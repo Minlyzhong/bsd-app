@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="format-detection" content="telephone=yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="default">
+		<meta name="theme-color" content="#E32519">
+		<meta name="msapplication-tap-highlight" content="no">
+		<meta name="_navigation_color" content="#E32519">
+		<title>党建E网通</title>
+		<link rel="icon" href="img/logo.png">
+		<link rel="stylesheet" href="css/framework7.ios.css">
+		<!--<link rel="stylesheet" href="css/framework7.css">-->
+		<link rel="stylesheet" href="css/framework7.ios.colors.css">
+		<link rel="stylesheet" href="css/my-app.css">
+		<link rel="stylesheet" href="css/assessment.css">
+		<link rel="stylesheet" href="css/partyDynamic.css">
+		<link rel="stylesheet/less" type="text/css" href="less/assessDemand.less" />
+		<link rel="stylesheet/less" type="text/css" href="less/deptRank.less" />
+		<link rel="stylesheet/less" type="text/css" href="less/exam.less" />
+		<link rel="stylesheet/less" type="text/css" href="less/video.less" />
+		<link rel="stylesheet" href="css/toast.css">
+		<link rel="stylesheet" href="css/weui.css">
+		<link rel="stylesheet" href="css/ystep.css">
+		<link rel="stylesheet" href="css/mtree.css">
+		<link rel="stylesheet" href="css/vmenuModule.css">
+		<link rel="stylesheet" href="css/swiper.min.css">
+		<!--<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=WaxLw3GXkWYfxey3OXIlxM1i&s=1"></script>
+		<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>-->
+		<!--video.js-->
+		<link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
+		<script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
+	</head>
+
+	<body>
+		<div class="statusbar-overlay"></div>
+		<div class="panel-overlay"></div>
+		<div class="views tabs toolbar-through">
+			<!--view view-main tab active类加载index先显示-->
+			<div id="home" class="view view-main tab active">
+				<div class="pages navbar-fixed">
+					<!--data-page属性是对应js的-->
+					<div data-page="home/home" class="page">
+						<div class="navbar">
+							<div class="navbar-inner">
+								<div class="left user-header1" style="margin-top: -3px;">
+									<img src="img/newIcon/home_title.png" alt="首页" />
+								</div>
+								<!--<div class="center sliding">首页</div>-->
+								<div class="searchbar searchNews" style="background: none;">
+									<div class="searchbar-input home-input" style="height: 30px;">
+							            <input  style="font-size: 15px;" type="search" placeholder="搜索关键字" readonly="readonly" >
+							            <a href="#" class="searchbar-clear"></a>
+							        </div>
+								</div>
+								<div class="right" ><i class="icon icon-camera1 homeCamera"></i></div>
+							</div>
+						</div>
+						
+						<div class="page-content infinite-scroll pull-to-refresh-content homePage" style="background: white;padding-top: 0px;padding-bottom: 50px;">
+							<div class="pull-to-refresh-layer" style="background: #EFEFF4;">
+								<div class="preloader"></div>
+								<div class="pull-to-refresh-arrow"></div>
+							</div>
+							<!-- 轮播图 -->
+							<div class="swiper-container homeSwiper qs-slider" style="height: 255px;margin-top:44px;">
+								<!-- <div class="carousel-top-title">时政要闻</div> -->
+								<div class="swiper-wrapper">
+								</div>
+								<div class="swiper-pagination homePager1 color-white" style="bottom: 0px;"></div>
+							</div>
+
+							<!-- <div class="card homecard" style="z-index: 500;">
+								<div class="card-content">
+								  <div class="card-content-inner">			
+									<div class="homeList"></div>	
+								</div>
+								</div>
+							</div> -->
+
+							<div class="card homecard" style="z-index: 500;">
+								<div class="card-content">
+								  <div class="card-content-inner">			
+										<div class="swiper-container swiper-init " data-speed="轮播速度" data-pagination=".swiper-pagination" style="height: 200px;">
+											<div class="swiper-wrapper">
+												<div class="swiper-slide">
+													<div class="homeListmin1 homeListmin"></div>
+												</div>
+												<div class="swiper-slide">
+														<div class="homeListmin2 homeListmin"></div>
+												</div>
+												
+											</div>
+											<div class="swiper-pagination"></div>
+										</div>	
+								</div>
+								</div>
+							</div>
+						
+
+							<div class="hotNews" >热点新闻
+								<i class="icon-hot"></i>
+							</div>
+							<div class="homeList1">
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="contacts" class="view tab">
+				<div class="pages navbar-fixed">
+					<div data-page="contacts/contacts" class="page">
+						<div class="navbar">
+							<div class="navbar-inner">
+								<div class="left"></div>
+								<div class="center">信息库</div>
+								<div class="right "></div>
+							</div>
+						</div>
+						<div class="contactPage page" style="height: 100%; background: white;">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="appList" class="view tab a">
+				<div class="pages navbar-fixed">
+					<div data-page="appList/appList" class="page appview">
+						<div class="navbar">
+							<div class="navbar-inner">
+								<div class="left">
+								</div>
+								<div class="center sliding">应用</div>
+								<div class="right">
+								</div>
+							</div>
+						</div>
+						<div class="page-content app-content" style="background: white;">
+							<div class="pull-to-refresh-layer" style="background: #EFEFF4;">
+								<div class="preloader"></div>
+								<div class="pull-to-refresh-arrow"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="user" class="view tab">
+				<div class="pages navbar-fixed">
+					<div data-page="user/user" class="page">
+						<a href="#" class="login-in">登录</a>
+						<!--支部风采-->
+						<div class="page-content" style="padding-top: 0px;margin-top: 0px;">
+						<div class='branchStyle' style="display: none;">
+							<img class="carousel-top-title1" src="img/test/style2.png"/>
+							<img class="carousel-top-title2" src="img/test/style1.png" style=""/>
+						</div>
+						<div class="card" style="border-radius: 10px; overflow: hidden; box-shadow:0px 10px 24px 2px rgba(219,102,94,0.1);">
+							<div class="card-content">
+								<div class="user-header card-content-inner">
+										<img src="" alt="" />
+										<div style="float:left;">
+											<div class="userName" style="display: block;"></div>
+											<div class="userDeptName"></div>
+										</div>
+										
+									</div>
+							</div>
+							<div class="row user-header-bottom card-footer">
+									<div class="col-50">
+										<div class="scoure score">--</div>
+										<div class="scoureTile">我的积分</div>
+									</div>
+									<div class="col-50 myRank">
+										<div class="scoure rank">--</div>
+										<div class="scoureTile">我的排名</div>
+									</div>
+								</div>
+							
+						</div>
+						
+						
+						
+							<div class="user-box-title">
+								我的信息
+							</div>
+							<div class="row no-gutter appList order-view">
+								<div class="col-25 grid">
+									<a href="#" class="link userScore">
+										<div><i class="icon icon-score"></i></div>
+										<div>我的积分</div>
+									</a>
+								</div>
+								<div class="col-25 grid">
+									<a href="#" class="link userRank">
+										<div><i class="icon icon-top"></i></div>
+										<div>排行榜</div>
+									</a>
+								</div>
+								<div class="col-25 grid">
+									<a href="#" class="link userFavorite">
+										<div><i class="icon icon-shouc"></i></div>
+										<div>收藏</div>
+									</a>
+								</div>
+								<div class="col-25 grid">
+									<a href="#" class="link userMsg">
+										<div><i class="icon icon-liuyan"></i></div>
+										<div>留言</div>
+									</a>
+								</div>
+							</div>
+							<div class="user-box-title">
+								我的工具
+							</div>
+							<div class="row no-gutter toolList"></div>
+							<!--<div class="list-block user-list">
+								<ul>
+									<li>
+										<a href="#" class="item-link item-content">
+											<div class="item-inner">
+												<div class="item-title remind">提醒项</div>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div>-->
+
+							<!-- <div class="list-block user-list">
+								<ul>
+									<li>
+										<a href="#" class="item-link item-content setting">
+											<div class="item-inner">
+												<div class="item-title ">设置</div>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div> -->
+
+							<div class="m-t-10">
+								<ul style="padding: 7px;margin-top: 14%;">
+									<li>
+										<a href="#" class="button login-out">退出登录</a>
+									</li>
+								</ul>
+							</div>
+							<!-- <div style="text-align: center; padding-bottom: 20px;" class="item-title">
+								Copyright ©2018 V<span id="sp_version"></span>
+							</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Bottom Tabbar-->
+			<div class="toolbar tabbar tabbar-labels">
+				<div class="toolbar-inner">
+					<a href="#home" class="tab-link active">
+						<i class="icon footer-icon-1"></i>
+						<span class="tabbar-label">首页</span>
+					</a>
+					<a href="#contacts" class="tab-link">
+						<i class="icon footer-icon-2"></i>
+						<span class="tabbar-label">信息库</span>
+					</a>
+					<a href="#appList" class="tab-link">
+						<i class="icon footer-icon-3"></i>
+						<span class="tabbar-label">应用</span>
+					</a>
+					<a href="#user" class="tab-link userXiabiao">
+						<i class="icon footer-icon-4"></i>
+						<span class="tabbar-label">我的</span>
+					</a>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="lib/lodash.js"></script>
+		<script type="text/javascript" src="js/framework7.js"></script>
+		<script type="text/javascript" src="js/toast.js"></script>
+		<!--
+        	作者：kwanworkios@163.com
+        	时间：2016-12-08
+        	描述：下4条引用是环信聊天
+        -->
+		<!--<script type="text/javascript" src="lib/webim.config.js"></script>-->
+		<!--<script type="text/javascript" src="lib/strophe-1.2.8.min.js"></script>-->
+		<!--<script type="text/javascript" src="lib/websdk-1.1.3.js"></script>-->
+		<!--<script type="text/javascript" src="lib/webImConn.js"></script>-->
+		<!--<script type="text/javascript" src="lib/zepto.min.js"></script>-->
+		<!--<script type="text/javascript" src="lib/zepto.touch.js"></script>-->
+		<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=UXTxGY2P3obB5GZ0IBEYBPui0NkUdG0o&s=1"></script>
+		<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+		<script type="text/javascript" src="lib/jquery-1.10.2.min.js"></script>
+		<script src="http://cdn.bootcss.com/less.js/2.7.2/less.min.js"></script>
+		<script type="text/javascript" src="lib/mtree.js"></script>
+		<script type="text/javascript" src="lib/iscroll.js"></script>		
+		<script type="text/javascript" src="lib/jquery.velocity.min.js"></script>
+		<script type="text/javascript" src="lib/jquery.touchSwipe.min.js"></script>
+		<script type="text/javascript" src="lib/vmenuModule.js"></script>
+		<script type="text/javascript" src="lib/highcharts.js"></script>
+		<script type="text/javascript" src="lib/highcharts-more.js"></script>
+		<script type="text/javascript" src="lib/highcharts-3d.js"></script>
+		<script type="text/javascript" src="lib/lrz.all.bundle.js"></script>
+		<script type="text/javascript" src="lib/base64.js"></script>
+		<script type="text/javascript" src="lib/crypto-js.min.js"></script>
+        <!--<script type="text/javascript" src="cordova.js"></script>-->
+		<script data-main="app" src="lib/require.js"></script>
+	</body>
+</html>

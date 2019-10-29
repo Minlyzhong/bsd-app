@@ -1,0 +1,27 @@
+{{#.}}
+	<div data-id="{{contentId}}" data-cid="{{catalogId}}" data-isstudy="{{isStudy}}" class="card qs-party-card dailyLearningCard" style="border-radius: 5px;">
+        {{!-- <div class="card-header item-content">
+        <div style="white-space: normal;">{{contentTitle}}</div>
+        {{#compare isStudy '==' 'false'}}
+        	<div class="notReview" style="background-color:#ffffff;color:red">未学习</div>
+       	{{else}}
+       		<div class="notReview" style="background-color:#ffffff;color:red">已学习</div>
+        {{/compare}}
+        </div> --}}
+        <div class="card-content"> 
+          <div class="card-content-inner"style="padding-bottom: 0px;">
+          		{{#compare titlePic '!=' ''}}
+          			<img class="lazy lazy-fadeIn" src="{{titlePic}}"/>
+                <div class="dailytitle" style="white-space: normal;">
+                  <span style="color:#ffffff;">{{contentTitle}}</span>
+                  {{#compare isStudy '==' 'false'}}
+                    <span class="notReview" style="background-color:#ffffff;color:red">未学习</span>
+                  {{else}}
+                    <span class="notReview" style="background-color:#ffffff;color:red">已学习</span>
+                  {{/compare}}
+                </div>
+          		{{/compare}}
+          </div>
+        </div>
+  	</div>
+{{/.}}

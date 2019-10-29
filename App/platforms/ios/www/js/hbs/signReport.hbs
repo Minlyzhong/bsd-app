@@ -1,0 +1,25 @@
+<div class="signChart" id=
+	{{#compare type '==' 'day'}}
+	"signDayChart" 
+	{{/compare}}
+	{{#compare type '==' 'week'}}
+	"signWeekChart" 
+	{{/compare}}
+	{{#compare type '==' 'month'}}
+	"signMonthChart" 
+	{{/compare}}
+	"></div>
+<div class="row no-gutter signList">
+	<div class="col-50 grid good" data-type="good">
+		正常打卡：{{good}} 
+	</div>
+	<div class="col-50 grid late" data-type="late">
+		迟到人数：{{late}}
+	</div>
+	<!-- <div class="col-50 grid early" data-type="early">
+		早退人数：{{early}}
+	</div> -->
+	<div class="col-50 grid notYet" data-type="notYet">
+		缺勤人数：{{notYet}}
+	</div>
+</div>

@@ -1,0 +1,83 @@
+/*
+ * 变量
+ */
+
+@phColor: #ddd;
+.box-style() {
+    position: relative;
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.searchBox(@x) {
+    position: fixed;
+    display: none;
+    right: 35px;
+    top: @x;
+    border: 1px #ddd solid;
+    z-index: 1000000;
+    background: white;
+    width: calc(~"75% - 55px");
+    width: -webkit-calc(~"75% - 55px");
+    max-height: 200px;
+    overflow: auto;
+}
+
+.boxUl {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.boxLi {
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+    font-size: 18px;
+}
+
+
+/*
+ * 样式表
+ */
+
+.deptRankNameBox {
+    .searchBox(131px);
+}
+
+.deptRankNameBox ul {
+    .boxUl();
+}
+
+.deptRankNameBox li {
+    .boxLi();
+}
+
+.deptRankNameBox li:active {
+    background: @phColor;
+}
+
+.deptRank-item {
+    padding-top: 20px;
+    padding-right: 10px;
+    font-size: 15px;
+    .box-style();
+}
+
+.deptRankCal {
+    position: fixed;
+    right: 16px;
+    top: 51px;
+    z-index: 1;
+    font-size: 17px;
+}

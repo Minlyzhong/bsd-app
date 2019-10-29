@@ -1,0 +1,196 @@
+<div data-page="assessment/threeMeetingsAndOneClass" class="page threeMeetingsAndOneClassPage no-tabbar navbar-fixed">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left ">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center"></div>
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+				<a href="#" class="link icon-only" style="margin-left: 0px;margin-top: 2px;"><i class="icon icon-history"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="searchbar threeMeetingsAndOneClassSearchBar">
+		<div class="searchbar-input">
+			<input type="search" placeholder="名称/关键字查询" id="threeMeetingsAndOneClassSearch" />
+			<a href="#" class="searchbar-clear threeMeetingsAndOneClassSearchClear" style="display: none;"></a>
+		</div>
+		<div class="threeMeetingsAndOneClassCancelBtn">取消</div>
+	</div>
+	<div class="buttons-row shykSelect" style="margin-top: 80px;background: #FFFFFF;">
+	        <a href="#tab1" class="tab-link active button buttonShyk">月份<span class="appBadge2 bg-red shykMonthNum"></span></a>
+	        <a href="#tab2" class="tab-link button buttonShykSeason">季度<span class="appBadge2 bg-red shykSeasonNum"></span></a>
+	        <a href="#tab3" class="tab-link button buttonShykYear">年度<span class="appBadge2 bg-red shykYearNum"></span></a>
+	</div>
+	<div class="page-content shykTab" style="padding-top: 0px;">
+        <div class="tabs-animated-wrap">
+        	<div class="tabs">
+        		<!--月度-->
+          		<div id="tab1" class="tab active">
+          			<div class="assessTime list-block">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 85px;"></i>
+					            <input type="text" placeholder="选择日期" id="picker-describe" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+          			<div class="page-content pull-to-refresh-content infinite-scroll threeMeetingsAndOneClassList" style="padding-bottom: 100px;position: absolute;top: -37px;width: 100%;right: 0;z-index: 0;padding-top:0px;">
+						<div class="list-block media-list kpi-content-list threeMeetingsAndOneClassRightList" >
+							<div class="pull-to-refresh-layer" style="margin-top:-55px">
+								<div class="preloader">
+								</div>
+								<div class="pull-to-refresh-arrow">
+								</div>
+							</div>
+							<ul>
+								<div class="infinite-scroll-preloader">
+								    <div class="preloader" style="left:38%;margin-left:0px;margin-top:0px;position:absolute;"></div>
+								    <div style="position: absolute;left: 45%;;font-size: 17px;">加载中...</div>
+								</div>
+							</ul>
+							<div class="shykNotFound">没有考核清单</div>
+						</div>
+					</div>
+          		</div>
+          		<!--季度-->
+	          	<div id="tab2" class="tab">
+	            	<div class="assessTimeSeason list-block">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left:70px;"></i>
+					            <input type="text" placeholder="选择季度" id="picker-describeSeason" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+          			<div class="page-content pull-to-refresh-content infinite-scroll threeMeetingsAndOneClassListSeason" style="padding-bottom: 100px;position: absolute;top: -37px;width: 100%;z-index: 0;padding-top:0px;display: none;">
+						<div class="list-block media-list kpi-content-list threeMeetingsAndOneClassRightListSeason" style="">
+							<div class="pull-to-refresh-layer" style="margin-top:-55px">
+								<div class="preloader">
+								</div>
+								<div class="pull-to-refresh-arrow">
+								</div>
+							</div>
+							<ul>
+								<div class="infinite-scroll-preloader">
+								    <div class="preloader" style="left:38%;margin-left:0px;margin-top:0px;position:absolute;"></div>
+								    <div style="position: absolute;left: 45%;;font-size: 17px;">加载中...</div>
+								</div>
+							</ul>
+							<div class="shykSeasonNotFound">没有考核清单</div>
+						</div>
+					</div>
+	          	</div>
+	          	<!--年份-->
+	            <div id="tab3" class="tab">
+	            	<div class="assessTimeYear list-block">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 100px;"></i>
+					            <input type="text" placeholder="选择年份" id="picker-describeYear" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+          			<div class="page-content pull-to-refresh-content infinite-scroll threeMeetingsAndOneClassListYear" style="padding-bottom: 100px;position: absolute;top: -37px;width: 100%;z-index: 0;padding-top:0px;display: none;">
+						<div class="list-block media-list kpi-content-list threeMeetingsAndOneClassRightListYear" style="">
+							<div class="pull-to-refresh-layer" style="margin-top:-55px">
+								<div class="preloader">
+								</div>
+								<div class="pull-to-refresh-arrow">
+								</div>
+							</div>
+							<ul>
+								<div class="infinite-scroll-preloader">
+								    <div class="preloader" style="left:38%;margin-left:0px;margin-top:0px;position:absolute;"></div>
+								    <div style="position: absolute;left: 45%;;font-size: 17px;">加载中...</div>
+								</div>
+							</ul>
+							<div class="shykYearNotFound">没有考核清单</div>
+						</div>
+					</div>
+	          	</div>       
+        	</div>
+      </div> 
+	</div>
+	<div class="page-content pull-to-refresh-content infinite-scroll threeMeetingsAndOneClassSearch" style="padding-bottom: 100px;width: 100%;z-index: 0;padding-top:0px;display: none;">
+		<!--<div class="pull-to-refresh-layer" style="margin-top: 0px;">
+				<div class="preloader">
+				</div>
+				<div class="pull-to-refresh-arrow">
+				</div>
+		</div>-->
+		<div class="list-block media-list kpi-content-list threeMeetingsAndOneClassSearchList" style="top: 0px;">
+			
+			<ul style="margin-bottom: 128px;">
+			</ul>
+			<div class="threeMeetingsAndOneClassNotFound">找不到您要查询的考核清单</div>
+		</div>
+	</div>
+		<!--<div class="assessTime list-block">
+		  <ul>
+		    <li>
+		      <div class="item-content">
+		        <div class="item-inner">
+		          <div class="item-input">
+		          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 85px;"></i>
+		            <input type="text" placeholder="选择日期" id="picker-describe" readonly>
+		          </div>
+		        </div>
+		      </div>
+		    </li>
+		  </ul>
+		</div>
+		<div class="page-content pull-to-refresh-content infinite-scroll threeMeetingsAndOneClassList" style="position: absolute;top: 0;width: 100%;right: 0;z-index: 0;">
+			<div class="list-block media-list kpi-content-list threeMeetingsAndOneClassRightList" style="padding-bottom: 55px;">
+				<div class="pull-to-refresh-layer" style="margin-top:-55px">
+					<div class="preloader">
+					</div>
+					<div class="pull-to-refresh-arrow">
+					</div>
+				</div>
+				<ul>
+					<div class="infinite-scroll-preloader">
+					    <div class="preloader" style="left:38%;margin-left:0px;margin-top:0px;position:absolute;"></div>
+					    <div style="position: absolute;left: 45%;;font-size: 17px;">加载中...</div>
+					</div>
+				</ul>
+				<div class="shykNotFound">没有考核清单</div>
+			</div>
+		</div>
+		
+		<div class="page-content pull-to-refresh-content infinite-scroll threeMeetingsAndOneClassSearch" style="position: absolute;top: 0;width: 100%;right: 0;z-index: 0;display: none;">
+			<div class="pull-to-refresh-layer" style="margin-top: 0px;">
+					<div class="preloader">
+					</div>
+					<div class="pull-to-refresh-arrow">
+					</div>
+			</div>
+			<div class="list-block media-list kpi-content-list threeMeetingsAndOneClassSearchList">
+				
+				<ul style="margin-bottom: 128px;">
+				</ul>
+				<div class="threeMeetingsAndOneClassNotFound">找不到您要查询的考核清单</div>
+			</div>
+		</div>
+	</div>-->
+	</div>
+</div>

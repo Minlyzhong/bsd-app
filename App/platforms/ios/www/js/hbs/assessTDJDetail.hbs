@@ -1,0 +1,28 @@
+{{#.}}
+	<li>
+		<a class="item-link item-content"  data-id="{{id}}" data-title="{{title}}">
+			<div class="item-inner">
+				<div class="userInfo-row item-subtitle" style="font-size: 14px;padding-top: 5px;">
+					<div style="font-size: 15px;white-space: normal;">
+						<span class="discussName rankName">考核清单：{{title}}</span>
+					</div>
+					<!--<div class="color-gray" style="font-size: 13px;">
+						<span class="discussName">{{reportTs}}</span>
+					</div>-->
+				</div>
+				<div style="margin-top: 10px; font-size: 13px;">
+					<span class="color-gray">目标要求：{{target}}</span>
+				</div>
+				<div style="margin-top: 10px;font-size: 15px;">
+					<span class="rankDetailTitle" style="color: #369;">要求考核次数：{{khcs}}</span>
+				</div>
+				<div style="margin-top: 10px;font-size: 15px;">
+					<span class="rankDetailTitle" style="color: #ED4C3C;">基础分值：{{score}}</span>
+				</div>
+				<div style="margin-top: 10px;font-size: 15px;">
+					<span class="rankDetailName" style="color: green;">已得总分：{{totalScore}}</span>
+				</div>
+			</div>
+		</a>
+	</li>
+{{/.}}

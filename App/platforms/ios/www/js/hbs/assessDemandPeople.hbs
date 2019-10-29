@@ -1,0 +1,21 @@
+{{#.}}
+<li>
+	<a href="#" class="item-link item-content" data-id="{{userId}}" data-name="{{userName}}">
+		<div class="item-media media-avater">
+			{{#compare headPic '==' ''}}
+			<img src="img/avater.png" />
+			{{else}}
+			<img src="{{basePath}}{{headPic}}"/>			
+			{{/compare}}
+		</div>
+		<div class="item-inner">
+			<div class="item-title-row">
+				<div class="item-title k-group-t">{{userName}}</div>
+			</div>
+			<div class="item-subtitle k-group-sub">
+				<span class="">考核次数：{{count}}次</span>
+			</div>
+		</div>
+	</a>
+</li>
+{{/.}}

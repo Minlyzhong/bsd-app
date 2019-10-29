@@ -1,0 +1,52 @@
+.navbar {
+	background: #ED4C3C;
+}
+.user-header {
+	background: #ED4C3C;
+}
+.login-out{
+	background: #ED4C3C;
+}
+.statusbar-overlay {
+	background: #ED4C3C;
+}
+.userRankSearchBar,
+.assessSearchBar,
+.payPeopleSearchBar,
+.payShowPeopleSearchBar,
+.contactsShowPeopleSearchBar,
+.contactsPeopleSearchBar {
+	background: #ED4C3C;
+}
+.webim-send-btn{
+	background-color: #ED4C3C;
+	border: 1px solid  #ED4C3C;
+	
+}
+.bgColor-Red {
+	background-color: #ED4C3C;
+}
+.signBtnRow .button.active {
+	background: #ED4C3C;
+	border: 1px solid #ED4C3C;
+}
+.recordSub{
+	background: #ED4C3C;
+}
+.recCommentWindow1 button,
+.recCommentWindow button{
+	background-color: #ED4C3C;
+	border: 1px solid #ED4C3C;
+}
+.dynamicFilter{
+	border-bottom: solid 2px #ED4C3C;
+}
+.deptRankSearchBar{
+	background: #ED4C3C;
+}
+.examSearchBar{
+	background: #ED4C3C;
+}
+.qs-party-card .card-header{
+	background-color: #ED4C3C;
+}

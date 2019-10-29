@@ -1,0 +1,81 @@
+{{#.}}
+	<div data-id="{{id}}" class="qs-party-card1"  data-isgood="{{isGood}}" data-catalogId="{{catalogId}}" stlye="background:#FFFFFF;">
+        <!--<div class="card-header item-content">
+        	<div style="white-space: normal;"></div>
+        </div>-->
+        {{#compare titlePic '!=' ''}}
+          	{{#compare picType '==' 0}}
+	        <div class="card-content" style="overflow:hidden;padding:10px"> 
+	          <div class="card-content-inner1" style="padding-bottom: 0px;display:block;float:left;padding-right:10px;">
+	          	<img class="lazy lazy-fadeIn" src="{{basePath}}{{titlePic}}"/>
+	          	{{subTitle}}
+	          </div>
+	          <div style="display:block;color: #333333;font-size: 17px;">
+	          	
+	          	<div style="display:block;" data-id="{{id}}">
+	          		{{title}}<br/>
+	          		<a href=# class="link partyLike">
+	        			<!--<i class="icon {{#compare isGood '==' false}}icon-noCollect{{else}}icon-collect{{/compare}}"></i>-->
+	        			<i class="icon icon-noCollect1"></i>
+	        			<span class="likeTotal">{{goodTotal}}</span>
+	        		</a>&nbsp;&nbsp;
+	        		<a href=# class="link partyComment"style="margin-right: 20px;">
+	        			<i class="icon icon-comment1"></i>
+	        			<span class="commentTotal">{{commentTotal}}</span>
+	        		</a>
+	        	</div>
+	          </div>
+	        </div>
+			{{else}}
+			<div class="card-header item-content">
+	       		<div style="white-space: normal;">{{title}}</div>
+	        </div>
+	        <div class="card-content"> 
+	          	<div class="card-content-inner"style="padding-bottom: 0px;">
+					<!--<video width="100%" controls="controls" id="video1" class='homeVideo'>-->
+					<video width="100%">
+      					<source src="{{basePath}}{{titlePic}}" type="video/{{videoType}}">
+					<video>
+	          		{{subTitle}}
+	          	</div>
+		     </div>
+	        <div class="card-footer no-border" data-id="{{id}}"><span>{{creatTs}}</span>
+	        		<a href=# class="link partyLike">
+	        			<!--<i class="icon {{#compare isGood '==' false}}icon-noCollect{{else}}icon-collect{{/compare}}"></i>-->
+	        			<i class="icon icon-noCollect1"></i>
+	        			<span class="likeTotal">{{goodTotal}}</span>
+	        		</a>&nbsp;&nbsp;
+	        		<a href=# class="link partyComment"style="margin-right: 20px;">
+	        			<i class="icon icon-comment1"></i>
+	        			<span class="commentTotal">{{commentTotal}}</span>
+	        		</a>
+	        </div>
+	    	{{/compare}}
+      	{{else}}
+      		<div class="card-content" style="overflow:hidden;padding:10px"> 
+	          <div class="card-content-inner1" style="padding-bottom: 0px;display:block;float:left;padding-right:10px;">
+	          	{{subTitle}}
+	          </div>
+	          <div style="display:block;color: #333333;font-size: 17px;" >
+
+	          	<div style="display:block;" data-id="{{id}}">
+	          		{{title}}<br/>
+	          		<a href=# class="link partyLike">
+	        			<!--<i class="icon {{#compare isGood '==' false}}icon-noCollect{{else}}icon-collect{{/compare}}"></i>-->
+	        			<i class="icon icon-noCollect1"></i>
+	        			<span class="likeTotal">{{goodTotal}}</span>
+	        		</a>&nbsp;&nbsp;
+	        		<a href=# class="link partyComment"style="margin-right: 20px;">
+	        			<i class="icon icon-comment1"></i>
+	        			<span class="commentTotal">{{commentTotal}}</span>
+	        		</a>
+	        	</div>
+	          </div>
+	        </div>
+      	{{/compare}}
+  	</div>
+{{/.}}
+<div class="infinite-scroll-preloader">
+    <div class="preloader" style="left:35%;margin-left:0px;margin-top:0px;position:absolute;"></div>
+    <div style="position: absolute;left: 50%;padding-top: 10px;font-size: 17px;">加载中...</div>
+ </div>

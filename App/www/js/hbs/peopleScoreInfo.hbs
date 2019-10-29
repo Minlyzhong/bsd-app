@@ -1,0 +1,17 @@
+{{#.}}
+
+<li>
+	<div data-id={{chatRoomId}} data-title={{chatRoomTitle}} class=" item-content">
+	<div class="item-inner">
+		<div class="item-title-row">
+		<div class="item-title scoreRuleTitle" class="discussName" style="color: #000;
+    margin-bottom: 5px;font-size: 16px;font-family: PingFang-SC-Medium;">{{action}} : <span style="color: brown;font-size: 15px;">{{description}}</span><span class="discussName color-orange sigleScore">+{{score}}</span></div>
+		{{!-- <div class="item-after">已完成</div> --}}
+		</div>
+		{{!-- <div class="item-subtitle scoreRuleList">{{defScore}}分 / 每{{frequencyType}}{{ruleName}}</div> --}}
+		<div class="item-subtitle scoreRuleList discussName" style="font-size:13px;color: #666;">{{memo}}</div>
+	</div>
+	</div>
+</li>
+
+{{/.}}

@@ -1,0 +1,263 @@
+.dynamicRow {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+}
+
+.dynamicHead {
+	width: 100%;
+	/*box-sizing: border-box;
+    display: -webkit-box;*/
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	/*-webkit-box-pack: justify;
+    -ms-flex-pack: justify;*/
+	-webkit-justify-content: space-between;
+	justify-content: space-between;
+	/*-webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;*/
+	height: 40px;
+}
+
+.dynamicDate {
+	font-size: 16px;
+	line-height: 40px;
+	padding-left: 10px;
+}
+
+.dynamicTime {
+	background: url(../img/icon/icon-calendar.png) right no-repeat;
+	background-size: 27px;
+	padding-right: 30px;
+	font-size: 16px;
+	line-height: 40px;
+}
+
+.dynamicReport,
+.dynamicReportSeason,
+.dynamicReportYear,
+.dynamicReportSearch
+{
+	background: white;
+	padding: 5px;
+	/* border-top: solid 1px #ddd;
+	border-bottom: solid 1px #ddd; */
+	margin-bottom: 10px;
+}
+
+.dynamicReportTitle,
+.dynamicReportTitleSeason,
+.dynamicReportTitleYear,
+.dynamicReportTitleSearch
+{
+	color: #36689a;
+	font-size: 19px;
+	padding: 10px;
+	border-bottom: 1px solid #f2f2f2;
+}
+
+.dynamicContentTitle {
+	color: #36689a;
+	font-size: 18px;
+	padding-top:5px;
+	padding-bottom: 2px;
+}
+
+.dynamicReportContent {
+	-webkit-justify-content: space-between;
+	justify-content: space-between;
+}
+
+.dynamicContent {
+	width: 50%;
+	padding-top: 10px;
+}
+
+.dynamicFilter,
+.dynamicFilterSeason,
+.dynamicFilterYear,
+.dynamicFilterSearch
+{
+	background: white;
+	height: 50px;
+	line-height: 50px;
+	font-size: 15px;
+	border-top: solid 1px #ddd;
+	border-bottom: solid 2px #ed4c3c;
+	margin-top: 44px;
+	/*position: fixed;*/
+	width: 100%;
+}
+
+.dynamicFilterContent,
+.dynamicFilterContentSeason,
+.dynamicFilterContentYear,
+.dynamicFilterContentSearch
+{
+	padding-left: 10px;
+	/*background-image: url(../img/icon/orderUp.png);*/
+	background-size: 26px;
+	background-repeat: no-repeat;
+	background-position: calc(100% + 2px);
+	background-position: -webkit-calc(100% + 2px);
+}
+
+.dynamicPopover li a {
+	padding: 0px 10px;
+	text-align: center;
+	color: #000000;
+	display: block;
+	line-height: 43px;
+	font-size: 16px;
+}
+
+.dynamicPopover li:not(:last-child) a:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	right: auto;
+	top: auto;
+	height: 1px;
+	width: 100%;
+	background-color: #c8c7cc;
+	display: block;
+	z-index: 15;
+	-webkit-transform-origin: 50% 100%;
+	transform-origin: 50% 100%;
+}
+
+.dynamicPage,
+.dynamicPageSeason,
+.dynamicPageYear,
+.dynamicPageSearch
+{
+	padding-top: 0px !important;
+	margin-top: 97px;
+}
+
+.dynamicList,
+.dynamicListYear,
+.dynamicListSeason,
+.dynamicListSearch
+{
+	font-size: 14px;
+	margin-top: -1px;
+	margin-bottom: 85px;
+}
+
+.dynamicNav,
+.dynamicNavSeason,
+.dynamicNavYear,
+.dynamicNavSearch,
+{
+	overflow: auto !important;
+	/*margin-top: 44px;*/
+	margin-bottom: -54px;
+	padding-bottom: 10px;
+}
+
+.titleContent, 
+.titleContentSeason,
+.titleContentYear,
+.titleContentSearch
+{
+	float: left;
+	background: url(../img/icon/right.png) right no-repeat;
+	background-size: 30px 36px;
+	font-size: 14px;
+	background-color: white;
+	border: solid 1px #E32519;
+	padding: 4px;
+	padding-right: 20px;
+	border-radius: 7px;
+	margin: 2px 5px;
+}
+
+.titleBlock, 
+.titleBlockSeason, 
+.titleBlockYear,
+.titleBlockSearch
+{
+	background: white;
+	border-bottom: 1px solid #ddd;
+}
+
+.dynamicReportList.row {
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+	background: white;
+}
+
+.dynamicReportList .grid {
+	padding-left: 40px;
+	font-size: 14px;
+	color: #333;
+	line-height: 30px;
+	text-align: left;
+	height: 50px;
+}
+
+.dynamicReportList .grid:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: auto;
+	bottom: 0;
+	right: auto;
+	height: 1px;
+	width: 100%;
+	background-color: #F2F2F2;
+	display: block;
+	z-index: 15;
+	-webkit-transform-origin: 50% 0;
+	transform-origin: 50% 0;
+}
+
+.dynamicReportList .grid:after {
+	content: '';
+	position: absolute;
+	left: auto;
+	top: 0;
+	bottom: auto;
+	right: 0;
+	height: 100%;
+	width: 1px;
+	background-color: #F2F2F2;
+	display: block;
+	z-index: 15;
+	-webkit-transform-origin: 50% 0;
+	transform-origin: 50% 0;
+}
+
+.dynamicReportList .grid:nth-of-type(2n+2):after {
+	content: none;
+	width: 0px;
+}
+
+.dynamicReportList .grid span {
+	display: inline;
+}
+
+/*.shykD,
+.shykUD,
+.shykDSeason,
+.shykUDSeason,
+.shykDYear,
+.shykUDYear
+{
+	position: absolute;	
+	width: 100%;
+	top:80px;
+}*/
+.dynamictitle{
+	padding-top:2px!important;
+	padding-bottom: 2px!important;
+
+}

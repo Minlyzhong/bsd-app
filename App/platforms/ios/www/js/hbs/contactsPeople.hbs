@@ -1,0 +1,11 @@
+{{#.}}
+<a href="#" class="item-link item-content" data-id="{{userId}}" data-userName="{{userName}}">
+    <div class="item-inner">
+		<div class="item-title">{{userName}}
+		{{#compare deptName '!=' undefined}}
+			<p class="color-gray" style="font-size: 15px;margin: 5px;">所属单位：{{deptName}}</p>
+		{{/compare}}
+	</div>
+</div>
+</a>
+{{/.}}

@@ -1,0 +1,11 @@
+{{#.}}
+	<div class="comments" data-commentId = "{{id}}">
+		<span class="ownName one" data-id="{{userId}}">{{userName}}</span>
+		{{#compare replyForArticle '!=' null}}
+		 回复 <span class="ownName two" data-id="{{reviewerId}}">{{replyForArticle}}</span>
+		{{else}}
+		说
+		{{/compare}}
+		: {{content}}
+	</div>
+{{/.}}

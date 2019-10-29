@@ -1,0 +1,16 @@
+{{#.}}
+	<div data-id="{{id}}" class="card qs-card">
+        <div class="card-header">
+	            <div class="qs-title">{{serviceTitle}}</div>
+	            {{#services_state state}}{{/services_state}}
+        </div>
+        <div class="card-content"> 
+          <div class="card-content-inner">
+          	<div class="item-text">服务地址:{{servicePlace}}</div>
+          	<div class="item-text">截止时间:{{regiestEndtime}}</div>
+          	<div class="item-text">服务内容:{{serviceContent}}</div>
+          </div>
+        </div>
+        <div class="card-footer"><span>召集人:{{creatorName}}</span><span>人数:{{totalUser}}</span></div>
+      </div>
+{{/.}}

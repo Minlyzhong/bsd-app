@@ -1,0 +1,29 @@
+{{#.}}
+<li>
+	<a href="#" class="item-link item-content" data-id="{{deptId}}" data-name="{{deptName}}" data-branchRank="{{totalRank}}" data-score="{{totalScore}}">
+		{{!-- <div class="item-media">
+			<i class="icon kpi-group"></i>
+		</div> --}}
+		<div class="item-inner" style="padding-right: 25px;padding-left: 10px;">
+			<div class="item-title-row">
+				<div class="item-title kpi-a-list-item-title" style="font-weight: 600;font-family:PingFang-SC-Medium; color:#333;">{{deptName}}</div>
+				<div class="item-after kpi-a-list-item-after">
+					<div class="reviewState">
+						<div class="reviewed"style="font-size: 14px;padding-right:5px;">
+							<i class="icon kpi-chart"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="deptRank-item">
+				<div>
+					<span>得分：{{totalScore}}</span>
+				</div>
+				<div>
+					<span>排名：{{totalRank}}</span>
+				</div>
+			</div>
+		</div>
+	</a>
+</li>
+{{/.}}

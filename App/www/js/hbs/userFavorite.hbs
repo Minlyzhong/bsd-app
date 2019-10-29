@@ -1,0 +1,26 @@
+{{#.}}
+	<li>
+		<div data-id={{articleId}} data-type={{typeId}} class="link item-content userFavorite-content">
+			<div class="item-inner">
+				<div class="item-title-row">
+					<div class="item-title" style="font-size: 15px;">{{title}}</div>
+				</div>
+				<div class="discuss-row item-subtitle"style="color: #8e8e93;padding: 8px 5px 0px 0px;">
+					<span style="font-size: 13px;">收藏时间：{{createTs}}</span>
+					{{!-- <span style="font-size: 13px;">收藏时间：{{creatTs}}</span> --}}
+					<div>
+						<span style="padding-left: 10px;font-size: 14px;">评论:</span>
+						{{#compare commentCount '!==''null'}}
+						<span class="color-orange">{{commentCount}}</span>
+						{{else}}
+						<span class="color-orange">0</span>
+						{{/compare}}
+					</div>
+				</div>
+				<div class="item-text"style="height: auto;">
+					<span style="font-size: 14px;">{{subTitle}}</span>
+				</div>
+			</div>
+		</div>
+	</li>
+{{/.}}

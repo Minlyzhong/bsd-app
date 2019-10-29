@@ -1,0 +1,63 @@
+<div data-page="payment/payDeal" class="page navbar-fixed no-tabbar">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left ">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center ">支付页</div>
+			<div class="right">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div style="padding: 15px;background: white; font-size: 15px;">
+			<div>订单详情：党费缴纳</div>
+			<div>订单金额：￥<span class="paySum"></span></div>
+		</div>
+		<div class="content-block-title">选择支付方式</div>
+		<div class="list-block media-list payTypeList">
+			<ul>
+				<li>
+					<label class="label-checkbox item-content">
+						<div class="item-media">
+		                    <img src="img/120x120.png" width="40" height="40">
+		                </div>
+						<div class="item-inner">
+							<div class="item-title-row" style="-webkit-justify-content: flex-start;justify-content: flex-start;">
+								<div class="item-title">支付宝支付</div>
+								<div class="item-after"><img src="img/payTip.png" width="50" height="21"></div>
+							</div>
+							<div class="item-text" style="font-size: 13px;padding-top: 5px;height: 25px;">数亿用户都在用，安全可托付</div>
+						</div>
+						<input type="radio" id='payBox' name="payBox" value="1" checked>
+   						 <div class="item-media" style="padding-right: 15px;"><i class="icon icon-form-checkbox"></i></div>
+					</label>
+				</li>
+				<li>
+					<label class="label-checkbox item-content">
+						<div class="item-media">
+		                    <img src="img/wechatlogo.png" width="40" height="36">
+		                </div>
+						<div class="item-inner">
+							<div class="item-title-row" style="-webkit-justify-content: flex-start;justify-content: flex-start;">
+								<div class="item-title">微信支付</div>
+								<div class="item-after"><img src="img/payTip.png" width="50" height="21"></div>
+							</div>
+							<div class="item-text" style="font-size: 13px;padding-top: 5px;height: 25px;">亿万用户的选择，更快更安全</div>
+						</div>
+						<input type="radio" id='payBox' name="payBox" value="2">
+   						 <div class="item-media" style="padding-right: 15px;"><i class="icon icon-form-checkbox"></i></div>
+					</label>
+				</li>
+			</ul>
+		</div>
+		<div class="m-t-10">
+			<ul style="padding: 0px;">
+				<li>
+					<a href="#" class="button payCheck" style="bottom: 30px;position: absolute;width: calc(100% - 20px);width: -webkit-calc(100% - 20px);height: 48px;line-height: 48px;">确认支付   ￥<span class="paySum"></span></a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

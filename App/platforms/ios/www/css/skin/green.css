@@ -1,0 +1,89 @@
+.navbar {
+	background: #00BA98;
+}
+.user-header {
+	background: #00BA98;
+}
+.login-out{
+	background: #00BA98;
+}
+.statusbar-overlay {
+	background: #00BA98;
+}
+
+.threePlusXStatisticsSearchBar,
+.threeMeetingsAndOneClassPaperDetailSearchBar,
+.threeMeetingsAndOneClassSearchBar,
+.userRankSearchBar,
+.assessSearchBar,
+.payPeopleSearchBar,
+.payShowPeopleSearchBar,
+.contactsShowPeopleSearchBar,
+.contactsPeopleSearchBar {
+	background: #00BA98;
+}
+.webim-send-btn{
+	background-color: #00BA98;
+	border: 1px solid  #00BA98;
+	
+	
+}
+.bgColor-Red {
+	background-color: #00BA98;
+}
+.signBtnRow .button.active {
+	background: #00BA98;
+	border: 1px solid #00BA98;
+}
+.recordSub{
+	background: #00BA98;
+}
+.recCommentWindow1 button,
+.recCommentWindow button{
+	background-color: #00BA98;
+	border: 1px solid #00BA98;
+}
+.dynamicFilter{
+	border-bottom: solid 2px #00BA98;
+}
+.deptRankSearchBar{
+	background: #00BA98;
+}
+.examSearchBar{
+	background: #00BA98;
+}
+.qs-party-card .card-header{
+	background-color: #00BA98;
+}
+
+
+.buttonShyk,
+.buttonShykSeason,
+.buttonShykYear
+{
+	font-size: 15px;
+	border: 1px solid #00BA98;
+	color: #00BA98;
+}
+.buttonShyk.active,
+.buttonShykSeason.active,
+.buttonShykYear.active
+{
+	background:#00BA98;
+	color: #fff;
+}
+.buttonShyk1,
+.buttonShykSeason1,
+.buttonShykYear1
+{
+	font-size: 15px;
+	border: 1px solid #00BA98;
+	color: #00BA98;
+}
+.buttonShyk1.active,
+.buttonShykSeason1.active,
+.buttonShykYear1.active
+{
+	background:#00BA98;
+	color: #fff;
+}

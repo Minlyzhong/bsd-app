@@ -1,0 +1,48 @@
+<div data-page="user/userRank" class="page navbar-fixed no-tabbar">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left sliding">
+				<a href="index.html" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center sliding">排行榜</div>
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="searchbar userRankSearchBar">
+			<div class="searchbar-input">
+				<input type="search" placeholder="人员名称" id="userRankSearch" />
+				<a href="#" class="searchbar-clear userRankSearchClear"></a>
+			</div>
+			<div class="searchCancelBtn">取消</div>
+		</div>
+		<div class="page-content infinite-scroll content" style="padding-top: 0px;background: white;width: 100%;">
+			<div class="content-block searchbar-not-found">搜索不到结果</div>
+			<div class="list-block media-list userRank-List" style="height: 100%;">
+				<ul>
+					<li>
+						<div class="link item-content -content">
+							<div class="item-inner">
+								<div class="discuss-row item-subtitle userRank-title" style="">
+									<div style="min-width: 15%;">排名</div>
+									<div style="min-width: 20%;">总积分</div>
+									<div style="min-width: 35%;">用户名</div>
+									<div style="min-width: 30%;">所属支部</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="page-content infinite-scroll search" style="background: white;padding-top: 0px;display: none;">
+			<div class="list-block media-list userRankPeopleList" style="display: block; top: 20px;margin-bottom: 0px;height: 100%;">
+				<ul>
+				</ul>
+				<div class="userRankNotFound">找不到您要查询人员</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,29 @@
+{{#.}}
+	<li>
+		<a class="item-link item-content assessPaperListContent"  data-id="{{id}}" data-userName="{{name}}">
+			<div class="item-inner">
+				<div class="userInfo-row item-subtitle" style="font-size: 14px;padding-top: 5px;">
+					<div class="color-gray" style="font-size: 13px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+						<span class="discussName rankName">填报者：{{name}}</span>
+					</div>
+					<!--<div class="color-gray" style="font-size: 13px;">
+						<span class="discussName">{{reportTs}}</span>
+					</div>-->
+				</div>
+				<div style="margin-top: 10px; font-size: 13px;">
+					<span class="color-gray">上报时间：{{ts}}</span>
+				</div>
+				<div style="font-size: 13px;">
+					<span class="color-gray">考核时间：{{reportTs}}</span>
+				</div>
+				<div style="margin-top: 10px;font-size: 15px;">
+					<span class="rankDetailTitle" style="color: #369;">考核清单：{{topicTitle}}</span>
+					<span class="rankDetailScore color-red">+{{score}}</span>
+				</div>
+				<div style="margin-top: 10px;font-size: 15px;">
+					<span class="rankDetailName" style="color: green;">标题：{{reportTitle}}</span>
+				</div>
+			</div>
+		</a>
+	</li>
+{{/.}}

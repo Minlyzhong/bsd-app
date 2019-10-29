@@ -1,0 +1,35 @@
+{{#.}}
+	<li>
+		{{!-- 三会一课考核统计 --}}
+		<a href="#" class="item-link item-content assessLeaderContent" data-id="{{deptId}}" data-name="{{deptName}}" data-unCT="{{unCompletedTotal}}" data-CT="{{completedTotal}}">
+			{{!-- <div class="item-media">
+				<i class="icon kpi-group"></i>
+			</div> --}}
+			<div class="item-inner" style="padding: 20px 25px 5px 10px;">
+				<div class="item-title-row">
+					<div class="item-title kpi-a-list-item-title getDeptName">{{deptName}}</div>
+					<div class="item-after kpi-a-list-item-after">参与度:{{completedPercent}}%</div>
+				</div>
+				<div class="item-subtitle kpi-a-list-item-sb" >更新时间: {{date}}</div>
+				<div>
+					 
+				<div class="kpi-a-list-item-subTitle" style="margin-top: 10px;" >
+					<div>
+						<i class="icon kpi-icon-people"></i>
+						<span>{{total}}</span>
+					</div>
+					<div>
+						<i class="icon icon-UDone"></i>
+						<span>{{unCompletedTotal}}</span>
+					</div>
+					<div>
+						<i class="icon icon-Done"></i>
+						<span>{{completedTotal}}</span>
+					</div>
+				</div>
+				</div>
+			
+			</div>
+		</a>
+	</li>
+{{/.}}

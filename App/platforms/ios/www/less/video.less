@@ -1,0 +1,117 @@
+/*
+ * 变量
+ */
+
+.videoRow() {
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+
+/*
+ * 样式表
+ */
+
+.videoHead {
+    padding: 10px 10px 10px 0px;
+    .videoRow();
+}
+
+.videoHeadName {
+    display: inherit;
+}
+
+.videoHeadName div:first-child {
+    width: 10px;
+    background: #5ac8fa;
+    margin-right: 5px;
+}
+
+.videoHeadName div:last-child {
+    font-size: 16px;
+}
+
+.videoHeadRank {
+    display: inherit;
+}
+
+.videoHeadRank div:first-child {
+    background: url(../img/icon/icon-gold.png) no-repeat;
+    background-size: 17px;
+    width: 17px;
+    height: 20px;
+}
+
+.videoHeadRank div:last-child {
+    margin-left: 5px;
+    color: orange;
+    line-height: 20px;
+}
+
+.videoList {
+    padding-right: 10px;
+    padding-top: 3px;
+}
+
+.videoList .grid {
+    position: relative;
+    width: 100%;
+    height: 130px;
+    padding: 0px 0px 10px 10px;
+    text-align: left;
+    color: black;
+}
+
+.videoList .grid>div:first-child {
+    background: #a55c5c;
+    width: 100%;
+    height: calc(~"100% - 35px");
+    height: -webkit-calc(~"100% - 35px");
+    height: -moz-calc(~"100% - 35px");
+}
+
+.videoList .grid div:first-child div {
+    font-size: 12px;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 8px;
+    background: rgba(57, 57, 57, 0.4);
+    position: absolute;
+    right: 10px;
+    bottom: 50px;
+}
+
+.videoList .grid div:first-child img {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.videoList .grid div:last-child {
+    padding-top: 5px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    line-height: 15px;
+}
+
+.videoSearchCancel {
+    width: 45px;
+    text-align: center;
+    padding-left: 10px;
+    font-weight: bold;
+    color: #777;
+}

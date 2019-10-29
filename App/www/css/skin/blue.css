@@ -1,0 +1,104 @@
+.navbar {
+	background: #307AE8;
+}
+.user-header {
+	background: #307AE8;
+}
+.login-out{
+	background: #307AE8;
+}
+.statusbar-overlay {
+	background: #307AE8;
+}
+
+.threePlusXStatisticsSearchBar,
+.threeMeetingsAndOneClassPaperDetailSearchBar,
+.threeMeetingsAndOneClassSearchBar,
+.userRankSearchBar,
+.assessSearchBar,
+.payPeopleSearchBar,
+.payShowPeopleSearchBar,
+.contactsShowPeopleSearchBar,
+.contactsPeopleSearchBar {
+	background: #307AE8;
+}
+.webim-send-btn{
+	background-color: #307AE8;
+	border: 1px solid  #307AE8;
+	
+}
+.bgColor-Red {
+	background-color: #307AE8;
+}
+.signBtnRow .button.active {
+	background: #307AE8;
+	border: 1px solid #307AE8;
+}
+.recordSub{
+	background: #307AE8;
+}
+.recCommentWindow1 button,
+.recCommentWindow button{
+	background-color: #307AE8;
+	border: 1px solid #307AE8;
+}
+.dynamicFilter{
+	border-bottom: solid 2px #307AE8;
+}
+.deptRankSearchBar{
+	background: #307AE8;
+}
+.examSearchBar{
+	background: #307AE8;
+}
+.qs-party-card .card-header{
+	background-color: #307AE8;
+}
+
+.buttonShyk,
+.buttonShykSeason,
+.buttonShykYear
+{
+	font-size: 15px;
+	border: 1px solid #307AE8;
+	color: #307AE8;
+}
+.buttonShyk.active,
+.buttonShykSeason.active,
+.buttonShykYear.active
+{
+	background:#307AE8;
+	color: #fff;
+}
+.buttonShyk1,
+.buttonShykSeason1,
+.buttonShykYear1
+{
+	font-size: 15px;
+	border: 1px solid #307AE8;
+	color: #307AE8;
+}
+.buttonShyk1.active,
+.buttonShykSeason1.active,
+.buttonShykYear1.active
+{
+	background:#307AE8;
+	color: #fff;
+}
+.recordBtnRow .button.active {
+	background: #307AE8;
+	color: #fff;
+	
+	height: 27px;
+	border: 1px solid #307AE8;
+}
+
+.recordBtnRow .button {
+	border: 1px solid #307AE8;
+	color: #307AE8;
+	height: 27px;
+	background: #fff;
+}
+.threeMeetingsAndOneClassPaperDetailSearchBarD, .shykuduSearchBar, .rankDeptSearchBar, .threePlusXStatisticsSearchBar, .threeMeetingsAndOneClassPaperDetailSearchBar, .assessmentResultPaperDetailSearchBar, .threeMeetingsAndOneClassSearchBar, .assessSearchBar, .assessPCSearchBar, .evaSearchBar, .evaLSearchBar, .userRankSearchBar, .payPeopleSearchBar, .payShowPeopleSearchBar, .contactsShowPeopleSearchBar, .contactsPeopleSearchBar{
+	background:#307AE8;
+}

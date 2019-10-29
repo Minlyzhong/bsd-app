@@ -1,0 +1,83 @@
+{{#compare role '>' -1}}
+	{{#compare role '!=' 1}}
+	<div class="searchbar assessSearchBar">
+	<div class="searchbar-input">
+		<input type="search" placeholder="考核清单的名称/关键字" id="assessSearch"/>
+		<a href="#" class="searchbar-clear assessSearchClear"></a>
+	</div>
+	<div class="searchCancelBtn">取消</div>
+	</div>
+	<div class="page-content" style="width: 30%;position: absolute;top: 0;left: 0;z-index: 0;">
+		<div class="list-block assesserLeftList">
+			<ul style="background: whitesmoke;">
+			</ul>
+		</div>
+	</div>
+	<div class="page-content" style="position: absolute;top: 0;width: 70%;right: 0;z-index: 0;">
+		<div class="list-block media-list kpi-content-list assesserRightList">
+			<ul>
+			</ul>
+		</div>
+	</div>
+	<div class="list-block media-list kpi-content-list assesserSearchList">
+		<ul style="margin-bottom: 128px;">
+		</ul>
+		<div class="assessNotFound">找不到您要查询的考核清单</div>
+	</div>
+	<!-- <div class="page-content" style="padding-top: 0px;">
+		<div class="view-refresh"><i class="icon icon-refresh"></i></div>
+		<div class="kpi-content-header" id="kpi-content-header"></div>
+		<div class="swiper-container kpi-type-swiper kpiType" style="float: left;">
+			<div class="swiper-wrapper typeWrapper">
+			</div>
+		</div>
+		<div class="swiper-container kpi-content-swiper">
+			<div class="swiper-wrapper contentWrapper">
+			</div>
+		</div>
+	</div> -->
+	{{else}}
+	<div class="leaderInfo">
+		<div class="kpi-a-header">
+			<div class="row no-gutter">
+				<div class="col-50 row-header b-b r-first">
+					<span class="span1 peopleTotal">--</span>
+					<span class="span2">(总人数)</span>
+				</div>
+				<div class="col-50 row-header b-b">
+					<span class="span1 assessCount">--</span>
+					<span class="span2">(考核总次数)</span>
+				</div>
+			</div>
+			<div class="kpi-a-list-item-subTitle" style="padding: 15px 10px;">
+				<div>
+					<i class="icon kpi-icon-people"></i>
+					<span>(人数/人)</span>
+				</div>
+				<div>
+					<i class="icon kpi-icon-count"></i>
+					<span>(考核次数/次)</span>
+				</div>
+				<div>
+					<i class="icon kpi-icon-score"></i>
+					<span>(考核总分/分)</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="page-content leaderDetailPage" style="padding-top: 0px;padding-bottom: 230px;">
+		<!-- <div class="pull-to-refresh-layer">
+			<div class="preloader"></div>
+			<div class="pull-to-refresh-arrow"></div>
+		</div> -->
+		<div class="list-block media-list kpi-a-list">
+			<ul>
+			</ul>
+		</div>
+	</div>
+	{{/compare}}
+{{else}}
+<div class="page-content">
+<div class="assessLogin">考核页面需要登录您的账号方可查看<br />点击登录</div>
+</div>
+{{/compare}}

@@ -1,0 +1,216 @@
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">职务：</div>
+		<div class="item-input">
+			<input type="text" placeholder="填写职务" id="officerName" name="officerName" value="{{officerName}}" />
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">身份证：</div>
+		<div class="item-input">
+			<input type="text" placeholder="填写身份证" id="cardNo" name="cardNo" value="{{cardNo}}" />
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">入党时间：</div>
+		<div class="item-input">
+			<input type="text" placeholder="填写入党时间" id="partyTime" name="partyTime" value="{{partyTime}}" readonly/>
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">出生日期：</div>
+		<div class="item-input">
+			<input type="text" placeholder="填写出生日期" id="birthday" name="birthday" value="{{birthday}}" readonly />
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">参加工作时间：</div>
+		<div class="item-input">
+			<input type="text" placeholder="填写工作时间" id="workTime" name="workTime" value="{{workTime}}" readonly />
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">性别：</div>
+		<div class="item-input">
+			<select id="sex" name="sex">
+				{{#each sexArr}}
+					{{#compare subKey 'equalNumber' ../sex}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">政治面貌：</div>
+		<div class="item-input">
+			<select id="politics" name="politics">
+				{{#each politicsArr}}
+					{{#compare  subKey 'equalNumber' ../politics}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">民族：</div>
+		<div class="item-input">
+			<select id="minority" name="minority">
+				{{#each minorityArr}}
+					{{#compare subKey 'equalNumber' ../minority}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">学历：</div>
+		<div class="item-input">
+			<select id="educat" name="educat">
+				{{#each educationArr}}
+					{{#compare subKey 'equalNumber' ../educat}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">婚姻状况：</div>
+		<div class="item-input">
+			<select id="marital" name="marital">
+				{{#each maritalArr}}
+					{{#compare subKey 'equalNumber' ../marital}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">人员分类：</div>
+		<div class="item-input">
+			<select id="ryfl" name="ryfl">
+				{{#each ryflArr}}
+					{{#compare subKey 'equalNumber' ../ryfl}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">人员编制：</div>
+		<div class="item-input">
+			<select id="rybz" name="rybz">
+				{{#each rybzArr}}
+					{{#compare subKey 'equalNumber' ../rybz}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">职业分类：</div>
+		<div class="item-input">
+			<select id="zyfl" name="zyfl">
+				{{#each zyflArr}}
+					{{#compare subKey 'equalNumber' ../zyfl}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">在职状态：</div>
+		<div class="item-input">
+			<select id="zzzt" name="zzzt">
+				{{#each zzztArr}}
+					{{#compare subKey 'equalNumber' ../zzzt}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">行政职务：</div>
+		<div class="item-input">
+			<select id="xzzw" name="xzzw">
+				{{#each xzzwArr}}
+					{{#compare subKey 'equalNumber' ../xzzw}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">职务级别：</div>
+		<div class="item-input">
+			<select id="zwjb" name="zwjb">
+				{{#each zwjbArr}}
+					{{#compare subKey 'equalNumber' ../zwjb}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>

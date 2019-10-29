@@ -1,0 +1,17 @@
+{{#.}}
+<div class="appContentList">
+	<div class="MenuList" data-option="on">{{menuName}}</div>
+	<div class="row no-gutter appList">
+		{{#each children}}
+		{{#compare appUrl '!=' -1}}
+		<div class="col-25 grid" data-id="{{appUrl}}" data-name="{{appName}}">
+			<a>
+				<img src="{{appBasePath}}{{appIcon}}" />
+				<span>{{appName}}</span>
+			</a>
+		</div>
+		{{/compare}}
+		{{/each}}
+	</div>
+</div>
+{{/.}}

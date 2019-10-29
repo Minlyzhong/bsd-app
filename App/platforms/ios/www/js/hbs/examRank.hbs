@@ -1,0 +1,36 @@
+{{#.}}
+<li>
+	<div class="item-content" data-id="{{id}}" data-score="{{totalScore}}" data-rank="{{rank}}" data-useTime="{{useTime}}" data-userName="{{userName}}" data-yes="{{yes}}">
+		<div class="item-media media-avater">
+			{{#examRank_rank rank}}{{/examRank_rank}}
+		</div>
+		<div class="rankInner">
+			<div class="item-media rankImg">
+				{{#compare headPic '==' ''}}
+				<img src="img/avater.png" />
+				{{else}}
+				<img src="{{basePath}}{{headPic}}"/>			
+				{{/compare}}
+			</div>
+			<div class="rankTitleRow">
+				{{#compare rank '!=' 0}}
+				<div class="item-title">
+					{{#compare own '==' 1}}
+						您
+					{{else}}
+						{{userName}}
+					{{/compare}}</div>
+				<div class="item-after rankPoint">{{useTime}}</div>
+				{{else}}
+				<div class="item-title" style="line-height: 2.5;font-size: 16px;">您还没上榜，再接再厉！</div>
+				{{/compare}}
+			</div>
+			<div class="item-subtitle rankMinute">
+				{{#compare rank '!=' 0}}
+				<span class="">{{totalScore}}分</span>
+				{{/compare}}
+			</div>
+		</div>
+	</div>
+</li>
+{{/.}}

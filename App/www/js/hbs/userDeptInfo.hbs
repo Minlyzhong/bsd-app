@@ -1,0 +1,47 @@
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">姓名</div>
+			<div class="item-after item-label" style="text-overflow: ellipsis;overflow: hidden;display: block;">{{name}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">人员编号</div>
+			<div class="item-after item-label">{{userNo}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">手机号码</div>
+			<div class="item-after item-label">{{phone}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">所属党委</div>
+			<div class="item-after item-label">{{deptName}}</div>
+		</div>
+	</a>
+</li>
+{{#compare partyTypeArr '!=' undefined}}
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">党组织类型</div>
+			{{#each partyTypeArr}}
+					{{#compare subKey 'equalNumber' ../partyType}}
+					<div class="item-after item-label" style="text-overflow: ellipsis;overflow: hidden;display: block;">{{subVal}}</div>
+					
+					{{/compare}}
+				{{/each}}
+		</div>
+	</a>
+</li>
+{{/compare}}

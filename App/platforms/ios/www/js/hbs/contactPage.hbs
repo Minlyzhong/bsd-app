@@ -1,0 +1,78 @@
+{{#compare role '>' -1}}
+<div class="" style="margin-top: 44px;">
+	<div class="searchbar contactsPeopleSearchBar">
+		<div class="searchbar-input">
+			<input type="search" placeholder="搜索" id="contactsPeopleSearch" />
+			<a href="#" class="searchbar-clear payPeopleSearchClear"></a>
+		</div>
+		<div class="searchCancelBtn">取消</div>
+	</div>
+</div>
+<div class="contactSearchBar">
+	<div class="content-block-title">请输入筛选条件</div>
+	<div class="list-block inputs-list inset">
+		<ul>
+			<li class="contactName">
+				<div class="item-content">
+					<div class="item-inner">
+						<div class="item-title label">人员名称</div>
+						<div class="item-input">
+							<input type="text" id="contactName" name="contactName" placeholder="人员名称" />
+						</div>
+					</div>
+				</div>
+			</li>
+			<li class="deptContactName" style="display: none;">
+				<div class="item-content">
+					<div class="item-inner">
+						<div class="item-title label">部门名称</div>
+						<div class="item-input">
+							<input type="text" id="deptName" name="deptName" placeholder="部门名称" />
+						</div>
+					</div>
+				</div>
+			</li>
+			<li class="contactsId">
+				<div class="item-content">
+					<div class="item-inner">
+						<div class="item-title label">查询类型</div>
+						<div class="item-input" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position: 80px 17px;">
+							<select id="contactsId">
+							</select>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li>
+				<div class="m-t-10 row">
+					<div class="col-25">
+						<a href="#" class="button resetBtn color-green button-big active1">清空</a>
+					</div>
+					<div class="col-50">
+						<a href="#" class="button searchBtn button-big active1">完成</a>
+					</div>
+					<div class="col-25">
+						<a href="#" class="button contactSearchClose color-red button-big active1">取消</a>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+<div class="page-content contactContent" style="padding-top: 0px; background: white;">
+	<div class="content-block-title1">选择单位</div>
+	<div class="contactMenu">
+	</div>
+</div>
+<div class="contactSearch page-content infinite-scroll" style="display: none; padding-top: 0px;">
+	<div class="list-block media-list contactSearchList " style="display: block; top: 0px;margin-bottom: 130px;">
+		<ul>
+		</ul>
+		<div class="contactsNotFound">找不到您要查询人员</div>
+		<div class="contactsDeptNotFound">找不到您要部门</div>
+	</div>
+</div>
+
+{{else}}
+<div class="assessLogin"style="margin-top: 40px;padding: -webkit-calc(50% + 44px) 10px; padding: calc(50% + 44px) 10px;">通讯录页面需要登录您的账号方可查看<br />点击登录</div>
+{{/compare}}

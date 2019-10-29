@@ -1,0 +1,16 @@
+<li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">党组织类型：</div>
+		<div class="item-input">
+			<select id="partyType" name="partyType">
+				{{#each partyTypeArr}}
+					{{#compare subKey 'equalNumber' ../partyType}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
+					{{else}}
+					<option value="{{subKey}}">{{subVal}}</option>
+					{{/compare}}
+				{{/each}}
+			</select>
+		</div>
+	</div>
+</li>

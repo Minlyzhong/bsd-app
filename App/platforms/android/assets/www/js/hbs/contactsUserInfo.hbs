@@ -1,0 +1,74 @@
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">手机号码</div>
+			<div class="item-after item-label">{{mobilePhone}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">人员编号</div>
+			<div class="item-after item-label">{{userNo}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">所属组织</div>
+			<div class="item-label" style="text-align: right;width: 65%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;color: #8e8e93;">{{deptName}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">性别</div>
+			{{#compare sex '==' 0}}
+			<div class="item-after item-label">男</div>
+			{{/compare}}
+			{{#compare sex '==' 1}}
+			<div class="item-after item-label">女</div>
+			{{/compare}}
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">职务</div>
+			<div class="item-label" style="text-align: right;width: 65%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;color: #8e8e93;">{{officerName}}</div>
+		</div>
+	</a>
+</li>
+<li class="time">
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">入党时间</div>
+			<div class="item-after item-label">{{partyTime}}</div>
+		</div>
+	</a>
+</li>
+<!--<li class="ownDaily" style="height:100px">
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title"  style="line-height:85px;overflow:hidden;">个人日志</div>
+			<div class="item-after item-label">
+				<img src='img/logo.png' class='ownDailyPic1'/>
+				<img src='img/u3.jpg' class='ownDailyPic2'/>
+				<img src='img/logo.png' class='ownDailyPic3'/>
+				<img src='img/logo.png' class='ownDailyPic4'/>
+			</div>
+		</div>
+	</a>
+</li>-->
+<!--<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">身份证</div>
+			<div class="item-after item-label">{{cardNo}}</div>
+		</div>
+	</a>
+</li>-->

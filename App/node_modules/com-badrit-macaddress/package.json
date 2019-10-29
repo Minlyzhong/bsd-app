@@ -1,0 +1,51 @@
+{
+  "_from": "git+https://github.com/mohamed-salah/MacAddress.git",
+  "_id": "com-badrit-macaddress@0.2.1",
+  "_inBundle": false,
+  "_integrity": "sha1-dJvDg7BEtYjf168Y/8cmzyGjWGc=",
+  "_location": "/com-badrit-macaddress",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "https://github.com/mohamed-salah/MacAddress.git",
+    "rawSpec": "https://github.com/mohamed-salah/MacAddress.git",
+    "saveSpec": "git+https://github.com/mohamed-salah/MacAddress.git",
+    "fetchSpec": "https://github.com/mohamed-salah/MacAddress.git",
+    "gitCommittish": "master"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/mohamed-salah/MacAddress.git#1c6d4c688a045ec571515cdc992ba7fd86119383",
+  "_spec": "https://github.com/mohamed-salah/MacAddress.git",
+  "_where": "D:\\APP2",
+  "bugs": {
+    "url": "https://github.com/mohamed-salah/MacAddress/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "com-badrit-macaddress",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "deprecated": false,
+  "description": "Cordova MacAddress Plugin",
+  "homepage": "https://github.com/mohamed-salah/MacAddress#readme",
+  "keywords": [
+    "cordova",
+    "macaddress",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "license": "MIT",
+  "name": "com-badrit-macaddress",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohamed-salah/MacAddress.git"
+  },
+  "version": "0.2.1"
+}

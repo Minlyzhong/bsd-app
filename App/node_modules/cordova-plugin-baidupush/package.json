@@ -1,0 +1,63 @@
+{
+  "Author": {
+    "name": "xyz",
+    "mail": "xuyazhou@126.com"
+  },
+  "_from": "cordova-plugin-baidupush",
+  "_id": "cordova-plugin-baidupush@1.0.5",
+  "_inBundle": false,
+  "_integrity": "sha1-n+MEC34YiVWeV/M2v5jYxlbg/Oo=",
+  "_location": "/cordova-plugin-baidupush",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-baidupush",
+    "name": "cordova-plugin-baidupush",
+    "escapedName": "cordova-plugin-baidupush",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-baidupush/-/cordova-plugin-baidupush-1.0.5.tgz",
+  "_shasum": "9fe3040b7e1889559e57f336bf98d8c656e0fcea",
+  "_spec": "cordova-plugin-baidupush",
+  "_where": "D:\\APP2",
+  "bugs": {
+    "url": "https://github.com/EtherZhou/baidupush/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-baidupush",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "deprecated": false,
+  "description": "\n    This plugin binds appId, userId, channelId of BaiduYun Push.\n    It also accepts messages pushed by BaiduYun.\n",
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=4.0.0"
+    }
+  ],
+  "homepage": "https://github.com/EtherZhou/baidupush#readme",
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "BaiduYun",
+    "Push"
+  ],
+  "name": "cordova-plugin-baidupush",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EtherZhou/baidupush.git"
+  },
+  "version": "1.0.5"
+}

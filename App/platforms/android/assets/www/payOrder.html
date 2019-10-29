@@ -1,0 +1,81 @@
+<div data-page="payment/payOrder" class="page navbar-fixed no-tabbar">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left ">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center ">缴费内容</div>
+			<div class="right">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="content-block-title">缴纳信息</div>
+		<div class="list-block">
+			<ul>
+				<li class="swipeout">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">缴款人</div>
+							<div class="item-input">
+								<input type="text" id="payPeople" name="payPeople" value="" placeholder="向左滑动添加缴款人" readonly/>
+							</div>
+						</div>
+					</div>
+					<div class="swipeout-actions-right">
+						<a href="#" class="swipeout-close addPayPeople" style="background-color: #1296DB;">添加</a>
+						<a href="#" class="swipeout-close bg-red rmPayPeople">移除</a>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">从几月</div>
+							<div class="item-input">
+								<input type="text" id="payBeginMonth" name="payBeginMonth" placeholder="选择开始缴纳月份" readonly/>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">到几月</div>
+							<div class="item-input">
+								<input type="text" id="payEndMonth" name="payEndMonth" placeholder="选择停止缴纳月份" readonly/>
+							</div>
+						</div>
+					</div>
+				</li>
+				<!--<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">缴纳月数</div>
+							<div class="item-input">
+								<input type="text" id="payMonths" name="payMonths" placeholder="" value="1" readonly/>
+							</div>
+						</div>
+					</div>
+				</li>-->
+				<!--<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">缴纳总额</div>
+							<div class="item-input">
+								<input type="text" id="payBill" name="payBill" placeholder="请补全缴纳信息" readonly/>
+							</div>
+						</div>
+					</div>
+				</li>-->
+			</ul>
+		</div>
+		<div class="m-t-10">
+			<ul style="padding: 0px;">
+				<li>
+					<a href="#" class="button createOrder">生成订单</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

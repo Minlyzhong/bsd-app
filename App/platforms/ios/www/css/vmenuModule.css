@@ -1,0 +1,79 @@
+.u-vmenu,
+.contactMenu {
+	margin-bottom: 160px;
+}
+.u-vmenu ul li ,
+.contactMenu ul li ,
+.firstMenu ul li {
+	list-style: none;	
+}
+
+.u-vmenu ul li a,
+.contactMenu ul li a,
+.firstMenu ul li a{
+	/*width: 100%;*/
+	list-style: none;
+	/*background: url(../img/vmenu/zakladka.png) left top no-repeat;*/
+	/*background-size: 100% 40px;*/
+	background: url(../img/newIcon/icon_branch_arrows_right.png) no-repeat;
+	background-size:12px 12px;
+	background-position:12px 15px;
+	
+}
+
+.u-vmenu ul ul,
+.contactMenu ul ul,
+.firstMenu ul ul {
+	display: none;
+	padding-left: 30px;
+}
+
+.u-vmenu ul li a,
+.contactMenu ul li a,
+.firstMenu ul li a {
+	padding-left: 10%;
+	height: 45px;
+	line-height: 42px;
+	display: block;
+	font-size: 17px;
+	color: black;
+	text-decoration: none;
+	outline: none;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.u-vmenu ul li a[data-option='on'],
+.contactMenu ul li a[data-option='on']{
+	/*background: url(../img/vmenu/on.png) right center no-repeat;*/
+	background: url(../img/newIcon/icon_branch_arrows_down.png) left top no-repeat;
+	background-size:12px 12px;
+	background-position:12px 15px;
+	/*background-position-x: calc(100% - 64px);
+	background-position-x: -webkit-calc(100% - 64px);*/
+}
+
+.firstMenu ul li a[data-option='on'] {
+	/*background: url(../img/vmenu/on.png) right center no-repeat;*/
+	background: url(../img/newIcon/icon_branch_arrows_down.png) left top no-repeat;
+	background-size:12px 12px;
+	background-position:12px 15px;
+}
+
+.u-vmenu ul li a[data-option='off'],
+.contactMenu ul li a[data-option='off']{
+	/*background: url(../img/vmenu/off.png) right center no-repeat;*/
+	background: url(../img/newIcon/icon_branch_arrows_right.png) left top no-repeat;
+	background-size:12px 12px;
+	background-position:12px 15px;
+	/*background-position-x: calc(100% - 64px);
+	background-position-x: -webkit-calc(100% - 64px);*/
+}
+
+.firstMenu ul li a[data-option='off']{
+	/*background: url(../img/vmenu/off.png) right center no-repeat;*/
+	background: url(../img/newIcon/icon_branch_arrows_right.png) left top no-repeat;
+	background-size:12px 12px;
+	background-position:12px 15px;
+}

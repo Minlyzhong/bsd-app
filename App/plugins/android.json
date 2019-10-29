@@ -1,0 +1,64 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "com.bestinfo.QSD"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "com.bestinfo.QSD"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.bestinfo.QSD"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "com.bestinfo.QSD"
+    },
+    "cordova-plugin-image-picker": {
+      "PACKAGE_NAME": "com.bestinfo.QSD"
+    },
+    "phonegap-plugin-barcodescanner": {
+      "PACKAGE_NAME": "com.bestinfo.QSD"
+    },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "com.bestinfo.QSD"
+    },
+    "org.devgeeks.Canvas2ImagePlugin": {
+      "PACKAGE_NAME": "com.bestinfo.TXDJ"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.bestinfo.TXDJ"
+    },
+    "call-number": {
+      "PACKAGE_NAME": "com.bestinfo.TXDJ"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.bestinfo.TXDJ"
+    },
+    "com-badrit-macaddress": {
+      "PACKAGE_NAME": "com.bestinfo.TXDJ"
+    },
+    "cordova-plugin-battery-status": {
+      "PACKAGE_NAME": "com.bestinfo.TXDJ"
+    },
+    "cordova-plugin-baidupush": {
+      "PACKAGE_NAME": "com.bestinfo.TXDJ"
+    },
+    "cordova-plugin-android-permissions": {
+      "PACKAGE_NAME": "com.bestinfo.HPDJ"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.bestinfo.QSD"
+    },
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "com.bestinfo.QSD"
+    }
+  }
+}

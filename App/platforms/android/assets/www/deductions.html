@@ -1,0 +1,56 @@
+<div data-page="user/deductions" class="page navbar-fixed no-tabbar page-on-center">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left ">
+				<a href="#" class="link icon-only recordNewBacks"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center " style="left: 17px;">新建扣分项</div>
+			<div class="right">
+				<a href="#" class="link icon-only"><i class="icon icon-home recordNewHome"></i></a>
+				<div class="saveRecord">保存</div>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="list-block">
+			<ul>
+				<li class="swipeout">
+					<div class="item-content">
+						<div class="item-inner">
+							<input type="hidden" name="dedname" id="hiddenSearch" value="" />
+							<div class="item-title kp-label">被扣分人员:</div>
+							<div class="item-input">
+								<input type="text" id="recordSend" style="font-size: 14px;" name="recordSend" value="" placeholder="默认选择上级组织(向左滑动添加其他)" readonly="">
+							</div>
+						</div>
+					</div>
+					<div class="swipeout-actions-right">
+						<a href="#" class="swipeout-close addLeader" style="background-color: #1296DB;">添加</a>
+						<a href="#" class="swipeout-close bg-red removeLeader">移除</a>
+					</div>
+				</li>
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">扣分原因:</div>
+							<div class="item-input" style="margin-left: -2px;">
+								<textarea id="recordContent" name="recordContent" placeholder="请输入扣分原因" style="width:100%;height:200px;"></textarea>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title  kp-label">扣分类型:</div>
+							<div class="item-input" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position: 200px 17px;">
+								<select id="recordType">
+								</select>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

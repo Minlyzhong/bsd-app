@@ -1,0 +1,22 @@
+{{#.}}
+<li>
+	<a data-id="{{id}}" data-topicId="{{topicId}}" data-userName="{{name}}" data-score="+{{score}}" data-memo="{{remarks}}" data-title="{{topicTitle}}" data-reportState="0" data-deptname="{{deptName}}" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-subtitle" style="font-size: 14px;padding-top: 5px;">
+				<div style="font-size: 13px;">
+					<!--<span class="color-orange">{{reportTs}}</span>-->
+					<span class="color-orange">{{reportTime}}</span>
+				</div>
+			</div>
+			<div style="margin-top: 10px;font-size: 15px;">
+				{{#compare name.length '<=' 5}}
+				<span class="color-gray"><span class="userName" style="color: #369;    font-weight: bold;">{{deptName}}-{{name}}</span>上报了考核明细，标题为《<span class="reportName" style="color: #369;    font-weight: bold;">{{reportTitle}}</span>》<span style="color: #369;    font-weight: bold;">+{{score}}</span></span>
+				{{/compare}}
+				{{#compare name.length '>' 5}}
+				<span class="color-gray"><span class="userName" style="color: #369;    font-weight: bold;">{{name}}</span>上报了考核明细，标题为《<span class="reportName" style="color: #369;    font-weight: bold;">{{reportTitle}}</span>》<span style="color: #369;    font-weight: bold;">+{{score}}</span></span>
+				{{/compare}}
+			</div>
+		</div>
+	</a>
+</li>
+{{/.}}

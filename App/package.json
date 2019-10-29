@@ -1,0 +1,37 @@
+{
+  "name": "com.bestinfo.txdj",
+  "version": "1.0.0",
+  "displayName": "藤县党建",
+  "cordova": {
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-whitelist": {},
+      "org.devgeeks.Canvas2ImagePlugin": {},
+      "cordova-plugin-splashscreen": {},
+      "call-number": {},
+      "cordova-plugin-device": {},
+      "com-badrit-macaddress": {},
+      "cordova-plugin-battery-status": {},
+      "cordova-plugin-baidupush": {},
+      "cordova-plugin-android-permissions": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-camera": {}
+    }
+  },
+  "dependencies": {
+    "call-number": "git+https://github.com/Rohfosho/CordovaCallNumberPlugin.git",
+    "com-badrit-macaddress": "git+https://github.com/mohamed-salah/MacAddress.git",
+    "cordova-android": "~5.2.2",
+    "cordova-plugin-android-permissions": "^1.0.0",
+    "cordova-plugin-baidupush": "^1.0.5",
+    "cordova-plugin-barcodescanner": "^0.7.4",
+    "cordova-plugin-battery-status": "^1.2.4",
+    "cordova-plugin-canvas2image": "git+https://github.com/devgeeks/Canvas2ImagePlugin.git",
+    "cordova-plugin-device": "^1.1.6",
+    "cordova-plugin-splashscreen": "^4.0.3",
+    "cordova-plugin-whitelist": "1",
+    "org.devgeeks.Canvas2ImagePlugin": "https://github.com/devgeeks/Canvas2ImagePlugin.git"
+  }
+}

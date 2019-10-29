@@ -1,0 +1,30 @@
+{{#.}}
+	<li>
+		<a href="#" class="item-link item-content assessLeaderContent" data-id="{{deptId}}" data-name="{{deptName}}" data-unCT="{{unCompletedTotal}}" data-CT="{{completedTotal}}">
+			<div class="item-media">
+				<i class="icon kpi-group"></i>
+			</div>
+			<div class="item-inner">
+				<div class="item-title-row">
+					<div class="item-title kpi-a-list-item-title getDeptName">{{deptName}}</div>
+					<div class="item-after kpi-a-list-item-after">参与度:{{completedPercent}}%</div>
+				</div>
+				<div class="item-subtitle kpi-a-list-item-sb">更新时间: {{date}}</div> 
+				<div class="kpi-a-list-item-subTitle">
+					<div>
+						<i class="icon kpi-icon-people"></i>
+						<span>{{total}}</span>
+					</div>
+					<div>
+						<i class="icon icon-UDone"></i>
+						<span>{{unCompletedTotal}}</span>
+					</div>
+					<div>
+						<i class="icon icon-Done"></i>
+						<span>{{completedTotal}}</span>
+					</div>
+				</div>
+			</div>
+		</a>
+	</li>
+{{/.}}

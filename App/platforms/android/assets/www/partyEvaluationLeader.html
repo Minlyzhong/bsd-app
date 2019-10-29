@@ -1,0 +1,158 @@
+<div data-page="party/partyEvaluationLeader" class="page assessmentPage no-tabbar navbar-fixed">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left ">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center evaLeaderHeader"></div>
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="buttons-row partyDynamicsSelect" style='margin-top: 44px;'>
+        <a href="#tab1" class="tab-link active button buttonShyk">月份</a>
+        <a href="#tab2" class="tab-link button buttonShykSeason">季度</a>
+        <a href="#tab3" class="tab-link button buttonShykYear">年度</a>
+	</div>
+	<div class="assessContent" style="background: white;margin-top: 0px;height: 100%;width: 100%;">
+		<div class="searchbar evaLSearchBar">
+			<div class="searchbar-input">
+				<input type="search" placeholder="考核考评的名称/关键字" id="evaLSearch" />
+				<!--<a href="#" class="searchbar-clear evaLSearchClear"></a>-->
+			</div>
+			<div class="evaLSearchCancelBtn">取消</div>
+		</div>
+		<div class="page-content evaLTab" style="padding-top: 0px;">
+        <div class="tabs-animated-wrap">
+        	<div class="tabs">
+        		<!--月度-->
+          		<div id="tab1" class="tab active">
+          			<div class="evaLTime list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 85px;"></i>
+					            <input type="text" placeholder="选择日期" id="picker-describe" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+					<div class="subnavbar LeaderMonth" style="background: #FFFFFF;">
+					    <div class="buttons-row">
+					        <a href="#" class="evaDone button tab-link active">已完成<span class="evaBadgeD bg-green" style="display: none;">3</span></a>
+					        <a href="#" class="evaUDone button tab-link">未完成<span class="evaBadgeUD bg-red" style="display: none;">3</span></a>
+					    </div>
+					</div>
+					<div class="page-content pull-to-refresh-content infinite-scroll evaLmonth" style="padding-top:44px;">
+						<!--向下拉更新
+						<div class="pull-to-refresh-layer" style="margin-top: -76px;">
+							<div class="preloader"></div>
+							<div class="pull-to-refresh-arrow"></div>
+						</div>-->
+						<div class="evaLList" style="margin:0px 0px 0px 0px;background: #FFFFFF;">
+							<ul class="list-block" style="margin: 0px;-webkit-padding-start: 0px;padding-bottom: 200px;">
+
+							</ul>
+						</div>
+					</div>
+          		</div>
+          		<!--季度-->
+	          	<div id="tab2" class="tab" style="position: relative;">
+	            	<div class="evaLTimeSeason list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left:70px;"></i>
+					            <input type="text" placeholder="选择季度" id="picker-describeSeason" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+					<div class="subnavbar LeaderSeason" style="background: #FFFFFF;">
+					    <div class="buttons-row">
+					        <a href="#" class="evaDone button tab-link active">已完成<span class="evaBadgeDSeason bg-green" style="display: none;">3</span></a>
+					        <a href="#" class="evaUDone button tab-link">未完成<span class="evaBadgeUDSeason bg-red" style="display: none;">3</span></a>
+					    </div>
+					</div>
+					<div class="page-content pull-to-refresh-content infinite-scroll evaLSeason" style="padding-top: 44px;">
+						<!--向下拉更新
+						<div class="pull-to-refresh-layer" style="margin-top: -76px;">
+							<div class="preloader"></div>
+							<div class="pull-to-refresh-arrow"></div>
+						</div>-->
+						<div class="evaLListSeason" style="margin:0px 0px 0px 0px;background: #FFFFFF;">
+							<ul class="list-block" style="margin: 0px;-webkit-padding-start: 0px;padding-bottom: 200px;">
+
+							</ul>
+						</div>
+					</div>
+          		</div>
+	          	<!--年份-->
+	            <div id="tab3" class="tab" style="position: relative;">
+	            	<div class="evaLTimeYear list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 100px;"></i>
+					            <input type="text" placeholder="选择年份" id="picker-describeYear" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>   
+					<div class="subnavbar LeaderYear" style="background: #FFFFFF;">
+					    <div class="buttons-row">
+					        <a href="#" class="evaDone button tab-link active">已完成<span class="evaBadgeDYear bg-green" style="display: none;">3</span></a>
+					        <a href="#" class="evaUDone button tab-link">未完成<span class="evaBadgeUDYear bg-red" style="display: none;">3</span></a>
+					    </div>
+					</div>
+					<div class="page-content pull-to-refresh-content infinite-scroll evaLYear" style="padding-top: 44px;">
+						<!--向下拉更新
+						<div class="pull-to-refresh-layer" style="margin-top: -76px;">
+							<div class="preloader"></div>
+							<div class="pull-to-refresh-arrow"></div>
+						</div>-->
+						<div class="evaLListYear" style="margin:0px 0px 0px 0px;background: #FFFFFF;">
+							<ul class="list-block" style="margin: 0px;-webkit-padding-start: 0px;padding-bottom: 200px;">
+								
+							</ul>
+						</div>
+					</div>
+				</div>
+        	</div>
+     	 </div> 
+     	 </div>
+     	 <div class="evaSearchLeader" style="display: none;">
+	     	<div class="subnavbar LeaderSearch" style="background: #FFFFFF;top:105px">
+			    <div class="buttons-row">
+			        <a href="#" class="evaDone button tab-link active">已完成<span class="evaBadgeDSearch bg-green" style="display: none;">3</span></a>
+			        <a href="#" class="evaUDone button tab-link">未完成<span class="evaBadgeUDSearch bg-red" style="display: none;">3</span></a>
+			    </div>
+			</div>
+			<div class="page-content pull-to-refresh-content infinite-scroll evaLSearch" style="padding-top:50px;height: 1000px;">
+				<!--向下拉更新
+				<div class="pull-to-refresh-layer" style="margin-top: -76px;">
+					<div class="preloader"></div>
+					<div class="pull-to-refresh-arrow"></div>
+				</div>-->
+				<div class="evaLListSearch" style="margin:0px 0px 0px 0px;background: #FFFFFF;height: 1000px;">
+					<ul class="list-block" style="margin: 0px;-webkit-padding-start: 0px;padding-bottom: 600px;">
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

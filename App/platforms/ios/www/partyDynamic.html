@@ -1,0 +1,295 @@
+<div data-page="partyDynamic/partyDynamic" class="page navbar-fixed no-tabbar">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left sliding">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center sliding pageTitle">考核统计</div>
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="" style="margin-top: 44px;">
+		<div class="searchbar contactsShowPeopleSearchBar partyDynamicSearchBar">
+			<div class="searchbar-input">
+				<input type="search" placeholder="搜索" id="partyDynamicSearch" />
+				<a href="#" class="searchbar-clear partyDynamicSearchClear"></a>
+			</div>
+			<div class="searchCancelBtn">取消</div>
+		</div>
+	</div>
+	<div class="buttons-row partyDynamicsSelect">
+        <a href="#tab1" class="tab-link active button buttonShyk">月份</a>
+        <a href="#tab2" class="tab-link button buttonShykSeason">季度</a>
+        <a href="#tab3" class="tab-link button buttonShykYear">年度</a>
+	</div>
+	<div class="page-content partyDynamicsTab" style="padding-top: 0px;">
+        <div class="tabs-animated-wrap">
+        	<div class="tabs">
+        		<!--月度-->
+          		<div id="tab1" class="tab active page-content" style="padding-top: 0px;">
+          			<div class="partyDynamicsTime list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 85px;"></i>
+					            <input type="text" placeholder="选择日期" id="picker-describe" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+          			<div class="dynamicNav">
+						<div class="titleBlock">
+						</div>
+						<!--<div class="dynamicHead">
+							<div class="dynamicDate">2017-05-22</div>
+							<div class="dynamicTime" data-type="0">本周</div>
+						</div>-->
+						<div class="dynamicReport">
+							<div class="dynamicReportTitle"><span class="dynamicReportName"></span> <span class="dynamicReportTime">月</span>概况</div>
+							<div class="row no-gutter dynamicReportList dynamicMonth">
+								<div class="col-50 grid" data-type="0" style="background: url(img/icon/icon-xingcheng.png) no-repeat 5px; background-size: 22px;">总人数：<span class="people"></span></div>
+								<div class="col-50 grid" data-type="1" style="background: url(img/icon/record.png) no-repeat 5px; background-size: 22px;">日志数量(条)：<span class="workTotal"></span></div>
+								<div class="col-50 grid" data-type="2" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotal"></span></div>
+								<div class="col-50 grid" data-type="3" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPoint"></span></div>
+							</div>
+						</div>
+					</div>
+					<div class="row no-gutter dynamicFilter" style="margin: 0px;">
+						<div class="col-22 dynamicFilterContent" data-picker='0' data-pickType='1'>人数</div>
+						<div class="col-22 dynamicFilterContent" data-picker='0' data-pickType='4'>日志</div>
+						<div class="col-28 dynamicFilterContent" data-picker='0' data-pickType='3'>考核次数</div>
+						<div class="col-28 dynamicFilterContent" data-picker='0' data-pickType='2'>考核得分</div>
+					</div>
+					<div class="page-content infinite-scroll dynamicPage" style="margin-top: 0px;margin-bottom: 50px;">
+						<div class="list-block media-list dynamicList">
+							<ul>
+							</ul>
+						</div>
+						<div class="content-block searchbar-not-found partyDynamicNotFound" style="text-align: center;">该单位没有下级部门</div>
+					</div>
+          		</div>
+          		<!--季度-->
+	          	<div id="tab2" class="tab page-content" style="padding-top: 0px;">
+	            	<div class="partyDynamicsTimeSeason list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left:70px;"></i>
+					            <input type="text" placeholder="选择季度" id="picker-describeSeason" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+          			<div class="dynamicNavSeason">
+						<div class="titleBlockSeason">
+						</div>
+						<!--<div class="dynamicHead">
+							<div class="dynamicDate">2017-05-22</div>
+							<div class="dynamicTime" data-type="0">本周</div>
+						</div>-->
+						<div class="dynamicReportSeason">
+							<div class="dynamicReportTitleSeason"><span class="dynamicReportNameSeason"></span> <span class="dynamicReportTime"季度</span>概况</div>
+							<div class="row no-gutter dynamicReportList dynamicSeason">
+								<div class="col-50 grid" data-type="0" style="background: url(img/icon/icon-xingcheng.png) no-repeat 5px; background-size: 22px;">总人数：<span class="peopleSeason"></span></div>
+								<div class="col-50 grid" data-type="1" style="background: url(img/icon/record.png) no-repeat 5px; background-size: 22px;">日志数量(条)：<span class="workTotalSeason"></span></div>
+								<div class="col-50 grid" data-type="2" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotalSeason"></span></div>
+								<div class="col-50 grid" data-type="3" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPointSeason"></span></div>
+							</div>
+						</div>
+					</div>
+					<div class="row no-gutter dynamicFilterSeason" style="margin: 0px;">
+						<div class="col-22 dynamicFilterContentSeason" data-pickerSeason='0' data-pickTypeSeason='1'>人数</div>
+						<div class="col-22 dynamicFilterContentSeason" data-pickerSeason='0' data-pickTypeSeason='4'>日志</div>
+						<div class="col-28 dynamicFilterContentSeason" data-pickerSeason='0' data-pickTypeSeason='3'>考核次数</div>
+						<div class="col-28 dynamicFilterContentSeason" data-pickerSeason='0' data-pickTypeSeason='2'>考核得分</div>
+					</div>
+					<div class="page-content infinite-scroll dynamicPageSeason" style="margin-top: 0px;margin-bottom: 50px;">
+						<div class="list-block media-list dynamicListSeason">
+							<ul>
+							</ul>
+						</div>
+						<div class="content-block searchbar-not-found partyDynamicNotFound" style="text-align: center;">该单位没有下级部门</div>
+					</div>
+	          	</div>
+	          	<!--年份-->
+	            <div id="tab3" class="tab page-content" style="padding-top: 0px;">
+	            	<div class="partyDynamicsTimeYear list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 100px;"></i>
+					            <input type="text" placeholder="选择年份" id="picker-describeYear" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+          			<div class="dynamicNavYear">
+						<div class="titleBlockYear">
+						</div>
+						<!--<div class="dynamicHead">
+							<div class="dynamicDate">2017-05-22</div>
+							<div class="dynamicTime" data-type="0">本周</div>
+						</div>-->
+						<div class="dynamicReportYear">
+							<div class="dynamicReportTitleYear"><span class="dynamicReportNameYear"></span> <span class="dynamicReportTime">年</span>概况</div>
+							<div class="row no-gutter dynamicReportList dynamicYear">
+								<div class="col-50 grid" data-type="0" style="background: url(img/icon/icon-xingcheng.png) no-repeat 5px; background-size: 22px;">总人数：<span class="peopleYear"></span></div>
+								<div class="col-50 grid" data-type="1" style="background: url(img/icon/record.png) no-repeat 5px; background-size: 22px;">日志数量(条)：<span class="workTotalYear"></span></div>
+								<div class="col-50 grid" data-type="2" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotalYear"></span></div>
+								<div class="col-50 grid" data-type="3" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPointYear"></span></div>
+							</div>
+						</div>
+					</div>
+					<div class="row no-gutter dynamicFilterYear" style="margin: 0px;">
+						<div class="col-22 dynamicFilterContentYear" data-pickerYear='0' data-pickTypeYear='1'>人数</div>
+						<div class="col-22 dynamicFilterContentYear" data-pickerYear='0' data-pickTypeYear='4'>日志</div>
+						<div class="col-28 dynamicFilterContentYear" data-pickerYear='0' data-pickTypeYear='3'>考核次数</div>
+						<div class="col-28 dynamicFilterContentYear" data-pickerYear='0' data-pickTypeYear='2'>考核得分</div>
+					</div>
+					<div class="page-content infinite-scroll dynamicPageYear" style="margin-top: 0px;margin-bottom: 50px;">
+						<div class="list-block media-list dynamicListYear">
+							<ul>
+							</ul>
+						</div>
+						<div class="content-block searchbar-not-found partyDynamicNotFound" style="text-align: center;">该单位没有下级部门</div>
+					</div>
+	          	</div>       
+        	</div>
+      </div> 
+	</div>
+	
+	<div class="dynamicNavSearch" style="display: none;">
+		<div class="titleBlockSearch">
+		</div>
+		<!--<div class="dynamicHead">
+			<div class="dynamicDate">2017-05-22</div>
+			<div class="dynamicTime" data-type="0">本周</div>
+		</div>-->
+		<div class="dynamicReportSearch">
+			<div class="dynamicReportTitleSearch"><span class="dynamicReportNameSearch"></span> <span class="dynamicReportTimeSearch">年</span>概况</div>
+			<div class="row no-gutter dynamicReportList dynamicSearch">
+				<div class="col-50 grid" data-type="0" style="background: url(img/icon/icon-xingcheng.png) no-repeat 5px; background-size: 22px;">总人数：<span class="peopleSearch"></span></div>
+				<div class="col-50 grid" data-type="1" style="background: url(img/icon/record.png) no-repeat 5px; background-size: 22px;">日志数量(条)：<span class="workTotalSearch"></span></div>
+				<div class="col-50 grid" data-type="2" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotalSearch"></span></div>
+				<div class="col-50 grid" data-type="3" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPointSearch"></span></div>
+			</div>
+		</div>
+	</div>
+	<div class="row no-gutter dynamicFilterSearch" style="margin: 0px;">
+		<div class="col-22 dynamicFilterContentSearch" data-pickerSearch='0' data-pickTypeSearch='1'>人数</div>
+		<div class="col-22 dynamicFilterContentSearch" data-pickerSearch='0' data-pickTypeSearch='4'>日志</div>
+		<div class="col-28 dynamicFilterContentSearch" data-pickerSearch='0' data-pickTypeSearch='3'>考核次数</div>
+		<div class="col-28 dynamicFilterContentSearch" data-pickerSearch='0' data-pickTypeSearch='2'>考核得分</div>
+	</div>
+	<div class="page-content infinite-scroll dynamicPageSearch" style="margin-top: 5px;">
+		<div class="list-block media-list dynamicListSearch">
+			<ul>
+			</ul>
+		</div>
+		<div class="content-block searchbar-not-found partyDynamicNotFoundSearch" style="text-align: center;">该单位没有下级部门</div>
+	</div>
+	<!--<div class="dynamicNav">
+		<div class="titleBlock">
+		</div>
+		<div class="dynamicHead">
+			<div class="dynamicDate">2017-05-22</div>
+			<div class="dynamicTime" data-type="0">本周</div>
+		</div>
+		<div class="dynamicReport">
+			<div class="dynamicReportTitle"><span class="dynamicReportName"></span> <span class="dynamicReportTime">周</span>概况</div>
+			<div class="dynamicRow dynamicReportContent">
+				<div class="dynamicContent">总人数：<span class="people"></span></div>
+				<div class="dynamicContent">日志数量(条)：<span class="workTotal"></span></div>
+			</div>
+			<div class="dynamicRow dynamicReportContent">
+				<div class="dynamicContent">考核次数(次)：<span class="detialTotal"></span></div>
+				<div class="dynamicContent">考核得分(分)：<span class="detialPoint"></span></div>
+			</div>
+			<div class="row no-gutter dynamicReportList">
+				<div class="col-50 grid" data-type="0" style="background: url(img/icon/icon-xingcheng.png) no-repeat 5px; background-size: 22px;">总人数：<span class="people"></span></div>
+				<div class="col-50 grid" data-type="1" style="background: url(img/icon/record.png) no-repeat 5px; background-size: 22px;">日志数量(条)：<span class="workTotal"></span></div>
+				<div class="col-50 grid" data-type="2" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotal"></span></div>
+				<div class="col-50 grid" data-type="3" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPoint"></span></div>
+			</div>
+		</div>
+	</div>
+	<div class="row no-gutter dynamicFilter">
+		<div class="col-22 dynamicFilterContent" data-picker='0' data-pickType='1'>人数</div>
+		<div class="col-22 dynamicFilterContent" data-picker='0' data-pickType='4'>日志</div>
+		<div class="col-28 dynamicFilterContent" data-picker='0' data-pickType='3'>考核次数</div>
+		<div class="col-28 dynamicFilterContent" data-picker='0' data-pickType='2'>考核得分</div>
+	</div>
+	<div class="page-content infinite-scroll dynamicPage">
+		<div class="list-block media-list dynamicList">
+			<ul>
+			</ul>
+		</div>
+		<div class="content-block searchbar-not-found partyDynamicNotFound" style="text-align: center;">该单位没有下级部门</div>
+	</div>-->
+	<!--<div class="partyDynamicSearch">
+		<div class="content-block-title">请输入筛选条件</div>
+		<div class="list-block inputs-list inset">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">查询年份</div>
+							<div class="item-input" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position: 80px 17px;">
+								<select id="partyDynamicYear">
+								</select>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">查询季度</div>
+							<div class="item-input" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position: 80px 17px;">
+								<select id="partyDynamicSeason">
+								</select>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">各级明细</div>
+							<div class="item-input">
+								<input type="text" id="partyDynamicContext" name="assessmentContext" placeholder="输入名称/关键字" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="m-t-10 row">
+						<div class="col-25">
+							<a href="#" class="button resetBtn color-green button-big active">清空</a>
+						</div>
+						<div class="col-50">
+							<a href="#" class="button searchBtn button-big active">完成</a>
+						</div>
+						<div class="col-25">
+							<a href="#" class="button partyDynamicSearchClose color-red button-big active">取消</a>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>-->
+</div>

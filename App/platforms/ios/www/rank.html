@@ -1,0 +1,229 @@
+<div data-page="rank/rank" class="page no-tabbar rankPage">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center">考核统计</div>
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+				<!--<a href="#" class="link icon-only rankDetail"><i class="icon icon-study"></i></a>-->
+			</div>
+		</div>
+	</div>
+	<!--搜索-->
+	<div class="searchRank" style="margin-top: 44px;display: none;">
+		<div class="searchbar contactsShowPeopleSearchBar rankDeptSearchBar">
+			<div class="searchbar-input">
+				<input type="search" placeholder="搜索" id="rankDeptSearch" />
+				<a href="#" class="searchbar-clear rankDeptClear"></a>
+			</div>
+			<div class="searchCancelBtn">取消</div>
+		</div>
+	</div>
+	<div class="buttons-row rankSelect">
+		        <a href="#tab1" class="tab-link active button buttonShyk">月份</a>
+		        <a href="#tab2" class="tab-link button buttonShykSeason">季度</a>
+		        <a href="#tab3" class="tab-link button buttonShykYear">年度</a>
+	</div>
+	<div class="page-content rankTab" style="padding-top: 0px;">
+        <div class="tabs-animated-wrap">
+        	<div class="tabs">
+        		<!--月度-->
+          		<div id="tab1" class="tab active page-content" style="padding-top: 0px;">
+          			<div class="rankTimeMonth list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 85px;"></i>
+					            <input type="text" placeholder="选择日期" id="picker-describe" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+					<div class="leaderInfo" style="margin-top: 0px;">
+						<div class="kpi-a-header">
+							<div class="row no-gutter" style="height: 60px;">
+								<div class="col-50 row-header b-b r-first" style='padding-top: 0px;height: 60px;'>
+									<span class="span1 peopleTotal" style="font-size: 20px;">--</span>
+									<span class="span2" style="font-size: 14px;">(总人数)</span>
+								</div>
+								<div class="col-50 row-header b-b" style='padding-top: 0px;height: 60px;'>
+									<span class="span1 assessCount" style="font-size: 20px;">--</span>
+									<span class="span2" style="font-size: 14px;">(考核总次数)</span>
+								</div>
+							</div>
+							<div class="kpi-a-list-item-subTitle">
+								<div>
+									<i class="icon kpi-icon-people"></i>
+									<span>(人数/人)</span>
+								</div>
+								<div>
+									<i class="icon kpi-icon-count"></i>
+									<span>(考核次数/次)</span>
+								</div>
+								<div>
+									<i class="icon kpi-icon-score"></i>
+									<span>(考核总分/分)</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="page-content leaderDetailPage infinite-scroll" style="padding-top: 0px;margin-top: 10px;padding-bottom: 25px;">
+						<div class="list-block media-list kpi-a-list" style="margin-top: 0px;margin-bottom: 300px;">
+							<ul>
+							</ul>
+						</div>
+					</div>
+          		</div>
+          		<!--季度-->
+	          	<div id="tab2" class="tab page-content" style="padding-top: 0px;">
+	            	<div class="rankTimeSeason list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left:70px;"></i>
+					            <input type="text" placeholder="选择季度" id="picker-describeSeason" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+					<div class="leaderInfoSeason" style="margin-top: 0px;">
+						<div class="kpi-a-header">
+							<div class="row no-gutter" style="height: 60px;">
+								<div class="col-50 row-header b-b r-first" style='padding-top: 0px;height: 60px;'>
+									<span class="span1 peopleTotalSeason" style="font-size: 20px;">--</span>
+									<span class="span2" style="font-size: 14px;">(总人数)</span>
+								</div>
+								<div class="col-50 row-header b-b" style='padding-top: 0px;height: 60px;'>
+									<span class="span1 assessCountSeason" style="font-size: 20px;">--</span>
+									<span class="span2" style="font-size: 14px;">(考核总次数)</span>
+								</div>
+							</div>
+							<div class="kpi-a-list-item-subTitle">
+								<div>
+									<i class="icon kpi-icon-people"></i>
+									<span>(人数/人)</span>
+								</div>
+								<div>
+									<i class="icon kpi-icon-count"></i>
+									<span>(考核次数/次)</span>
+								</div>
+								<div>
+									<i class="icon kpi-icon-score"></i>
+									<span>(考核总分/分)</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="page-content infinite-scroll leaderDetailPageSeason" style="padding-top: 0px;margin-top: 10px;padding-bottom: 25px;">
+						<div class="list-block media-list kpi-a-list" style="margin-top: 0px;margin-bottom: 300px;">
+							<ul>
+							</ul>
+						</div>
+					</div>
+	          	</div>
+	          	<!--年份-->
+	            <div id="tab3" class="tab page-content" style="padding-top: 0px;">
+	            	<div class="rankTimeYear list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 100px;"></i>
+					            <input type="text" placeholder="选择年份" id="picker-describeYear" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+					<div class="leaderInfoYear " style="margin-top: 0px;">
+						<div class="kpi-a-header">
+							<div class="row no-gutter" style="height: 60px;">
+								<div class="col-50 row-header b-b r-first" style='padding-top: 0px;height: 60px;'>
+									<span class="span1 peopleTotalYear" style="font-size: 20px;">--</span>
+									<span class="span2" style="font-size: 14px;">(总人数)</span>
+								</div>
+								<div class="col-50 row-header b-b" style='padding-top: 0px;height: 60px;'>
+									<span class="span1 assessCountYear" style="font-size: 20px;">--</span>
+									<span class="span2" style="font-size: 14px;">(考核总次数)</span>
+								</div>
+							</div>
+							<div class="kpi-a-list-item-subTitle">
+								<div>
+									<i class="icon kpi-icon-people"></i>
+									<span>(人数/人)</span>
+								</div>
+								<div>
+									<i class="icon kpi-icon-count"></i>
+									<span>(考核次数/次)</span>
+								</div>
+								<div>
+									<i class="icon kpi-icon-score"></i>
+									<span>(考核总分/分)</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="page-content infinite-scroll leaderDetailPageYear" style="padding-top: 0px;margin-top: 10px;padding-bottom: 25px;">
+						<div class="list-block media-list kpi-a-list" style="margin-top: 0px;margin-bottom: 300px;">
+							<ul>
+							</ul>
+						</div>
+					</div>
+	          	</div>       
+        	</div>
+      </div> 
+	</div>
+	<!--<div class="leaderInfo" style="margin-top: 0px;">
+		<div class="kpi-a-header">
+			<div class="row no-gutter">
+				<div class="col-50 row-header b-b r-first">
+					<span class="span1 peopleTotal">--</span>
+					<span class="span2">(总人数)</span>
+				</div>
+				<div class="col-50 row-header b-b">
+					<span class="span1 assessCount">--</span>
+					<span class="span2">(考核总次数)</span>
+				</div>
+			</div>
+			<div class="kpi-a-list-item-subTitle" style="padding: 15px 10px;">
+				<div>
+					<i class="icon kpi-icon-people"></i>
+					<span>(人数/人)</span>
+				</div>
+				<div>
+					<i class="icon kpi-icon-count"></i>
+					<span>(考核次数/次)</span>
+				</div>
+				<div>
+					<i class="icon kpi-icon-score"></i>
+					<span>(考核总分/分)</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="page-content infinite-scroll leaderDetailPage" style="padding-top: 0px;margin-top: 10px;padding-bottom: 25px;">
+		<div class="list-block media-list kpi-a-list" style="margin-top: 0px;margin-bottom: 208px;">
+			<ul>
+			</ul>
+		</div>
+	</div>-->
+	<div class="page-content infinite-scroll leaderDetailSearchPage" style="display: none;padding-top: 0px;margin-top: 10px;padding-bottom: 25px;">
+		<div class="list-block media-list kpi-a-listSearch" style="margin-top: 0px;margin-bottom: 208px;">
+			<ul>
+			</ul>
+		<div class="leaderDetailSearchNotFound" style="text-align: center;padding-top: 100px;color: #666666;">找不到您要查询部门</div>
+		</div>
+	</div>
+</div>

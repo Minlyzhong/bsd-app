@@ -1,0 +1,46 @@
+<div data-page="signReport/signReport" class="page with-subnavbar no-tabbar">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left sliding">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center sliding">考勤统计</div>
+			<div class="right	 sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+			</div>
+			<div class="subnavbar">
+				<div class="buttons-row signBtnRow">
+					<a href="#tab1" class="button tab-link dayPick" data-type="day">日统计</a>
+					<a href="#tab2" class="button tab-link weekPick" data-type="week">周统计</a>
+					<a href="#tab3" class="button tab-link monthPick" data-type="month">月统计</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="tabs">
+			<div id="tab1" class="tab dayPage">
+				<div class="signCalendarDiv">
+					<input type="text" id="dayCalId" class="signCalendar" readonly />
+					<!--<div class="signCalendarIcon">
+						<i class="icon icon-calendar"></i>
+					</div>-->
+				</div>
+				<div class="dayReport"></div>
+			</div>
+			<div id="tab2" class="tab weekPage">
+				<div class="signCalendarDiv">
+					<input type="text" id="weekCalId" class="signClearCal" readonly />
+					<input type="text" id="weekId" class="signCalendar" readonly /> 
+				</div>
+				<div class="weekReport"></div>
+			</div>
+			<div id="tab3" class="tab monthPage">
+				<div class="signCalendarDiv">
+					<input type="text" id="monthId" class="signCalendar" readonly />
+				</div>
+				<div class="monthReport"></div>
+			</div>
+		</div>
+	</div>
+</div>

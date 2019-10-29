@@ -1,0 +1,30 @@
+{{#.}}
+	<li>
+		<a data-id={{id}} data-memo="{{memo}}" data-reportState="{{reportState}}" data-userName="{{userName}}" class="item-link item-content rankDetail-content">
+			<div class="item-inner" style="padding-right:0px">
+				<span style="float:right;color:#8e8e93;">{{TsMonth}}月</span>
+				<div class="userInfo-row item-subtitle" style="font-size: 14px;padding-top: 5px;">
+					<div class="color-gray" style="font-size: 13px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+						<span class="discussName">填报人：{{userName}}</span><br/><br/> 
+						<!--<span class="discussName">考核项：{{topicTitle}}</span><br/>-->
+						<span class="discussName">考核时间：{{reportTime}}</span>
+					</div>
+					<!--<div class="color-gray" style="font-size: 13px;">
+						
+					</div>-->
+				</div>
+				<div style="margin-top: 10px;font-size: 15px;">
+					<span class="rankDetailTitle" style="color: #369;">考核清单：{{topicTitle}}；</span>
+					<span class="rankDetailScore color-red">+{{totalScore}}</span>
+				</div>
+				<div style="margin-top: 10px;font-size: 15px;">
+					<span class="rankDetailName" style="color: #008000;">标题：{{reportTitle}}</span>
+					{{#compare reportState '==' -1}}
+					<span style="float: right;color: red;border: solid 2px;">已退回</span>
+					{{/compare}}
+				</div>
+			</div>
+		</a>
+	</li>
+	
+{{/.}}

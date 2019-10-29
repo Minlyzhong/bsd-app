@@ -1,0 +1,13 @@
+{{#.}}
+<a class="col-50 grid">
+	<div>
+		{{#compare imgPath '==' ''}}
+		<img src="img/icon/icon-videoBg.png"/>
+		{{else}}
+		<img src="{{basePath}}{{imgPath}}"/>
+		{{/compare}}
+		<div>{{time}}</div>
+	</div>
+	<div>{{demo}}</div>
+</a>
+{{/.}}

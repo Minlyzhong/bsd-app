@@ -1,0 +1,293 @@
+/*
+ * 变量
+ */
+
+@phColor: #ddd;
+.rankAward () {
+    background-size: 37px;
+    width: 37px;
+    height: 45px;
+    border-radius: 0;
+    text-align: center;
+    line-height: 30px;
+    margin-top: 4px;
+    color: white;
+    font-size: 15px;
+}
+
+.examRow() {
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+
+/*
+ * 样式表
+ */
+
+.examList .item-content:active,
+.examRankList li:active,
+.examRankPerson li:active {
+    background: @phColor;
+}
+
+.rankMinute {
+    font-size: 19px !important;
+    color: #d21806;
+//  309bce
+    float: right;
+    line-height: 64px;
+    margin-right: 20px;
+}
+
+.rankPoint {
+    margin: 0 !important;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.rankImg {
+    display: inline-flex !important;
+}
+
+.rankImg img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-top: 3px;
+}
+
+.rankNoAward {
+    min-width: 37px;
+    text-align: center;
+    color: gray;
+}
+
+.rankGold {
+    background: url(../img/icon/icon-gold.png);
+    .rankAward();
+}
+
+.rankSliver {
+    background: url(../img/icon/icon-sliver.png);
+    .rankAward();
+}
+
+.rankCopper {
+    background: url(../img/icon/icon-copper.png);
+    .rankAward();
+}
+
+.rankInner {
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    margin-left: 10px;
+}
+
+.rankTitleRow {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.examRankPerson {
+    z-index: 10000;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 63px;
+    background: #DDDDDD;
+}
+
+.examAnswerSetting {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: none;
+}
+
+.examAnswerSetting .item-title.label {
+    width: auto;
+    font-size: 15px;
+}
+
+.examSlide input[type="range"] {
+    -webkit-appearance: none;
+    background: linear-gradient(#b7b8b7, #b7b8b7) no-repeat;
+    background-size: 100% 2px;
+    background-position: left;
+    width: 80%;
+    float: right;
+}
+
+.examSlide input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 25px;
+    width: 25px;
+    /*使滑块超出轨道部分的偏移量相等*/
+    margin-top: -5px;
+    background: #ffffff;
+    border-radius: 50%;
+    /*设置边框*/
+    border: solid 0.125em rgba(205, 224, 230, 0.5);
+    /*添加底部阴影*/
+    box-shadow: 0 .125em .125em #3b4547;
+}
+
+.examAnswerBottom {
+    z-index: 999;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    background: white;
+}
+
+.examAnswerBottomHead {
+    padding: 0 15px;
+    font-weight: bold;
+    height: 45px;
+    border-top: 1px #ddd solid;
+    /* position: relative; */
+    .examRow();
+}
+
+.examAnswerBottomHead .pick {
+    padding: 0 20px;
+    margin-left: 15px;
+    background: url(../img/icon-app.png) no-repeat left;
+    background-size: 20px;
+}
+
+.examAnswerBottomPick {
+    display: none;
+    padding: 5px 0 5px 10px;
+    border-top: 1px #ddd solid;
+    max-height: 300px;
+    overflow: auto !important;
+}
+
+.examAnswerBottomPick .examPickNumber {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 1px #ddd solid;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    margin: 2px 5px 5px 0;
+}
+
+.examAnswerBottomPick .examPickNumber:active,
+.examAnswerBottomPick .examPickNumber.active {
+    background: #ddd;
+}
+
+.examAnswerTitle {
+    padding: 20px;
+}
+
+.examAnswerContent {
+    margin: 5px 30px 15px 30px;
+    padding: 10px;
+    display: inline-flex;
+    width: calc(~"100% - 80px");
+    width: -webkit-calc(~"100% - 80px");
+    width: -moz-calc(~"100% - 80px");
+}
+
+.examAnswerContent.active {
+    background: #309bce;
+    color: white;
+    border-radius: 12px;
+}
+
+.examAnswerContent.false {
+    background: #ED4C3C;
+    color: white;
+    border-radius: 12px;
+}
+
+.examAnswerContent.true {
+    background: #3DA600;
+    color: white;
+    border-radius: 12px;
+}
+
+.examAnswerContent div {
+    background: url(../img/icon/icon-radio.png) no-repeat -3px -2px;
+    background-size: 25px;
+    width: 20px;
+    height: 20px;
+}
+
+.examAnswerContent span {
+    width: calc(~"100% - 50px");
+    width: -webkit-calc(~"100% - 50px");
+    width: -moz-calc(~"100% - 50px");
+    padding-left: 10px;
+}
+
+.examAnswerHead {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    .examRow();
+}
+
+.examAnswerHeadSubmit {
+    padding: 2px 13px;
+    border-radius: 5px;
+    background: #E32519;
+    color: white;
+    height: 30px;
+    line-height: 30px;
+}
+
+.examAnswerHeadTime {
+    font-weight: bold;
+    width: 70%;
+    font-size: 16px;
+    color: #777;
+}
+
+.examAnswerName {
+    font-size: 18px;
+    padding: 12px;
+    color: #777;
+}
+
+.examDetailBox {
+    padding: 10px;
+    font-size: 20px;
+    margin-top: 30px;
+}
+
+.examDetailBox div {
+    padding-bottom: 20px;
+}
+
+.examDetailBox div:nth-child(1) {
+    font-weight: bold;
+}
+
+.examDetailBottom {
+    position: fixed;
+    width: 100%;
+    bottom: 30px;
+}
+.examDetailBottom li{
+    list-style-type:none;
+}

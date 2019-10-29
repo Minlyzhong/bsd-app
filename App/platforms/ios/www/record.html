@@ -1,0 +1,115 @@
+<div data-page="record/record" class="page navbar-fixed no-tabbar with-subnavbar ">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left ">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center ">工作日志</div>
+			<!--<div class="right newRecord">新建</div>-->
+			<div class="right">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+				<a href="#" class="link icon-only recordMenu" style="margin-left: 0px;"><i class="icon icon-menu" style="margin-top: 0px;"></i></a>
+				<a href="#" class="link icon-only newRecord" style="margin-left: 0px;"><i class="icon icon-add" style="margin-top: 0px;"></i></a>
+				</p>
+			</div>
+			<div class="subnavbar recordSub" style="top: 36px;">
+				<div class="buttons-row recordBtnRow">
+					<a href="#tab1" class="button tab-link myRecordPick active" data-type="myRecordPick" data-load="0">我的日志</a>
+					<a href="#tab2" class="button tab-link otherRecordPick" data-type="otherRecordPick" data-load="1">
+						<span class="recordBadge bg-white"></span>日志信箱</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="searchbar payPeopleSearchBar" style="top: 76px;">
+		<div class="searchbar-input">
+			<input type="search" placeholder="搜索工作日志" id="recordSearchOpen" readonly/>
+			<a href="#" class="searchbar-clear payPeopleSearchClear"></a>
+		</div>
+		<div class="searchCancelBtn">取消</div>
+	</div>
+	<div class="page-content pull-to-refresh-content infinite-scroll">
+		<div class="pull-to-refresh-layer" style="margin-top: -20px;">
+			<div class="preloader"></div>
+			<div class="pull-to-refresh-arrow"></div>
+		</div>
+		
+		<div class="content-block searchbar-not-found recordNotFound">
+			没有相关的工作日志
+		</div>
+		<div class="list-block recordList" style="margin: 0;">
+
+		</div>
+	</div>
+	<div class="recordSearch">
+		<div class="content-block-title">请输入筛选条件</div>
+		<div class="list-block inputs-list inset">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">日志名称</div>
+							<div class="item-input">
+								<input type="text" id="logName" name="logName" placeholder="输入日志名称" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="userName" style="display: none;">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">人员名称</div>
+							<div class="item-input">
+								<input type="text" id="userName" name="userName" placeholder="输入人员名称" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="logTypeId" style="display: none;">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">日志类型</div>
+							<div class="item-input" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position: 80px 17px;">
+								<select id="logTypeId">
+								</select>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">开始时间</div>
+							<div class="item-input">
+								<input type="text" id="beginDate" name="beginDate" placeholder="输入开始时间" readonly/>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">结束时间</div>
+							<div class="item-input">
+								<input type="text" id="finishDate" name="finishDate" placeholder="输入结束时间" readonly/>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="m-t-10 row">
+						<div class="col-25">
+							<a href="#" class="button resetBtn color-green button-big active">清空</a>
+						</div>
+						<div class="col-50">
+							<a href="#" class="button searchBtn button-big active">完成</a>
+						</div>
+						<div class="col-25">
+							<a href="#" class="button recordSearchClose color-red button-big active">取消</a>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

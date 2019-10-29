@@ -1,0 +1,797 @@
+define(['app',
+	'hbs!js/hbs/assessmentLeaderTest',
+	'hbs!js/hbs/rankPage',
+], function(app, leaderTemplate,rankPageTemplate) {
+	var $$ = Dom7;
+	var firstIn = 1;
+	var pageDataStorage = {};
+	var pageNo = 1;
+	var loading = true;
+	var pageNo1 = 1;
+	var loading1 = true;
+	
+	//表头数据
+	var searchDeptBranchTotalPathHead = app.basePath + '/mobile/partyAm/searchDeptBranchTotal';
+	//获取年份
+	var getYearsPath = app.basePath + '/mobile/partyAm/getYears';
+	//各级党委部门下的支部完成情况
+	var departmentCompletedStatusPath = app.basePath + '/mobile/partyAm/departmentCompletedStatus';
+	var userPoint = 0;
+	var queryByDeptName = '';
+	var year="";
+	var year1="";
+	var month="";
+	var month1="";
+	var startDate = '';
+	var endDate = '';
+	var season = '';
+	
+	
+	var seasonRankTestCount = 1;
+	var yearRankTestCount = 1;
+	//时间段
+	//月份
+	var rankTestMonthStartDate = '';
+	var rankTestMonthEndDate = '';
+	//季度
+	var rankTestSeasonStartDate = '';
+	var rankTestSeasonEndDate = '';
+	var pageSeasonRankTest = 1;
+	var loadingSeasonRankTest = true;
+	//年份
+	var rankTestYearStartDate = '';
+	var rankTestYearEndDate = '';
+	var pageYearRankTest = 1;
+	var loadingYearRankTest = true;
+	//查询
+	var rankTestSearchStartDate = '';
+	var rankTestSearchEndDate = '';
+	
+	var khpl;
+	/**
+	 * 页面初始化 
+	 * @param {Object} page 页面内容
+	 */
+	function init(page) {
+		// if(app.roleId != 1) {
+		// 	$$('.leaderInfo').remove();
+		// 	$$('.leaderDetailPage1').remove();
+		// 	$$('.rankPage').append(rankPageTemplate({
+		// 		role: app.roleId,
+		// 	}));
+		// }
+		initData(page);
+		clickEvent(page);
+		app.back2Home();
+	}
+
+	/**
+	 * 初始化模块变量
+	 */
+	function initData(page) {
+		khpl = 2;
+		queryByDeptName = ''
+		firstIn = 0;
+		pageDataStorage = {};
+		pageNo = 1;
+		loading = true;
+		pageNo1 = 1;
+		loading1 = true;
+		year="";
+		year1="";
+		month="";
+		month1="";
+		startDate = "";
+		endDate="";
+		//季度
+		pageSeasonRankTest = 1;
+		loadingSeasonRankTest = true;
+		//年份
+		pageYearRankTest = 1;
+		loadingYearRankTest = true;
+		//查询
+		rankTestSearchStartDate = '';
+		rankTestSearchEndDate = '';
+		var user = {
+			role: app.roleId
+		}
+		$$('.rankTestName').html(page.query.appName)
+		seasonRankTestCount = 1;
+		yearRankTestCount = 1;
+//		if(user.role > -1 && user.role != 1) {
+//			$$('.rankDetail').css('display', 'flex');
+//			//加载数据
+//			loadDept();
+//			loadPartyMenu();
+//		} else {
+//			//利于党务负责人查看和评比的搜索框
+			$$('.searchRank').css('display','block');
+			$$('.rankDetail').css('display', 'none');
+			//先执行loadTime();在去加载数据
+			loadTime();	
+			loadPartyDeptHead();
+			loadCompletedStatus(false);
+			pushAndPull(page);
+//		}
+		
+	}
+	
+	
+	
+	function loadTime(){
+		var pickerDescribe;
+		var pickerDescribeSeason;
+		var pickerDescribeYear;
+		app.ajaxLoadPageContent1(getYearsPath,{
+		},function(data){
+			console.log('getYearsPath');
+			console.log(data);
+			result = data.data;
+			if(result == null){
+				var nowDate = new Date();
+				var nowYear = nowDate.getFullYear();
+				result =[nowYear+'年']
+				
+			}
+			$$.each(data.data, function(index, item) {
+					result[index] = item.toString()+'年';
+			});
+			console.log(result);
+			pickerDescribe = app.myApp.picker({
+	    		input: '#picker-describe',
+			    rotateEffect: true,
+			    cols: [
+			        {
+			            textAlign: 'left',
+			            values:(result)
+			        },
+			        {
+			            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
+			        },
+			    ]
+			});
+			pickerDescribeSeason = app.myApp.picker({
+	    		input: '#picker-describeSeason',
+			    rotateEffect: true,
+			    cols: [
+			        {
+			            textAlign: 'left',
+			            values:(result)
+			        },
+			        {
+			            values: ('第一季度 第二季度 第三季度 第四季度').split(' ')
+			        },
+			    ]
+			});
+			pickerDescribeYear = app.myApp.picker({
+	    		input: '#picker-describeYear',
+			    rotateEffect: true,
+			    cols: [
+			        {
+			            textAlign: 'left',
+			            values:(result)
+			        },
+			    ]
+			});
+		});
+		var date = new Date();
+		year = date.getFullYear();
+		month = date.getMonth()+1<10? "0"+(date.getMonth()+1):date.getMonth()+1;
+	
+		rankTestMonthStartDate = year+'-'+month+'-01';
+		rankTestMonthEndDate = year+'-'+month+'-31';
+		$("#picker-describe").val(year+'年 '+ month+'月');
+		//月份
+		$$(".rankTestMonthTime").on('click',function(){
+			pickerDescribe.open();
+			$$('.picker-3d .close-picker').text('完成');
+			$$('.picker-3d .close-picker').css('margin-right','10px');
+			pickerDescribe.displayValue[0] = year+'年';
+			pickerDescribe.displayValue[1] = month+'月';
+			pickerDescribe.value[0] = year+'年';
+			pickerDescribe.value[1] = month+'月';
+			pickerDescribe.params.cols[0].setValue(year+'年');
+			pickerDescribe.params.cols[1].setValue(month+'月');	
+			$("#picker-describe").val(year+'年 '+ month+'月');
+			year = pickerDescribe.value[0].substring(0,pickerDescribe.value[0].length-1);
+			month = pickerDescribe.value[1].substring(0,pickerDescribe.value[1].length-1);
+			rankTestMonthStartDate = year+'-'+month+'-01';
+			rankTestMonthEndDate = year+'-'+month+'-31';
+			$$('.picker-3d .close-picker').on('click',function(){
+				year = pickerDescribe.value[0].substring(0,pickerDescribe.value[0].length-1);
+				month = pickerDescribe.value[1].substring(0,pickerDescribe.value[1].length-1);
+				$("#picker-describe").val(year+'年 '+ month+'月');
+				rankTestMonthStartDate = year+'-'+month+'-01';
+				rankTestMonthEndDate = year+'-'+month+'-31';
+				var str = '';
+				str += '<div class="infinite-scroll-preloader">';
+				str += '<div class="preloader" style="left:35%;margin-left:0px;margin-top:0px;position:absolute;"></div>';
+				str += '<div style="position: absolute;left: 45%;;font-size: 17px;">加载中...</div>';
+				str += '</div>';
+				$$('.leaderDetailPage1 .kpi-a-list ul').html(str);
+				loadPartyDeptHead();
+				loadCompletedStatus();
+			});
+		});
+		//季度
+		if(month<=3){
+			$("#picker-describeSeason").val(year+'年 '+ '第一季度');
+			rankTestSeasonStartDate = year+'-01-01';
+			rankTestSeasonEndDate = year+'-03-31';
+		}else if(month>3 && month<=6){
+			$("#picker-describeSeason").val(year+'年 '+ '第二季度');
+			rankTestSeasonStartDate = year+'-04-01';
+			rankTestSeasonEndDate = year+'-06-31';
+		}else if(month>6 && month<=9){
+			$("#picker-describeSeason").val(year+'年 '+ '第三季度');
+			rankTestSeasonStartDate = year+'-07-01';
+			rankTestSeasonEndDate = year+'-09-31';
+		}else if(month>9 && month<=12){
+			$("#picker-describeSeason").val(year+'年 '+ '第四季度');
+			rankTestSeasonStartDate = year+'-10-01';
+			rankTestSeasonEndDate = year+'-12-31';
+		}
+		$$(".rankTestSeasonTime").on('click',function(){
+			pickerDescribeSeason.open();
+			$$('.picker-3d .close-picker').text('完成');
+			$$('.picker-3d .close-picker').css('margin-right','10px');
+			$$('.picker-3d .close-picker').on('click',function(){
+				year = pickerDescribeSeason.value[0].substring(0,pickerDescribeSeason.value[0].length-1);
+				season = pickerDescribeSeason.value[1].substring(0,pickerDescribeSeason.value[1].length);
+				if(season == '第一季度'){
+					rankTestSeasonStartDate = year+'-01-01';
+					rankTestSeasonEndDate = year+'-03-31';
+				}else if(season == '第二季度'){
+					rankTestSeasonStartDate = year+'-04-01';
+					rankTestSeasonEndDate = year+'-06-31';
+				}else if(season == '第三季度'){
+					rankTestSeasonStartDate = year+'-07-01';
+					rankTestSeasonEndDate = year+'-09-31';
+				}else if(season == '第四季度'){
+					rankTestSeasonStartDate = year+'-10-01';
+					rankTestSeasonEndDate = year+'-12-31';
+				}
+				$("#picker-describeSeason").val(year+'年 '+ season);
+				var str = '';
+				str += '<div class="infinite-scroll-preloader">';
+				str += '<div class="preloader" style="left:35%;margin-left:0px;margin-top:0px;position:absolute;"></div>';
+				str += '<div style="position: absolute;left: 45%;;font-size: 17px;">加载中...</div>';
+				str += '</div>';
+				$$('.leaderDetailPageSeason1 .kpi-a-list ul').html(str);
+				loadPartyDeptHeadBySeason();
+				loadCompletedStatusBySeason();
+			});
+		});
+		
+		//年份
+		$("#picker-describeYear").val(year+'年 ');
+		rankTestYearStartDate= year+'-01-01';
+		rankTestYearEndDate= year+'-12-31';
+		$$(".rankTestYearTime").on('click',function(){
+			pickerDescribeYear.open();
+			$$('.picker-3d .close-picker').text('完成');
+			$$('.toolbar-inner .right').css('margin-right','20px');	
+			$$('.picker-3d .close-picker').on('click',function(){
+				$$('.shykNotFound').css('display','none');
+				year = pickerDescribeYear.value[0].substring(0,pickerDescribeYear.value[0].length-1);
+				rankTestYearStartDate= year+'-01-01';
+				rankTestYearEndDate= year+'-12-31';
+				$("#picker-describeYear").val(year+'年 ');
+				var str = '';
+				str += '<div class="infinite-scroll-preloader">';
+				str += '<div class="preloader" style="left:35%;margin-left:0px;margin-top:0px;position:absolute;"></div>';
+				str += '<div style="position: absolute;left: 45%;;font-size: 17px;">加载中...</div>';
+				str += '</div>';
+				$$('.leaderDetailPageYear1 .kpi-a-list ul').html(str);
+				loadPartyDeptHeadByYear();
+				loadCompletedStatusByYear();
+			});
+		});
+	}
+	/**
+	 * 点击事件
+	 */
+	function clickEvent(page) {
+		$$('#rankDeptSearch').on('focus', showSearchList);
+		$$('.rankDeptSearchBar .searchCancelBtn').on('click', hideSearchList);
+		$$('.rankTestSearchBox .searchBtn').on('click', keyupContent);
+		$$('.rankTestSearchBox .resetBtn').on('click', clearSearchKey);
+		$$('.rankTestSearchClose').on('click',function(){
+			$$('.rankTestSearchBox').css('display','none');
+		})
+		
+		$$('.addshykDept').click(function(){
+			app.myApp.getCurrentView().loadPage('shykAddDept.html?deptName='+$$('#rankDeptName').val());
+		})
+		
+		$$('.removeLeader').click(function(){
+			$$('#rankDeptName').val('');
+		})
+		
+		//点击tab标签
+		//月份
+		$$('.buttonShyk').on('click',function(){
+			khpl = 2;
+			setTimeout(function(){
+				$$('.leaderDetailPageSeason1').css('display','none');
+				$$('.leaderDetailPage1').css('display','block');
+				$$('.leaderDetailPageYear1').css('display','none');
+			},100);
+			if($$('.rankTestTab').css('display') == 'none'){
+				setTimeout(function(){
+					keyupContent();
+				},100);
+			}
+		});
+		//季度
+		$$('.buttonShykSeason').on('click',function(){
+			khpl = 1;
+			setTimeout(function(){
+				$$('.leaderDetailPageSeason1').css('display','block');
+				$$('.leaderDetailPage1').css('display','none');
+				$$('.leaderDetailPageYear1').css('display','none');
+			},100);
+			
+			if($$('.rankTestTab').css('display') == 'none'){
+				setTimeout(function(){
+					keyupContent();
+				},100);
+			}else{
+				if(seasonRankTestCount == 1){
+					setTimeout(function(){
+						loadPartyDeptHeadBySeason();
+						loadCompletedStatusBySeason(false);
+					},500);
+					seasonRankTestCount += 1;
+				}
+			}
+			
+		});
+		//年份
+		$$('.buttonShykYear').on('click',function(){
+			khpl = 0;
+			setTimeout(function(){
+				$$('.leaderDetailPageSeason1').css('display','none');
+				$$('.leaderDetailPage1').css('display','none');
+				$$('.leaderDetailPageYear1').css('display','block');
+			},100);
+			
+			if($$('.rankTestTab').css('display') == 'none'){
+				setTimeout(function(){
+					keyupContent();
+				},100);
+			}else{
+				if(yearRankTestCount == 1){
+					setTimeout(function(){
+						loadPartyDeptHeadByYear();
+						loadCompletedStatusByYear(false);
+					},500);
+					yearRankTestCount += 1;
+				}
+			}
+		});	
+	}	
+	/*
+	 * 点击搜索框
+	 */
+	function showSearchList(){
+		$$('.rankTestTab').css('display','none');
+		$$('.kpi-a-listSearch ul').html('');
+		pageNo1 = 1;
+		loading1 = true;
+		queryByDeptName = ''
+		rankTestSearchEndDate = '';
+		rankTestSearchStartDate = '';
+		$$(this).css('text-align', 'left');
+		$$('.rankTestSearchBox').css('display','block');
+		$$('.rankDeptSearchBar .searchCancelBtn').css('display', 'block');
+		$$('.leaderDetailSearchPage').css('display','block');
+		$$('.leaderDetailPage1').css('display','none');
+		$$('.leaderDetailSearchNotFound').css('display','none');
+	}
+	
+	function clearSearchKey(){
+		queryByDeptName = ''
+		rankTestSearchEndDate = '';
+		rankTestSearchStartDate = '';
+		$$('#rankDeptName').val("");
+		$$('#rankTestStartTime').val("");
+		$$('#rankTestEndTime').val("");
+	}
+	/*
+	 * 点击取消按钮
+	 */
+	function hideSearchList(){
+		$$('.rankTestTab').css('display','block');
+		$$('.kpi-a-listSearch ul').html('');
+		pageNo1 = 1;
+		loading1 = true;
+		queryByDeptName = ''
+		rankTestSearchEndDate = '';
+		rankTestSearchStartDate = '';
+		$$('#rankDeptName').val("");
+		$$('#rankTestStartTime').val("");
+		$$('#rankTestEndTime').val("");
+		$$('.rankDeptSearchBar #rankDeptSearch').css('text-align', 'center');
+		$$('.rankDeptSearchBar .searchCancelBtn').css('display', 'none');
+		$$('.rankDeptSearchBar .searchbar-clear').css('opacity', '0');
+		$$('.leaderDetailPage1').css('display','block');
+		$$('.leaderDetailSearchPage').css('display','none');
+	}
+	/*
+	 * keyup事件的触发
+	 */
+	function keyupContent(){
+		//queryByDeptName = $$('#rankDeptSearch').val();
+//		if($$("#rankTestStartTime").val() == '' && $$("#rankTestEndTime").val() != ''){
+//			app.myApp.alert('请选择开始时间！');
+//			return;
+//		}
+//		if($$("#rankTestEndTime").val() == '' && $$("#rankTestStartTime").val() != ''){
+//			app.myApp.alert('请选择结束时间！');
+//			return;
+//		}
+//		if(year > year1){
+//			app.myApp.alert('开始年份必须小于结束年份！');
+//			return;
+//		}else if(year == year1 && month>month1){
+//			app.myApp.alert('开始月份必须小于结束月份！');
+//			return;
+//		}else if(year != year1){
+//			app.myApp.alert('月份跨度不能大于12个月！');
+//			return;
+//		}
+		var monthClassName = $('#tab1').hasClass('active');
+		var seasonClassName = $('#tab2').hasClass('active');
+		var yearClassName = $('#tab3').hasClass('active');
+		console.log(monthClassName);
+		console.log(seasonClassName);
+		console.log(yearClassName);
+		if(monthClassName){
+			khpl = 2;
+			rankTestSearchStartDate = rankTestMonthStartDate;
+			rankTestSearchEndDate = rankTestMonthEndDate;
+		}else if(seasonClassName){
+			khpl = 1;
+			rankTestSearchStartDate = rankTestSeasonStartDate;
+			rankTestSearchEndDate = rankTestSeasonEndDate;
+		}else if(yearClassName){
+			khpl = 0;
+			rankTestSearchStartDate = rankTestYearStartDate;
+			rankTestSearchEndDate = rankTestYearEndDate;
+		}
+		queryByDeptName = $$('#rankDeptName').val();
+		$$('.rankTestSearchBox').css('display','none');
+		console.log(rankTestSearchStartDate);
+		console.log(rankTestSearchEndDate);
+		//loadPartyDeptHead();
+		loadCompletedStatus1(false);
+	}
+	
+	//获取领导考核统计表头(月份)
+	function loadPartyDeptHead() {
+		app.ajaxLoadPageContent1(searchDeptBranchTotalPathHead, {
+			// deptId:app.user.deptId,
+			// userId:app.user.id,
+			startDate:rankTestMonthStartDate,
+			endDate:rankTestMonthEndDate,
+			khpl:2
+		}, function(result) {
+			console.log(result);
+			var data = result.data;
+			pageDataStorage['partyDeptHead'] = data;
+			handlePartyDeptHead(data);
+		});
+	}
+	//获取领导考核统计表头(季度)
+	function loadPartyDeptHeadBySeason() {
+		app.ajaxLoadPageContent1(searchDeptBranchTotalPathHead, {
+			// deptId:app.user.deptId,
+			// userId:app.user.id,
+			startDate:rankTestSeasonStartDate,
+			endDate:rankTestSeasonEndDate,
+			khpl:1
+		}, function(result) {
+			console.log(result);
+			var data = result.data;
+			pageDataStorage['partyDeptHead'] = data;
+			handlePartyDeptHeadBySeason(data);
+		});
+	}
+	//获取领导考核统计表头(年度)
+	function loadPartyDeptHeadByYear() {
+		app.ajaxLoadPageContent1(searchDeptBranchTotalPathHead, {
+			// deptId:app.user.deptId,
+			// userId:app.user.id,
+			startDate:rankTestYearStartDate,
+			endDate:rankTestYearEndDate,
+			khpl:0
+		}, function(result) {
+			console.log(result);
+			var data = result.data;
+			pageDataStorage['partyDeptHead'] = data;
+			handlePartyDeptHeadByYear(data);
+		});
+	}
+	
+	//各级党委部门下的支部完成情况(月份)
+	function loadCompletedStatus(isLoadMore) {
+		console.log(rankTestMonthStartDate);
+		console.log(rankTestMonthEndDate);
+		app.ajaxLoadPageContent(departmentCompletedStatusPath, {
+			query:queryByDeptName,
+			current:pageNo,
+			startDate:rankTestMonthStartDate,
+			endDate:rankTestMonthEndDate,
+			khpl:2
+		}, function(result) {
+			console.log(result);
+			var data = result.data.records;
+			
+			$$.each(data, function(index, item){
+				item.completedPercent = (item.completedPercent*100).toFixed(2);
+				
+			})
+			
+			handleCompletedStatus(data,isLoadMore);
+		});
+	}
+	//各级党委部门下的支部完成情况(季度)
+	function loadCompletedStatusBySeason(isLoadMore) {
+		console.log(rankTestSeasonStartDate);
+		console.log(rankTestSeasonEndDate);
+		app.ajaxLoadPageContent(departmentCompletedStatusPath, {
+			query:queryByDeptName,
+			current:pageSeasonRankTest,
+			startDate:rankTestSeasonStartDate,
+			endDate:rankTestSeasonEndDate,
+			khpl:1
+		}, function(result) {
+			console.log(result);
+			var data = result.data.records;
+			$$.each(data, function(index, item){
+				item.completedPercent = (item.completedPercent*100).toFixed(2);
+				
+			})
+			handleCompletedStatusBySeason(data,isLoadMore);
+		});
+	}
+	//各级党委部门下的支部完成情况(年份)
+	function loadCompletedStatusByYear(isLoadMore) {
+		console.log(rankTestYearStartDate);
+		console.log(rankTestYearEndDate);
+		app.ajaxLoadPageContent(departmentCompletedStatusPath, {
+			query:queryByDeptName,
+			current:pageYearRankTest,
+			startDate:rankTestYearStartDate,
+			endDate:rankTestYearEndDate,
+			khpl:0
+		}, function(result) {
+			console.log(result);
+			var data = result.data.records;
+			$$.each(data, function(index, item){
+				item.completedPercent = (item.completedPercent*100).toFixed(2);
+				
+			})
+			handleCompletedStatusByYear(data,isLoadMore);
+		});
+	}
+	
+	//模糊查询各级党委部门下的支部完成情况
+	function loadCompletedStatus1(isLoadMore) {
+//		if(startDate == '' && endDate == ''){
+//			var date = new Date();
+//			startDate = date.getFullYear()+'-'+(date.getMonth()+1);
+//			endDate = startDate;
+//		}
+		console.log(rankTestSearchStartDate);
+		console.log(rankTestSearchEndDate);
+		app.ajaxLoadPageContent(departmentCompletedStatusPath, {
+			query:queryByDeptName,
+			current:pageNo1,
+			startDate:rankTestSearchStartDate,
+			endDate:rankTestSearchEndDate,
+			khpl:khpl
+		}, function(result) {
+			console.log(result);
+			var data = result.data.records;
+			
+			handleCompletedStatus1(data,isLoadMore);
+		});
+	}
+	/**
+	 * 加载领导考核统计表头(月份)
+	 */
+	function handlePartyDeptHead(data) {
+		console.log(data);
+		$$('.assessCount').html(data.completedTotal);
+		$$('.peopleTotal').html(data.unCompletedTotal);
+		$$('.headRank .deptName').html(data.deptName);
+	}
+	/**
+	 * 加载领导考核统计表头(季度)
+	 */
+	function handlePartyDeptHeadBySeason(data) {
+		console.log(data);
+		$$('.assessCountSeason').html(data.completedTotal);
+		$$('.peopleTotalSeason').html(data.unCompletedTotal);
+		$$('.headRankSeason .deptName').html(data.deptName);
+	}
+	/**
+	 * 加载领导考核统计表头(年份)
+	 */
+	function handlePartyDeptHeadByYear(data) {
+		$$('.assessCountYear').html(data.completedTotal);
+		$$('.peopleTotalYear').html(data.unCompletedTotal);
+		$$('.headRankYear .deptName').html(data.deptName);
+	}
+	
+	/*
+	 * 处理各级党委部门下的支部完成情况(月份)
+	 */
+	function handleCompletedStatus(data,isLoadMore){
+		if(data.length) {
+			if(isLoadMore) {
+				$$('.leaderDetailPage1 .kpi-a-list ul').append(leaderTemplate(data));
+			} else {
+				$$('.leaderDetailPage1 .kpi-a-list ul').html(leaderTemplate(data));
+			}
+			$$('.kpi-a-list .assessLeaderContent').on('click',function(){
+				app.myApp.getCurrentView().loadPage('shykDUD.html?deptId='+$$(this).data('id')+'&startDate='+rankTestMonthStartDate+'&endDate='+rankTestMonthEndDate+"&deptName="+$$(this).data('name')+"&khpl=2");
+			});
+			loading = false;
+		} else {
+			loading = true;
+		}
+	}
+	/*
+	 * 处理各级党委部门下的支部完成情况(季度)
+	 */
+	function handleCompletedStatusBySeason(data,isLoadMore){
+		if(data.length) {
+			if(isLoadMore) {
+				$$('.leaderDetailPageSeason1 .kpi-a-list ul').append(leaderTemplate(data));
+			} else {
+				$$('.leaderDetailPageSeason1 .kpi-a-list ul').html(leaderTemplate(data));
+			}
+			$$('.kpi-a-list .assessLeaderContent').on('click',function(){
+				app.myApp.getCurrentView().loadPage('shykDUD.html?deptId='+$$(this).data('id')+'&startDate='+rankTestSeasonStartDate+'&endDate='+rankTestSeasonEndDate+"&deptName="+$$(this).data('name')+"&khpl=1");
+			});
+			loadingSeasonRankTest = false;
+		} else {
+			loadingSeasonRankTest = true;
+		}
+	}
+	/*
+	 * 处理各级党委部门下的支部完成情况(年份)
+	 */
+	function handleCompletedStatusByYear(data,isLoadMore){
+		if(data.length) {
+			if(isLoadMore) {
+				$$('.leaderDetailPageYear1 .kpi-a-list ul').append(leaderTemplate(data));
+			} else {
+				$$('.leaderDetailPageYear1 .kpi-a-list ul').html(leaderTemplate(data));
+			}
+			$$('.kpi-a-list .assessLeaderContent').on('click',function(){
+				app.myApp.getCurrentView().loadPage('shykDUD.html?deptId='+$$(this).data('id')+'&startDate='+rankTestYearStartDate+'&endDate='+rankTestYearEndDate+"&deptName="+$$(this).data('name')+"&khpl=0");
+			});
+			loadingYearRankTest = false;
+		} else {
+			loadingYearRankTest = true;
+		}
+	}
+	
+	/*
+	 * 处理各级党委部门下的支部完成情况
+	 */
+	function handleCompletedStatus1(data,isLoadMore){
+		if(data.length) {
+			if(isLoadMore) {
+				$$('.leaderDetailSearchPage .kpi-a-listSearch ul').append(leaderTemplate(data));
+			} else {
+				$$('.leaderDetailSearchPage .kpi-a-listSearch ul').html(leaderTemplate(data));
+			}
+			$$('.kpi-a-listSearch .assessLeaderContent').on('click',function(){
+				app.myApp.getCurrentView().loadPage('shykDUD.html?deptId='+$$(this).data('id')+'&startDate='+rankTestSearchStartDate+'&endDate='+rankTestSearchEndDate+"&deptName="+$$(this).data('name')+"&khpl="+khpl);
+				//app.myApp.getCurrentView().loadPage('shykDUD.html?deptId='+$$(this).data('id')+'&year='+year+'&year1='+year1+'&month='+month+'&month1='+month1);
+			});
+			loading1 = false;
+		} else {
+			loading1 = true;
+		}
+	}
+
+	
+	/**
+	 * 上下拉操作 
+	 */
+	function pushAndPull(page) {
+		//加载更多
+		var loadMoreContent = $$(page.container).find('.infinite-scroll.leaderDetailPage1');
+		var loadMoreContent1 = $$(page.container).find('.infinite-scroll.leaderDetailSearchPage1');
+		var loadMoreContent2 = $$(page.container).find('.infinite-scroll.leaderDetailPageSeason1');
+		var loadMoreContent3 = $$(page.container).find('.infinite-scroll.leaderDetailPageYear1');
+		loadMoreContent.on('infinite',function() {
+			if(loading) return;
+			loading = true;
+			pageNo += 1;
+			//这里写请求
+			loadCompletedStatus(true);
+		});
+		loadMoreContent1.on('infinite',function() {
+			if(loading1) return;
+			loading1 = true;
+			pageNo1 += 1;
+			//这里写请求
+			loadCompletedStatus1(true);
+		});
+		loadMoreContent2.on('infinite',function() {
+			if(loadingSeasonRankTest) return;
+			loadingSeasonRankTest = true;
+			pageSeasonRankTest += 1;
+			//这里写请求
+			loadCompletedStatusBySeason(true);
+		
+		});
+		loadMoreContent3.on('infinite',function() {
+			if(loadingYearRankTest) return;
+			loadingYearRankTest = true;
+			pageYearRankTest += 1;
+			//这里写请求
+			loadCompletedStatusByYear(true);
+		});
+		//下拉刷新	
+		var ptrContent=$$(page.container).find('.pull-to-refresh-content.leaderDetailPage1');
+		var ptrContent1=$$(page.container).find('.pull-to-refresh-content.leaderDetailSearchPage1');
+		var ptrContent2=$$(page.container).find('.pull-to-refresh-content.leaderDetailPageSeason1');
+		var ptrContent3=$$(page.container).find('.pull-to-refresh-content.leaderDetailPageYear1');
+		ptrContent.on('refresh', function() {
+			setTimeout(function() {
+				pageNo = 1;
+				loading = true;
+				//这里写请求
+				loadCompletedStatus(false);
+				app.myApp.pullToRefreshDone();
+			}, 500);
+		});
+		ptrContent1.on('refresh', function() {
+			setTimeout(function() {
+				pageNo1 = 1;
+				loading1 = true;
+				//这里写请求
+				loadCompletedStatus1(false);
+				app.myApp.pullToRefreshDone();
+			}, 500);
+		});
+		ptrContent2.on('refresh', function() {
+			setTimeout(function() {
+				pageSeasonRankTest = 1;
+				loadingSeasonRankTest = true;
+				//这里写请求
+				loadCompletedStatusBySeason(false);
+				app.myApp.pullToRefreshDone();
+			}, 500);
+		});
+		ptrContent3.on('refresh', function() {
+			setTimeout(function() {
+				pageYearRankTest = 1;
+				loadingYearRankTest = true;
+				//这里写请求
+				loadCompletedStatusByYear(false);
+				app.myApp.pullToRefreshDone();
+			}, 500);
+		});
+	}
+
+	/**
+	 * 重置firstIn变量 
+	 */
+	function resetFirstIn() {
+		firstIn = 1;
+	}
+
+	return {
+		init: init,
+		resetFirstIn: resetFirstIn,
+	}
+});

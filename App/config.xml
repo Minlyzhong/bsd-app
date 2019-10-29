@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.bestinfo.HPDJ" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>党建E网通</name>
+    <description>
+    </description>
+    <author email="kwanworkios@163.com">
+        kwan
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
+    <engine name="android" spec="~5.2.2" />
+    <plugin name="cordova-plugin-whitelist" spec="1" />
+    <plugin name="org.devgeeks.Canvas2ImagePlugin" spec="https://github.com/devgeeks/Canvas2ImagePlugin.git" />
+    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
+    <plugin name="call-number" spec="git+https://github.com/Rohfosho/CordovaCallNumberPlugin.git" />
+    <plugin name="cordova-plugin-device" spec="^1.1.6" />
+    <plugin name="com-badrit-macaddress" spec="git+https://github.com/mohamed-salah/MacAddress.git" />
+    <plugin name="cordova-plugin-battery-status" spec="^1.2.4" />
+    <plugin name="cordova-plugin-baidupush" spec="^1.0.5" />
+    <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
+</widget>

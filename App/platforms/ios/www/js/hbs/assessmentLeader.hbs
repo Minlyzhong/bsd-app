@@ -1,0 +1,30 @@
+{{#.}}
+	<li>
+		<a href="#" class="item-link item-content assessLeaderContent" data-id="{{deptId}}" data-name="{{deptName}}" data-count="{{count}}" data-point="{{point}}">
+			<div class="item-media">
+				<i class="icon kpi-group"></i>
+			</div>
+			<div class="item-inner">
+				<div class="item-title-row">
+					<div class="item-title kpi-a-list-item-title ">{{deptName}}</div>
+					<div class="item-after kpi-a-list-item-after">排名:{{rank}}</div>
+				</div>
+				<div class="item-subtitle kpi-a-list-item-sb">更新时间: {{date}}</div> 
+				<div class="kpi-a-list-item-subTitle">
+					<div>
+						<i class="icon kpi-icon-people"></i>
+						<span>{{people}}</span>
+					</div>
+					<div>
+						<i class="icon kpi-icon-count"></i>
+						<span>{{count}}</span>
+					</div>
+					<div>
+						<i class="icon kpi-icon-score"></i>
+						<span>{{point}}</span>
+					</div>
+				</div>
+			</div>
+		</a>
+	</li>
+{{/.}}

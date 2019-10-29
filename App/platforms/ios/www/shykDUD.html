@@ -1,0 +1,186 @@
+<div data-page="rank/shykDUD" class="page no-tabbar rankPage">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left sliding">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center sliding shykdN" style="left:0px">3+X考核统计</div>
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+				<!--<a href="#" class="link icon-only rankDetail"><i class="icon icon-study"></i></a>-->
+			</div>
+		</div>
+	</div>
+	<!--搜索框-->
+	<div class="searchRank" style="margin-top: 44px;">
+		<div class="searchbar contactsShowPeopleSearchBar shykuduSearchBar" style="z-index: 2;">
+			<div class="searchbar-input">
+				<input type="search" placeholder="搜索" id="shykuduSearch" />
+				<a href="#" class="searchbar-clear shykuduSearchClear"></a>
+			</div>
+			<div class="searchCancelBtn">取消</div>
+		</div>
+	</div>
+	<!--<div class="leaderInfo" style="margin-top: 0px;">
+		<div class="kpi-a-header">
+			<div class="row no-gutter">
+				<div class="col-100 headRank">
+					<span class="span deptName"></span><br/>
+				</div>
+				<div class="col-50 row-header b-b r-first">
+					<span class="span1 peopleTotal">--</span>
+					<span class="span2">(未完成支部)</span>
+				</div>
+				<div class="col-50 row-header b-b">
+					<span class="span1 assessCount">--</span>
+					<span class="span2">(已完成支部)</span>
+				</div>
+			</div>
+			<div class="kpi-a-list-item-subTitle" style="padding: 15px 10px;">
+				<div>
+					<i class="icon kpi-icon-people"></i>
+					<span>(支部总数)</span>
+				</div>
+				<div>
+					<i class="icon icon-UDone"></i>
+					<span>(未完成支部)</span>
+				</div>
+				<div>
+					<i class="icon icon-Done"></i>
+					<span>(已完成支部)</span>
+				</div>
+			</div>
+		</div>
+	</div>-->
+	<div class="conInfoTab atdjdTab" style="z-index: 2; border-top: 1px #D9D9D9 solid;">
+		<div data-index="0">已参与<span class='done' ></span></div>
+		<div data-index="1">未参与<span class='uDone' ></span></div>
+	</div>
+	<div class="conInfoTab" style="border-bottom: 1px solid #EBEBEB;z-index: 2; height: 50px;position: absolute;top: 118px;background-color: #FFFFFF;color:#458fd2;">
+		<div class="" style="display:block;margin-top:8px;background-color: #FFFFFF;border-right: 1px solid #EBEBEB;">支部名称</div>
+		<div class="" style="display:block;margin-top:8px;background-color: #FFFFFF;">分数</div>
+	</div>
+	<!--已参与-->
+	<div class="page-content infinite-scroll shykD pull-to-refresh-content" style="padding-top: 0px;margin-top:40px;padding-bottom: 25px;">
+		<div class="list-block media-list kpi-a-list" style="margin-bottom: 280px;">
+			<div class="pull-to-refresh-layer" style="margin-top:-10px">
+				<div class="preloader"></div>
+				<div class="pull-to-refresh-arrow"></div>
+			</div>
+			<ul>
+				<div class="infinite-scroll-preloader">
+				    <div class="preloader" style="left:35%;margin-left:0px;margin-top:0px;position:absolute;"></div>
+				    <div style="position: absolute;left: 45%;font-size: 17px;">加载中...</div>
+				</div>
+			</ul>
+		</div>
+	</div>
+	<div class="page-content infinite-scroll shykDSearch pull-to-refresh-content" style="padding-top: 0px;margin-top:40px;padding-bottom: 25px;display: none;">
+		<div class="list-block media-list kpi-a-list" style="margin-bottom: 280px;">
+			<div class="pull-to-refresh-layer" style="margin-top:-10px">
+				<div class="preloader"></div>
+				<div class="pull-to-refresh-arrow"></div>
+			</div>
+			<ul>
+				<!--<div class="infinite-scroll-preloader">
+				    <div class="preloader" style="left:35%;margin-left:0px;margin-top:0px;position:absolute;"></div>
+				    <div style="position: absolute;left: 45%;font-size: 17px;">加载中...</div>
+				</div>-->
+			</ul>
+			<div class="shykDNotFound">找不到该支部</div>
+		</div>
+	</div>
+	<!--未参与-->
+	<div class="page-content infinite-scroll shykUD pull-to-refresh-content" style="padding-top: 0px;margin-top:40px;padding-bottom: 25px;display: none;">
+		<div class="list-block media-list kpi-a-list" style="margin-bottom: 280px;">
+			<div class="pull-to-refresh-layer" style="margin-top:-10px">
+				<div class="preloader"></div>
+				<div class="pull-to-refresh-arrow"></div>
+			</div>
+			<ul>
+				<div class="infinite-scroll-preloader">
+				    <div class="preloader" style="left:35%;margin-left:0px;margin-top:0px;position:absolute;"></div>
+				    <div style="position: absolute;left: 45%;font-size: 17px;">加载中...</div>
+				</div>
+			</ul>
+		</div>
+	</div>
+	<div class="page-content infinite-scroll shykUDSearch pull-to-refresh-content" style="padding-top: 0px;margin-top:40px;padding-bottom: 25px;display: none;">
+		<div class="list-block media-list kpi-a-list" style="margin-bottom: 280px;">
+			<div class="pull-to-refresh-layer" style="margin-top:-10px">
+				<div class="preloader"></div>
+				<div class="pull-to-refresh-arrow"></div>
+			</div>
+			<ul>
+				<!--<div class="infinite-scroll-preloader">
+				    <div class="preloader" style="left:35%;margin-left:0px;margin-top:0px;position:absolute;"></div>
+				    <div style="position: absolute;left: 45%;font-size: 17px;">加载中...</div>
+				</div>-->
+			</ul>
+			<div class="shykUDNotFound">找不到该支部</div>
+		</div>
+	</div>
+	<!--搜索box-->
+	<div class="shykdudSearchBox" style="top:50px">
+		<div class="content-block-title">请输入筛选条件</div>
+		<div class="list-block inputs-list inset">
+			<ul>
+				<li class="shykSearchType" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position:right">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">查询类型</div>
+							<!--<div class="item-input" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position: 170px 18px;">-->
+							<div class="item-input" style="margin-right: 20px;">
+								<select id="shykSearchType" style="text-overflow:ellipsis;">
+								</select>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="shykDeptName">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">支部名称</div>
+							<div class="item-input">
+								<input type="text" id="shykDeptName" name="shykDeptName" placeholder="输入关键字/名称" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="shykStartTime">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">开始时间</div>
+							<div class="item-input">
+								<input type="text" id="shykStartTime" name="shykStartTime" placeholder="选择开始时间" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="shykEndTime">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">结束时间</div>
+							<div class="item-input">
+								<input type="text" id="shykEndTime" name="shykEndTime" placeholder="选择结束时间" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="m-t-10 row">
+						<div class="col-25">
+							<a href="#" class="button resetBtn color-green button-big active">清空</a>
+						</div>
+						<div class="col-50">
+							<a href="#" class="button searchBtn button-big active">完成</a>
+						</div>
+						<div class="col-25">
+							<a href="#" class="button shykdudSearchClose color-red button-big active">取消</a>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

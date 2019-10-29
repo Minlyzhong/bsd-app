@@ -1,0 +1,630 @@
+/*
+ * 考核
+ */
+
+
+/*领导页面*/
+
+.kpi-a-header {
+	position: relative;
+	width: 100%;
+	height: auto;
+	background: #FFFFFF;
+	z-index: 99;
+}
+
+.kpi-a-header .row-header {
+	position: relative;
+	display: block;
+	text-align: center;
+	height: 100px;
+	padding-top: 20px;
+	color: #458fd2;
+}
+
+.r-first:after {
+	position: absolute;
+	content: '';
+	width: 1px;
+	height: 60%;
+	top: 20px;
+	right: 0;
+	left: auto;
+	bottom: auto;
+	display: block;
+	z-index: 15;
+	-webkit-transform-origin: 50% 100%;
+	transform-origin: 50% 100%;
+	background: #EBEBEB;
+}
+
+.kpi-a-header .row-header span {
+	display: block;
+	color: #458fd2;
+}
+
+.kpi-a-header .row-header .span1 {
+	font-size: 24px;
+}
+
+.kpi-a-header .row-header .span2 {
+	font-size: 16px;
+}
+
+.b-r {
+	border-right: 1px solid #EBEBEB;
+}
+
+.b-b {
+	border-bottom: 1px solid #EBEBEB;
+}
+
+.kpi-a-list {
+	margin: 15px auto;
+}
+
+.kpi-group {
+	background-image: url(../img/icon/icon-group.png);
+	height: 48px;
+	width: 48px;
+}
+
+.kpi-icon-people {
+	background-image: url(../img/icon/icon-people.png);
+	height: 22px;
+	width: 22px;
+}
+
+.kpi-icon-count {
+	background-image: url(../img/icon/icon-count.png);
+	height: 22px;
+	width: 22px;
+}
+
+.icon-Done {
+	background-image: url(../img/icon/Done.png);
+	height: 22px;
+	width: 22px;
+}
+.icon-UDone {
+	background-image: url(../img/icon/UnDone.png);
+	height: 22px;
+	width: 22px;
+}
+
+.kpi-icon-forward {
+	background-image: url(../img/icon/icon-forward.png);
+	height: 22px;
+	width: 22px;
+}
+
+.kpi-icon-score {
+	background-image: url(../img/icon/icon-score.png);
+	height: 22px;
+	width: 22px;
+}
+
+.kpi-a-list-item-title {
+	font-size: 16px;
+	text-decoration: none;
+	color: #333333;
+	overflow: hidden;
+	-ms-text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+}
+
+.kpi-a-list-item-after {
+	font-size: 13px;
+	color: #929292;
+}
+
+.kpi-a-list-item-sb {
+	font-size: 13px;
+	color: #929292;
+	padding-top: 10px;
+}
+
+.kpi-a-list-item-subTitle {
+	width: 100%;
+	position: relative;
+	padding: 10px 15px;
+	box-sizing: border-box;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	-webkit-justify-content: space-between;
+	justify-content: space-between;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+}
+
+.kpi-a-list-item-subTitle span {
+	color: #929292;
+}
+
+.assessListChart,
+.assessPeopleListChart {
+	position: relative;
+	width: 100%;
+	height: 300px;
+	background: #FFFFFF;
+	border-bottom: solid #C8C7CC 1px;
+}
+
+.assessListTopCard {
+	width: 100%;
+	height: 100px;
+	background: white;
+}
+
+.assessListTopRow {
+	position: relative;
+	box-sizing: border-box;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	-webkit-justify-content: space-between;
+	justify-content: space-between;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+}
+
+.assessListScoreTitle {
+	padding-left: 20px;
+	padding-top: 20px;
+	color: #A5A1A1;
+	padding-right: 20px;
+}
+
+.assessListScore,
+.assessListTime {
+	padding-bottom: 10px;
+	padding-left: 20px;
+	color: #369;
+	font-size: 40px;
+	padding-right: 20px;
+}
+
+.assessListCheck {
+	background-color: #36689a;
+	border: none;
+	margin-right: 10px;
+	margin-left: 10px;
+	color: #fff;
+	font-size: 17px;
+	height: 44px;
+	line-height: 42px;
+}
+
+.leaderInfo {
+	border-bottom: solid #c8c7cc 1px;
+}
+
+
+/*领导详情一层页面*/
+
+.media-avater img {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+}
+
+.k-group-t {
+	font-weight: normal !important;
+}
+
+.k-group-after {
+	color: #F43530 !important;
+	font-size: 14px !important;
+}
+
+.k-group-sub {
+	padding-top: 15px;
+	font-size: 14px !important;
+	color: #929292;
+}
+
+.k-group-sub .s-r {
+	float: right;
+}
+
+
+/*考核页面*/
+
+.view-refresh {
+	position: absolute;
+	top: 15px;
+	right: 20px;
+	z-index: 9999;
+}
+
+.icon-refresh {
+	width: 24px;
+	height: 24px;
+	background-image: url(../img/icon/icon-refresh.png);
+}
+
+.kpi-content-header {
+	position: relative;
+	width: 100%;
+	height: 180px;
+	background: #ED4C3C;
+}
+
+.kpi-type-swiper {
+	width: 100%;
+	height: 44px;
+	color: #999999;
+	position: relative;
+	z-index: 999;
+	background: #F9F9F9;
+}
+
+.kpi-type-swiper:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	right: auto;
+	top: auto;
+	height: 1px;
+	width: 100%;
+	background-color: #c4c4c4;
+	display: block;
+	z-index: 15;
+	-webkit-transform-origin: 50% 100%;
+	transform-origin: 50% 100%;
+}
+
+.kpi-type-swiper .swiper-slide {
+	height: 42px;
+	width: 25%;
+	line-height: 47px;
+	text-align: center;
+	font-size: 14px;
+	-ms-text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+	overflow: visible;
+}
+
+.cur {
+	color: #ff626e;
+	border-bottom: 2px solid #ff626e;
+}
+
+.kpi-content-swiper {
+	width: 100%;
+	height: -webkit-calc(61%);
+	overflow-y: auto;
+}
+
+.kpi-content-swiper .swiper-slide {
+	width: 100%;
+	height: 100%;
+}
+
+.kpi-content-list {
+	margin: 0 auto;
+}
+
+.kpi-content-list .kpi-title {
+	font-size: 16px;
+	color: #404040;
+	font-weight: normal !important;
+	padding-bottom: 20px;
+}
+
+.kpi-content-list .sub-title {
+	font-size: 14px;
+	padding-bottom: 10px;
+	color: #999999;
+}
+.sub-title {
+	font-size: 14px;
+	padding-bottom: 10px;
+	color: #999999;
+}
+
+.kpi-content-list .kpi-text {
+	font-size: 14px;
+	color: #999999;
+	height: 30px;
+}
+
+.kpi-content-list .after-title {
+	color: #FF3B30;
+	font-size: 14px;
+}
+
+.icon-plan {
+	width: 32px;
+	height: 32px;
+	background-image: url(../img/icon/icon-plan.png);
+}
+
+.icon-active {
+	width: 28px;
+	height: 28px;
+	background-image: url(../img/icon/icon-active.png);
+}
+
+.icon-study {
+	width: 24px;
+	height: 24px;
+	background-image: url(../img/icon/icon-studyWhite.png);
+}
+
+.swiper-container {
+	margin: 0 auto;
+	position: relative;
+	z-index: 1;
+}
+
+.assessDetailTitle {
+	padding-top: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
+	font-size: 15px;
+}
+
+
+/*
+ * 考核详情页面
+ */
+
+.kp-label {
+	width: 30%;
+	-webkit-flex-shrink: 0;
+	-ms-flex: 0 0 auto;
+	flex-shrink: 0;
+	color: #404040;
+	font-size: 14px;
+}
+
+.kpiPicture {
+	overflow: visible;
+}
+
+.picContainer {
+	float: left;
+	position: relative;
+	margin-right: 9px;
+	margin-bottom: 9px;
+	width: 77px;
+	height: 77px;
+	border: 1px solid #D9D9D9;
+}
+
+.picSize {
+	width: 77px;
+	height: 77px;
+}
+
+.file-panel {
+	position: absolute;
+	height: 23px;
+	background: rgba( 0, 0, 0, 0.5);
+	width: 100%;
+	bottom: 0;
+	left: 0;
+	text-align: center;
+	overflow: hidden;
+	z-index: 300;
+}
+
+.file-panel .icon-delete {
+	width: 24px;
+	height: 24px;
+	margin-bottom: 1px;
+	background-image: url(../img/icon/icon-delete.png);
+	cursor: pointer;
+}
+
+.assesserLeftList,
+.assesserLeftListSeason,
+.assesserLeftListYear
+{
+	width: 99%;
+	/*border-right: solid 1px #c8c7cc;*/
+	margin-top: 35px;
+	margin-bottom: 5px;
+}
+
+.assesserLeftList .item-content,
+.assesserLeftListSeason .item-content,
+.assesserLeftListYear .item-content
+{
+	padding: 0px;
+}
+
+.assesserLeftList .item-inner,
+.assesserLeftListSeason .item-inner,
+.assesserLeftListYear .item-inner
+{
+	padding-left: 15px;
+}
+
+.assesserLeftList .item-title,
+.assesserLeftListSeason .item-title,
+.assesserLeftListYear .item-title
+{
+	width: 100%;
+	text-align: center;
+	font-size: 15px;
+	color: gray;
+}
+
+.assesserRightList,
+.assesserRightListSeason,
+.assesserRightListYear
+{
+	width: 100%;
+	margin-top: 35px;
+	margin-bottom: 5px;
+}
+.threeMeetingsAndOneClassRightList,
+.threeMeetingsAndOneClassRightListSeason,
+.threeMeetingsAndOneClassRightListYear
+{
+	width: 100%;
+	margin-top: 90px;
+	margin-bottom: 5px;
+}
+
+.threeMeetingsAndOneClassPaperDetailSearchBarD,
+.shykuduSearchBar,
+.rankDeptSearchBar,
+.threePlusXStatisticsSearchBar,
+.threeMeetingsAndOneClassPaperDetailSearchBar,
+.threeMeetingsAndOneClassSearchBar,
+.assessSearchBar,
+.userRankSearchBar,
+.payPeopleSearchBar,
+.payShowPeopleSearchBar,
+.contactsShowPeopleSearchBar,
+.contactsPeopleSearchBar {
+	padding: 0px;
+	background: #ed4c3c;
+	border-bottom: none;
+	width: 100%;
+	height: 36px;
+	z-index: 1;
+}
+
+.threeMeetingsAndOneClassPaperDetailSearchBarD .searchbar-input,
+.shykuduSearchBar .searchbar-input,
+.rankDeptSearchBar .searchbar-input,
+.threePlusXStatisticsSearchBar .searchbar-input,
+.threeMeetingsAndOneClassPaperDetailSearchBar .searchbar-input,
+.threeMeetingsAndOneClassSearchBar .searchbar-input,
+.userRankSearchBar .searchbar-input,
+.assessSearchBar .searchbar-input,
+.payPeopleSearchBar .searchbar-input,
+.payShowPeopleSearchBar .searchbar-input,
+.contactsShowPeopleSearchBar .searchbar-input,
+.contactsPeopleSearchBar .searchbar-input {
+	margin-left: 5%;
+	margin-right: 5%;
+	height: 24px;
+}
+
+.threeMeetingsAndOneClassPaperDetailSearchBarD input[type="search"],
+.shykuduSearchBar input[type="search"],
+.rankDeptSearchBar input[type="search"],
+.threePlusXStatisticsSearchBar input[type="search"],
+.threeMeetingsAndOneClassPaperDetailSearchBar input[type="search"],
+.threeMeetingsAndOneClassSearchBar input[type="search"],
+.userRankSearchBar input[type="search"],
+.assessSearchBar input[type="search"],
+.payPeopleSearchBar input[type="search"],
+.payShowPeopleSearchBar input[type="search"],
+.contactsShowPeopleSearchBar input[type="search"],
+.contactsPeopleSearchBar input[type="search"] {
+	text-align: center;
+	border-radius: 12px;
+}
+
+.shykDDetailPageSearch,
+.threeMeetingsAndOneClassPaperDetailSearch,
+.threeMeetingsAndOneClassSearchList,
+.assesserSearchList,
+.payPeopleerSearchList,
+.contactList,
+.contactSearchList {
+	margin: 0px;
+	position: absolute;
+	top: 79px;
+	right: 0px;
+	width: 100%;
+	z-index: 666666;
+	background: white;
+	height: 100%;
+	overflow: auto;
+	display: none;
+}
+
+.shykDetailNotFound,
+.shykNotFound,
+.shykSeasonNotFound,
+.shykYearNotFound,
+.threeMeetingsAndOneClassPaperDetailNotFound,
+.threeMeetingsAndOneClassNotFound,
+.userRankNotFound,
+.assessNotFound,
+.payPeopleNotFound,
+.contactsPeopleNotFound,
+.contactsNotFound,
+.contactsDeptNotFound,
+.firstPeopleNotFound {
+	width: 100%;
+	font-size: 14px;
+	margin-top: 10px;
+	color: #808080;
+	text-align: center;
+	display: none;
+}
+.shykDetailNotFound{
+	margin-top: 45px;	
+}
+
+
+.threePlusXStatisticsCancelBtn,
+.threeMeetingsAndOneClassPaperDetailCancelBtn,
+.threeMeetingsAndOneClassPaperDetailCancelBtnD,
+.threeMeetingsAndOneClassCancelBtn,
+.searchCancelBtn {
+	color: white;
+	width: 50px;
+	margin-right: 5%;
+	display: none;
+	text-align: center;
+}
+
+.searchbar .threePlusXStatisticsSearchClear,
+.searchbar .threeMeetingsAndOneClassPaperDetailSearchClear,
+.searchbar .threeMeetingsAndOneClassSearchClear,
+.searchbar .assessSearchClear,
+.searchbar .payPeopleSearchClear {
+	opacity: 0;
+	width: 30px;
+	height: 30px;
+	top: -2px;
+	pointer-events: auto;
+}
+
+.assessLogin {
+	text-align: center;
+	width: 100%;
+	height: 100%;
+	padding: 50% 10px;
+}
+
+.atdHead {
+	padding: 10px;
+	font-size: 15px;
+}
+
+.atdHead .atdType {
+	color: #999;
+}
+
+.atdHead .atdName {
+	font-size: 18px;
+	padding-bottom: 10px;
+}
+
+.atdBody {
+}

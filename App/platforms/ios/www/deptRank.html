@@ -1,0 +1,82 @@
+<div data-page="deptRank/deptRank" class="page navbar-fixed no-tabbar deptR">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left sliding">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center sliding pageTitle"></div>
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+			</div>
+		</div>
+	</div>
+	<form class="searchbar searchbar-init deptRankSearchBar">
+		<div class="searchbar-input">
+			<input type="search" id="deptRankSearch" placeholder="点击输入查询条件" readonly style="text-align: center;">
+			<!--<a href="#" class="searchbar-clear"></a>-->
+		</div>
+		<!--<a href="#" class="searchbar-cancel"style="color: white;">取消</a>-->
+	</form>
+	<div class="searchbar-overlay"></div>
+	<div class="page-content infinite-scroll">
+		<div class="list-block media-list deptRankList">
+			<ul>
+			</ul>
+		</div>
+	</div>
+	<div class="deptRankNameBox searchBox">
+		<ul>
+		</ul>
+	</div>
+	<div class="recordSearch deptRankSearch" style="top: 44px; height: auto;">
+		<div class="content-block-title">请输入查询条件</div>
+		<div class="list-block inputs-list inset">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">支部名称</div>
+							<div class="item-input">
+								<input type="text" id="deptRankName" name="deptRankName" placeholder="输入支部名称">
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">查询时间</div>
+							<div class="item-input">
+								<input type="text" id="deptRankDate" name="deptRankDate" placeholder="选择开始时间" readonly="">
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="item-content">
+					<div class="item-inner">
+						<div class="item-title label">得分排序</div>
+						<div class="item-input">
+							<div class="buttons-row companyRow deptRankRow">
+								<a href="#" class="button color-blue active desc" data-value="0">降序</a>
+								<a href="#" class="button color-red asc" data-value="1">升序</a>
+							</div>
+						</div>
+					</div>
+				</li>	
+				<li>
+					<div class="m-t-10 row">
+						<div class="col-25">
+							<a href="#" class="button deptRankResetBtn color-green button-big active">清空</a>
+						</div>
+						<div class="col-50">
+							<a href="#" class="button deptRankSearchBtn button-big active">完成</a>
+						</div>
+						<div class="col-25">
+							<a href="#" class="button deptRankCloseBtn color-red button-big active">取消</a>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,127 @@
+<div data-page="assessDemand/assessDemand" class="page navbar-fixed no-tabbar assessDemandPage">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left sliding">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center sliding pageTitle"></div>
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+				<a href="#" class="link icon-only searchIcon"><i class="icon icon-search"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="demandHistory">
+			<div class="demandHistoryTitle">
+				<div class="dHTLine"></div>
+				<div class="dHTitle">历史查询记录</div>
+				<div class="dHTLine"></div>
+			</div>
+			<div class="list-block media-list demandHistoryList">
+			</div>
+		</div>
+		<div class="card recordCard demandCard" style="display: none;margin-top: 22%;">
+			<div class="card-header item-content level-blue">
+				<div class="demandTitle"></div>
+				<div class="reviewState">
+					<div class="notReview">关闭</div>
+				</div>
+			</div>
+			<div class="card-content" style="border-bottom: 1px #f2f2f2 solid;">
+				<div class="card-content-inner">
+					<p class="demandTime"></p>
+					<p class="demandTp"></p>
+					<p class="demandTopic"></p>
+				</div>
+			</div>
+			<div class="row no-gutter dynamicReportList">
+				<div class="col-100 grid" data-type="0" style="background: url(img/icon/icon-xingcheng.png) no-repeat 15px; background-size: 22px; padding-left: 45px;">考核人数（人）：<span class="people">22</span></div>
+				<div class="col-100 grid" data-type="1" style="background: url(img/icon/assessment.png) no-repeat 15px; background-size: 22px; padding-left: 45px;">考核次数（次）：<span class="detialTotal">113</span></div>
+				<div class="col-100 grid" data-type="2" style="background: url(img/icon/userScoreInfo.png) no-repeat 15px; background-size: 22px; padding-left: 45px;">考核得分（分）：<span class="detialPoint">312</span></div>
+			</div>
+		</div>
+	</div>
+	<div class="deptNameBox searchBox">
+		<ul>
+		</ul>
+	</div>
+	<div class="testPaperBox searchBox">
+		<ul>
+		</ul>
+	</div>
+	<div class="topicBox searchBox">
+		<ul>
+		</ul>
+	</div>
+	<div class="recordSearch demandSearch" style="top: 44px; height: auto;">
+		<div class="content-block-title">请输入查询条件</div>
+		<div class="list-block inputs-list inset">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">单位名称</div>
+							<div class="item-input">
+								<input type="text" id="demandDeptName" name="demandDeptName" placeholder="输入党委/党总支/支部名称">
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">开始时间</div>
+							<div class="item-input">
+								<input type="text" id="demandBeginDate" name="demandBeginDate" placeholder="选择开始时间" readonly="">
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">结束时间</div>
+							<div class="item-input">
+								<input type="text" id="demandEndDate" name="demandEndDate" placeholder="选择结束时间" readonly="">
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">考核项</div>
+							<div class="item-input">
+								<input type="text" id="demandTestPaper" name="demandTestPaper" placeholder="选择考核项（选填）">
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">考核清单</div>
+							<div class="item-input">
+								<input type="text" id="demandTopic" name="demandTopic" placeholder="选择考核清单（选填）">
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="m-t-10 row">
+						<div class="col-25">
+							<a href="#" class="button demandResetBtn color-green button-big active">清空</a>
+						</div>
+						<div class="col-50">
+							<a href="#" class="button demandSearchBtn button-big active">完成</a>
+						</div>
+						<div class="col-25">
+							<a href="#" class="button demandCloseBtn color-red button-big active">取消</a>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,88 @@
+<div data-page="signReport/signReport" class="page with-subnavbar no-tabbar signReport">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left sliding">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center sliding">考勤统计</div>
+			<div class="right	 sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+			</div>
+			<div class="subnavbar">
+				<div class="buttons-row signBtnRow">
+					<a href="#tab1" class="button tab-link dayPick" data-type="day">日统计</a>
+					<a href="#tab2" class="button tab-link weekPick" data-type="week">周统计</a>
+					<a href="#tab3" class="button tab-link monthPick" data-type="month">月统计</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div class="signSearchBox">
+			<div class="assessmentSort" style="color:#929292;padding: 5px;">查询
+				<img class="sortIcon" src='img/assessmentResultImg/downIcon.png' style="position:absolute"/>
+			</div>
+			<div class="list-block signOrganization">
+				<ul>
+					<li class="swipeout">
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title kp-label">组织选择:</div>
+								<div class="item-input">
+									<input type="text" id="signDept" style="font-size: 14px;" name="signDept" value="" placeholder="向左滑动添加" readonly/>
+								</div>
+							</div>
+						</div>
+						<div class="swipeout-actions-right">
+							<a href="#" class="swipeout-close addSignLeader" style="background-color: #1296db;">添加</a>
+							<a href="#" class="swipeout-close bg-red removeSignLeader">移除</a>
+						</div>
+					</li>
+					<!--<li class="sortTypeChoose">
+				      <div class="item-content">
+				        <div class="item-inner">
+				          <div class="item-input" style="text-align: center;">
+				            <input type="text" placeholder="请选择" readonly id="picker-sort">
+				          </div>
+				        </div>
+				      </div>
+					</li>-->
+					<li>
+						<div class="m-t-10 row" style="margin: 0px !important;">
+							<div class="col-50">
+								<a href="#" class="button signSearchBtn button-big active">查询</a>
+							</div>
+							<div class="col-50">
+								<a href="#" class="button signCloseBtn color-red button-big active">取消</a>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="tabs">
+			<div id="tab1" class="tab dayPage">
+				<div class="signCalendarDiv">
+					<input type="text" id="dayCalId" class="signCalendar" readonly />
+					<!--<div class="signCalendarIcon">
+						<i class="icon icon-calendar"></i>
+					</div>-->
+				</div>
+				<div class="dayReport"></div>
+			</div>
+			<div id="tab2" class="tab weekPage">
+				<div class="signCalendarDiv">
+					<input type="text" id="weekCalId" class="signClearCal" readonly />
+					<input type="text" id="weekId" class="signCalendar" readonly /> 
+				</div>
+				<div class="weekReport"></div>
+			</div>
+			<div id="tab3" class="tab monthPage">
+				<div class="signCalendarDiv">
+					<input type="text" id="monthId" class="signCalendar" readonly />
+				</div>
+				<div class="monthReport"></div>
+			</div>
+		</div>
+	</div>
+</div>

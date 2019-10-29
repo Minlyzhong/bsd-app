@@ -1,0 +1,45 @@
+{{#.}}
+<li>
+	<a href="#" class="item-link item-content" data-deptId="{{deptId}}">
+		<div class="item-inner">
+			<div class="item-title-row" >
+				<div class="dynamicContentTitle">{{deptName}}</div>
+			</div>
+			<div style="color: gray;">
+				<div class="dynamicRow dynamicReportContent">
+					<div class="dynamicContent">
+					{{#compare pickType '==' 1}}
+					<span style="color: #ed4c3c;">总人数：{{people}}</span>
+					{{else}}
+					人数(次)：{{people}}
+					{{/compare}}
+					</div>
+					<div class="dynamicContent">
+					{{#compare pickType '==' 4}}
+					<span style="color: #ed4c3c;">日志数量(条)：{{workTotal}}</span>
+					{{else}}
+					日志数量(条)：{{workTotal}}
+					{{/compare}}
+					</div>
+				</div>
+				<div class="dynamicRow dynamicReportContent">
+					<div class="dynamicContent">
+					{{#compare pickType '==' 3}}
+					<span style="color: #ed4c3c;">考核次数(次)：{{detialTotal}}</span>
+					{{else}}
+					考核次数(次)：{{detialTotal}}
+					{{/compare}}
+					</div>
+					<div class="dynamicContent">
+					{{#compare pickType '==' 2}}
+					<span style="color: #ed4c3c;">考核得分(分)：{{detialPoint}}</span>
+					{{else}}
+					考核得分(分)：{{detialPoint}}
+					{{/compare}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</a>
+</li>
+{{/.}}

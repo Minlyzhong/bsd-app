@@ -1,0 +1,27 @@
+{{#.}}
+<li>
+	<a href="#" class="item-link item-content assessListContent" data-id="{{testpaperId}}" data-name="{{paperTitle}}">
+		<div class="item-media media-avater">
+			<img src="img/icon/icon-plan.png" />
+		</div>
+		<div class="item-inner">
+			<div class="item-title-row">
+				<div class="item-title k-group-t">{{paperTitle}}</div>
+				{{#compare pointDetail '>' 0}}
+				<div class="item-after k-group-after" style="color: green !important;">总分: {{point}}分</div>
+				{{else}}
+				<div class="item-after k-group-after" style="color: gray !important;">总分: {{point}}分</div>
+				{{/compare}}
+			</div>
+			<div class="item-subtitle k-group-sub">
+				<span class="">考核清单: {{topicCount}}项</span>
+				{{#compare countDetail '>' 0}}
+				<span class="s-r" style="color: green !important;">考核次数: {{count}}次</span>
+				{{else}}
+				<span class="s-r" style="color: gray !important;">考核次数: {{count}}次</span>
+				{{/compare}}
+			</div>
+		</div>
+	</a>
+</li>
+{{/.}}

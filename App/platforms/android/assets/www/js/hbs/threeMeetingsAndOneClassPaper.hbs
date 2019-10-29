@@ -1,0 +1,23 @@
+{{#.}}
+	<li style="overflow:hidden;position:relative;">
+		<a class="item-link item-content" data-id="{{id}}" data-score="{{score}}" data-target="{{target}}" data-minus="{{minus}}" data-memo="{{memo}}" style="padding-left: 0px;">
+			<!--<div class="item-media"><i class="icon icon-plan"></i></div>-->
+			<div class="item-inner" style="padding-left: 15px;">
+				<div class="item-title-row" style="height: 32px;">
+					<div class="item-title kpi-title">{{title}}</div>
+				</div>
+				<div class="item-subtitle sub-title" style="font-size:14px;">{{target}}</div>
+				<div class="item-title-row" style="height: 20px; background: 0px; padding-top: 5px;">
+					<div class="item-subtitle sub-title" style="color: #ED4C3C;">+{{score}}分</div>
+				</div>
+			</div>
+		</a>
+		{{#compare totalScore '>' '0'}}
+			<div class="item-subtitle sub-title getDetail" data-id="{{id}}" style="position: absolute;color: #3EAB46;font-size: 14px;"><i class='icon icon-point'></i>已得{{totalScore}}分</div>
+		{{/compare}}
+	</li>
+{{/.}}
+<div class="infinite-scroll-preloader">
+    <div class="preloader" style="left:35%;margin-left:0px;margin-top:0px;position:absolute;"></div>
+    <div style="position: absolute;left: 45%;;font-size: 17px;">加载中...</div>
+</div>

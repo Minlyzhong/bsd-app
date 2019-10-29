@@ -1,0 +1,21 @@
+{{#.}}
+<a href="#" class="cardLink" data-deptId="{{deptId}}" data-deptName="{{deptName}}" data-tpId="{{tpId}}" data-tpName="{{tpName}}" data-topicId="{{topicId}}" data-topicName="{{topicName}}" data-begin="{{begin}}" data-end="{{end}}">
+<div class="card recordCard">
+	<div class="card-header item-content">
+		<div></div>
+		<div class="reviewState">
+			<div class="notReview">删除记录</div>
+		</div>
+	</div>
+	<div class="card-content">
+		<div class="card-content-inner color-gray">
+			<p >单位名称：{{deptName}}</p>
+			<p >开始时间：{{begin}}</p>
+			<p>结束时间：{{end}}</p>
+			<p>考核项：{{tpName}}</p>
+			<p>考核清单：{{topicName}}</p>
+		</div>
+	</div>
+</div>
+</a>
+{{/.}}

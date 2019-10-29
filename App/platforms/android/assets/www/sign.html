@@ -1,0 +1,97 @@
+<div data-page="sign/sign" class="page no-tabbar">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left sliding">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center sliding">考勤登记</div>
+			<!--<div class="right sliding"></div>-->
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+				<div class="ownReport">个人统计</div>
+			</div>
+		</div>
+	</div>
+	<div class="page-content">
+		<div style="height: 4%;"></div>
+		<!--<input type="button" id="check" value="Check GPS state">-->
+		<div class="signCard" id="cardUp" disabled>
+			<div class="signCircle">上午
+				<div class="signTitle">上午上班</div>
+			</div>
+		</div>
+		<div class="signCard" id="cardDown" disabled>
+			<div class="signCircle" style="background: #43B535;">下午
+				<div class="signTitle">下午上班</div>
+			</div>
+		</div>
+		<div style="height: 4%;"></div>
+	</div>
+	<div class="signView">
+		<div class="content-block-title"style="padding-left: 15px;">我的打卡信息</div>
+		<div class="list-block inputs-list inset">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">考勤类型</div>
+							<div class="item-input">
+								<input type="text" id="signType" name="signType" placeholder="" readonly/>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">我的姓名</div>
+							<div class="item-input">
+								<input type="text" id="name" name="name" placeholder="" readonly/>
+							</div>
+						</div>
+					</div>
+				</li>
+				<!--<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">我的位置</div>
+							<div class="item-input">
+								<input type="text" id="position" name="position" placeholder="" readonly/>
+							</div>
+						</div>
+				</li>-->
+				<li>
+					<div class="item-content">
+						<div class="item-inner" style="padding-right:0px;">
+							<div class="item-title label">当前时间</div>
+							<div class="item-input">
+								<input type="text" id="time" name="time" placeholder="" readonly/>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">备注</div>
+							<div class="item-input">
+								<input type="text" id="demo" name="demo" placeholder="输入备注"/>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="m-t-10 row">
+						<div class="col-50">
+							<a href="#" class="button searchBtn button-big active">完成</a>
+						</div>
+						<div class="col-50">
+							<a href="#" class="button cancelBtn color-red button-big active">取消</a>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="signCover"></div>
+</div>

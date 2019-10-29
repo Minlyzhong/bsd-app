@@ -1,0 +1,92 @@
+<div data-page="assessment/threeMeetingsAndOneClassPaperDetail" class="page navbar-fixed no-tabbar historyclass">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left sliding">
+				<a href="index.html" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center sliding">三会一课上报历史</div>
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+			</div>
+		</div>
+	</div>
+	
+	<div class="threeMeetingsAndOneClassPaperDetailContent" style="background: white;margin-top: 44px;height: 100%;width: 100%;">
+		<div class="searchbar threeMeetingsAndOneClassPaperDetailSearchBar">
+			<div class="searchbar-input">
+				<input type="search" placeholder="名称/关键字查询" id="threeMeetingsAndOneClassPaperDetailSearch" />
+				<a href="#" class="searchbar-clear threeMeetingsAndOneClassPaperDetailSearchClear" style="display: none;"></a>
+			</div>
+			<div class="threeMeetingsAndOneClassPaperDetailCancelBtn">取消</div>
+		</div>
+		<div class="searchbar threeMeetingsAndOneClassChoose"><div class='fenlei'>分类（全部）</div><div class='threeMeetingsAndOneClassDate'>月份</div></div>
+		
+		
+		<div class="page-content infinite-scroll pull-to-refresh-content threeMeetingsAndOneClassPaperDetailPage" style="position: absolute;top: 0;width: 100%;right: 0;z-index: 0;">
+			<div class="pull-to-refresh-layer" style="margin-top: 0px;">
+				<div class="preloader"></div>
+				<div class="pull-to-refresh-arrow"></div>
+			</div>
+			<div class="list-block media-list threeMeetingsAndOneClassPaperDetailList">
+				<ul>
+				</ul>
+				<div class="shykDetailNotFound">找不到您的上报历史</div>
+			</div>
+		</div>
+		
+		<div class="page-content pull-to-refresh-content infinite-scroll threeMeetingsAndOneClassPaperDetailSearch" style="position: absolute;top: 0;width: 100%;right: 0;z-index: 0;">
+			<div class="pull-to-refresh-layer" style="margin-top: 20px;">
+					<div class="preloader">
+					</div>
+					<div class="pull-to-refresh-arrow">
+					</div>
+			</div>
+			<div class="list-block media-list kpi-content-list threeMeetingsAndOneClassPaperDetailSearchList">
+				<ul style="margin-bottom: 128px;">
+				</ul>
+				<div class="threeMeetingsAndOneClassPaperDetailNotFound">找不到您的上报历史</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="threeMeetingsAndOneClassPaperDetailSearchBox" style="top:50px">
+		<div class="content-block-title">请输入筛选条件</div>
+		<div class="list-block inputs-list inset">
+			<ul>
+				<li class="secretaryName">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">清单名称</div>
+							<div class="item-input">
+								<input type="text" id="threeMeetingsAndOneClassPaperDetailName" name="threeMeetingsAndOneClassPaperDetailName" placeholder="输入名称/关键字" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="threeMeetingsAndOneClassPaperDetailTime">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">选择时间</div>
+							<div class="item-input">
+								<input type="text" id="picker-describe1" name="threeMeetingsAndOneClassPaperDetailTime" placeholder="选择时间" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="m-t-10 row">
+						<div class="col-25">
+							<a href="#" class="button resetBtn color-green button-big active">清空</a>
+						</div>
+						<div class="col-50">
+							<a href="#" class="button searchBtn button-big active">完成</a>
+						</div>
+						<div class="col-25">
+							<a href="#" class="button threeMeetingsAndOneClassPaperDetailSearchClose color-red button-big active">取消</a>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

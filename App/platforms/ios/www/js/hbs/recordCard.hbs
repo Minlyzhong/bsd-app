@@ -1,0 +1,56 @@
+{{#.}}
+<div class="card recordCard" data-id = "{{workId}}" data-userId = "{{userId}}" data-loadTypeId = "{{loadTypeId}}" data-state = "{{state}}">
+	<div class="card-header item-content level-blue">
+		<div class="recordCardTitle">{{logTitle}}</div>
+		{{#compare loadTypeId '==' 1}}
+			<div class="reviewState">
+			{{#compare state '==' 0}}
+			<div class="notReview">未审阅</div>
+			{{else}}
+			<div class="reviewed">已审阅</div>
+			{{/compare}}</div>	
+		{{/compare}}
+	</div>
+	<div class="card-content"> 
+		<div class="card-content-inner">
+			<p class="color-gray workType">日志类型：{{logType}}</p>
+			<p class="color-gray">创建人：{{creator}}</p>
+	  		<p class="color-gray">所属组织：{{deptName}}</p>
+	  		<p class="color-gray">创建时间：{{logTime}}</p>
+	  		<div class="sendName" style="display: none;">{{userName}}</div>
+			<!--<p class="color-gray reviewName">
+				{{#compare loadTypeId '==' 0}}
+					审阅者：
+				{{else}}
+					发件人：
+				{{/compare}}{{userName}}
+			</p>-->
+	   		<!--<div class="company-span-row">
+				<span>类型: 三小场所 </span>
+				<span>经营者: <div class='companyOperator'></div></span>
+				<span>员工人数: <div class='companyEmp'></div></span>
+			</div>-->
+		</div>
+	</div>
+  	<div class="card-footer">
+      	<a href=# class="partyLike">
+      		<i class="icon
+      			{{#compare loadTypeId '==' 0}}
+      				icon-collect
+      			{{else}}
+	      			{{#compare isGood '==' false}}
+	      				icon-noCollect
+	      			{{else}}
+	      				icon-collect
+	      			{{/compare}}
+	      		{{/compare}}">
+      		</i>
+      		<span class="likeTotal">{{goodTotal}}</span>
+      	</a>
+    		<a href=# class="partyComment"style="margin-right: 20px;">
+    			<i class="icon icon-comment"></i>
+    			<span class="commentTotal">{{commentTotal}}</span>
+    		</a>
+  	</div>
+</div>
+{{/.}}

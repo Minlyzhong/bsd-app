@@ -1,0 +1,23 @@
+{{#.}}
+	<li class="item-content SmallList item-link card" data-id="{{id}}" data-title="{{catalogName}}" data-curl="{{catalogUrl}}" data-icon="{{catalogIcon}}" style="background-image:url({{catalogIcon}}) ;background-size:100%;background-repeat: no-repeat;">
+	{{!-- <div class="card"> --}}
+		<div class="card-content">
+			<div class="card-content-inner" style="padding-bottom:54px;" >
+
+					<div class="" style="color:#FFFFFF;font-size:30px;font-family:PingFang-SC-Medium;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;overflow: hidden;">{{catalogName}}</div>
+					<div class="subtitle" style="position:absolute;left:17px;top:75px; color:#FFFFFF;font-size:13px;width:230px;">{{dataFirst}}</div>
+				
+			</div>
+		</div>
+	{{!-- </div> --}}
+      {{!-- <div class="item-inner">
+      	{{#compare catalogIcon '==' ""}}
+		<img src="img/logo.png" style="width:50px;height:50px;"/>
+		{{else}}
+		<img src="{{basePath}}{{catalogIcon}}" style="width:50px;height:50px;"/>
+		{{/compare}}
+        <div class="item-title" style="position:absolute;left:60px;top:15px">{{catalogName}}</div>
+        <div class="item-title kp-label" style="width:200px;position:absolute;left:60px;top:40px;color:#999999;font-size:13px">{{dataFirst}}</div>
+      </div> --}}
+    </li>
+{{/.}}

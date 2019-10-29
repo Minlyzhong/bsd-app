@@ -1,0 +1,136 @@
+<div data-page="party/threePlusXStatistics" class="page navbar-fixed no-tabbar assessDemandPage">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left">
+				<a href="#" class="back link icon-only">
+					<i class="icon icon-eback"></i>
+				</a>
+			</div>
+			<div class="center threePlusXStatisticsTitle"></div>
+			<div class="right">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="threePlusXStatistics" style="background: white;margin-top: 44px;height: 100%;width: 100%;">
+		<!--<div class="searchbar threePlusXStatisticsSearchBar">
+			<div class="searchbar-input">
+				<input type="search" placeholder="查询" id="threePlusXStatisticsSearch" />
+				<a href="#" class="searchbar-clear threePlusXStatisticsSearchClear" style="display: none;"></a>
+			</div>
+			<div class="threePlusXStatisticsCancelBtn">取消</div>
+		</div>-->
+		<div class="buttons-row shykSelect">
+		        <a href="#tab1" class="tab-link active button buttonShyk">月份</a>
+		        <a href="#tab2" class="tab-link button buttonShykSeason">季度</a>
+		        <a href="#tab3" class="tab-link button buttonShykYear">年度</a>
+		</div>
+		
+		<div class="page-content shykTab" style="padding-top: 0px;">
+	        <div class="tabs-animated-wrap">
+	        	<div class="tabs">
+	        		<!--月度-->
+	          		<div id="tab1" class="tab active">
+	          			<div class="threePlusMonthTime list-block" style="margin: 0px;">
+						  <ul>
+						    <li>
+						      <div class="item-content">
+						        <div class="item-inner">
+						          <div class="item-input">
+						          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 85px;"></i>
+						            <input type="text" placeholder="选择日期" id="picker-describe" readonly>
+						          </div>
+						        </div>
+						      </div>
+						    </li>
+						  </ul>
+						</div>
+	          			<div class="page-content threePlusXStatisticsPage" style="padding-bottom:0px;padding-top:0px;">
+						</div>
+	          		</div>
+	          		<!--季度-->
+		          	<div id="tab2" class="tab">
+		          		<div class="threePlusSeasonTime list-block" style="margin: 0px;">
+						  <ul>
+						    <li>
+						      <div class="item-content">
+						        <div class="item-inner">
+						          <div class="item-input">
+						          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 70px;"></i>
+						            <input type="text" placeholder="选择日期" id="picker-describeSeason" readonly>
+						          </div>
+						        </div>
+						      </div>
+						    </li>
+						  </ul>
+						</div>
+		            	<div class="page-content threePlusXStatisticsPageSeason" style="padding-bottom:0px;padding-top:0px;">
+						</div>
+		          	</div>
+		          	<!--年份-->
+		            <div id="tab3" class="tab">
+		            	<div class="threePlusYearTime list-block" style="margin: 0px;">
+						  <ul>
+						    <li>
+						      <div class="item-content">
+						        <div class="item-inner">
+						          <div class="item-input">
+						          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 90px;"></i>
+						            <input type="text" placeholder="选择日期" id="picker-describeYear" readonly>
+						          </div>
+						        </div>
+						      </div>
+						    </li>
+						  </ul>
+						</div>
+		            	<div class="page-content threePlusXStatisticsPageYear" style="padding-bottom:0px;padding-top:0px;">
+						</div>
+		          	</div>       
+	        	</div>
+	      </div> 
+		</div>
+		<!--<div class="page-content threePlusXStatisticsPage" style="padding-bottom:0px;padding-top:0px;">
+		</div>-->
+	</div>
+	
+	<div class="threePlusXStatisticsSearchBox" style="top:50px">
+		<div class="content-block-title">请输入筛选条件</div>
+		<div class="list-block inputs-list inset">
+			<ul>
+				<li class="threePlusXStatisticsStartTime">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">开始时间</div>
+							<div class="item-input">
+								<input type="text" id="threePlusXStatisticsStartTime" name="threePlusXStatisticsStartTime" placeholder="选择开始时间" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="threePlusXStatisticsEndTime">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">结束时间</div>
+							<div class="item-input">
+								<input type="text" id="threePlusXStatisticsEndTime" name="threePlusXStatisticsEndTime" placeholder="选择结束时间" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="m-t-10 row">
+						<div class="col-25">
+							<a href="#" class="button resetBtn color-green button-big active">清空</a>
+						</div>
+						<div class="col-50">
+							<a href="#" class="button searchBtn button-big active">完成</a>
+						</div>
+						<div class="col-25">
+							<a href="#" class="button threePlusXStatisticsSearchClose color-red button-big active">取消</a>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

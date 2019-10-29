@@ -1,0 +1,220 @@
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">姓名</div>
+			<div class="item-after item-label"style="text-overflow: ellipsis;overflow: hidden;display: block;">{{userName}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">人员编号</div>
+			<div class="item-after item-label">{{userNo}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">手机号码</div>
+			<div class="item-after item-label">{{mobilePhone}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">所属组织</div>
+			<div class="item-after item-label">{{deptName}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">性别</div>
+			{{#compare sex '==' 0}}
+			
+				<div class="item-after item-label">男</div>
+			{{/compare}}
+			{{#compare sex '==' 1}}
+				<div class="item-after item-label">女</div>
+			{{/compare}}
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">职务</div>
+			<div class="item-label" style="text-align: right;width: 65%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;color: #8e8e93;">{{officerName}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">入党时间</div>
+			<div class="item-after item-label">{{partyTime}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">身份证</div>
+			<div class="item-after item-label">{{cardNo}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">政治面貌</div>
+			{{#each politicsArr}}
+					{{#compare  subKey 'equalNumber' ../politics}}
+					<div class="item-after item-label">{{subVal}}</div>
+					
+					{{/compare}}
+				{{/each}}
+			
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">民族</div>
+			{{#each minorityArr}}
+					{{#compare subKey 'equalNumber' ../minority}}
+					<div class="item-after item-label">{{subVal}}</div>
+					
+					{{/compare}}
+				{{/each}}
+			
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">学历</div>
+			{{#each educationArr}}
+					{{#compare subKey 'equalNumber' ../educat}}
+					<div class="item-after item-label">{{subVal}}</div>
+					
+					{{/compare}}
+				{{/each}}
+			
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">婚姻状况</div>
+			{{#each maritalArr}}
+					{{#compare subKey 'equalNumber' ../marital}}
+					<div class="item-after item-label">{{subVal}}</div>
+				
+					{{/compare}}
+				{{/each}}
+			
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">出生日期</div>
+			<div class="item-after item-label">{{birthday}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">参加工作时间 </div>
+			<div class="item-after item-label">{{workTime}}</div>
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">人员分类</div>
+			{{#each ryflArr}}
+					{{#compare subKey 'equalNumber' ../ryfl}}
+					<div class="item-after item-label">{{subVal}}</div>
+					{{/compare}}
+			{{/each}}
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">人员编制</div>
+			{{#each rybzArr}}
+					{{#compare subKey 'equalNumber' ../rybz}}
+					<div class="item-after item-label">{{subVal}}</div>
+					
+					{{/compare}}
+			{{/each}}
+			
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">职业分类</div>
+			{{!-- <div class="item-after item-label">{{zyfl}}</div> --}}
+			{{#each zyflArr}}
+					{{#compare subKey 'equalNumber' ../zyfl}}
+					<div class="item-after item-label">{{subVal}}</div>
+					{{/compare}}
+				{{/each}}
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">在职状态</div>
+			{{#each zzztArr}}
+					{{#compare subKey 'equalNumber' ../zzzt}}
+					<div class="item-after item-label">{{subVal}}</div>
+					{{/compare}}
+				{{/each}}
+			{{!-- <div class="item-after item-label">{{zzzt}}</div> --}}
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">行政职务</div>
+			{{#each xzzwArr}}
+					{{#compare subKey 'equalNumber' ../xzzw}}
+					<div class="item-after item-label">{{subVal}}</div>
+					{{/compare}}
+				{{/each}}
+			{{!-- <div class="item-after item-label">{{xzzw}}</div> --}}
+		</div>
+	</a>
+</li>
+<li>
+	<a href="#" class="item-link item-content">
+		<div class="item-inner">
+			<div class="item-title">职务级别</div>
+			{{!-- <div class="item-after item-label">{{zwjb}}</div> --}}
+			{{#each zwjbArr}}
+					{{#compare subKey 'equalNumber' ../zwjb}}
+					<div class="item-after item-label">{{subVal}}</div>
+					{{/compare}}
+				{{/each}}
+		</div>
+	</a>
+</li>

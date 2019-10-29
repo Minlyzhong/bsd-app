@@ -1,0 +1,197 @@
+<div data-page="assessment/assessment" class="page assessmentPage no-tabbar navbar-fixed">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left ">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center assessmenTitle">党建考核</div>
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+				<a href="#" class="link icon-only" style="margin-left: 0px;margin-top: 2px;"><i class="icon icon-history"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="searchbar assessSearchBar">
+		<div class="searchbar-input">
+			<input type="search" placeholder="考核清单的名称/关键字" id="assessSearch" />
+			<a href="#" class="searchbar-clear assessSearchClear"></a>
+		</div>
+		<div class="searchCancelBtn">取消</div>
+	</div>
+	
+	<div class="assessContent" style="background: white;margin-top: 0px;height: 100%;width: 100%;">
+		<div class="buttons-row partyDynamicsSelect" style='margin-top: 80px;'>
+			<a href="#tab1" class="tab-link active button buttonShyk">月份</a>
+			<a href="#tab2" class="tab-link button buttonShykSeason">季度</a>
+			<a href="#tab3" class="tab-link button buttonShykYear">年度</a>
+		</div>
+		<div class="page-content assessmentTab" style="padding-top: 0px;">
+        <div class="tabs-animated-wrap">
+        	<div class="tabs">
+        		<!--月度-->
+          		<div id="tab1" class="tab active">
+          			<div class="assessmentTime list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 85px;"></i>
+					            <input type="text" placeholder="选择日期" id="picker-describe" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+					<div class="page-content" style="width: 30%;position: absolute;top: 30px;left: 0;z-index:0;padding-top: 0px;margin-top: 14px;">
+						<div class="list-block assesserLeftList" style="margin:0px 0px 0px 0px;padding-bottom: 160px;height: 100%;
+						border-right: 1px solid #ddd;">
+							<ul style="background: whitesmoke;">
+							</ul>
+						</div>
+					</div>
+					<div class="page-content  assesserList" style="position: absolute;top: 30px;width: 70%;right: 0;z-index:0;padding-top: 0px;margin-top: 14px;">
+						<div class="list-block media-list kpi-content-list assesserRightList" style="margin:0px 0px 0px 0px;padding-bottom: 160px;">
+							<ul>
+							</ul>
+						</div>
+					</div>
+          		</div>
+          		<!--季度-->
+	          	<div id="tab2" class="tab" style="position: relative;">
+	            	<div class="assessmentTimeSeason list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left:70px;"></i>
+					            <input type="text" placeholder="选择季度" id="picker-describeSeason" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>
+					<div class="page-content" style="width: 30%;position: absolute;top: 30px;left: 0;z-index:0;padding-top: 0px;margin-top: 14px;">
+						<div class="list-block assesserLeftListSeason" style="margin:0px 0px 0px 0px;padding-bottom: 160px; height: 100%;
+						border-right: 1px solid #ddd;">
+							<ul style="background: whitesmoke;">
+							</ul>
+						</div>
+					</div>
+					<div class="page-content  assesserListSeason"" style="position: absolute;top: 30px;width: 70%;right: 0;z-index:0;padding-top: 0px;margin-top: 14px;">
+						<div class="list-block media-list kpi-content-list assesserRightListSeason"" style="margin:0px 0px 0px 0px;padding-bottom: 160px;">
+							<ul>
+							</ul>
+						</div>
+					</div>
+          		</div>
+	          	<!--月份-->
+	            <div id="tab3" class="tab" style="position: relative;">
+	            	<div class="assessmentTimeYear list-block" style="margin: 0px;">
+					  <ul>
+					    <li>
+					      <div class="item-content">
+					        <div class="item-inner">
+					          <div class="item-input">
+					          	<i class="icon icon-time" style="position: absolute;top: 10px;left: 100px;"></i>
+					            <input type="text" placeholder="选择年份" id="picker-describeYear" readonly>
+					          </div>
+					        </div>
+					      </div>
+					    </li>
+					  </ul>
+					</div>   
+					<div class="page-content" style="width: 30%;position: absolute;top: 30px;left: 0;z-index:0;padding-top: 0px;margin-top: 14px;">
+						<div class="list-block assesserLeftListYear" style="margin:0px 0px 0px 0px;padding-bottom: 160px;height: 100%;
+						border-right: 1px solid #ddd;">
+							<ul style="background: whitesmoke;">
+							</ul>
+						</div>
+					</div>
+					<div class="page-content  assesserListYear" style="position: absolute;top: 30px;width: 70%;right: 0;z-index:0;padding-top: 0px;margin-top: 14px;">
+						<div class="list-block media-list kpi-content-list assesserRightListYear" style="margin:0px 0px 0px 0px;padding-bottom: 160px;">
+							<ul>
+							</ul>
+						</div>
+					</div>
+				</div>
+        	</div>
+     	 </div> 
+	</div>
+		<!--<div class="page-content" style="width: 30%;position: absolute;top: 30px;left: 0;z-index:0;padding-top: 0px;margin-top: 45px;">
+			<div class="list-block assesserLeftList">
+				<ul style="background: whitesmoke;">
+				</ul>
+			</div>
+		</div>
+		pull-to-refresh-content infinite-scroll
+		<div class="page-content  assesserList" style="position: absolute;top: 30px;width: 70%;right: 0;z-index:0;padding-top: 0px;margin-top: 45px;">
+			<div class="list-block media-list kpi-content-list assesserRightList">
+				<ul>
+				</ul>
+			</div>
+		</div>-->
+		<div class="list-block media-list kpi-content-list assesserSearchList" style="margin-top: 42px;">
+			<ul style="margin-bottom: 128px;">
+			</ul>
+			<div class="assessNotFound">找不到您要查询的考核清单</div>
+		</div>
+	</div>
+	
+	
+	<!--<div class="assessmentSearch">
+		<div class="content-block-title">请输入筛选条件</div>
+		<div class="list-block inputs-list inset">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">查询年份</div>
+							<div class="item-input" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position: 80px 17px;">
+								<select id="assessmentYear">
+								</select>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">查询季度</div>
+							<div class="item-input" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position: 80px 17px;">
+								<select id="assessmentSeason">
+								</select>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title label">考核清单</div>
+							<div class="item-input">
+								<input type="text" id="assessmentContext" name="assessmentContext" placeholder="输入名称/关键字" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="m-t-10 row">
+						<div class="col-25">
+							<a href="#" class="button resetBtn color-green button-big active">清空</a>
+						</div>
+						<div class="col-50">
+							<a href="#" class="button searchBtn button-big active">完成</a>
+						</div>
+						<div class="col-25">
+							<a href="#" class="button assessmentSearchClose color-red button-big active">取消</a>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>-->
+</div>

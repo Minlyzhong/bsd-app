@@ -1,0 +1,28 @@
+{{#.}}
+	<div data-id="{{id}}" class="card qs-party-card honorCard" style="border-radius: 5px;">
+        <div class="card-header item-content">
+        <div style="white-space: normal;">{{honorName}}</div>
+       	{{#compare verify '==' 0}}
+	    	 <div class="notReview" style="background-color:#ffffff;color:orange;">待审核</div>
+	    {{/compare}}
+        {{#compare verify '==' 1}}
+	    	<div class="notReview" style="background-color:#ffffff;color:green;">通过</div>
+	    {{/compare}}
+	   	{{#compare verify '==' 2}}
+	    	<div class="notReview" style="background-color:#ffffff;color:red;">不通过</div>
+	    {{/compare}}
+        </div>
+        <div class="card-content"> 
+          <div class="card-content-inner"style="padding-bottom: 0px;">
+          			<img class="lazy lazy-fadeIn" src="{{honorPic}}"/>
+          </div>
+        </div>
+        <div class="card-footer" style="display:block;">
+			<div>{{honorTime}}</div>
+			{{#compare verify '==' 2}}
+			<div style="color:red"><strong>审核意见：</strong>{{memo}}</div>
+			{{/compare}}
+  		</div>
+  		
+  	</div>
+{{/.}}
