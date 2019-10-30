@@ -1,0 +1,13 @@
+{{#.}}
+<li class="item-content" data-userId = "{{userId}}" data-userName = "{{name}}" data-id = "{{id}}" >
+	{{!-- <div class="item-media"><i class="icon icon-assessment"></i></div> --}}
+	<div class="item-inner" style="padding: 10px 0px 10px 0px;">
+		<div class="item-title twoLine" style="color:#000;white-space: normal; font-size: 16px;">{{logTitle}}</div>
+		<div class="item-after"style="font-size: 14px;color: #333;margin-top: 20px;">--{{name}}</div>
+		<div class="item-after" style="font-size: 13px;color:gray">{{createTime}}</div>
+	</div>
+	<div class="item-media">
+		<div><img style="width: 95px;height: 75px;margin-right: 20px;" src="{{logPic}}"/></div>
+	</div>
+</li>
+{{/.}}

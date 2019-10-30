@@ -3832,3 +3832,19 @@ select:focus {
 	max-height: 45px;
 	font-size: 14px;
 }
+
+
+/* 两行 */
+.twoLine{
+	white-space: normal !important; 
+	max-height: 200px;
+	display: -webkit-box;
+	-webkit-box-orient: vertical; 
+	-webkit-line-clamp: 2; 
+	overflow: hidden;
+}
+
+#someelement img{
+	width: 201px;
+    height: 150px;
+}
