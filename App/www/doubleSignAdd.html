@@ -28,9 +28,33 @@
 								</div>
 							</div>
 						</div>
-					</li>
+				</li>
 				<li>
-						<div class="item-content">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title  kp-label">签到类型:</div>
+							<div class="item-input" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position: 80px 17px;">
+								<select id="signType">
+										<option value="0" selected >正常</option>
+										<option value="1"  >请假</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">天气:</div>
+							<div class="item-input">
+								<input type="text" id="weather" name="weather" placeholder="天气"  />
+							</div>
+							
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
 							<div class="item-inner">
 								<div class="item-title kp-label">工作地点:</div>
 								<div class="item-input">
@@ -40,7 +64,30 @@
 							</div>
 						</div>
 					</li>
-				
+				<li class="swipeout">
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label">签字人:</div>
+									<div class="item-input">
+										<input type="text" id="needSign" name="needSign" placeholder="向左滑动选择签字人" readonly/>
+									</div>
+								</div>
+							</div>
+							<div class="swipeout-actions-right">
+								<a href="#" class="swipeout-close addneedSign" style="background-color: #1296db;">添加</a>
+								<a href="#" class="swipeout-close bg-red removeneedSign">移除</a>
+							</div>
+					</li>
+				<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title kp-label">标题:</div>
+								<div class="item-input">
+									<input type="text" id="assessTitle" name="assessTitle" placeholder="输入标题" />
+								</div>
+							</div>
+						</div>
+					</li>
 				<li class="align-top">
 					<div class="item-content">
 						<div class="item-inner">

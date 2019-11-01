@@ -5,11 +5,11 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	//保存专项考核明细
-	var saveUserReportDetialPath = app.basePath + '/mobile/partySpecialResult/savePartySpecialResult';
+	var saveUserReportDetialPath = app.basePath + '/mobile/dbSign';
 	var assessId = -1;
 	var assessScore = 0;
 	var count = 0;
-	
+	var typeVal = 0;
 	var thisAppName = '';
 
 	
@@ -57,14 +57,8 @@ define(['app'], function(app) {
 		photoBrowserPhotos = [];
 		lng = 0.0;
 		lat = 0.0;
+		typeVal = 0;
 		assessId = pageData.assessId;
-		assessScore = pageData.score;
-		if(pageData.judgmentParam){
-			judgmentParam = pageData.judgmentParam;
-		}else{
-			judgmentParam = 0;
-		}
-		console.log(judgmentParam == 1);
 		srcName = [];
 		suffixName = [];
 		fileNames = [];
@@ -93,6 +87,22 @@ define(['app'], function(app) {
 			app.myApp.confirm('您的签到尚未上传，是否返回首页？', function() {
 				app.back3Home();
 			});
+		});
+		$$('#signType').change(function() {
+			typeVal = $$('#signType').val();
+			console.log(typeVal);
+		});
+		//点击签字人添加
+		$$('.addneedSign').on('click',function(){
+			//跳转人员选择
+			app.myApp.getCurrentView().loadPage('showNeedSign.html?&state='+typeVal);
+		});
+		//点击签字人移除
+		$$('.removeneedSign').on('click',function(){
+			//清空签字人
+			hostMan=[];
+			$$('#needSign').val('');
+//				getAbsenteesBack();
 		});
 	}
 
@@ -129,10 +139,15 @@ define(['app'], function(app) {
 		var assessTitle = $$('#assessTitle').val();
 		var assessTs = $$('#assessTs').val();
 		var assessContent = $$('#assessContent').val();
-		if(!assessContent || !assessTitle || !assessTs) {
+		var weather = $$('#weather').val();
+		if(!assessContent || !assessTitle || !assessTs || !weather) {
 			app.myApp.alert('请补全考核信息！');
 			return;
 		}
+
+		var signDate = assessTs.split(',')[0];
+		var signweek = assessTs.split(',')[1].replace( /^\s*/, '');
+
 		//防止数据传输过慢多次上传
 		count = count + 1;
 		if(count > 0){
@@ -141,17 +156,20 @@ define(['app'], function(app) {
 		app.myApp.showPreloader('信息保存中...');
 
 		var params={
-			// id: 0,
-			topicId: assessId,
-			reportTitle: assessTitle,
-			// reportTime: assessTs,
-			reportContext: assessContent,
-			reportUserId: app.userId,
-			reportState: 0,
-			score: assessScore,
-			images : imageList,
-			file: fileList 
+			contentTitle: assessTitle,
+			deptId: app.user.deptId,
+			deptName: app.userDetail.deptName,
+			jobContent: assessContent,
+			// modifier: app.user.nickName,
+			name: app.user.nickName,
+			tenantId: app.tenantId,
+			userId: app.user.userId,
+			weather: weather,
+			week: signweek,
+			workingAddress: $$('#location').val()
 		}
+
+		console.log(params)
 		var formDatas= JSON.stringify(params)
 		$$.ajax({
             url:saveUserReportDetialPath,
@@ -161,7 +179,7 @@ define(['app'], function(app) {
             data: formDatas,
             cache: false,
             success:function (data) {
-				if(data.code == 0){
+				if(data.code == 0 && data.data == true){
 					console.log(data);
 					app.myApp.hidePreloader();
 					app.myApp.toast('保存成功', 'success').show(true);
@@ -278,7 +296,28 @@ define(['app'], function(app) {
 			var userPosition = response.result.addressComponent.street + response.result.addressComponent.street_number;
 			$$('#location').val(userPosition);
 		}
-	}		
+	}	
+	
+	/**
+	 * 选择主持人页面回调 
+	 * @param {Object} needSign 用户列表
+	 */
+	function addSignBack(needSignInfo) {
+		needSignMan = needSignInfo;
+		addSignInfoBack();
+	}
+	/**
+	 * 选择主持人的信息显示回调
+	 */
+	function addSignInfoBack() {
+		console.log(needSignMan);
+		if(needSignMan.length > 0) {
+				$$('#needSign').val(needSignMan[0].userName);
+		}else{
+			$$('#needSign').val("");
+		}
+//		getAbsenteesBack();
+	}
 	
 
 	/**
@@ -316,5 +355,6 @@ define(['app'], function(app) {
 	return {
 		init: init,
 		resetFirstIn: resetFirstIn,
+		addSignBack: addSignBack
 	}
 });

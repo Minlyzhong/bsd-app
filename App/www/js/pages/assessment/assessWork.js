@@ -213,7 +213,8 @@ define(['app'], function(app) {
 		}else{
 			$$('.assessMemo').append(pageData.memo);
 		}
-		addCalendar('assessTs');
+		addCalendar('beginTime');
+		addCalendar('beginTime');
 	}
 	/*
 	 * 文档上传

@@ -5,7 +5,7 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	//保存专项考核明细
-	var saveUserReportDetialPath = app.basePath + '/mobile/partySpecialResult/savePartySpecialResult';
+	var saveUserReportDetialPath = app.basePath + '/mobile/dbSign';
 	var assessId = -1;
 	var assessScore = 0;
 	var count = 0;
@@ -129,10 +129,15 @@ define(['app'], function(app) {
 		var assessTitle = $$('#assessTitle').val();
 		var assessTs = $$('#assessTs').val();
 		var assessContent = $$('#assessContent').val();
-		if(!assessContent || !assessTitle || !assessTs) {
+		var weather = $$('#weather').val();
+		if(!assessContent || !assessTitle || !assessTs || !weather) {
 			app.myApp.alert('请补全考核信息！');
 			return;
 		}
+
+		var signDate = assessTs.split(',')[0];
+		var signweek = assessTs.split(',')[1].replace( /^\s*/, '');
+
 		//防止数据传输过慢多次上传
 		count = count + 1;
 		if(count > 0){
@@ -141,17 +146,20 @@ define(['app'], function(app) {
 		app.myApp.showPreloader('信息保存中...');
 
 		var params={
-			// id: 0,
-			topicId: assessId,
-			reportTitle: assessTitle,
-			// reportTime: assessTs,
-			reportContext: assessContent,
-			reportUserId: app.userId,
-			reportState: 0,
-			score: assessScore,
-			images : imageList,
-			file: fileList 
+			contentTitle: assessTitle,
+			deptId: app.user.deptId,
+			deptName: app.userDetail.deptName,
+			jobContent: assessContent,
+			// modifier: app.user.nickName,
+			name: app.user.nickName,
+			tenantId: app.tenantId,
+			userId: app.user.userId,
+			weather: weather,
+			week: signweek,
+			workingAddress: $$('#location').val()
 		}
+
+		console.log(params)
 		var formDatas= JSON.stringify(params)
 		$$.ajax({
             url:saveUserReportDetialPath,
@@ -161,7 +169,7 @@ define(['app'], function(app) {
             data: formDatas,
             cache: false,
             success:function (data) {
-				if(data.code == 0){
+				if(data.code == 0 && data.data == true){
 					console.log(data);
 					app.myApp.hidePreloader();
 					app.myApp.toast('保存成功', 'success').show(true);

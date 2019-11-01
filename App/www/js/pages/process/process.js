@@ -40,8 +40,8 @@ define(['app','hbs!js/hbs/meetingList'], function(app, meetingListTemplate) {
 	 * 点击事件
 	 */
 	function clickEvent(page) {
-		$$('#cardDown').on('click', function() {
-		
+		$$('.addMeeting').on('click', function() {
+			app.myApp.getCurrentView().loadPage('processAdd.html');
 		});
 		};
 
