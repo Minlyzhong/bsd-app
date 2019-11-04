@@ -4,12 +4,12 @@ define(['app'], function(app) {
 	var pageDataStorage = {};
 	var pageNo = 1;
 	var loading = true;
-	//保存专项考核明细
+	//保存双签到信息
 	var saveUserReportDetialPath = app.basePath + '/mobile/dbSign';
 	var assessId = -1;
 	var assessScore = 0;
 	var count = 0;
-	
+	var typeVal = 0;
 	var thisAppName = '';
 
 	
@@ -26,6 +26,7 @@ define(['app'], function(app) {
 	var target;
 	var	minus;
 	var	memo;
+	var peopleDetail = {};
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -33,7 +34,7 @@ define(['app'], function(app) {
 	function init(page) {
 		//设置页面不能滑动返回
 		page.view.params.swipeBackPage = false;
-		app.myApp.onPageBack("doubleSign/doubleSign", function(page){
+		app.myApp.onPageBack("doubleSign/doubleSignAdd", function(page){
 			page.view.params.swipeBackPage = true;
 		});
 		count = 0;
@@ -57,20 +58,14 @@ define(['app'], function(app) {
 		photoBrowserPhotos = [];
 		lng = 0.0;
 		lat = 0.0;
+		typeVal = 0;
 		assessId = pageData.assessId;
-		assessScore = pageData.score;
-		if(pageData.judgmentParam){
-			judgmentParam = pageData.judgmentParam;
-		}else{
-			judgmentParam = 0;
-		}
-		console.log(judgmentParam == 1);
 		srcName = [];
 		suffixName = [];
 		fileNames = [];
 		fileCount = 0;
 		thisAppName = pageData.thisAppName;
-		
+		peopleDetail = {};
 		minDate = pageData.StartDate
 	}
 
@@ -94,6 +89,23 @@ define(['app'], function(app) {
 				app.back3Home();
 			});
 		});
+		$$('#signType').change(function() {
+			typeVal = $$('#signType').val();
+			console.log(typeVal);
+		});
+		//点击签字人添加
+		$$('.addneedSign').on('click',function(){
+			//跳转人员选择
+			app.myApp.getCurrentView().loadPage('showNeedSign.html?&state='+typeVal);
+		});
+		//点击签字人移除
+		$$('.removeneedSign').on('click',function(){
+			//清空签字人
+			hostMan=[];
+			peopleDetail={};
+			$$('#needSign').val('');
+//				getAbsenteesBack();
+		});
 	}
 
 	/**
@@ -105,7 +117,7 @@ define(['app'], function(app) {
 	}
 	//初始化日历
 	function addCalendar(contentID) {
-		//var minDate = '2018-4-01';
+		//var minDate = '2018-04-01';
 		console.log(minDate);
 		calID = app.myApp.calendar({
 			input: '#' + contentID,
@@ -118,7 +130,7 @@ define(['app'], function(app) {
 			dateFormat: 'yyyy-mm-dd, DD',
 			closeOnSelect: true,
 			maxDate: new Date(),
-			minDate:minDate,
+			// minDate:minDate,
 		});
 	}
 
@@ -130,11 +142,19 @@ define(['app'], function(app) {
 		var assessTs = $$('#assessTs').val();
 		var assessContent = $$('#assessContent').val();
 		var weather = $$('#weather').val();
-		if(!assessContent || !assessTitle || !assessTs || !weather) {
-			app.myApp.alert('请补全考核信息！');
+		var location = $$('#location').val();
+		var arr = Object.keys(peopleDetail)
+		if(arr.length == 0){
+			console.log(arr);
+			app.myApp.alert('请选择签字人！');
+			return;
+		}
+		if(!assessContent || !assessTitle || !assessTs || !weather || !location ) {
+			app.myApp.alert('请补全签到信息！');
 			return;
 		}
 
+		console.log(assessTs);
 		var signDate = assessTs.split(',')[0];
 		var signweek = assessTs.split(',')[1].replace( /^\s*/, '');
 
@@ -153,47 +173,50 @@ define(['app'], function(app) {
 			// modifier: app.user.nickName,
 			name: app.user.nickName,
 			tenantId: app.tenantId,
+			people: peopleDetail,
 			userId: app.user.userId,
 			weather: weather,
 			week: signweek,
-			workingAddress: $$('#location').val()
+			workingAddress: location,
+			type :typeVal
 		}
 
 		console.log(params)
 		var formDatas= JSON.stringify(params)
-		$$.ajax({
-            url:saveUserReportDetialPath,
-            method: 'POST',
-            dataType: 'json',
-			contentType: 'application/json;charset:utf-8',
-            data: formDatas,
-            cache: false,
-            success:function (data) {
-				if(data.code == 0 && data.data == true){
-					console.log(data);
-					app.myApp.hidePreloader();
-					app.myApp.toast('保存成功', 'success').show(true);
-					$$('.sumbit').html('已保存');
+		// $$.ajax({
+        //     url:saveUserReportDetialPath,
+        //     method: 'POST',
+        //     dataType: 'json',
+		// 	contentType: 'application/json;charset:utf-8',
+        //     data: formDatas,
+        //     cache: false,
+        //     success:function (data) {
+		// 		if(data.code == 0 && data.data == true){
+		// 			console.log(data);
+		// 			app.myApp.hidePreloader();
+		// 			app.myApp.toast('保存成功', 'success').show(true);
+		// 			$$('.sumbit').html('已保存');
 					
-				// 	require(['js/pages/assessment/assessment'], function(assessment) {
-				// 		assessment.addCallback();
-				// 	});
+		// 		// 	require(['js/pages/doubleSign/doubleSign'], function(doubleSign) {
+		// 		// 		doubleSign.refresh();
+		// 		// 	});
 			
-				// app.myApp.getCurrentView().back();
+		// 		
 			
-				app.myApp.getCurrentView().back();
+		// 		app.myApp.getCurrentView().back();
 			
-				}else{
-					app.myApp.toast(data.msg , 'error').show(true);
-				}
+		// 		}else{
+				// app.myApp.hidePreloader();
+		// 			app.myApp.toast(data.msg , 'error').show(true);
+		// 		}
 				
 			
-		},
-            error:function () {
-				app.myApp.hidePreloader();
-				app.myApp.alert(app.utils.callbackAjaxError());
-            }
-        });
+		// },
+        //     error:function () {
+		// 		app.myApp.hidePreloader();
+		// 		app.myApp.alert(app.utils.callbackAjaxError());
+        //     }
+        // });
 
 
 
@@ -286,7 +309,28 @@ define(['app'], function(app) {
 			var userPosition = response.result.addressComponent.street + response.result.addressComponent.street_number;
 			$$('#location').val(userPosition);
 		}
-	}		
+	}	
+	
+	/**
+	 * 选择主持人页面回调 
+	 * @param {Object} needSign 用户列表
+	 */
+	function addSignBack(needSignInfo) {
+		peopleDetail = needSignInfo;
+		addSignInfoBack();
+	}
+	/**
+	 * 选择主持人的信息显示回调
+	 */
+	function addSignInfoBack() {
+		console.log(needSignInfo);
+		if(peopleDetail) {
+				$$('#needSign').val(peopleDetail.name);
+		}else{
+			$$('#needSign').val("");
+		}
+//		getAbsenteesBack();
+	}
 	
 
 	/**
@@ -324,5 +368,6 @@ define(['app'], function(app) {
 	return {
 		init: init,
 		resetFirstIn: resetFirstIn,
+		addSignBack: addSignBack
 	}
 });

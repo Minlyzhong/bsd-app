@@ -6,8 +6,9 @@ define(['app',
 	var pageNo1 = 1;
 	var loading = true;
 	var loading1 = true;
-	//最新日志分页列表
-	var findLatestWorkLogPath = app.basePath + '/mobile/worklog/page/list/';
+	//获取签到列表
+	// var findLatestWorkLogPath = app.basePath + '/mobile/dbSign/list';
+	var findLatestWorkLogPath = app.basePath + '/mobile/dbSign/list';
 
 	var pageDataStorage = {}; 
 	
@@ -132,11 +133,11 @@ define(['app',
 	function loadRecord(isLoadMore,pageNo) {
 		console.log(pageNo);
 		console.log(NewRecordKey);
-		app.ajaxLoadPageContent(findLatestWorkLogPath+3, {
-			// userId: app.user.userId,
-			pageNo: pageNo,
-			tenantId: app.user.tenantId,
-			
+		app.ajaxLoadPageContent(findLatestWorkLogPath, {
+			userId: app.user.userId,
+			current: pageNo,
+			size: 10
+			// tenantId: app.user.tenantId,			
 //			query: NewRecordKey,
 		}, function(result) {
 			var data = result.data.records;
@@ -154,10 +155,12 @@ define(['app',
 		photoDatas = [];
 		console.log(pageNo);
 		console.log(NewRecordKey);
-		app.ajaxLoadPageContent(findLatestWorkLogPath+3, {
-			// userId: app.user.userId,
-			pageNo: pageNo1,
+		app.ajaxLoadPageContent(findLatestWorkLogPath, {
+			userId: app.user.userId,
+			size: 10,
+			current: pageNo1,
 			query: NewRecordKey,
+			
 		}, function(result) {
 			var data = result.data.records;
 			$$.each(data, function(index, item) {
@@ -184,11 +187,7 @@ define(['app',
 		if(data.length) {
 
 			$$.each(data, function(index, item){
-				if(item.images){
-					item.logPic = app.filePath + item.images[0].attPath;
-				}else{
-					item.logPic = item.logPic;
-				}
+				
 			})
 
 

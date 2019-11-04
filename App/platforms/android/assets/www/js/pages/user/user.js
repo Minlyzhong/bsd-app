@@ -72,7 +72,7 @@ define(['app',
 		setPageStorageClear(pageDataStorage['pageStorageClear']);
 		if(app.userId > 0) {
 			$$('.userName').css('display','block');
-			$$('.userName').html(app.user.userName);
+			$$('.userName').html(app.user.nickName);
 			//console.log(app.user.userName)	
 			$$('.user-header img').attr('src', app.headPic);
 	
@@ -198,7 +198,7 @@ define(['app',
 		if(app.userId > 0 ) {
 			$$('.branchStyle').css('display','block');
 			$$('.userName').css('display','block');
-			$$('.userName').html(app.user.userName);
+			$$('.userName').html(app.user.nickName);
 			$$('.userDeptName').html(app.userDetail.deptName);
 			$$('.user-header img').attr('src', app.headPic);
 			// $$('.user-header1 img').attr('src', app.headPic);

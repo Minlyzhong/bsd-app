@@ -214,6 +214,7 @@ define(['app'], function(app) {
 			$$('.assessMemo').append(pageData.memo);
 		}
 		addCalendar('assessTs');
+		// addCalendar('beginTime');
 	}
 	/*
 	 * 文档上传
@@ -313,8 +314,11 @@ define(['app'], function(app) {
 	}
 	//初始化日历
 	function addCalendar(contentID) {
-		//var minDate = '2018-4-01';
-		console.log(minDate);
+		// var minDate = '2018-04-02';
+		// console.log(minDate);
+		var str = minDate.split('-')[2];
+		console.log(str);
+		
 		calID = app.myApp.calendar({
 			input: '#' + contentID,
 			toolbarCloseText: '完成',
@@ -326,7 +330,7 @@ define(['app'], function(app) {
 			dateFormat: 'yyyy-mm-dd',
 			closeOnSelect: true,
 			maxDate: new Date(),
-			minDate:minDate,
+			// minDate:minDate,
 		});
 	}
 

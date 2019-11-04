@@ -486,10 +486,10 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	var filePath = 'http://120.24.51.37/group1/';
 
 	//  测试库(一期)
-	//	var basePath = 'http://192.168.11.80:8080/';
+	// 	var basePath = 'http://192.168.11.80:8080/';
 	// var basePath = 'http://120.24.51.37:91/';
 	//  合浦(正式库一期)
-	//	var basePath =  'http://219.159.197.209:8099/';
+	// 	var basePath =  'http://219.159.197.209:8099/';
 
 	// 测试		
 	// var loginPath = 'http://127.0.0.1:9010';		
@@ -554,7 +554,7 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	
 	
 	return {
-		version: '4.3',
+		version: '4.4',
 		myApp: myApp,
 		basePath: basePath,
 		mainView: mainView,

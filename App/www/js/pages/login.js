@@ -202,7 +202,7 @@ define(['app'], function(app) {
 						var headPic = 'img/icon/icon-user_d.png';
 					}
 					app.headPic = headPic;
-					$$('.userName').html(app.user.userName);
+					$$('.userName').html(app.user.nickName);
 					$$('.userName').css('display','block');
 					$$('.userDeptName').html(app.userDetail.deptName);
 					localStorage.setItem('headPic', headPic);

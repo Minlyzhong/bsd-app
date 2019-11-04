@@ -6,13 +6,14 @@ define(['app'], function(app) {
 	var photoBrowserPopup = '';
 	var pageDataStorage = {}; 
 	//上传申报经费接口
-	var honorPath = app.basePath + '/mobile/honor/save';
+	var FundsPath = app.basePath + '/mobile/Funds/save';
 	//上传附件
 	var uploadPersonalHonorPath = app.basePath +'/file/upload' ;
 	
 	
 	var count;
 	var imageList = [];
+	var deptList = [];
 	var Level = [];
 	/**
 	 * 页面初始化 
@@ -21,7 +22,7 @@ define(['app'], function(app) {
 	function init(page) {
 		//设置页面不能滑动返回
 		page.view.params.swipeBackPage = false;
-		app.myApp.onPageBack("user/personalHonor", function(page){
+		app.myApp.onPageBack("funds/funds", function(page){
 			page.view.params.swipeBackPage = true;
 		});
 		initData(page.query);
@@ -43,6 +44,7 @@ define(['app'], function(app) {
 		pageDataStorage = {}; 
 		imageList = [];
 		Level = [];
+		deptList = [];
 	}
 
 	/**
@@ -57,26 +59,62 @@ define(['app'], function(app) {
 	 */
 	function clickEvent(page) {
 		//点击开会时间触发
-		addCalendar('honorTime');
+		addCalendar('beginTime');
+		addCalendar('endTime');
 		//点击上传
-		$$('.saveHonor').click(submitHonor);
+		$$('.saveFunds').click(submitFunds);
 		//点击上传图片的+号
 		$$('.weui_uploader_input_wrp').on('click', showImgPicker);
+
 		//点击返回icon
-		$$('.honorBack').on('click',function(){
+		$$('.FundsBack').on('click',function(){
 			app.myApp.confirm('您的申报尚未上传，是否退出？', function() {
 				app.myApp.getCurrentView().back();
 			});
 		});
 		//点击小房子icon
-		$$('.honorHome').on('click',function(){
+		$$('.FundsHome').on('click',function(){
 			app.myApp.confirm('您的申报尚未上传，是否返回首页？', function() {
 				app.back3Home();
 			});
 		});
+		//项目具体情况:
+		$$('.tcaomFundsDetailsIcon').on('click',function(){
+			changeStateForText($$(this));
+			$('.tcaomFundsDetails').slideToggle(200);
+		});
+		//预算具体情况:
+		$$('.tcaomBudgetDetailsIcon').on('click',function(){
+			changeStateForText($$(this));
+			$('.tcaomBudgetDetails').slideToggle(200);
+		});
+
+		//点击主持人添加
+		$$('.addVillage').on('click',function(){
+			//跳转人员选择
+			app.myApp.getCurrentView().loadPage('addVillage.html?deptList='+JSON.stringify(deptList)+'&deptType=1');
+		});
+		//点击主持人移除
+		$$('.removeVillage').on('click',function(){
+			//清空主持人
+			deptList=[];
+			$$('#VillageCom').val('');
+//				getAbsenteesBack();
+		});
 	}
 	
-
+	/*
+	 * 改变文本框的状态
+	 */
+	function changeStateForText(chooseText){
+		if(chooseText.hasClass('icon-openIcon')){
+			chooseText.removeClass('icon-openIcon');
+			chooseText.addClass('icon-closeIcon');
+		}else{
+			chooseText.removeClass('icon-closeIcon');
+			chooseText.addClass('icon-openIcon');
+		}
+	}
 	//初始化日历
 	function addCalendar(contentID) {
 		calID = app.myApp.calendar({
@@ -89,18 +127,18 @@ define(['app'], function(app) {
 			dayNamesShort: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
 			dateFormat: 'yyyy-mm-dd',
 			closeOnSelect: true,
-			maxDate: new Date(),
+			// maxDate: new Date(),
 		});
 	}
 	/*
 	 * 上传
 	 */
-	function submitHonor(){
-		if($$('#honorName').val() == ''){
+	function submitFunds(){
+		if($$('#FundsName').val() == ''){
 			app.myApp.alert('请输入项目名称！');
 			return false;
 		}
-		if($$('#honorTime').val() == ''){
+		if($$('#FundsTime').val() == ''){
 			app.myApp.alert('请选择所获项目时间！');
 			return false;
 		}
@@ -108,25 +146,26 @@ define(['app'], function(app) {
 			app.myApp.alert('请输入组织！');
 			return false;
 		}
-		// if($$('#honorDescription').val() == ''){
-		// 	app.myApp.alert('所获备注！');
-		// 	return false;
-		// }
-		// 暂时注释
-		// if(photoDatas == '' && photoDatas.length == 0) {
-		// 	app.myApp.alert('请上传照片！');
-		// 	return false;
-		// }
+		
 		//防止数据传输过慢多次上传
 		count = count + 1;
 		if(count > 0){
 			$$('.saveHonor').attr('disabled',false);
 		}
-		
-		var time1 = $$('#honorTime').val()+' 00:00:00';
+		var sTime = $$('#beginTime').val();
+		var eTime = $$('#endTime').val();
+		if(!sTime || !eTime) {
+			app.myApp.alert('请确认时间！');
+		} else if(sTime <= eTime) {
+			app.myApp.alert('项目开始时间必须早于结束时间！');
+			$$('#endTime').val('');
+			return;
+		}
+		var time1 = sTime +' 00:00:00';
+		var time2 = eTime +' 00:00:00';
 		// for(var i=0; i<Level.length;i++){
-		// 	if(Level[i].subKey == $$('#honorLevel').val()){	
-		// 		var	honorName = Level[i].subVal;
+		// 	if(Level[i].subKey == $$('#FundsLevel').val()){	
+		// 		var	FundsName = Level[i].subVal;
 		// 		break;
 		// 	}
 		// }
@@ -134,11 +173,11 @@ define(['app'], function(app) {
 
 		
 		var params={
-			honorName: $$('#honorName').val(),
+			FundsName: $$('#FundsName').val(),
 			getTime:time1,
 			grantOrganization:$$('#grantOrganization').val(),
-			honorLevel:$$('#honorLevel').val(),
-			honorDescription:$$('#honorDescription').val(),
+			FundsLevel:$$('#FundsLevel').val(),
+			FundsDescription:$$('#FundsDescription').val(),
 			userId:app.userId,
 			images : imageList
 		}
@@ -146,7 +185,7 @@ define(['app'], function(app) {
 		var formDatas= JSON.stringify(params)
 
 		$$.ajax({
-            url:honorPath,
+            url:FundsPath,
             method: 'POST',
             dataType: 'json',
             // processData: false, // 告诉jQuery不要去处理发送的数据
@@ -174,6 +213,28 @@ define(['app'], function(app) {
 
 
 		
+	}
+
+
+	/**
+	 * 选择村社区页面回调 
+	 * @param {Object} VillageCom 用户列表
+	 */
+	function addHostBack(VillageComInfo) {
+		deptList = VillageComInfo;
+		addHostInfoBack();
+	}
+	/**
+	 * 选择主持人的信息显示回调
+	 */
+	function addHostInfoBack() {
+		console.log(deptList);
+		if(deptList.length > 0) {
+				$$('#VillageCom').val(deptList[0].userName);
+		}else{
+			$$('#VillageCom').val("");
+		}
+//		getAbsenteesBack();
 	}
 	
 	/**
@@ -368,5 +429,6 @@ define(['app'], function(app) {
 	return {
 		init: init,
 		resetFirstIn: resetFirstIn,
+		addHostBack:addHostBack,
 	}
 });

@@ -757,6 +757,9 @@
 	background:rgba(242,243,245,1);
 	border:none;
 }
+.list-block input[type="text"], .list-block input[type="password"], .list-block input[type="search"], .list-block input[type="email"], .list-block input[type="tel"], .list-block input[type="url"], .list-block input[type="date"], .list-block input[type="datetime-local"], .list-block input[type="time"], .list-block input[type="number"], .list-block select, .list-block textarea {
+	font-size: 15px;
+}
 .input-comment:-ms-input-placeholder{color:#CCCCCC;font-size:13px;}/* Internet Explorer 10+ */ 
 .input-comment::-webkit-input-placeholder{color:#CCCCCC;font-size:13px;}/* WebKit browsers */
 .input-comment::-moz-placeholder{color:#CCCCCC;font-size:13px;}/* Mozilla Firefox 4 to 18 */ 
@@ -3829,7 +3832,7 @@ select:focus {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
-	max-height: 45px;
+	max-height: 44px;
 	font-size: 14px;
 }
 
@@ -3847,4 +3850,28 @@ select:focus {
 #someelement img{
 	width: 201px;
     height: 150px;
+}
+
+
+.meetingCard{
+	box-shadow: 2px 2px 5px #ccc; 
+	border:none;
+	border-radius: 5px;
+}
+
+.meetingCard .item-text{
+	color:#47474a;
+}
+
+
+.funds-block .kp-label{
+	width: 160px;
+}
+.signedList a{
+	width: 80%;
+    margin: 0px auto;
+    height: 35px;
+    line-height: 35px;
+    color: #fff;
+    background: #24aae1;
 }

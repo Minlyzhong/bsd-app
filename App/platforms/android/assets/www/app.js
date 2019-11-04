@@ -475,26 +475,30 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	$$(document).on('ajaxError', function(e) {
 		myApp.hidePreloader();
 	});
-	//  测试库
-	//	var basePath = 'http://192.168.11.80:8080/';
-		// var basePath = 'http://120.24.51.37:91/';
-	//  合浦(正式库)
-//		var basePath =  'http://219.159.197.209:8099/';
-		var loginPath = 'http://180.142.130.246:9010';
-		// 测试
-		// var loginPath = 'http://120.24.51.37:9010';
-		// var loginPath = 'http://127.0.0.1:9010';
-		var basePath = 'http://180.142.130.246:9010/admin';
-		//测试
-		// var basePath = 'http://120.24.51.37:9010/admin';
-		// var basePath = 'http://127.0.0.1:9010/admin';
-		var filePath = 'http://180.142.130.246:8020/group1/';
-		//测试
-		// var filePath = 'http://120.24.51.37/group1/';
+	// 合浦(正式库)
+	// var loginPath = 'http://180.142.130.246:9010';
+	// var basePath = 'http://180.142.130.246:9010/admin';
+	// var filePath = 'http://180.142.130.246:8020/group1/';
+
+	// 测试库
+	var loginPath = 'http://120.24.51.37:9010';
+	var basePath = 'http://120.24.51.37:9010/admin';
+	var filePath = 'http://120.24.51.37/group1/';
+
+	//  测试库(一期)
+	// 	var basePath = 'http://192.168.11.80:8080/';
+	// var basePath = 'http://120.24.51.37:91/';
+	//  合浦(正式库一期)
+	// 	var basePath =  'http://219.159.197.209:8099/';
+
+	// 测试		
+	// var loginPath = 'http://127.0.0.1:9010';		
+	// var basePath = 'http://127.0.0.1:9010/admin';
+		
 	//	建辉电脑ip
-//		 var basePath = 'http://192.168.11.90:8081/';
+	//		 var basePath = 'http://192.168.11.90:8081/';
 	//	经理电脑ip
-//		var basePath = 'http://192.168.11.10:80/';
+	//		var basePath = 'http://192.168.11.10:80/';
 	
 	var userId = parseInt(localStorage.getItem('userId')) || -1;
 	var user = localStorage.getItem('user');
@@ -550,7 +554,7 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	
 	
 	return {
-		version: '4.3',
+		version: '4.4',
 		myApp: myApp,
 		basePath: basePath,
 		mainView: mainView,

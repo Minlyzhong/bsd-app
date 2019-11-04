@@ -742,7 +742,7 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 	}
 	//初始化日历
 	function addCalendar(contentID) {
-		//var minDate = '2018-4-01';
+		//var minDate = '2018-04-01';
 		console.log(minDate);
 		calID = app.myApp.calendar({
 			input: '#' + contentID,
@@ -755,7 +755,7 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 			dateFormat: 'yyyy-mm-dd',
 			closeOnSelect: true,
 			maxDate: new Date(),
-			minDate:minDate,
+			// minDate:minDate,
 		});
 	}
 	

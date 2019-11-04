@@ -39,7 +39,7 @@ define(['app'], function(app) {
 	function init(page) {
 		//设置页面不能滑动返回
 		page.view.params.swipeBackPage = false;
-		app.myApp.onPageBack("assess/assessmentFirstHand", function(page){
+		app.myApp.onPageBack("assess/assessmentFirstHand2", function(page){
 			page.view.params.swipeBackPage = true;
 		});
 		count = 0;
@@ -318,7 +318,7 @@ define(['app'], function(app) {
 	}
 	//初始化日历
 	function addCalendar(contentID) {
-		//var minDate = '2018-4-01';
+		//var minDate = '2018-04-01';
 		console.log(minDate);
 		calID = app.myApp.calendar({
 			input: '#' + contentID,
@@ -331,7 +331,7 @@ define(['app'], function(app) {
 			dateFormat: 'yyyy-mm-dd',
 			closeOnSelect: true,
 			maxDate: new Date(),
-			minDate:minDate,
+			// minDate:minDate,
 		});
 	}
 

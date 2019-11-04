@@ -8,7 +8,7 @@ define(['app'], function(app) {
 	//获取双签内容
 	var findDetailInfoPath = app.basePath + '/mobile/partyAm/findDetailInfo';
 	//上传签名
-	var saveUserReportDetialPath = app.basePath + '/mobile/partySpecialResult/updatePartySpecialResult';
+	var saveUserReportDetialPath = app.basePath + '/mobile/dbSign/sign';
 	//上传附件
 	var uploadReportDetialPhotoPath = app.basePath + '/file/upload';
 	var assessId = -1;
@@ -17,9 +17,11 @@ define(['app'], function(app) {
 	var readonlyPicCount = 0;
 	var reWork = 0;
 	var deptName = '';
-	var result = {};
-	var signPic = '';
+	var SignResult = {};
+	var count = 0;
 	var imgLength = 0;
+	var signPic = [];
+	var signPicParam = {};
 	
 	/**
 	 * 页面初始化 
@@ -27,7 +29,9 @@ define(['app'], function(app) {
 	 */
 	function init(page) {
 //		if(firstIn) {
-	
+		app.myApp.onPageBack("doubleSign/doubleSignDetail", function(page){
+			page.view.params.swipeBackPage = true;
+		});
 			initData(page.query);
 //		} else {
 //			loadStorage();
@@ -51,11 +55,14 @@ define(['app'], function(app) {
 		loading = true;
 		photoBrowserPhotos = [];
 		reWork = 0;
-		result = {};
+		SignResult = {};
 		photoBrowserPopup = '';
 		assessId = pageData.assessId;
 		readonlyPicCount = 0;
 		imgLength = 0;
+		count = 0;
+		signPic = [];
+		signPicParam = {};
 		findDetailInfo();
 		
 		$$('#reSign').css('display','none');
@@ -94,15 +101,15 @@ define(['app'], function(app) {
 //			refType:10,
 		}, function(data) {
 			
-			result = data.data;
-			imageList = data.data.images || [];
-			$$('#assessTs').val(result.reportTime);
+			SignResult = data.data;
+			// imageList = data.data.images || [];
+			$$('#assessTs').val(SignResult.reportTime);
 			$$('#assessContent').val(data.data.reportContext);
 			$$('#assessdeptName').val(deptName);
-			console.log(readonlyPicCount)
-			readonlyPicCount = imageList.length || 0;
-			console.log(readonlyPicCount);
-			showReadonlyPhotos(data.data.images);
+			// console.log(readonlyPicCount)
+			// readonlyPicCount = imageList.length || 0;
+			// console.log(readonlyPicCount);
+			// showReadonlyPhotos(data.data.images);
 			
 
 
@@ -117,6 +124,8 @@ define(['app'], function(app) {
 			app.myApp.getCurrentView().loadPage('doubleHandSign.html');
 		})
 		$$('#reSign').on('click',function(){
+
+			app.myApp.getCurrentView().loadPage('doubleHandSign.html');
 			var imageList = $$('#someelement img').length;
 			console.log(imageList);
 			if(imgLength < imageList){
@@ -124,20 +133,20 @@ define(['app'], function(app) {
 				$("#someelement img")[imageList-1].remove();
 			}
 			
-			app.myApp.getCurrentView().loadPage('doubleHandSign.html');
+			
 		})
 		$$('.assessWorkBack').on('click',function(){
-			app.myApp.confirm('是否退出？', function() {
+			app.myApp.confirm('还未签名,是否退出？', function() {
 				app.myApp.getCurrentView().back();
 			});
 		});
 		$$('.assessWorkHome').on('click',function(){
-			app.myApp.confirm('是否返回首页？', function() {
+			app.myApp.confirm('还未签名,是否返回首页？', function() {
 				app.back3Home();
 			});
 		});
 
-		
+		// $$('').on('click',saveUserReportDetial);
 		
     
 	}
@@ -147,42 +156,24 @@ define(['app'], function(app) {
 	 * 保存考核信息
 	 */
 	function saveUserReportDetial() {
+
 		var assessTitle = $$('#assessTitle').val();
 		var assessTs = $$('#assessTs').val();
 		var assessContent = $$('#assessContent').val();
-		if(!assessContent || !assessTitle || !assessTs) {
-			app.myApp.alert('请补全考核信息！');
-			return;
-		}
-		// alert(imageList.length);
-		var params={
-
-			deptId: result.deptId,
-			deptName: result.deptName,
-			file: result.file,
-			id: result.id,
-			images: imageList,
-			knowledgeTimerId:result.knowledgeTimerId,
-			// knowledgeTimerNum: 0,
-			name: result.name,
-			reduceScore: result.reduceScore,
-			remarks: result.remarks,
-			reportContext: assessContent,
-			reportState: result.reportState,
-			// reportTime: assessTs,
-			reportTitle: assessTitle,
-			reportUserId: result.reportUserId,
-			score: result.score,
-			tenantId: result.tenantId,
-			topicId: result.topicId,
-			topicTitle: result.topicTitle,
-			totalScore: result.totalScore,
-			type: result.type,
-			userScore: result.userScore,
-
-		}
+		// if(!assessContent || !assessTitle || !assessTs) {
+		// 	app.myApp.alert('请补签名');
+		// 	return;
+		// }
 		
-		var formDatas= JSON.stringify(params)
+		//防止数据传输过慢多次上传
+		count = count + 1;
+		if(count > 0){
+			$$('.sumbit').attr('disabled',false);
+		}
+
+		uploadReportDetialPhoto(signPic[1]);
+
+		var formDatas= JSON.stringify(signPicParam)
 		$$.ajax({
             url:saveUserReportDetialPath,
             method: 'POST',
@@ -198,8 +189,8 @@ define(['app'], function(app) {
 					$$('.rankSumbit').html('已保存');
 					app.myApp.getCurrentView().back();
 					
-					require(['js/pages/assessmentResult/assessmentHistoryPaperDetail.js'], function(assessmentHistoryPaperDetail) {
-						assessmentHistoryPaperDetail.ajaxLoadContent(false);
+					require(['js/pages/doubleSign/doubleSign.js'], function(doubleSign) {
+						doubleSign.refresh(false);
 					});
 				}else{
 					app.myApp.toast('保存失败', 'error').show(true);
@@ -238,10 +229,10 @@ define(['app'], function(app) {
 				'Authorization': "bearer " + app.access_token
 			}
 			var params = {
-				"ext": "",
-				"filePath": "",
-				"length": 0,
-				"name": 0,
+				filePath: "",
+				id: 0,
+				name: "",
+				type: 0
 				
 			}
 			// options.params = params;
@@ -251,13 +242,16 @@ define(['app'], function(app) {
 				// sum++;
 
 				// alert(data.code);
-				if(data.code == 0) {
+				if(data.code == 0 && data.data != null) {
 					var result = data.data;
-					params.ext = result.ext;
-					params.name = result.name;
+					// params.ext = result.ext;
+					params.name = app.user.nickName;
 					params.filePath = result.filePath;
-					params.length = result.length;
-					imageList.push(params);
+					params.id = SignResult.id;
+					params.type = SignResult.type;
+					// params.length = result.length;
+					// imageList.push(params);
+					signPicParam = params;
 				
 				} else {
 					ft.abort();
@@ -275,43 +269,43 @@ define(['app'], function(app) {
 	 * 显示已读相片
 	 * @param {Object} picUrlList 需要显示的图片数组
 	 */
-	function showReadonlyPhotos(picUrlList) {
-		$$.each(picUrlList, function(index, item) {
-			photoBrowserPhotos.push(app.filePath + item.filePath);
-			var random = app.utils.generateGUID();
-			$$('.weui_uploader').append(
-				'<div class="weui_uploader_bd kpiPicture">' +
-				'<div class="picContainer" id="img_' + random + '">' +
-				'<img src="' + app.filePath + item.filePath + '" class="picSize" />' +
-				'</div>' +
-				'</div>');
+	// function showReadonlyPhotos(picUrlList) {
+	// 	$$.each(picUrlList, function(index, item) {
+	// 		photoBrowserPhotos.push(app.filePath + item.filePath);
+	// 		var random = app.utils.generateGUID();
+	// 		$$('.weui_uploader').append(
+	// 			'<div class="weui_uploader_bd kpiPicture">' +
+	// 			'<div class="picContainer" id="img_' + random + '">' +
+	// 			'<img src="' + app.filePath + item.filePath + '" class="picSize" />' +
+	// 			'</div>' +
+	// 			'</div>');
 			
-			// //添加删除图片的监听事件
-			// $$('#delete_file_' + random).on('click', function(e) {
-			// 	e.stopPropagation();
-			// 	var photoContainer = $$(this).parent().parent();
-			// 	var piciIndex = photoContainer.index();
-			// 	app.myApp.confirm('确认删除该图片?', function() {
-			// 		photoContainer.remove();
-			// 		photoBrowserPhotos.splice(piciIndex - 2, 1);
-			// 		photoDatas.splice(piciIndex - 2 , 1);
-			// 		imageList.splice(piciIndex - 2 , 1);
-			// 		app.myApp.toast('删除成功', 'success').show(true);
-			// 	});
-			// });	
-			$$('#img_' + random).on('click', function(e) {
-				var picIndex = $$(this).parent().index();
-				photoBrowserPopup = app.myApp.photoBrowser({
-					photos: photoBrowserPhotos,
-					theme: 'dark',
-					backLinkText: '关闭',
-					ofText: '/',
-					type: 'popup',
-				});
-				photoBrowserPopup.open(picIndex - 1 - reWork);
-			});
-		});
-	}
+	// 		// //添加删除图片的监听事件
+	// 		// $$('#delete_file_' + random).on('click', function(e) {
+	// 		// 	e.stopPropagation();
+	// 		// 	var photoContainer = $$(this).parent().parent();
+	// 		// 	var piciIndex = photoContainer.index();
+	// 		// 	app.myApp.confirm('确认删除该图片?', function() {
+	// 		// 		photoContainer.remove();
+	// 		// 		photoBrowserPhotos.splice(piciIndex - 2, 1);
+	// 		// 		photoDatas.splice(piciIndex - 2 , 1);
+	// 		// 		imageList.splice(piciIndex - 2 , 1);
+	// 		// 		app.myApp.toast('删除成功', 'success').show(true);
+	// 		// 	});
+	// 		// });	
+	// 		$$('#img_' + random).on('click', function(e) {
+	// 			var picIndex = $$(this).parent().index();
+	// 			photoBrowserPopup = app.myApp.photoBrowser({
+	// 				photos: photoBrowserPhotos,
+	// 				theme: 'dark',
+	// 				backLinkText: '关闭',
+	// 				ofText: '/',
+	// 				type: 'popup',
+	// 			});
+	// 			photoBrowserPopup.open(picIndex - 1 - reWork);
+	// 		});
+	// 	});
+	// }
 
 		/**
 	 * 选择签名页面回调 
@@ -332,8 +326,11 @@ define(['app'], function(app) {
 		if(signPic) {
 			var i = new Image();
             i.src = "data:" + signPic[0] + "," + signPic[1];
-            $(i).appendTo($("#someelement")); // append the image (SVG) to DOM.	
+			$(i).appendTo($("#someelement")); // append the image (SVG) to DOM.	
+
+			// uploadReportDetialPhoto(signPic[1]);
 		}else{
+			signPic=[];
 			$("#someelement").html('');
 		}
 //		getAbsenteesBack();

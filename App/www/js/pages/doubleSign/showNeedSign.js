@@ -8,14 +8,15 @@ define(['app',
 	var loading = true;
 	var searchNo = 1;
 	var searchLoading = true;
-	//选择部门人员
-	var findDeptPeoplePath = app.basePath + '/mobile/user/findDeptPeople/';
-	//模糊搜索部门人员
-	var searchDeptPeoplePath = app.basePath + '/mobile/user/searchDeptPeople';
+	//获取下一步签字列表
+	var findDeptPeoplePath = app.basePath + '/mobile/dbSign/applyList';
+	//模糊获取下一步签字列表
+	// var searchDeptPeoplePath = app.basePath + '/mobile/dbSign/applyList';
 	var deptName = '';
 	var oldContent = '';
 	var backPage = '';
 	var deptId = 0;
+	var state = 0;
 
 	/**
 	 * 页面初始化 
@@ -40,6 +41,10 @@ define(['app',
 		oldContent = '';
 		deptName = pageData.deptName;
 		deptId = pageData.deptId;
+		if(pageData.state){
+			state = pageData.state;
+		}
+		
 		
 		pageNo = 1;
 		loading = true;
@@ -108,9 +113,11 @@ define(['app',
 	 * 异步请求页面数据 
 	 */
 	function ajaxLoadContent(isLoadMore) {
-		app.ajaxLoadPageContent(findDeptPeoplePath+2, {
+		app.ajaxLoadPageContent(findDeptPeoplePath, {
 			// deptId: deptId,
-			current: pageNo,
+			userId:app.user.userId,
+			// current: pageNo,
+			type:state
 		}, function(result) {
 			var data = result.data.records;
 			console.log(data);
@@ -176,38 +183,40 @@ define(['app',
 	 * @param {Object} content 输入的关键字
 	 * @param {Object} isLoadMore 是否加载更多
 	 */
-	function searchPeople(content, isLoadMore) {
-		if(!isLoadMore) {
-			content = content.trim();
-			if(content != oldContent) {
-				oldContent = content;
-			} else {
-				return;
-			}
-		}
-		$$('.payPeopleNotFound').css('display', 'none');
-		if(!content) {
-			return;
-		}
-		app.ajaxLoadPageContent(searchDeptPeoplePath, {
-			name: content,
-			// deptId: deptId,
-			// pageNo: searchNo
-		}, function(result) {
-			var data = result.data;
-			console.log(data);
-			if(data.length > 0) {
-				if(data.length == 10) {
-					searchLoading = false;
-				}
-				var searchList = data;
-				$$('.payShowPeopleList ul').append(payPeopleTemplate(data));
-			} else {
-				$$('.payShowPeopleList ul').html("");
-				$$('.payPeopleNotFound').css('display', 'block');
-			}
-		});
-	}
+	// function searchPeople(content, isLoadMore) {
+	// 	if(!isLoadMore) {
+	// 		content = content.trim();
+	// 		if(content != oldContent) {
+	// 			oldContent = content;
+	// 		} else {
+	// 			return;
+	// 		}
+	// 	}
+	// 	$$('.payPeopleNotFound').css('display', 'none');
+	// 	if(!content) {
+	// 		return;
+	// 	}
+	// 	app.ajaxLoadPageContent(searchDeptPeoplePath, {
+	// 		name: content,
+	// 		userId:app.user.userId,
+	// 		type:state
+	// 		// deptId: deptId,
+	// 		// pageNo: searchNo
+	// 	}, function(result) {
+	// 		var data = result.data;
+	// 		console.log(data);
+	// 		if(data.length > 0) {
+	// 			if(data.length == 10) {
+	// 				searchLoading = false;
+	// 			}
+	// 			var searchList = data;
+	// 			$$('.payShowPeopleList ul').append(payPeopleTemplate(data));
+	// 		} else {
+	// 			$$('.payShowPeopleList ul').html("");
+	// 			$$('.payPeopleNotFound').css('display', 'block');
+	// 		}
+	// 	});
+	// }
 
 	/**
 	 * 选择发送到的用户 
