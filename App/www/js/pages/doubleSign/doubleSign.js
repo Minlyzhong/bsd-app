@@ -7,8 +7,8 @@ define(['app',
 	var loading = true;
 	var loading1 = true;
 	//获取签到列表
-	// var findLatestWorkLogPath = app.basePath + '/mobile/dbSign/list';
 	var findLatestWorkLogPath = app.basePath + '/mobile/dbSign/list';
+	// var findLatestWorkLogPath = app.basePath + '/mobile/worklog/page/list/';
 
 	var pageDataStorage = {}; 
 	
@@ -96,7 +96,7 @@ define(['app',
 	function keyupContent(){
 		$$('.firstShowPeopleList ul').html('');
 		NewRecordKey = $$('#ShowNewRecordSearch').val();
-		console.log(NewRecordKey);
+		// console.log(NewRecordKey);
 		if(!NewRecordKey) {
 			return;
 		}
@@ -131,20 +131,20 @@ define(['app',
 	 * 异步请求页面数据 
 	 */
 	function loadRecord(isLoadMore,pageNo) {
-		console.log(pageNo);
-		console.log(NewRecordKey);
+		// console.log(pageNo);
+		// console.log(NewRecordKey);
 		app.ajaxLoadPageContent(findLatestWorkLogPath, {
 			userId: app.user.userId,
 			current: pageNo,
-			size: 10
+			size: 10,
 			// tenantId: app.user.tenantId,			
 //			query: NewRecordKey,
 		}, function(result) {
 			var data = result.data.records;
 			$$.each(data, function(index, item) {
-			
+				item.createTime = app.getnowdata(item.createTime);
 			});
-			console.log(data);
+			// console.log(data);
 			handleRecord(data, isLoadMore);			
 		});
 	}
@@ -153,8 +153,8 @@ define(['app',
 //		console.log(app.userId);
 		//清空photoDatas
 		photoDatas = [];
-		console.log(pageNo);
-		console.log(NewRecordKey);
+		// console.log(pageNo);
+		// console.log(NewRecordKey);
 		app.ajaxLoadPageContent(findLatestWorkLogPath, {
 			userId: app.user.userId,
 			size: 10,
@@ -164,13 +164,9 @@ define(['app',
 		}, function(result) {
 			var data = result.data.records;
 			$$.each(data, function(index, item) {
-				if(!item.images) {
-					item.logPic = 'img/logo.png';
-				} else {
-					item.logPic = app.filePath + item.images[0].attPath;
-				}
+				
 			});
-			console.log(data);
+			// console.log(data);
 			if(data == ''){
 				$$('.firstPeopleNotFound').css('display','none');
 			}
@@ -180,7 +176,7 @@ define(['app',
 
 
 	/**
-	 * 加载工作日志
+	 * 加载双签到
 	 * @param {Object} data
 	 */
 	function handleRecord(data, isLoadMore) {
@@ -233,10 +229,10 @@ define(['app',
 	 * 跳转详细页面 
 	 */
 	function loadRecordDetail() {
-		var recordId = $$(this).data('id');
+		var signId = $$(this).data('id');
 		var userId = $$(this).data('userId');
 
-		app.myApp.getCurrentView().loadPage('doubleSignDetail.html?id=' + recordId + '&userId=' + userId);
+		app.myApp.getCurrentView().loadPage('doubleSignDetail.html?id=' + signId + '&userId=' + userId);
 	}
 
 	/**

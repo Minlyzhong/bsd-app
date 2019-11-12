@@ -3,16 +3,20 @@ define(['app','hbs!js/hbs/meetingList'], function(app, meetingListTemplate) {
 	var firstIn = 1;
 	var pageDataStorage = {};
 	var pageNo = 1;
+	var pageNo1 = 1;
 	var loading = true;
-	//获取会议列表
-	var checkSignPath = app.basePath + '/mobile/sign/check';
-	
+	var loading1 = true;
+	//获取项目列表
+	var checkSignPath = app.basePath + '/mobile/specialDeclare/list';
+
+	var NewRecordKey = '';
 
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
 	 */
 	function init(page) {
+		NewRecordKey = '';
 		initData(page.query);
 		app.back2Home();
 		clickEvent(page);
@@ -25,7 +29,12 @@ define(['app','hbs!js/hbs/meetingList'], function(app, meetingListTemplate) {
 	function initData(pageData) {
 		firstIn = 0;
 		pageDataStorage = {};
-		checkList(false);
+		pageNo = 1;
+		loading = true;
+		pageNo1 = 1;
+		loading1 = true;
+		pageDataStorage = {};
+		checkList(false, pageNo);
 		
 	}
 
@@ -43,19 +52,71 @@ define(['app','hbs!js/hbs/meetingList'], function(app, meetingListTemplate) {
 		$$('.addMeeting').on('click', function() {
 			app.myApp.getCurrentView().loadPage('processAdd.html');
 		});
-		};
 
-		
-	
+		$$('#ShowNewRecordSearch').on('focus',searchRecord);
+		$$('.ShowNewRecordSearchBar .searchCancelBtn').on('click', hideSearchList);
+		$$('#ShowNewRecordSearch').on('keyup', keyupContent);
+
+
+		};
+		function searchRecord(){
+			pageNo1 = 1;
+			loading1 = true;
+			NewRecordKey='';
+			$$(this).css('text-align', 'left');
+			$$('.meetingListSearch ul').html('');
+			$$('.firstPeopleNotFound').css('display', 'none');
+			$$('.ShowNewRecordSearchBar .searchCancelBtn').css('display', 'block');
+			$$('.infinite-scroll.searchRecord').css('display', 'block');
+			$$('.infinite-scroll.contentRecord').css('display', 'none');
+		}
+		function hideSearchList(){
+			pageNo1 = 1;
+			loading1 = true;
+			NewRecordKey='';
+			$$('#ShowNewRecordSearch').val('');
+			$$('.firstPeopleNotFound').css('display', 'none');
+			$$('.meetingListSearch ul').html('');
+			$$('#ShowNewRecordSearch').css('text-align', 'center');
+			$$('.ShowNewRecordSearchBar .searchCancelBtn').css('display', 'none');
+			$$('.infinite-scroll.searchRecord').css('display', 'none');
+			$$('.infinite-scroll.contentRecord').css('display', 'block');
+		}
+		function keyupContent(){
+			$$('.meetingListSearch ul').html('');
+			NewRecordKey = $$('#ShowNewRecordSearch').val();
+			console.log(NewRecordKey);
+			if(!NewRecordKey) {
+				return;
+			}
+			checkList1(false,pageNo1);
+		}
 
 	//获取会议列表
-	function checkList(isLoadMore) {
+	function checkList(isLoadMore,pageNo) {
 		app.ajaxLoadPageContent(checkSignPath, {
-			// userId: app.userId
+			userId: app.userId,
+			size:10,
+			current:pageNo
 		}, function(data) {
 			console.log(data);
-			if(data.code == 0) {
-				var meetingDate =[{meetingName:'项目1',part:'阶段'},{meetingName:'项目2',part:'阶段'}]
+			if(data.code == 0 && data.data !=null) {
+				var meetingDate = data.data.records;
+				$$.each(meetingDate,function(index, item){
+					item.createdTime = item.createdTime.split(' ')[0];
+					item.projectEndDate = item.projectEndDate.split(' ')[0];
+					item.projectStartDate = item.projectStartDate.split(' ')[0];
+					if(item.step < 6){
+						
+						item.step = parseInt(item.step) + 1;
+					}else{
+						item.status = 1;
+					}
+
+					
+				})
+
+
 				if(isLoadMore){
 					console.log(meetingDate)
 					$$('.meetingList ul').append(meetingListTemplate(meetingDate));
@@ -71,7 +132,106 @@ define(['app','hbs!js/hbs/meetingList'], function(app, meetingListTemplate) {
 			}
 			$$('.meetingList .card').click(function(){
 				var id = $$(this).data('id');
-				app.myApp.getCurrentView().loadPage('processDetail.html?honorId=1');
+				var pTitle = $$(this).data('title');
+				var step = $$(this).data('step');
+				app.myApp.getCurrentView().loadPage('processDetail.html?pId='+id+'&pTitle='+pTitle+'&step='+step);
+			})
+		});
+	
+	}
+
+
+	/**
+	 * 点击事件
+	 */
+	function clickEvent(page) {
+		$$('.addMeeting').on('click', function() {
+			app.myApp.getCurrentView().loadPage('processAdd.html');
+		});
+
+		$$('#ShowNewRecordSearch').on('focus',searchRecord);
+		$$('.ShowNewRecordSearchBar .searchCancelBtn').on('click', hideSearchList);
+		$$('#ShowNewRecordSearch').on('keyup', keyupContent);
+
+
+		};
+		function searchRecord(){
+			pageNo1 = 1;
+			loading1 = true;
+			NewRecordKey='';
+			$$(this).css('text-align', 'left');
+			$$('.meetingListSearch ul').html('');
+			$$('.firstPeopleNotFound').css('display', 'none');
+			$$('.ShowNewRecordSearchBar .searchCancelBtn').css('display', 'block');
+			$$('.infinite-scroll.searchRecord').css('display', 'block');
+			$$('.infinite-scroll.contentRecord').css('display', 'none');
+		}
+		function hideSearchList(){
+			pageNo1 = 1;
+			loading1 = true;
+			NewRecordKey='';
+			$$('#ShowNewRecordSearch').val('');
+			$$('.firstPeopleNotFound').css('display', 'none');
+			$$('.meetingListSearch ul').html('');
+			$$('#ShowNewRecordSearch').css('text-align', 'center');
+			$$('.ShowNewRecordSearchBar .searchCancelBtn').css('display', 'none');
+			$$('.infinite-scroll.searchRecord').css('display', 'none');
+			$$('.infinite-scroll.contentRecord').css('display', 'block');
+		}
+		function keyupContent(){
+			$$('.meetingListSearch ul').html('');
+			NewRecordKey = $$('#ShowNewRecordSearch').val();
+			console.log(NewRecordKey);
+			if(!NewRecordKey) {
+				return;
+			}
+			checkList1(false,pageNo1);
+		}
+
+	//收搜获取会议列表
+	function checkList1(isLoadMore,pageNo1) {
+		app.ajaxLoadPageContent(checkSignPath, {
+			userId: app.userId,
+			size:10,
+			current:pageNo1,
+			query: NewRecordKey,
+		}, function(data) {
+			console.log(data);
+			if(data.code == 0 && data.data !=null) {
+				var meetingDate = data.data.records;
+				$$.each(meetingDate,function(index, item){
+					item.createdTime = item.createdTime.split(' ')[0];
+					item.projectEndDate = item.projectEndDate.split(' ')[0];
+					item.projectStartDate = item.projectStartDate.split(' ')[0];
+					if(item.step < 6){
+						
+						item.step = parseInt(item.step) + 1;
+					}else{
+						item.status = 1;
+					}
+
+					
+				})
+
+
+				if(isLoadMore){
+					console.log(meetingDate)
+					$$('.meetingListSearch ul').append(meetingListTemplate(meetingDate));
+					loading = false;
+				}else{
+					console.log(meetingDate)
+					$$('.meetingListSearch ul').html(meetingListTemplate(meetingDate));
+					loading = true;
+				}
+			}else{
+				loading = true;
+				$$('.meetingListSearch ul').html("");
+			}
+			$$('.meetingListSearch .card').click(function(){
+				var id = $$(this).data('id');
+				var pTitle = $$(this).data('title');
+				var step = $$(this).data('step');
+				app.myApp.getCurrentView().loadPage('processDetail.html?pId='+id+'&pTitle='+pTitle+'&step='+step);
 			})
 		});
 	
@@ -85,10 +245,13 @@ define(['app','hbs!js/hbs/meetingList'], function(app, meetingListTemplate) {
 			pageNo = 1;
 			loading = true;
 			//这里写请求
-			checkList(false);
+			checkList(false,pageNo);
 			app.myApp.pullToRefreshDone();
 		}, 1000);
 	}
+	
+
+	
 	/**
 	 * 上下拉操作 
 	 */
@@ -99,7 +262,8 @@ define(['app','hbs!js/hbs/meetingList'], function(app, meetingListTemplate) {
 			setTimeout(function() {
 				pageNo = 1;
 				loading = true;
-				checkList(false);
+				//这里写请求
+				checkList(false,pageNo);
 				app.myApp.pullToRefreshDone();
 			}, 500);
 		});
@@ -107,10 +271,19 @@ define(['app','hbs!js/hbs/meetingList'], function(app, meetingListTemplate) {
 		//加载更多
 		var loadMoreContent = $$(page.container).find('.infinite-scroll');
 		loadMoreContent.on('infinite', function() {
-			if(loading) return;
-			loading = true;
-			pageNo += 1;
-			checkList(true);
+			if(NewRecordKey==''){
+				if(loading) return;
+				loading = true;
+				pageNo += 1;
+				//这里写请求
+				checkList(true,pageNo);
+			}else{
+				if(loading1) return;
+				loading1 = true;
+				pageNo1 += 1;
+				//这里写请求
+				checkList1(true,pageNo1);
+			}
 		});
 	}
 

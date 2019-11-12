@@ -292,19 +292,11 @@ define(['app',
 
 		function backAction() {
 			app.myApp.getCurrentView().back();
-			if(formType == 1){
-				require(['js/pages/threeMeetingAndOneClass/threeMeetingAndOneClassEdit'],function(threeMeetingAndOneClassEdit){
-					threeMeetingAndOneClassEdit.addHostBack(leaderList);
-				});
-			}else if(meetingType == 1){
+			 if(meetingType == 1){
 				require(['js/pages/process/processDetailEdit'],function(processDetailEdit){
-						processDetailEdit.addHostBack(leaderList);
+						processDetailEdit.addRecordBack(leaderList);
 				});
 
-			}else{
-				require(['js/pages/threeMeetingAndOneClass/threeMeetingAndOneClassAdd'],function(threeMeetingAndOneClassAdd){
-					threeMeetingAndOneClassAdd.addHostBack(leaderList);
-				});
 			}
 			
 		}
@@ -394,7 +386,7 @@ define(['app',
 	 * @param {Object} deptId 部门ID
 	 */
 	function findDeptPeople(deptId, deptName) {
-		app.myApp.getCurrentView().loadPage('showHost.html?deptName=' + deptName + '&deptId=' + deptId + '&backPage=addHost');
+		app.myApp.getCurrentView().loadPage('showRecord.html?deptName=' + deptName + '&deptId=' + deptId + '&backPage=addHost');
 		return;
 	}
 

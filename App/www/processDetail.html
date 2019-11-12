@@ -1,70 +1,154 @@
 <div data-page="process/processDetail" class="page no-tabbar">
+	
 	<div class="navbar">
-		<div class="navbar-inner">
-			<div class="left sliding">
-				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			<div class="navbar-inner">
+				<div class="left sliding">
+					<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+				</div>
+				<div class="center sliding">四议两公开流程</div>
+				<div class="right sliding">
+					<!-- <div class="ownDetail">项目详情</div> -->
+				</div>
 			</div>
-			<div class="center sliding">支部</div>
-			<!--<div class="right sliding"></div>-->
-			<div class="right sliding">
-				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
-				<!--<div class="ownReport">个人统计</div>-->
+		</div>
+	<div class="page-content">
+		<div class="content-block" style="margin: 20px 0px;">
+		  <!-- tabs控制面板 -->
+		  <div class="buttons-row">
+			<!-- 关联到第一个tab, 默认激活 -->
+			<a href="#tab1" class="tab-link active button buttonShyk">项目详情</a>
+			<!-- 关联到第二个tab -->
+			<a href="#tab2" class="tab-link button buttonShyk">流程</a>
+			
+		  </div>
+		</div>
+		<!-- Tabs, 标签内容区容器 -->
+		<div class="tabs">
+		  <!-- Tab 1, 默认激活 -->
+		  <div id="tab1" class="tab active">
+			<div class="content-block" >
+
+				<div class="list-block funds-block">
+					<ul>
+						<li class="align-top">
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label" style="margin-top: 3px;">项目名称:</div>
+									<div class="item-input" style="margin-left: -2px;">
+										<input type="text" id="FundsName" name="FundsName" readonly/>
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title kp-label">项目开始时间:</div>
+										<div class="item-input">
+											<input type="text" id="beginTime" name="beginTime"  readonly/>
+										</div>
+										</div>
+									</div>
+								</li>
+							<li>
+									<div class="item-content">
+										<div class="item-inner">
+											<div class="item-title kp-label">项目完成时间:</div>
+											<div class="item-input">
+												<input type="text" id="endTime" name="endTime " readonly/>
+											</div>
+										</div>
+									</div>
+							</li>
+						
+						<li class="align-top">
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label" style="margin-top: 3px;">申报人:</div>
+									<div class="item-input" style="margin-left: -2px;">
+										<input type="text" id="processUser" name="processUser" readonly/>
+									</div>
+								</div>
+							</div>
+						</li>
+						<!-- <li class="align-top">
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title kp-label" style="margin-top: 3px;">村(社区):</div>
+										<div class="item-input" style="margin-left: -2px;">
+											<input type="text" id="grantOrganization" name="grantOrganization" readonly/>
+										</div>
+									</div>
+								</div>
+							</li> -->
+						<li class="align-top">
+								<div class="item-content">
+									<div class="item-inner">
+										<div class="item-title kp-label" style="margin-top: 3px;">项目主要内容:</div>
+										<div class="item-input" style="margin-left: -2px;">
+											<textarea id="fundsDetails" name="fundsDetails" style="width:100%;height:200px;" readonly></textarea>
+										</div>
+									</div>
+								</div>
+						</li>	
+						
+						<li class="align-top">
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label" style="margin-top: 3px;">资金预算(万元):</div>
+									<div class="item-input" style="margin-left: -2px;">
+										<input type="text" id="fee" name="fee" readonly/>
+									</div>
+								</div>
+							</div>
+						</li>
+					
+						<li class="align-top">
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label" style="margin-top: 3px;">预算具体情况:</div>
+									<div class="item-input" style="margin-left: -2px;">
+										<textarea id="fundsBudgetDetails" name="fundsBudgetDetails" style="width:100%;height:200px;" readonly></textarea>
+									</div>
+								</div>
+								<!-- <icon class="icon icon-openIcon tcaomBudgetDetailsIcon" style="margin: 12px 5px 0 0;"></icon>	 -->
+							</div>
+						</li>
+					</ul>
+					<div class="weui_cells weui_cells_form">
+						<div class="weui_cell uploadCell">
+							<div class="weui_cell_bd weui_cell_primary">
+								<div class="weui_uploader weui_uploader1">
+									<div class="weui_uploader_hd weui_cell">
+										<div class="weui_cell_bd weui_cell_primary">项目实施前照片(涉及施工类的项目)</div>
+										<div class="weui_cell_ft"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+						
 			</div>
-		</div>
-	</div>
+		  </div>
+		  <!-- Tab 2 -->
+		  <div id="tab2" class="tab">
+			<div class="content-block-title" style="margin-top: 0px; white-space: normal; font-size: 13px;">
+					<p class="pTitle" style="line-height: 25px;">温馨提示: 可点击下面流程进行填写或者查看</p>
+				</div>
+			<div class=" precessList" style="margin-bottom: 20px;">
+				
+				<ul>
+					
+				</ul>
 
-	<div class="page-content precessList" style="margin-bottom: 20px;">
+			</div>	
+			</div>
+		  </div>
+		 
+		</div>
+	  </div>
 		
-		<ul>
-			<!-- <li data-type="1" data-name="党支部会议提议">
-				<span>1</span>
-				<p>党支部会议提议</p>
-			</li>
-			<li data-type="2" data-name="两委会议提议">
-				<span>2</span>
-				<p>两委会议提议</p>
-			</li>
-			<li data-type="3" data-name="党员大会审议">
-				<span>3</span>
-				<p>党员大会审议</p>
-			</li>
-			<li data-type="4" data-name="村名大会决议">
-				<span>4</span>
-				<p>村名大会决议</p>
-			</li>
-			<li data-type="5" data-name="决议公开">
-				<span>5</span>
-				<p>决议公开</p>
-			</li>
-			<li data-type="6" data-name="实施结果公示">
-				<span>6</span>
-				<p>实施结果公示</p>
-			</li> -->
-		</ul>
-<!-- <div class="stepCont stepCont2">
-	 <div class="ystep"></div> 
-	<div class='ystep-container ystep-lg ystep-blue'></div>
-	<div class="pageCont">
-		<div id="page1" class="stepPage">
-			<h1>page1</h1>
-		</div>
-		<div id="page2" class="stepPage">
-			<h1>page2</h1>
-		</div>
-		<div id="page3" class="stepPage">
-			<h1>page3</h1>
-		</div>
-		<div id="page4" class="stepPage">
-			<h1>page4</h1>
-		</div>
-		<div id="page5" class="stepPage">
-			<h1>page5</h1>
-		</div>
-	</div>
-</div> -->
-		
-	</div>	
-
 	
 </div>
 

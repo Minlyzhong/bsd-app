@@ -1,5 +1,5 @@
 define(['app',
-	'hbs!js/hbs/addSign',
+	'hbs!js/hbs/addHost',
 ], function(app, payPeopleTemplate) {
 	var $$ = Dom7;
 	var firstIn = 1;
@@ -8,15 +8,14 @@ define(['app',
 	var loading = true;
 	var searchNo = 1;
 	var searchLoading = true;
-	//获取下一步签字列表
-	var findDeptPeoplePath = app.basePath + '/mobile/dbSign/applyList';
-	//模糊获取下一步签字列表
-	// var searchDeptPeoplePath = app.basePath + '/mobile/dbSign/applyList';
+	//选择部门人员
+	var findDeptPeoplePath = app.basePath + '/mobile/user/findDeptPeople/';
+	//模糊搜索部门人员
+	var searchDeptPeoplePath = app.basePath + '/mobile/user/searchDeptPeople';
 	var deptName = '';
 	var oldContent = '';
 	var backPage = '';
 	var deptId = 0;
-	var state = 0;
 
 	/**
 	 * 页面初始化 
@@ -41,11 +40,7 @@ define(['app',
 		oldContent = '';
 		deptName = pageData.deptName;
 		deptId = pageData.deptId;
-		if(pageData.state){
-			state = pageData.state;
-		}
-		
-		
+		backPage = pageData.backPage;
 		pageNo = 1;
 		loading = true;
 		searchLoading = true;
@@ -78,33 +73,28 @@ define(['app',
 //			});
 //		});
 		//选择人员
-		$$('.chooseLeader').on('click', function() {
+		$$('.payShowBtnRow .chooseLeader').on('click', function() {
 			var leaderList = [];
 			var search = $$('.list-pay-search').find('input[name="payBox"]:checked');
-			console.log(search);
 			if(search.length == 0) {
 				app.myApp.alert('请选择用户');
 			} else {
 				$$.each(search, function(index, item) {
 					var userObj = {
 						userId: parseInt($$(item).val()),
-						name: $$(item).parent().find('.item-title span').html(),
-						deptName: $$(item).parent().find('.item-title p').html(),
-						deptId: $$(item).data('deptId'),
-						// tenantId: $$(item).data('tenantId')
-
+						userName: $$(item).parent().find('.item-title span').html(),
+						deptName: $$(item).parent().find('.item-title p').html()
 					}
 					leaderList = [];
 					leaderList.push(userObj);					
 				});
-				var payPeople = require('js/pages/doubleSign/doubleSignAdd');
+				var payPeople = require('js/pages/threeMeetingAndOneClass/addRecord');
 				console.log(leaderList.length);
-				console.log(leaderList);
-				payPeople.addSignBack(leaderList[0]);
+				payPeople.setLeaderList(leaderList);
 				app.myApp.getCurrentView().back();
 			}
 		});
-		// $$('.searchShowBtnRow .chooseLeader').on('click', chooseLeader);
+		$$('.searchShowBtnRow .chooseLeader').on('click', chooseLeader);
 	}
 
 	/**
@@ -118,22 +108,17 @@ define(['app',
 	 * 异步请求页面数据 
 	 */
 	function ajaxLoadContent(isLoadMore) {
-		app.ajaxLoadPageContent(findDeptPeoplePath, {
+		app.ajaxLoadPageContent(findDeptPeoplePath+deptId, {
 			// deptId: deptId,
-			userId:app.user.userId,
 			current: pageNo,
-			size:20,
-			type:state
-			// type:1
 		}, function(result) {
-			var data = result.data;
+			var data = result.data.records;
 			console.log(data);
 			if(data.length) {
-				if(data.length == 20) {
+				if(data.length == 10) {
 					loading = false;
 				}
 				$$('.list-pay-search ul').append(payPeopleTemplate(data));
-				loading = false;
 			} else if(isLoadMore) {
 
 			} else {
@@ -191,40 +176,38 @@ define(['app',
 	 * @param {Object} content 输入的关键字
 	 * @param {Object} isLoadMore 是否加载更多
 	 */
-	// function searchPeople(content, isLoadMore) {
-	// 	if(!isLoadMore) {
-	// 		content = content.trim();
-	// 		if(content != oldContent) {
-	// 			oldContent = content;
-	// 		} else {
-	// 			return;
-	// 		}
-	// 	}
-	// 	$$('.payPeopleNotFound').css('display', 'none');
-	// 	if(!content) {
-	// 		return;
-	// 	}
-	// 	app.ajaxLoadPageContent(searchDeptPeoplePath, {
-	// 		name: content,
-	// 		userId:app.user.userId,
-	// 		type:state
-	// 		// deptId: deptId,
-	// 		// pageNo: searchNo
-	// 	}, function(result) {
-	// 		var data = result.data;
-	// 		console.log(data);
-	// 		if(data.length > 0) {
-	// 			if(data.length == 10) {
-	// 				searchLoading = false;
-	// 			}
-	// 			var searchList = data;
-	// 			$$('.payShowPeopleList ul').append(payPeopleTemplate(data));
-	// 		} else {
-	// 			$$('.payShowPeopleList ul').html("");
-	// 			$$('.payPeopleNotFound').css('display', 'block');
-	// 		}
-	// 	});
-	// }
+	function searchPeople(content, isLoadMore) {
+		if(!isLoadMore) {
+			content = content.trim();
+			if(content != oldContent) {
+				oldContent = content;
+			} else {
+				return;
+			}
+		}
+		$$('.payPeopleNotFound').css('display', 'none');
+		if(!content) {
+			return;
+		}
+		app.ajaxLoadPageContent(searchDeptPeoplePath, {
+			name: content,
+			// deptId: deptId,
+			// pageNo: searchNo
+		}, function(result) {
+			var data = result.data;
+			console.log(data);
+			if(data.length > 0) {
+				if(data.length == 10) {
+					searchLoading = false;
+				}
+				var searchList = data;
+				$$('.payShowPeopleList ul').append(payPeopleTemplate(data));
+			} else {
+				$$('.payShowPeopleList ul').html("");
+				$$('.payPeopleNotFound').css('display', 'block');
+			}
+		});
+	}
 
 	/**
 	 * 选择发送到的用户 
@@ -244,7 +227,7 @@ define(['app',
 				leaderList = [];
 				leaderList.push(userObj);
 			});
-			var payPeople = require('js/pages/doubleSignAdd/' + backPage);
+			var payPeople = require('js/pages/threeMeetingAndOneClass/' + backPage);
 			payPeople.setLeaderList(leaderList);
 			app.myApp.getCurrentView().back();
 		}

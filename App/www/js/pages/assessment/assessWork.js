@@ -519,6 +519,7 @@ define(['app'], function(app) {
 				var data = JSON.parse(r.response);
 				// sum++;
 				app.myApp.hidePreloader();
+				
 				if(data.code == 0 && data.data != null) {
 					var result = data.data;
 					params.ext = result.ext;

@@ -1,0 +1,17 @@
+{{#.}}
+<li>
+	<label class="label-checkbox item-content">
+		<div class="item-inner">
+			<div class="item-title"><span>{{name}}</span>
+			{{#compare deptName '!=' null}}
+				<p class="color-gray" style="font-size: 15px;margin: 5px;">所属单位：{{deptName}}</p>
+			{{/compare}}
+			</div>
+		</div>
+		<input type="radio" id='payBox' name="payBox" value="{{userId}}" data-deptId="{{deptId}}" data-tenantId="{{tenantId}}">
+		<div class="item-media" style="padding-right: 15px;">
+			<i class="icon icon-form-checkbox"></i>
+		</div>
+	</label>
+</li>
+{{/.}}

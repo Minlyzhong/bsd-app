@@ -274,6 +274,7 @@ define(['app',
 					// console.log(app.roleId)
 					$$.each(menuItem.children, function(_, appItem) {
 						appItem.menuIcon=app.filePath+appItem.menuIcon;
+						
 						if(app.roleId < 1 && appItem.menuUrl == "assessTopicList.html") {
 							appItem.menuUrl = -1;
 							
@@ -396,12 +397,18 @@ define(['app',
 			}
 		});
 		$$('.app-content .grid').on('click', function() {
+			
 			if(app.userId <= 0) {
 				toLogin();
 				return;
 			}
 			var appId = $$(this).data('id');
 			var menuName = $$(this).data('name');
+			console.log(appId);
+			if(appId == undefined){
+				app.myApp.toast('该功能正在开发中','none').show(true);
+				return;
+			}
 			if(appId == 'villageCheck') {
 				userScan();
 			} else if(appId == 'assessment.html') {

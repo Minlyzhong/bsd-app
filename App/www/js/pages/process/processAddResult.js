@@ -5,18 +5,21 @@ define(['app'], function(app) {
 	var photoDatas = [];
 	var photoBrowserPopup = '';
 	var pageDataStorage = {}; 
-	//保存专项资金项目
-	var FundsPath = app.basePath + '/mobile/specialDeclare/saveSpecialDeclare';
+	//保存专项资金项目决议公示结果
+	var FundsResultPath = app.basePath + '/mobile/specialDeclare/saveResolutionPublicity';
 	//上传附件
 	var uploadPersonalHonorPath = app.basePath +'/file/upload' ;
 	//通过ID查询支部信息
-	var departmentPath = app.basePath + '/mobile/political/department/';
+	// var departmentPath = app.basePath + '/mobile/political/department/';
 	
 	var count;
 	var imageList = [];
 	var deptList = [];
 	var Level = [];
 	var villageId = 0;
+	var pId = 0;
+	var pType = 0;
+	var pName = 0;
 
 	/**
 	 * 页面初始化 
@@ -48,8 +51,16 @@ define(['app'], function(app) {
 		imageList = [];
 		Level = [];
 		deptList = [];
+		console.log(pageData)
+		pId = pageData.pId;
+		eventId = pageData.eventId;
+		pType = pageData.type;
+		pName = pageData.name;
+
+		// pTitle = pageData.pTitle
+		$$('.meetingCenter').html(pName);
 		villageId = 0;
-		getVillageId();
+		// getVillageId();
 	}
 
 	/**
@@ -83,45 +94,10 @@ define(['app'], function(app) {
 				app.back3Home();
 			});
 		});
-		// //项目具体情况:
-		// $$('.tcaomFundsDetailsIcon').on('click',function(){
-		// 	changeStateForText($$(this));
-		// 	$('.tcaomFundsDetails').slideToggle(200);
-		// });
-		//预算具体情况:
-		$$('.tcaomBudgetDetailsIcon').on('click',function(){
-			changeStateForText($$(this));
-			$('.tcaomBudgetDetails').slideToggle(200);
-		});
+	
 
-		//点击村社区添加
-		$$('.addVillage').on('click',function(){
-			//跳转村社区选择
-			app.myApp.getCurrentView().loadPage('addVillage.html?deptList='+JSON.stringify(deptList)+'&deptType=1');
-		});
-		//点击村社区移除
-		$$('.removeVillage').on('click',function(){
-			//清空村社区
-			deptList=[];
-			$$('#VillageCom').val('');
-//				getAbsenteesBack();
-		});
+	
 	}
-	/**
-	 * 获取村(社区)id
-	 */
-
-	 function getVillageId(){
-		app.ajaxLoadPageContent(departmentPath + app.user.deptId, {
-			// honorId:honorId,
-		}, function(data) {
-			if(data.code == 0 && data.data != null){
-				console.log(data.villageId);
-				villageId = data.data.villageId;
-			}
-		});
-		
-	 }
 	
 	/*
 	 * 改变文本框的状态
@@ -155,23 +131,20 @@ define(['app'], function(app) {
 	 */
 	function submitFunds(){
 		
-		var budget = $$('#fee').val();
-		var budgetDetailed = $$('#fundsBudgetDetails').val();
-		var projectContent = $$('#fundsDetails').val();
-		var projectName = $$('#FundsName').val();
+		var phone = $$('#phone').val();
 		var sTime = $$('#beginTime').val();
 		var eTime = $$('#endTime').val();
 
 		if(!sTime || !eTime) {
 			app.myApp.alert('请确认时间！');
 		} else if(sTime >= eTime) {
-			app.myApp.alert('项目开始时间必须早于结束时间！');
+			app.myApp.alert('公示开始时间必须早于结束时间！');
 			$$('#endTime').val('');
 			return;
 		}
 
-		if(!budget || !budgetDetailed || !projectContent || !projectName){
-			app.myApp.alert('请补全申报内容！');
+		if(!phone ){
+			app.myApp.alert('请输入联系电话！');
 			return false;
 		}
 		
@@ -185,23 +158,23 @@ define(['app'], function(app) {
 		var time2 = eTime +' 00:00:00';
 	
 		var params = {
-			budget: budget,
-			budgetDetailed: budgetDetailed,
-			projectContent: projectContent,
-			projectEndDate: time2,
-			projectName: projectName,
-			projectStartDate: time1,
-			tenantId: app.tenantId,
-			villageId: villageId,
-			enclosures : imageList,
 			creator: app.userId,
-			creatorName:app.user.nickName
+			creatorName: app.user.nickName,
+			enclosures: imageList,
+			eventId: eventId,
+			openEndDate: time2,
+			openStartDate: time1,
+			phone: phone,
+			step: pType,
+			tenantId: app.tenantId,
+
+			
 		}
 		console.log(params)
 		var formDatas = JSON.stringify(params)
 
 		$$.ajax({
-            url:FundsPath,
+            url:FundsResultPath,
             method: 'POST',
             dataType: 'json',
 			contentType: 'application/json;charset:utf-8',
@@ -214,10 +187,14 @@ define(['app'], function(app) {
 					app.myApp.getCurrentView().back();
 					setTimeout(function() {
 					//调用
+					require(['js/pages/process/processDetail'], function(process) {
+						process.refresh();
+					});
 					require(['js/pages/process/process'], function(process) {
 						process.refresh();
 					});
 					}, 1000);
+					
 				}else{
 					app.myApp.toast("保存失败，请重新保存！", 'none').show(true);
 				}
@@ -400,10 +377,12 @@ define(['app'], function(app) {
 				'Authorization': "bearer " + app.access_token
 			}
 			var params = {
+			
+				"eventId": eventId,
 				"fileName": "",
 				"filePath": "",
-				"step": 0,
-				"tenantId": app.userDetail.tenantId,
+				"step": pType,
+				"tenantId": app.tenantId
 			}
 			// options.params = params;
 
@@ -413,12 +392,10 @@ define(['app'], function(app) {
 				
 				// sum++;
 				
-				if(data.code == 0 && data.data != null) {
+				if(data.code == 0 && data.data !=null) {
 					var result = data.data;
 					params.fileName = result.name;
 					params.filePath = result.filePath;
-					// params.attSize = result.length;
-
                     imageList.push(params);
                    
 				} else {

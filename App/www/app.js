@@ -36,6 +36,7 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 		swipePanel: true,
 		tapHold: true,
 		cache: true,
+		// modalTitle: '北海党建',
 		modalTitle: '党建E网通',
 		modalButtonOk: '确定',
 		modalButtonCancel: '取消',
@@ -455,7 +456,15 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 			// }else{
 			// 	$$('.homeCamera').css('display','none');
 			// }
+			$$('.userName').html('---');
+			$$('.userDeptName').html('---');
+			$$('.login-out').hide();
+			$$('.score').html('--');
+			$$('.rank').html('--');
+			$$('.login-in').show();
+			$$('.row.toolList').html("");
 			$$('.homeCamera').css('display','none');
+			$$('.branchStyle').css('display','none');
 			myApp.toast('账号已过期,请重新登录', 'error').show(true);
 			
 			// var nowView = myApp.getCurrentView();
@@ -484,6 +493,11 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	var loginPath = 'http://120.24.51.37:9010';
 	var basePath = 'http://120.24.51.37:9010/admin';
 	var filePath = 'http://120.24.51.37/group1/';
+
+	// 测试库(2)北海党建
+	// var loginPath = 'http://120.24.51.37:9011';
+	// var basePath = 'http://120.24.51.37:9011/admin';
+	// var filePath = 'http://120.24.51.37/group1/';
 
 	//  测试库(一期)
 	// 	var basePath = 'http://192.168.11.80:8080/';

@@ -405,7 +405,8 @@ define(['app'], function(app) {
 		var assessTitle = $$('#assessTitle').val();
 		var assessTs = $$('#assessTs').val();
 		var assessContent = $$('#assessContent').val();
-		if(!assessContent || !assessTitle || !assessTs) {
+		var assessSelfScore = $$('#assessSelfScore').val();
+		if(!assessContent || !assessTitle || !assessTs || !assessSelfScore) {
 			app.myApp.alert('请补全考核信息！');
 			return;
 		}
@@ -427,7 +428,8 @@ define(['app'], function(app) {
 			reportState: 0,
 			totalScore: assessScore,
 			file: fileList,
-			images : imageList
+			images : imageList,
+			userScore: assessSelfScore
 		}
 		var formDatas= JSON.stringify(params)
 		$$.ajax({

@@ -1,8 +1,8 @@
 define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate) {
 	var $$ = Dom7;
 	var firstIn = 1;
-	//保存三会一课
-	var threeMeetingAndOneClassAddPath = app.basePath + '/mobile/partyAm/saveReportDetial';
+	//保存专项资金项目
+	var saveFourMeeting = app.basePath + '/mobile/specialDeclare/saveFourMeeting';
 	//上传图片
 	var uploadReportDetialPhotoPath = app.basePath + '/file/upload';
 	//上传文件
@@ -36,13 +36,16 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 	//地理位置
 	var lng;
 	var lat;
-	var topicId;
 	
 	var deptId;
-	var target;
-	var	memo;
 	//一个装id获取缺席人的id
 	var getAddIds;
+	var eventId =0;
+	var pId =0;
+	var pTitle ='';
+	var pType ='';
+	var name ='会议填写';
+
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -63,17 +66,24 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 	function initData(pageData) {
 		console.log('pageData')
 		console.log(pageData)
-		$$('.shykTitle').html(pageData.name);
-		$$('.assessTarget').append(target);
+		
 		fileList = [];
 		imageList = [];
-	
+		pId = pageData.pId;
+		eventId = pageData.eventId;
+		pType = pageData.type;
+		pTitle = pageData.pTitle;
+		name = pageData.name;
+
+		$$('.precessTitle').html(name);
+		$$('.pTitle').html('项目名称 : '+ pTitle);
 		attType = 0;
-		// $$('.assessMemo').append(memo);
+		
 		firstIn = 0;
 		listAttendees = [];
 		listedList = [];
 		hostMan = [];
+		recordMan = [];
 		lng = 0.0;
 		lat = 0.0;
 		getAddIds = [];
@@ -173,19 +183,12 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 					app.back3Home();
 				});
 			});
-			/*//点击列席人添加
-			$$('.addAttendees').on('click',function(){
-//				app.myApp.alert('请选择列席人');
-				//跳转人员选择
-				app.myApp.getCurrentView().loadPage('addAttendees.html?listAttendees='+JSON.stringify(listAttendees)+'&deptType=1');
-			});
-			//点击列席人移除
-			$$('.removeAttendees').on('click',attendeesRemove);*/
+			
 			
 			//点击出席人添加
 			$$('.addListeds').on('click',function(){
 				//跳转人员选择
-				app.myApp.getCurrentView().loadPage('addListeds.html?listedList='+JSON.stringify(listedList)+'&deptType=1'+'&selectType=1');
+				app.myApp.getCurrentView().loadPage('addListeds.html?listedList='+JSON.stringify(listedList)+'&deptType=1'+'&selectType=1'+'&meetingType=1');
 			});
 			//点击出席人移除
 			$$('.removeListeds').on('click',recordRemove);
@@ -193,7 +196,7 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 			//点击缺席人添加
 			$$('.addAbsentees').on('click',function(){
 				//跳转人员选择
-				app.myApp.getCurrentView().loadPage('addListeds.html?listedList='+JSON.stringify(absenteesList)+'&deptType=1'+'&selectType=2');
+				app.myApp.getCurrentView().loadPage('addListeds.html?listedList='+JSON.stringify(absenteesList)+'&deptType=1'+'&selectType=2'+'&meetingType=1');
 			});
 			//点击缺席人移除
 			$$('.removeAbsentees').on('click',absenteesRemove);
@@ -202,13 +205,26 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 			//点击主持人添加
 			$$('.addHost').on('click',function(){
 				//跳转人员选择
-				app.myApp.getCurrentView().loadPage('addHost.html?hostMan='+JSON.stringify(hostMan)+'&deptType=1');
+				app.myApp.getCurrentView().loadPage('addHost.html?hostMan='+JSON.stringify(hostMan)+'&deptType=1'+'&meetingType=1');
 			});
 			//点击主持人移除
 			$$('.removeHost').on('click',function(){
 				//清空主持人
 				hostMan=[];
 				$$('#host').val('');
+//				getAbsenteesBack();
+			});
+
+			//点击记录人添加
+			$$('.addRecord').on('click',function(){
+				//跳转人员选择
+				app.myApp.getCurrentView().loadPage('addRecord.html?hostMan='+JSON.stringify(recordMan)+'&deptType=1'+'&meetingType=1');
+			});
+			//点击记录人移除
+			$$('.removeRecord').on('click',function(){
+				//清空主持人
+				recordMan=[];
+				$$('#record').val('');
 //				getAbsenteesBack();
 			});
 	}
@@ -330,6 +346,16 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 				app.myApp.alert('请输入开会时间');
 				return false;
 			};
+			//获取应到人数
+			if($$('#arrives').val() == ''){
+				app.myApp.alert('请输入应到人数');
+				return false;
+			};
+			//获取实到人数
+			if($$('#tos').val() == ''){
+				app.myApp.alert('请输入实到人数');
+				return false;
+			};
 //			//获取地点
 //			$$('#location').val();
 			if($$('#location').val() == ''){
@@ -385,6 +411,15 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 			});
 			hostManPush = hostManPush.join();
 			console.log(hostManPush);
+
+			var recordManPush = [];
+			console.log(recordMan);
+			$.each(recordMan, function(index,item) {
+				recordManPush.push(item.userName);
+			});
+			recordManPush = recordManPush.join();
+			console.log(recordManPush);
+
 			var listedListPush = [];
 
 			console.log(listedList);
@@ -402,44 +437,60 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 			absenteesListPush = absenteesListPush.join();
 			console.log(absenteesListPush);
 			var formDatas={
-				topicId:topicId,
-				object:$$('#assessTitle').val(),
-				meetingTime:$$('#assessTs').val() + " " + $$('#assessTsTime').val() + ":00",
-				reportContext:$$('#meetingRecord').val(),
-				reportUserId:app.userId,
-				lat:lat,
-				lng:lng,
-				meetingAddress:$$('#location').val(),
-				summary:$$('#content').val(),
-				resolution:$$('#meetingDecision').val(),
-				different:$$('#differentViews').val(),
+				object: $$('#assessTitle').val(),
+				meetingTitle: pTitle,
+				meetingTime: $$('#assessTs').val() + " " + $$('#assessTsTime').val() + ":00",
+				content: $$('#meetingRecord').val(),
+				creator: app.userId,
+				creatorName: app.user.nickName,
+				// lat:lat,
+				// lng:lng,
+				address: $$('#location').val(),
+				abstracts: $$('#content').val(),
+				resolution: $$('#meetingDecision').val(),
+				different: $$('#differentViews').val(),
 				host:hostManPush,
-				participantIds:$$('#attendees').val(),
+				attendants: $$('#attendees').val(),
 				absents:absenteesListPush,
 				attends:listedListPush,
-				images : imageList,
-				file: fileList,
-				
+				enclosures : imageList,
+				// file: fileList,
+				eventId: eventId,
+				tos: $$('#tos').val(),
+				arrives: $$('#arrives').val(),
+				step: pType,
+				tenantId: app.tenantId,
+				record: recordManPush
+
 			}
+			console.log(formDatas);
 			var parems = JSON.stringify(formDatas)
 			$$.ajax({
-				url:threeMeetingAndOneClassAddPath,
+				url:saveFourMeeting,
 				method:'POST',
 				dataType:'json',
 				contentType:'application/json;charset:utf-8;',
 				data:parems,
 				cache:false,
 				success: function(data){
+					if(data.code == 0 && data.data == true){
+						app.myApp.toast('保存成功', 'success').show(true);
+						$$('.sumbit').html('已保存');
+						app.myApp.getCurrentView().back();
+						setTimeout(function(){
+							require(['js/pages/process/processDetail'], function(processDetail) {
+								processDetail.refresh();
+							});
+							require(['js/pages/process/process'], function(process) {
+								process.refresh();
+							});
+						},1000)
+						
+						
+					}else{
+						app.myApp.toast('保存失败','error').show(true);
+					}
 					
-					app.myApp.toast('保存成功', 'success').show(true);
-					$$('.sumbit').html('已保存');
-					require(['js/pages/assessment/threeMeetingsAndOneClass'], function(threeMeetingsAndOneClass) {
-						threeMeetingsAndOneClass.refreshThreeMeetingsAndOneClassPaper();
-					});
-					require(['js/pages/appList/appList'], function(appList) {
-						appList.reSetshykReadRows();
-					});
-					app.myApp.getCurrentView().back();
 				},
 				error:function(){
 					app.myApp.alert(app.utils.callbackAjaxError());
@@ -572,7 +623,6 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 	/**
 	 *  上传图片
 	 * @param {Object} photoDatas 相片数组
-	 * @param {Object} detailID  考核明细ID
 	 */
 	function uploadReportDetialPhoto(photo) {
 			app.myApp.showPreloader('图片保存中...');
@@ -588,10 +638,12 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 					'Authorization': "bearer " + app.access_token
 				}
 				var params = {
-					"ext": "",
+					"eventId": eventId,
+					"fileName": "",
 					"filePath": "",
-					"length": 0,
-					"name": 0,
+					// "objectId": 0,
+					"step": pType,
+					"tenantId": app.tenantId
 					
 				}
 				// options.params = params;
@@ -600,12 +652,10 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 					var data = JSON.parse(r.response);
 					// sum++;
 					
-					if(data.code == 0) {
+					if(data.code == 0 && data.data != null) {
 						var result = data.data;
-						params.ext = result.ext;
-						params.name = result.name;
+						params.fileName = result.name;
 						params.filePath = result.filePath;
-						params.length = result.length;
 						imageList.push(params);
 						
 					} else {
@@ -958,6 +1008,27 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 		}
 //		getAbsenteesBack();
 	}
+
+	/**
+	 * 选择记录人页面回调 
+	 * @param {Object} host 用户列表
+	 */
+	function addRecordBack(hostInfo) {
+		recordMan = hostInfo;
+		addRecordInfoBack();
+	}
+	/**
+	 * 选择记录人的信息显示回调
+	 */
+	function addRecordInfoBack() {
+		console.log(recordMan);
+		if(recordMan.length > 0) {
+				$$('#record').val(recordMan[0].userName);
+		}else{
+			$$('#record').val("");
+		}
+//		getAbsenteesBack();
+	}
 	
 	/**
 	 * 选择缺席人页面回调 
@@ -1182,6 +1253,7 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 		init: init,
 		addLeaderBack:addLeaderBack,
 		addHostBack:addHostBack,
+		addRecordBack:addRecordBack,
 		resetFirstIn: resetFirstIn,
 		addAttendeesBack:addAttendeesBack,
 		addAbsenteesBack:addAbsenteesBack

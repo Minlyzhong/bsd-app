@@ -3847,6 +3847,14 @@ select:focus {
 	overflow: hidden;
 }
 
+/* 一行 */
+.oneLine{
+	overflow: hidden;
+    /* max-width: 110px; */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 #someelement img{
 	width: 201px;
     height: 150px;
@@ -3854,18 +3862,50 @@ select:focus {
 
 
 .meetingCard{
-	box-shadow: 2px 2px 5px #ccc; 
-	border:none;
-	border-radius: 5px;
+	border-top: 1px solid #e9e7e7;
+	border-bottom: 1px solid #e9e7e7;
+	border-left: none;
+	border-right: none;
+    width: 100%;
+	margin: 10px 0px;
+	border-radius: 0px;
 }
 
 .meetingCard .item-text{
 	color:#47474a;
+	line-height: 25px;
+	height: 25px;
+	font-size: 14px;
+	/* font-family: PingFang-SC-Medium; */
+}
+
+.meetingCard .meetingTitle{
+	color:#000;
+	font-size: 14px;
+}
+.meetingCard .processStatus{
+	display: inline-block;
+    background:#c5ddf7;
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-weight: 500;
+    color: #007aff;
+}
+.meetingCard .processUnStatus{
+	display: inline-block;
+    background: rgb(247, 222, 226);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-weight: 500;
+    color: rgb(236, 78, 105);
 }
 
 
 .funds-block .kp-label{
 	width: 160px;
+}
+.signedList{
+	font-size: 16px;
 }
 .signedList a{
 	width: 80%;
@@ -3874,4 +3914,20 @@ select:focus {
     line-height: 35px;
     color: #fff;
     background: #24aae1;
+}
+
+.signedList .eachSigned{
+	 margin: 5px;
+	 display: none;
+}
+
+.signedList .eachSignedTime{
+	text-align: right;
+	margin-right: 5px;
+	font-size: 15px;
+	color: #666;
+}
+
+.signedList .mySign{
+	display: none;
 }
