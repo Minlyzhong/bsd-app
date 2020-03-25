@@ -6,9 +6,12 @@ define(['app',
 		var firstIn = 1;
 		var pageDataStorage = {};
 		//根据年月查询三会一课
-		var loadKnowledgeTopicByYearAndMonthPath = app.basePath + 'knowledgeTopic/loadKnowledgeTopicByYearAndMonth';
+		var loadKnowledgeTopicByYearAndMonthPath = app.basePath + '/mobile/partyAm/loadKnowledgeTopicByYearAndMonth';
+
+		//查询3+x未读的日志数量
+		var findShykUnReadPath = app.basePath + '/mobile/partyAm/loadKnowledgeTopicByYearAndMonthNun';
 		//获取三会一课年份
-		var getYearsPath = app.basePath + 'knowledgeTopic/getYears';
+		var getYearsPath = app.basePath + '/mobile/partyAm/getYears';
 		var oldContent = '';
 		//月份
 		var pageNo = 1;
@@ -46,6 +49,8 @@ define(['app',
 		var numSearch = '';
 		//导航栏的名称
 		var thisAppName = ''
+		
+		var khpl = 2;
 		
 
 		/**
@@ -103,6 +108,31 @@ define(['app',
 		}
 
 		/**
+	 * 查询3+x未读的日志数量
+	 */
+	function findShykReadRows(data) {
+		
+		var myDate = new Date();
+		
+		var month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
+		startDate = myDate.getFullYear()+'-'+ month +'-01';
+		endDate =myDate.getFullYear()+'-'+ month+'-31';
+		
+		app.ajaxLoadPageContent(findShykUnReadPath, {
+			khpl:data,
+			startDate:startDate,
+			endDate:endDate,
+		}, function(result) {
+			if(result.code == 0){
+				shykReadRows = result.data;
+			}
+			
+		},{
+			async: false
+		});
+	}
+
+		/**
 		 * 点击事件
 		 */
 		function clickEvent() {
@@ -114,11 +144,16 @@ define(['app',
 			//获取年份
 			app.ajaxLoadPageContent1(getYearsPath,{
 			},function(data){
-				console.log(data);
-				result = data;
-				$$.each(data, function(index, item) {
-						result[index] = item.text.toString()+'年';
-				});
+				if(result == null){
+					var nowDate = new Date();
+					var nowYear = nowDate.getFullYear();
+					result =[nowYear+'年']
+					console.log(result);
+				}
+				result = data.data;
+				$$.each(data.data, function(index, item) {
+					result[index] = item.toString()+'年';
+			});
 				console.log(result);
 				pickerDescribe = app.myApp.picker({
 		    		input: '#picker-describe',
@@ -129,7 +164,7 @@ define(['app',
 				            values:(result)
 				        },
 				        {
-				            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+				            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 				        },
 				    ]
 				});
@@ -159,10 +194,11 @@ define(['app',
 			});
 			var myDate = new Date();
 			year = myDate.getFullYear();
-			month = myDate.getMonth()+1;
+			month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
 			//月份时间判断
 			$("#picker-describe").val(year+'年 '+ month+'月');
-			monthStartTime = year+'-'+month+'-1';
+			
+			monthStartTime = year+'-'+month+'-01';
 			monthEndTime = year+'-'+month+'-31';
 			$$(".assessTime").on('click',function(){
 				pickerDescribe.open();
@@ -189,7 +225,7 @@ define(['app',
 					str += '<div style="position: absolute;left: 45%;;font-size: 17px;">加载中...</div>';
 					str += '</div>';
 					$$('.threeMeetingsAndOneClassRightList ul').html(str);
-					monthStartTime = year+'-'+month+'-1';
+					monthStartTime = year+'-'+month+'-01';
 					monthEndTime = year+'-'+month+'-31';
 					loadKnowledgeTopic(false);
 				});
@@ -199,19 +235,19 @@ define(['app',
 			//季度时间判断
 			if(month<=3){
 				$("#picker-describeSeason").val(year+'年 '+ '第一季度');
-				seasonStartTime = year+'-1-1';
-				seasonEndTime = year+'-3-31';
+				seasonStartTime = year+'-01-01';
+				seasonEndTime = year+'-03-31';
 			}else if(month>3 && month<=6){
 				$("#picker-describeSeason").val(year+'年 '+ '第二季度');
-				seasonStartTime = year+'-4-1';
-				seasonEndTime = year+'-6-31';
+				seasonStartTime = year+'-04-01';
+				seasonEndTime = year+'-06-31';
 			}else if(month>6 && month<=9){
 				$("#picker-describeSeason").val(year+'年 '+ '第三季度');
-				seasonStartTime = year+'-7-1';
-				seasonEndTime = year+'-9-31';
+				seasonStartTime = year+'-07-01';
+				seasonEndTime = year+'-09-31';
 			}else if(month>9 && month<=12){
 				$("#picker-describeSeason").val(year+'年 '+ '第四季度');
-				seasonStartTime = year+'-10-1';
+				seasonStartTime = year+'-10-01';
 				seasonEndTime = year+'-12-31';
 			}
 			$$(".assessTimeSeason").on('click',function(){
@@ -223,16 +259,16 @@ define(['app',
 					year = pickerDescribeSeason.value[0].substring(0,pickerDescribeSeason.value[0].length-1);
 					season = pickerDescribeSeason.value[1].substring(0,pickerDescribeSeason.value[1].length);
 					if(season == '第一季度'){
-						seasonStartTime = year+'-1-1';
-						seasonEndTime = year+'-3-31';
+						seasonStartTime = year+'-01-01';
+						seasonEndTime = year+'-03-31';
 					}else if(season == '第二季度'){
-						seasonStartTime = year+'-4-1';
-						seasonEndTime = year+'-6-31';
+						seasonStartTime = year+'-04-01';
+						seasonEndTime = year+'-06-31';
 					}else if(season == '第三季度'){
-						seasonStartTime = year+'-7-1';
-						seasonEndTime = year+'-9-31';
+						seasonStartTime = year+'-07-01';
+						seasonEndTime = year+'-09-31';
 					}else if(season == '第四季度'){
-						seasonStartTime = year+'-10-1';
+						seasonStartTime = year+'-10-01';
 						seasonEndTime = year+'-12-31';
 					}
 					$("#picker-describeSeason").val(year+'年 '+ season);
@@ -251,7 +287,7 @@ define(['app',
 			
 			//年份时间判断
 			$("#picker-describeYear").val(year+'年 ');
-			yearStartTime= year+'-1-1';
+			yearStartTime= year+'-01-01';
 			yearEndTime= year+'-12-31';
 			$$(".assessTimeYear").on('click',function(){
 				pickerDescribeYear.open();
@@ -298,6 +334,7 @@ define(['app',
 			//点击tab标签
 			//月份
 			$$('.buttonShyk').on('click',function(){
+				khpl = 2;
 				setTimeout(function(){
 					$$('.threeMeetingsAndOneClassList').css('display','block');
 					$$('.threeMeetingsAndOneClassListSeason').css('display','none');
@@ -311,6 +348,7 @@ define(['app',
 			});
 			//季度
 			$$('.buttonShykSeason').on('click',function(){
+				khpl = 1;
 				setTimeout(function(){
 					$$('.threeMeetingsAndOneClassListSeason').css('display','block');
 					$$('.threeMeetingsAndOneClassList').css('display','none');
@@ -329,6 +367,7 @@ define(['app',
 			});
 			//年份
 			$$('.buttonShykYear').on('click',function(){
+				khpl = 0;
 				setTimeout(function(){
 					$$('.threeMeetingsAndOneClassListYear').css('display','block');
 					$$('.threeMeetingsAndOneClassList').css('display','none');
@@ -354,22 +393,27 @@ define(['app',
 			console.log(monthStartTime);
 			console.log(monthEndTime);
 			console.log(app.user.deptId);
+			// khpl年 0 ， 季 1，月 2
 			app.ajaxLoadPageContent1(loadKnowledgeTopicByYearAndMonthPath,{
 				startDate:monthStartTime,
 				endDate:monthEndTime,
-				pageNo:pageNo,
-				userId:app.userId,
-				deptId:app.user.deptId
+				// pageNo:pageNo,
+				// userId:app.userId,
+				// deptId:app.user.deptId,
+				khpl:2
 			},function(data){
+				
 				console.log(data);
-				numMonth = data.unCompletedTotal;
+				// numMonth = data.unCompletedTotal;
+				findShykReadRows(2);
+				numMonth = shykReadRows
 				var data = data.data;
 				//当没有数据的时候
-				if(data == undefined){
+				if(data == undefined || data == null){
 					loading = true;
 					$$('.infinite-scroll-preloader').remove();	
 				}
-				if(data == '' && pageNo == 1){
+				if((data == '' && pageNo == 1) || (data == null && pageNo == 1)){
 					$$('.shykNotFound').css('display','block');
 				}
 				if(data.length>0){
@@ -394,7 +438,8 @@ define(['app',
 						var target = $$(this).data('target') || '无';
 						var minus = $$(this).data('minus') || 0;
 						var memo = $$(this).data('memo') || '无';
-						app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId);
+						//app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId+'&StartDate='+monthStartTime);
+						app.myApp.getCurrentView().loadPage('threeMeetingAndOneClassAdd.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId+'&StartDate='+monthStartTime);
 					});
 					//点击手指
 					$$('.getDetail').on('click',function(){
@@ -406,6 +451,7 @@ define(['app',
 					loading = true;
 					$$('.infinite-scroll-preloader').remove();	
 				}
+
 			});
 		}
 		
@@ -418,19 +464,21 @@ define(['app',
 			app.ajaxLoadPageContent1(loadKnowledgeTopicByYearAndMonthPath,{
 				startDate:seasonStartTime,
 				endDate:seasonEndTime,
-				pageNo:pageSeason,
-				userId:app.userId,
-				deptId:app.user.deptId
+				// pageNo:pageSeason,
+				// userId:app.userId,
+				// deptId:app.user.deptId,
+				khpl:1
 			},function(data){
 				console.log(data);
-				numSeason = data.unCompletedTotal;
+				findShykReadRows(1);
+				numSeason = shykReadRows
 				var data = data.data;
-				if(data == undefined){
+				if(data == undefined || data == null){
 					loading = true;
 					$$('.infinite-scroll-preloader').remove();	
 				}
-				if(data == '' && pageSeason == 1){
-					$$('.shykNotFound').css('display','block');
+				if((data == '' && pageSeason == 1) || (data == null && pageSeason == 1)){
+					$$('.shykSeasonNotFound').css('display','block');
 				}
 				if(data.length>0){
 					if(pageSeason == 1){
@@ -454,7 +502,8 @@ define(['app',
 						var target = $$(this).data('target') || '无';
 						var minus = $$(this).data('minus') || 0;
 						var memo = $$(this).data('memo') || '无';
-						app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId);
+						//app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId+'&StartDate='+seasonStartTime);
+						app.myApp.getCurrentView().loadPage('threeMeetingAndOneClassAdd.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId+'&StartDate='+seasonStartTime);
 					});
 					//点击手指
 					$$('.getDetail').on('click',function(){
@@ -478,19 +527,22 @@ define(['app',
 			app.ajaxLoadPageContent1(loadKnowledgeTopicByYearAndMonthPath,{
 				startDate:yearStartTime,
 				endDate:yearEndTime,
-				pageNo:pageYear,
-				userId:app.userId,
-				deptId:app.user.deptId
+				// pageNo:pageYear,
+				// userId:app.userId,
+				// deptId:app.user.deptId,
+				khpl:0
 			},function(data){
 				console.log(data);
-				numYear = data.unCompletedTotal;
+				findShykReadRows(0);
+				shykYearNum = shykReadRows
 				var data = data.data;
-				if(data == undefined){
+				if(data == undefined ){
 					loading = true;
 					$$('.infinite-scroll-preloader').remove();	
 				}
-				if(data == '' && pageYear == 1){
-					$$('.shykNotFound').css('display','block');
+				
+				if((data == '' && pageYear == 1)||(data == null && pageYear == 1)){
+					$$('.shykYearNotFound').css('display','block');
 				}
 				if(data.length>0){
 					if(pageYear == 1){
@@ -514,7 +566,8 @@ define(['app',
 						var target = $$(this).data('target') || '无';
 						var minus = $$(this).data('minus') || 0;
 						var memo = $$(this).data('memo') || '无';
-						app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId);
+						//app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId+'&StartDate='+yearStartTime);
+						app.myApp.getCurrentView().loadPage('threeMeetingAndOneClassAdd.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId+'&StartDate='+yearStartTime);
 					});
 					//点击手指
 					$$('.getDetail').on('click',function(){
@@ -550,18 +603,21 @@ define(['app',
 			console.log(seasonClassName);
 			console.log(yearClassName);
 			if(monthClassName){
+				khpl = 2;
 				SearchStartTime = monthStartTime;
 				SearchEndTime = monthEndTime;
 				$$('.shykMonthNum').css('display','block');
 				$$('.shykSeasonNum').css('display','none');
 				$$('.shykYearNum').css('display','none');
 			}else if(seasonClassName){
+				khpl = 1;
 				SearchStartTime = seasonStartTime;
 				SearchEndTime = seasonEndTime;
 				$$('.shykMonthNum').css('display','none');
 				$$('.shykSeasonNum').css('display','block');
 				$$('.shykYearNum').css('display','none');
 			}else if(yearClassName){
+				khpl = 0;
 				SearchStartTime = yearStartTime;
 				SearchEndTime = yearEndTime;
 				$$('.shykMonthNum').css('display','none');
@@ -611,21 +667,30 @@ define(['app',
 				query: searchContent,
 				startDate:SearchStartTime,
 				endDate:SearchEndTime,
-				pageNo:pageNo1,
-				userId:app.userId,
-				deptId:app.user.deptId
+				// pageNo:pageNo1,
+				// userId:app.userId,
+				// deptId:app.user.deptId,
+				khpl:khpl
 			}, function(data) {
 				console.log(data);
-				numSearch = data.unCompletedTotal
-				$$('.shykMonthNum').html(numSearch);
-				$$('.shykSeasonNum').html(numSearch);
-				$$('.shykYearNum').html(numSearch);
 				var data = data.data;
-				if(data == undefined){
+				
+				
+				if(data == undefined || data == null){
 					loading = true;
-					$$('.infinite-scroll-preloader').remove();	
+					$$('.shykMonthNum').css('display','none');
+				$$('.shykSeasonNum').css('display','none');
+				$$('.shykYearNum').css('display','none');
+					$$('.infinite-scroll-preloader').remove();
+					$$('.threeMeetingsAndOneClassSearchList ul').html(' ');	
+					$$('.threeMeetingsAndOneClassSearchList .threeMeetingsAndOneClassNotFound').css('display','block');
 				}
 				if(data.length>0){
+					numSearch = data.length;
+					// numSearch = data.unCompletedTotal
+					$$('.shykMonthNum').html(numSearch);
+					$$('.shykSeasonNum').html(numSearch);
+					$$('.shykYearNum').html(numSearch);
 					if(isLoadMore == true) {
 						$$('.infinite-scroll-preloader').remove();
 						$$('.threeMeetingsAndOneClassSearchList ul').append(paperTemplate(data));
@@ -643,7 +708,8 @@ define(['app',
 						var target = $$(this).data('target') || '无';
 						var minus = $$(this).data('minus') || 0;
 						var memo = $$(this).data('memo') || '无';
-						app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId);
+						//app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId+'&StartDate='+seasonStartTime);
+						app.myApp.getCurrentView().loadPage('threeMeetingAndOneClassAdd.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo +'&thisAppName=' +thisAppName+'&deptId='+app.user.deptId+'&StartDate='+SearchStartTime);
 					});
 					//点击手指
 					$$('.getDetail').on('click',function(){

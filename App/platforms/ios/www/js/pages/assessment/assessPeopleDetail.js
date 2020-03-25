@@ -6,8 +6,8 @@ define(['app',
 	var pageDataStorage = {};
 	var pageNo = 1;
 	var loading = true;
-	//个人考核接口
-	var rankInfoPath = app.basePath + 'knowledgeTestpaper/loadKnowledgeReportDetial';
+	//个人考核明细接口
+	var rankInfoPath = app.basePath + '/mobile/partyAm/partySpecialResultByMonthAndUserId';
 	//考核责任项接口
 	//var loadPartyMenuPath = app.basePath + 'knowledgeTestpaper/loadPartyMenu';
 	var empId = 0;
@@ -72,6 +72,10 @@ define(['app',
 			startDate:startDate,
 			endDate:endDate,
 		}, function(data) {
+			var data = data.data.records;
+			$$.each(data, function(index, item){
+				item.paperTitle = item.paTitle;
+			})
 			console.log(data);
 			handleRankInfo(data);
 			pageDataStorage['rankInfo'] = data;
@@ -83,9 +87,9 @@ define(['app',
 	 * @param {Object} data
 	 */
 	function handleRankInfo(data) {
-		if(data.data && data.data.length > 0) {
+		if(data && data.length > 0) {
 			var currentData = [];
-			$$.each(data.data, function(index, item) {
+			$$.each(data, function(index, item) {
 				if(item.reportState == 0) {
 					currentData.push(item);
 				}

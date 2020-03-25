@@ -7,7 +7,7 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//加载所有聊天室接口
-	var chatListPath = app.basePath + 'extChatPage/loadChatList';
+	var chatListPath = app.basePath + '/mobile/blog/topic/all';
 
 	/**
 	 * 页面初始化 
@@ -61,9 +61,9 @@ define(['app',
 
 		}, function(data) {
 			$$('.discuss-not-found').hide();
-			console.log(data);
-			pageDataStorage['chatList'] = data;
-			handleChatList(data);
+			console.log(data.data);
+			pageDataStorage['chatList'] = data.data;
+			handleChatList(data.data);
 		});
 	}
 
@@ -71,8 +71,13 @@ define(['app',
 	 * 加载所有聊天室
 	 */
 	function handleChatList(data) {
-		if(data.data && data.data.length > 0) {
-			$$('.chatRoom-list ul').html(discussTemplate(data.data));
+		if(data && data.length > 0) {
+			
+			for(var i=0; i<data.length;i++){
+				data[i].createdDate = app.getnowdata(data[i].createdDate);
+			}
+			console.log(data)
+			$$('.chatRoom-list ul').html(discussTemplate(data));
 			loading = false;
 			$$('.discuss-content').on('click', function(e) {
 				var roomId = $$(this).data('id');

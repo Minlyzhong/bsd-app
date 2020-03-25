@@ -7,7 +7,8 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//查找人员信息
-	var fingUserInfoPath = app.basePath + 'extContact/findUserInfo';
+	// var fingUserInfoPath = app.basePath + '/mobile/user/searchDeptPeople';
+	var fingUserInfoPath = app.basePath + '/mobile/user/getUserInfo/';
 	var userId = 0;
 	var userName = '';
 	var vilId = 0;
@@ -17,6 +18,7 @@ define(['app',
 	 * @param {Object} page 页面内容
 	 */
 	function init(page) {
+		console.log(page)
 //		app.pageStorageClear('firstSecretary/firstSecretaryDetail', [
 //			'firstSecretary/firstSecretaryRecord',
 //		]);
@@ -32,13 +34,14 @@ define(['app',
 	 * 初始化模块变量
 	 */
 	function initData(pageData) {
+		
 		firstIn = 0;
 		pageDataStorage = {};
 		pageNo = 1;
 		loading = true;
 		vilId = parseInt(pageData.isVil);
 		userId = pageData.userId;
-		userName = '';
+		userName = pageData.username;
 		ajaxLoadContent(userId);
 	}
 
@@ -123,13 +126,38 @@ define(['app',
 	 * 异步请求页面数据 
 	 */
 	function ajaxLoadContent(userId) {
-		app.ajaxLoadPageContent(fingUserInfoPath, {
-			userId: userId,
-		}, function(data) {
-			console.log(data);
-			data.headPic = app.basePath + data.headPic;
-			pageDataStorage['content'] = data;
-			handleContent(data);
+		app.ajaxLoadPageContent(fingUserInfoPath+userId, {
+			// name: userId
+		}, function(result) {
+			if(result.code == 0 && result.data.partyUser !=null){
+				
+				var data = result.data.partyUser;
+				if(result.data.avatar){
+					data.headPic = app.filePath + result.data.avatar;
+				}else{
+					data.headPic = 'img/icon/icon-user_d.png';
+				}
+
+				if(data.partyTime){
+					data.partyTime = data.partyTime.split(' ')[0];
+				}
+				pageDataStorage['content'] = data;
+				handleContent(data);
+			}else{
+				var data = result.data;
+				if(data.avatar){
+					data.headPic = app.filePath + data.avatar;
+				}else{
+					data.headPic = 'img/icon/icon-user_d.png';
+				}
+
+				pageDataStorage['content'] = data;
+				userName = data.name;
+				$$('.firstName').html(data.name);
+				attrDefine(data);
+				clickEvent();
+			}
+			
 		});
 	}
 

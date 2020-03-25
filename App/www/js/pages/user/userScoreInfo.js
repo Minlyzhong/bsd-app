@@ -172,8 +172,8 @@ define(['app',
 		loadMoreContent.on('infinite', function() {
 			if(loading) return;
 			loading = true;
-			pageNo += 1;
-			scoreInfo(true);
+			// pageNo += 1;
+			// scoreInfo(true);
 		});
 	}
 

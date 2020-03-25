@@ -10,7 +10,7 @@ define(['app'], function(app) {
 	var grant_type='password';
 	var scope ='app';
 	var word = 'welcome,bestinfo';
-	//登陆接口
+	//登录接口
 	var loginPath = app.loginPath+'/auth/oauth/token';
 	//设备信息录入接口
 	var saveMobileDeviceUserPath = app.basePath + 'mobile/device/saveMobileDeviceUser';
@@ -94,7 +94,7 @@ define(['app'], function(app) {
 			app.myApp.alert('密码不能为空!');
 			return;
 		} else {
-			app.myApp.showPreloader("正在登陆中...");
+			app.myApp.showPreloader("正在登录中...");
 			var newPwd = getAesString(password,word);
 			console.log(newPwd);
 			var headers = makeBasicAuth(client_id,client_secret);
@@ -137,7 +137,7 @@ define(['app'], function(app) {
 					getUserDetail(data.userId, data.access_token)
 
 					
-					app.myApp.toast('登陆成功！', 'success').show(true);
+					app.myApp.toast('登录成功！', 'success').show(true);
 					
 					app.myApp.getCurrentView().back();
 
@@ -176,7 +176,7 @@ define(['app'], function(app) {
 				if(text.code == 1){
 					app.myApp.toast(text.msg, 'error').show(true);
 				}else{
-					app.myApp.toast('登陆失败', 'error').show(true);
+					app.myApp.toast('登录失败', 'error').show(true);
 				}
 				
 			});
@@ -221,14 +221,14 @@ define(['app'], function(app) {
 					localStorage.setItem('userDetail', JSON.stringify(userDetail))
 				}else{
 					app.myApp.hidePreloader();
-					app.myApp.toast('登陆失败', 'error').show(true);
+					app.myApp.toast('登录失败', 'error').show(true);
 				}
 				
 			},
 			error : function(){
 
 				app.myApp.hidePreloader();
-				app.myApp.toast('登陆失败', 'error').show(true);
+				app.myApp.toast('登录失败', 'error').show(true);
 			}
 		})
 		

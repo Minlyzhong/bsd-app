@@ -5,7 +5,7 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	//校验考试资格
-	var checkSubjectPath = app.basePath + 'exam/checkSubject';
+	var checkSubjectPath = app.basePath + '/mobile/education/exam/check/';
 	var id = 0;
 	var name = '';
 	var count = 0;
@@ -85,40 +85,41 @@ define(['app'], function(app) {
 	 * 异步请求页面数据 
 	 */
 	function ajaxLoadContent() {
-		app.ajaxLoadPageContent(checkSubjectPath, {
-			subjectId: id,
-			userId: app.userId
+		app.ajaxLoadPageContent(checkSubjectPath+id+'/'+app.userId, {
+			// subjectId: id,
+			// userId: app.userId
 		}, function(data) {
 			console.log(data);
+			var checkdata=data.data
 			//exmTimes 已参加考试的次数
 			//remTimes 剩下多少考试次数
 			$$('.remTimes').css('color','red');
-			$$('.remTimes').html('剩余次数：'+data.remTimes+'次');
-			if(data.exmTimes == 0) {
+			$$('.remTimes').html('剩余次数：'+checkdata.remTimes+'次');
+			if(checkdata.exmTimes == 0) {
 				$$('.examAnswerBtn').css('display', 'block');
 				$$('.examDetailAnswer').on('click', function() {
 					app.myApp.getCurrentView().loadPage('examAnswer.html?id=' + id + '&name=' + name + '&time=' +
-						time + '&count=' + count + '&point=' + point + '&falseExam=0' + '&count1=' + data.exmTimes);
+						time + '&count=' + count + '&point=' + point + '&falseExam=0' + '&count1=' + checkdata.exmTimes);
 				});
-			} else if(data.remTimes > 0 && data.exmTimes != 0){
+			} else if(checkdata.remTimes > 0 && checkdata.exmTimes != 0){
 				$$('.reExamAnswerBtn').css('display', 'block');
 				$$('.examAnswerBtn').css('display', 'none');
 				$$('.reExamAnswerBtn').on('click', function() {
 					app.myApp.getCurrentView().loadPage('examAnswer.html?id=' + id + '&name=' + name + '&time=' +
-						time + '&count=' + count + '&point=' + point + '&falseExam=0' + '&count1=' + data.exmTimes);
+						time + '&count=' + count + '&point=' + point + '&falseExam=0' + '&count1=' + checkdata.exmTimes);
 				});
 				$$('.examFalseBtn').css('display', 'block');
 				$$('.examDetailFalse').on('click', function() {
 					app.myApp.getCurrentView().loadPage('examAnswer.html?id=' + id + '&name=' + name + '&time=' +
-						time + '&count=' + count + '&point=' + point + '&falseExam=1' + '&count1=' + data.exmTimes);
+						time + '&count=' + count + '&point=' + point + '&falseExam=1' + '&count1=' + checkdata.exmTimes);
 				});
-			} else if(data.remTimes  <= 0){
+			} else if(checkdata.remTimes  <= 0){
 				$$('.reExamAnswerBtn').css('display', 'none');
 				$$('.examAnswerBtn').css('display', 'none');
 				$$('.examFalseBtn').css('display', 'block');
 				$$('.examDetailFalse').on('click', function() {
 					app.myApp.getCurrentView().loadPage('examAnswer.html?id=' + id + '&name=' + name + '&time=' +
-						time + '&count=' + count + '&point=' + point + '&falseExam=1' + '&count1=' + data.exmTimes);
+						time + '&count=' + count + '&point=' + point + '&falseExam=1' + '&count1=' + checkdata.exmTimes);
 				});
 			}
 		});

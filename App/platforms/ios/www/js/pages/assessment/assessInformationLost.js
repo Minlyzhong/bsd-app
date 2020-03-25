@@ -7,9 +7,9 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//获取未参与考核的党支部列表
-	var findCompPagerOfPartyOffDZB = app.basePath + 'statHelper/findCompPagerOfPartyOffDZB';
+	var findCompPagerOfPartyOffDZB = app.basePath + '/mobile/partyAm/findCompPagerOfPartyOffDZB/';
 	//获取未参与三会一课的党支部列表
-	var findCompRateOfThreePlusX = app.basePath + 'statHelper/findCompPagerOfThreePlusXOffDZB';
+	var findCompRateOfThreePlusX = app.basePath + '/mobile/partyAm/getOneDepartmentCompletionStatus';
 	//var topicId = 0;
 	var deptId = 0;
 	
@@ -66,12 +66,12 @@ define(['app',
 	 */
 	function ajaxLoadContent(isLoadMore) {
 		console.log('1');
-		app.ajaxLoadPageContent(findCompPagerOfPartyOffDZB, {
-			deptId: deptId,
-			page: pageNo,
-			limit: 10,
+		app.ajaxLoadPageContent(findCompPagerOfPartyOffDZB+deptId, {
+			// deptId: deptId,
+			current: pageNo,
+			size: 20,
 		}, function(data) {
-			var result = data.data;
+			var result = data.data.records;
 			console.log(result);
 			if(isLoadMore) {
 				pageDataStorage['party'] = pageDataStorage['party'].concat(result);
@@ -89,10 +89,10 @@ define(['app',
 	function ajaxLoadContent1(isLoadMore) {
 		console.log(pageNo);
 		app.ajaxLoadPageContent(findCompRateOfThreePlusX, {
-			userId: app.userId,
+			// userId: app.userId,
 			deptId: deptId,
-			page: pageNo,
-			limit: 10,
+			current: pageNo,
+			size: 10,
 		}, function(data) {
 			var result = data.data;
 			console.log(result);
@@ -118,7 +118,7 @@ define(['app',
 			}
 			//$$('.atdjList .item-content').off('click', loadPage);
 			//$$('.atdjList .item-content').on('click', loadPage);
-			if(result.length == 10) {
+			if(result.length == 20) {
 				loading = false;
 			}
 		}

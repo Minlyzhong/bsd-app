@@ -164,6 +164,7 @@ define(['app'], function(app) {
 
 		if(!sTime || !eTime) {
 			app.myApp.alert('请确认时间！');
+			return;
 		} else if(sTime >= eTime) {
 			app.myApp.alert('项目开始时间必须早于结束时间！');
 			$$('#endTime').val('');
@@ -219,13 +220,13 @@ define(['app'], function(app) {
 					});
 					}, 1000);
 				}else{
-					app.myApp.toast("保存失败，请重新保存！", 'none').show(true);
+					app.myApp.toast("保存失败，请退出重新保存！", 'none').show(true);
 				}
 				
 					
             },
             error:function () {
-				app.myApp.toast("保存失败，请重新保存！", 'none').show(true);
+				app.myApp.toast("保存失败，请退出重新保存！", 'none').show(true);
             }
         });
 

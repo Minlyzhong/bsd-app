@@ -7,7 +7,9 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//考勤统计
-	var signReportPath = app.basePath + 'extApplicationPage/getSignReport';
+	var signReportPath = app.basePath + '/mobile/sign/register/statistics/';
+	//根据分类代号查找分类
+	var findTypeByCodePath = app.basePath + '/mobile/sign/codes';
 	//统计导航栏的点击次数
 	var weekChoose = 0;
 	var monthChoose = 0;
@@ -27,6 +29,10 @@ define(['app',
 	//当前选择器选择的类别
 	var pickChoose = 'day';
 	var dateChoose = '';
+	
+	var deptNameSign = '';
+	var deptSign = '';
+	var deptId = '';
 
 	/**
 	 * 页面初始化 
@@ -48,7 +54,10 @@ define(['app',
 	/**
 	 * 初始化模块变量
 	 */
-	function initData(pageData) {
+	function initData(pageData) {	
+		deptNameSign = '';
+		deptSign = '';
+		deptId = '';
 		firstIn = 0;
 		pageDataStorage = {};
 		pageNo = 1;
@@ -104,21 +113,170 @@ define(['app',
 			pickChoose = $$(this).data('type');
 			getSignReport(pickChoose, dateTime[pickChoose]);
 		});
+		//点击添加的时候触发
+		$$('.addSignLeader').click(function(){
+				app.myApp.getCurrentView().loadPage('signResultAddDept.html?deptType=1');
+		});
+		//点击移除的时候触发
+		$$('.removeSignLeader').click(function(){
+			$$('#signDept').val('');
+			deptSign = '';
+			deptNameSign = '';
+		});
+		//点击分类div触发事件
+		$$('.assessmentSort').click(assessmentSortSearch);
+		//点击查询按钮
+		$$('.signSearchBtn').click(function(){
+			$('.signOrganization').slideToggle(200);
+			setTimeout(function(){
+				getSignReport(pickChoose, dateTime[pickChoose]);
+			},100);
+		});
+		//点击取消按钮
+		$$('.signCloseBtn').click(function(){
+			$('.signOrganization').slideToggle(200);
+			deptSign = '';
+			deptNameSign = '';
+			$$("#signDept").val('');
+			getSignReport(pickChoose, dateTime[pickChoose]);
+		});
+		
+		//var result = [];
+		//var resultId = [];
+		//var result1 = [];
+		//var result1Id = [];
+//		var result2 = [];
+//		var result2Id = [];
+//		var pickerDescribe;
+		/*
+		 * HKRYFL(人员分类)
+		 *ZBTYPE(支部分类)
+		 *DZZLX(党组织类型)
+		 */
+//		app.ajaxLoadPageContent1(findTypeByCodePath,{
+//			code:"DZZLX",
+//		},function(data){
+//			$$.each(data, function(index, item) {
+//				result[index] = item.subVal.toString();
+//				resultId[index] = item.subKey.toString();
+//			});
+//		});
+//		app.ajaxLoadPageContent1(findTypeByCodePath,{
+//			code:"ZBTYPE",
+//		},function(data){
+//			$$.each(data, function(index, item) {
+//				result1[index] = item.subVal.toString();
+//				result1Id[index] = item.subKey.toString();
+//			});
+//		});
+//		app.ajaxLoadPageContent1(findTypeByCodePath,{
+//			code:"HKRYFL",
+//		},function(data){
+//			$$.each(data, function(index, item) {
+//				result2[index] = item.subVal.toString();
+//				result2Id[index] = item.subKey.toString();
+//			});
+//		});
+//		var carVendors = {
+//		     党组织类型 : result,
+//		     支部分类 : result1,
+//		     人员分类 : result2
+//		};	
+//		var carVendorsValues = {
+//		     党组织类型 : resultId,
+//		     支部分类 : result1Id,
+//		     人员分类 : result2Id
+//		};	
+//		var carVendors = {
+//		     人员分类 : result2
+//		};	
+//		var carVendorsValues = {
+//		     人员分类 : result2Id
+//		};	
+//		console.log(carVendors);
+//		console.log(carVendorsValues);
+//		pickerDescribe = app.myApp.picker({
+//  		input: '#picker-sort',
+//		    rotateEffect: true,
+//			formatValue: function (picker, values,displayValues) {
+//		        return displayValues[1];
+//		    },
+//			cols: [
+//		        {
+//		            textAlign: 'center',
+//		            displayValues: ['人员分类'],
+//		            values: ['4'],
+//		            onChange: function (picker,value,displayValues) {
+//		                if(picker.cols[1].replaceValues){
+//		                    picker.cols[1].replaceValues(carVendorsValues[displayValues],carVendors[displayValues]);
+//		                }
+//		            }
+//		        },
+//		        {
+//		        	displayValues:carVendors.人员分类,
+//		            values:carVendorsValues.人员分类,
+//		            width: 160,
+//		        },
+//		    ]
+//		});
+//		
+//		$$(".sortTypeChoose").on('click',function(){
+//			pickerDescribe.open();
+//			$$('.picker-3d .close-picker').text('完成');
+//			$$('.toolbar-inner .right').css('margin-right','20px');	
+//			$$('.picker-3d .close-picker').on('click',function(){
+//				console.log(pickerDescribe.value);
+//			});
+//		});
 	}
-
+	function assessmentSortSearch(){
+		var sortImg = $$('.sortIcon').attr("src");
+		var sortImgUrl = '';
+		if(sortImg == 'img/assessmentResultImg/downIcon.png'){
+			sortImgUrl = 'img/assessmentResultImg/upIcon.png';
+			//弹出搜索框
+			$('.signOrganization').slideToggle(200);
+		}else{
+			sortImgUrl = 'img/assessmentResultImg/downIcon.png';
+			//隐藏搜索框
+			$('.signOrganization').slideToggle(200);
+		}
+		$$('.sortIcon').prop("src",sortImgUrl);
+	}
+	
+	/*
+	 * 获取组织的名称和ID
+	 */
+	function getdeptName(deptNameSign1,deptSign1){
+		deptNameSign = deptNameSign1;
+		deptSign = deptSign1;
+		$$('#signDept').val(deptNameSign);
+		console.log(deptNameSign);
+		console.log(deptSign);
+	}
+	
 	/**
 	 * 加载考勤统计
 	 */
 	function getSignReport(type, _date) {
-		if((type == 'day' && dayChoose == 1) ||
-			(type == 'week' && weekChoose == 1) ||
-			(type == 'month' && monthChoose == 1)) {
-			return;
-		}
-		app.ajaxLoadPageContent(signReportPath, {
-			deptId: app.user.deptId,
-			type: type,
-			date: _date
+//		if((type == 'day' && dayChoose == 1) ||
+//			(type == 'week' && weekChoose == 1) ||
+//			(type == 'month' && monthChoose == 1)) {
+//			return;
+//		}
+//		console.log(deptSign == '');
+//		console.log(deptSign);
+		if(deptSign == ''){
+			deptId = app.userDetail.deptId;
+		}else{
+			deptId = deptSign;
+		}	
+		// 统计周期类型：day是日统计, week是周统计, month是月统计
+		app.ajaxLoadPageContent(signReportPath+deptId+'/'+type, {
+			// deptId: deptId,
+			// type: type,
+			date: _date,
+			roleId:app.roleId
 		}, function(data) {
 			data = data.data;
 			console.log(data);
@@ -126,6 +284,8 @@ define(['app',
 			handleSignReport(data, type);
 		});
 	}
+
+	
 
 	/**
 	 * 整理数据
@@ -138,35 +298,46 @@ define(['app',
 		var countObj = {};
 		var infoObj = {};
 		//data  总数组
-		for(var key in data) {
-			if(key == 'total') {
-				continue;
-			}
-			countObj[key] = 0;
-			var userIdArr = [];
-			//data[key]   正常人数的数组
-			infoObj[key] = {};
-			var infoKeyObj = infoObj[key];
-			$$.each(data[key], function(index, item) {
-				if($.inArray(item.userId, userIdArr) == -1) {
-					countObj[key]++;
-					userIdArr.push(item.userId);
-					infoKeyObj[item.userId] = [];
-				}
-				infoKeyObj[item.userId].push(item);
-			});
-		}
+		// for(var key in data) {
+		// 	if(key == 'base') {
+		// 		continue;
+		// 	}
+		// 	countObj[key] = 0;
+		// 	var userIdArr = [];
+		// 	//data[key]   正常人数的数组
+		// 	infoObj[key] = {};
+		// 	var infoKeyObj = infoObj[key];
+		// 	$$.each(data[key], function(index, item) {
+		// 		console.log('item')
+		// 		console.log(item)
+		// 		if($.inArray(item.userId, userIdArr) == -1) {
+		// 			countObj[key]++;
+		// 			userIdArr.push(item.userId);
+		// 			infoKeyObj[item.userId] = [];
+		// 		}
+		// 		infoKeyObj[item.userId].push(item);
+		// 	});
+		// }
+
+		countObj.none = data['none'];
+		countObj.late = data['late'];
+		
+		countObj.normal = data['normal'];
+		countObj.type = type;
+		
+		
+
 		//保存总人数
 		countObj.type = type;
-		countObj.total = data['total'];
-		console.log(countObj);
+		countObj.total = data['base'];
 		dataList[type] = countObj;
-
 		//保存用户记录
-		peopleList[type] = infoObj;
-		console.log(peopleList);
-
+		peopleList[type] = countObj;
+		// peopleList[type] = infoObj;
+		console.log('dataList[type]')
+		console.log(dataList[type])
 		$$('.' + type + 'Report').html(reportTemplate(dataList[type]));
+		// $$('.' + type + 'Report').html(reportTemplate(dataList[type]));
 		if(type == 'day') {
 			dayChoose = 1;
 			loadChart("signDayChart", '日统计', dataList[type]);
@@ -182,7 +353,7 @@ define(['app',
 			var title = $$(this).html().split("：")[0];
 			dateChoose = [$$('#dayCalId').val(), $$('#weekId').val(), monthContent];
 			app.myApp.getCurrentView().loadPage('signDetail.html?title=' + title +
-				'&item=' + JSON.stringify(peopleList[type][signtype]));
+				'&signType=' + type+'&peopleType='+ signtype);
 		});
 	}
 
@@ -252,10 +423,10 @@ define(['app',
 				type: 'pie',
 				name: '比例',
 				data: [
-					['正常', data.good],
+					['正常', data.normal],
 					['迟到', data.late],
 					//					['早退', data.early],
-					['缺勤', data.notYet],
+					['缺勤', data.none],
 				]
 			}]
 		});
@@ -414,6 +585,7 @@ define(['app',
 
 	return {
 		init: init,
+		getdeptName:getdeptName,
 		resetFirstIn: resetFirstIn,
 	}
 });

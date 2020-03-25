@@ -133,7 +133,7 @@ define(['app',
 		$$('.assessListContent').on('click', function() {
 			var point = parseInt($$(this).data('point'));
 			if(!point) {
-				app.myApp.alert('此考核项已被退回,请到专项考核历史记录重新填写提交');
+				app.myApp.alert('此考核项还未填写或已被退回,请到专项考核或者历史记录填写提交');
 				return;
 			}
 			var topicId = $$(this).data('id');

@@ -5,11 +5,12 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	//获取考核完成进度
-	var findCompletionPath = app.basePath + 'statHelper/findCompletion';
+	var findCompletionPath = app.basePath + '/mobile/partyAm/findCompletion';
 	var name = '';
 	var topicId = 0;
 	var deptId = 0;
-
+	var startDate = '';
+	var endDate = '';
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -20,6 +21,7 @@ define(['app'], function(app) {
 //			'assessment/assessTDLost'
 //		]);
 //		if(firstIn) {
+			console.log(page)
 			initData(page.query);
 //		} else {
 //			loadStorage();
@@ -40,6 +42,8 @@ define(['app'], function(app) {
 		name = pageData.name;
 		topicId = pageData.topicId;
 		deptId = pageData.deptId;
+		startDate = pageData.startDate;
+		endDate = pageData.endDate;
 		console.log(deptId);
 		console.log(topicId);
 		ajaxLoadContent();
@@ -57,7 +61,14 @@ define(['app'], function(app) {
 	 */
 	function attrDefine(page) {
 		$$('.atdHead .tName').html(page.query.name);
-		$$('.atdHead .dName').html(page.query.deptName);
+		
+		if(page.query.deptName == 'undefined' || page.query.deptName == '' || page.query.deptName == undefined ){
+			$$('.atdHead .dName').html(app.userDetail.deptName);
+		}else{
+			$$('.atdHead .dName').html(page.query.deptName);
+			
+		}
+		
 	}
 
 	/**
@@ -89,7 +100,7 @@ define(['app'], function(app) {
 		var head = $('.atdHead').prop('outerHTML');
 		head = head.replace(regn, '').replace(regt, '').replace(rege, 'equal');
 		if(type == '已参与') {
-			app.myApp.getCurrentView().loadPage('assessTDJoin.html?head=' + head + '&deptId=' + deptId + '&topicId=' + topicId);
+			app.myApp.getCurrentView().loadPage('assessTDJoin.html?head=' + head + '&deptId=' + deptId + '&topicId=' + topicId+'&startDate='+startDate+'&endDate='+endDate);
 		} else {
 			app.myApp.getCurrentView().loadPage('assessTDLost.html?head=' + head + '&deptId=' + deptId + '&topicId=' + topicId);
 		}

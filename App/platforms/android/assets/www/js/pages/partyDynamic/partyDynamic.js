@@ -329,11 +329,11 @@ define(['app',
 		scrollSearch(function(direction) {
 			if(direction == 'up') {
 				$$('.dynamicFilterSearch').css('margin-top','0px');
-				$$('.dynamicPageSearch').css('margin-top','50px');
+				$$('.dynamicPageSearch').css('margin-top','0px');
 				$('.dynamicNavSearch').slideDown(200);
 			} else {
 				$$('.dynamicFilterSearch').css('margin-top','0px');
-				$$('.dynamicPageSearch').css('margin-top','56px');
+				$$('.dynamicPageSearch').css('margin-top','6px');
 				$('.dynamicNavSearch').slideUp(200);
 			} 
 		});
@@ -1222,6 +1222,14 @@ define(['app',
 		$$('.workTotalSearch').html(data.workTotal);
 		deptIdSearch = data.deptId;
 		deptNameSearch = data.deptName;
+		console.log('khpl---'+khpl)
+		if(khpl == 0){
+			$$('.dynamicReportTimeSearch').html('年');
+		}else if(khpl == 1){
+			$$('.dynamicReportTimeSearch').html('季');
+		}else{
+			$$('.dynamicReportTimeSearch').html('月');
+		}
 		$$('.dynamicReportNameSearch').html(deptNameSearch);
 	}
 
@@ -1611,9 +1619,14 @@ define(['app',
 		//点击部门清除搜索框的key值
 		partyDynamicKey = '';
 		$$('.dynamicPageSearch').scrollTop(0);
+		
+		
 		console.log($$('.dynamicReportNameSearch').html());
+
 		var html = '<span class="titleContentSearch" data-deptId="' + deptIdSearch + '">' + $$('.dynamicReportNameSearch').html() + '</span>';
+	
 		$$('.titleBlockSearch').append(html);
+
 		titleBlockSearchHtml = $$('.titleBlockSearch').html();
 		var height = (titleBlockSearchHtml.getCurrentHeight() / 30 * 33);
 		$$('.titleBlockSearch').css('height', height == 0 ? height : (height + 5) + 'px');

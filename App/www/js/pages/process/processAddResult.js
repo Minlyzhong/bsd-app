@@ -75,8 +75,8 @@ define(['app'], function(app) {
 	 */
 	function clickEvent(page) {
 		//点击开会时间触发
-		addCalendar('beginTime');
-		addCalendar('endTime');
+		addCalendar('beginTime1');
+		addCalendar('endTime1');
 		//点击上传
 		$$('.saveFunds').click(submitFunds);
 		//点击上传图片的+号
@@ -132,14 +132,14 @@ define(['app'], function(app) {
 	function submitFunds(){
 		
 		var phone = $$('#phone').val();
-		var sTime = $$('#beginTime').val();
-		var eTime = $$('#endTime').val();
+		var sTime = $$('#beginTime1').val();
+		var eTime = $$('#endTime1').val();
 
 		if(!sTime || !eTime) {
 			app.myApp.alert('请确认时间！');
 		} else if(sTime >= eTime) {
 			app.myApp.alert('公示开始时间必须早于结束时间！');
-			$$('#endTime').val('');
+			$$('#endTime1').val('');
 			return;
 		}
 

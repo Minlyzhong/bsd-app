@@ -92,6 +92,16 @@ define(['app'], function(app) {
 				$('#absentees').animate({height:"40px"},200);
 			}
 		});
+		//点击要支书发言
+		$$('.tcaomContentIcon2').on('click',function(){
+			changeStateForText($$(this));
+			$('.tcaomContent2').slideToggle(200);
+		});
+		//点击班子成员发言
+		$$('.tcaomContentIcon3').on('click',function(){
+			changeStateForText($$(this));
+			$('.tcaomContent3').slideToggle(200);
+		});
 		//点击要点摘录及内容
 		$$('.tcaomContentIcon').on('click',function(){
 			changeStateForText($$(this));
@@ -133,7 +143,7 @@ define(['app'], function(app) {
 			console.log(result);
 			dataResult = result;
 			//把获取的参数加入页面
-			$$("#meetinTime").val(result.reportTime);
+			$$("#meetinTime").val(result.meetingTime);
 			$$("#location").val(result.meetingAddress);
 			$$("#host").val(result.host);
 			$$("#recorder").val(threeMeetingAndOneClassUserName);
@@ -143,6 +153,8 @@ define(['app'], function(app) {
 			$$("#meetingTitle").val(result.object);
 			$$("#meetingRecord").val(result.reportContext);
 			$$("#content").val(result.summary);
+			$$("#branchSpeak").val(result.branchSpeak);
+			$$("#memberSpeak").val(result.memberSpeak);
 			$$("#meetingDecision").val(result.resolution);
 			$$("#differentViews").val(result.different);
 			//加载图片
@@ -160,6 +172,14 @@ define(['app'], function(app) {
 		if($$("#content").val() != ''){
 			changeStateForText($$('.tcaomContentIcon'));
 			$('.tcaomContent').slideToggle(200);
+		}
+		if($$("#branchSpeak").val() != ''){
+			changeStateForText($$('.tcaomContentIcon2'));
+			$('.tcaomContent2').slideToggle(200);
+		}
+		if($$("#memberSpeak").val() != ''){
+			changeStateForText($$('.tcaomContentIcon3'));
+			$('.tcaomContent3').slideToggle(200);
 		}
 		if($$("#meetingDecision").val() != ''){
 			changeStateForText($$('.tcaomMeetingDecisionIcon'));

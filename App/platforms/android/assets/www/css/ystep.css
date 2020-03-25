@@ -117,12 +117,12 @@
   /* width: 360px; */
   width: 100%;
   margin: 0 auto;
-  padding: 36px 34px 0px;
+  padding: 0px 60px 0px;
 }
 
 .precessList li {
   position: relative;
-  padding: 0 30px;
+  padding: 0px 0px 0px 50px;
   list-style: none;
   height: 80px;
   border-left: 2px solid #ccc;
@@ -158,6 +158,7 @@
   margin: 0px;
   font-family: PingFang-SC-Medium;
   color: #383636;
+  font-size: 13px;
 }
 .precessList .notWrite{
   padding: 3px;
@@ -177,8 +178,8 @@
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   /* background: #cecece; */
-  color: #ccc;
-  border: 1px solid #ddd;
+  color: #24aae1;
+  border: 1px solid #24aae1;
   /* width: 45px; */
   float: right;
 }

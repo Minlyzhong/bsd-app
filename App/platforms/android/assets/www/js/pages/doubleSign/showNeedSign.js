@@ -1,5 +1,5 @@
 define(['app',
-	'hbs!js/hbs/addHost',
+	'hbs!js/hbs/addSign',
 ], function(app, payPeopleTemplate) {
 	var $$ = Dom7;
 	var firstIn = 1;
@@ -78,28 +78,33 @@ define(['app',
 //			});
 //		});
 		//选择人员
-		$$('.payShowBtnRow .chooseLeader').on('click', function() {
+		$$('.chooseLeader').on('click', function() {
 			var leaderList = [];
 			var search = $$('.list-pay-search').find('input[name="payBox"]:checked');
+			console.log(search);
 			if(search.length == 0) {
 				app.myApp.alert('请选择用户');
 			} else {
 				$$.each(search, function(index, item) {
 					var userObj = {
 						userId: parseInt($$(item).val()),
-						userName: $$(item).parent().find('.item-title span').html(),
-						deptName: $$(item).parent().find('.item-title p').html()
+						name: $$(item).parent().find('.item-title span').html(),
+						deptName: $$(item).parent().find('.item-title p').html(),
+						deptId: $$(item).data('deptId'),
+						// tenantId: $$(item).data('tenantId')
+
 					}
 					leaderList = [];
 					leaderList.push(userObj);					
 				});
 				var payPeople = require('js/pages/doubleSign/doubleSignAdd');
 				console.log(leaderList.length);
-				payPeople.addSignBack(leaderList);
+				console.log(leaderList);
+				payPeople.addSignBack(leaderList[0]);
 				app.myApp.getCurrentView().back();
 			}
 		});
-		$$('.searchShowBtnRow .chooseLeader').on('click', chooseLeader);
+		// $$('.searchShowBtnRow .chooseLeader').on('click', chooseLeader);
 	}
 
 	/**
@@ -116,16 +121,19 @@ define(['app',
 		app.ajaxLoadPageContent(findDeptPeoplePath, {
 			// deptId: deptId,
 			userId:app.user.userId,
-			// current: pageNo,
+			current: pageNo,
+			size:20,
 			type:state
+			// type:1
 		}, function(result) {
-			var data = result.data.records;
+			var data = result.data;
 			console.log(data);
 			if(data.length) {
-				if(data.length == 10) {
+				if(data.length == 20) {
 					loading = false;
 				}
 				$$('.list-pay-search ul').append(payPeopleTemplate(data));
+				loading = false;
 			} else if(isLoadMore) {
 
 			} else {
@@ -236,7 +244,7 @@ define(['app',
 				leaderList = [];
 				leaderList.push(userObj);
 			});
-			var payPeople = require('js/pages/threeMeetingAndOneClass/' + backPage);
+			var payPeople = require('js/pages/doubleSignAdd/' + backPage);
 			payPeople.setLeaderList(leaderList);
 			app.myApp.getCurrentView().back();
 		}

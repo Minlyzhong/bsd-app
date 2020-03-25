@@ -5,7 +5,7 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	var imageList = [];
-	//获取考核内容
+	//获取专项考核内容
 	var findDetailInfoPath = app.basePath + '/mobile/partyAm/findDetailInfo';
 	//修改考核明细
 	var saveUserReportDetialPath = app.basePath + '/mobile/partySpecialResult/updatePartySpecialResult';

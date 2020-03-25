@@ -2,19 +2,30 @@ define(['app'], function(app) {
 	var $$ = Dom7;
 	var pageDataStorage = {};
 	//保存新闻文章
-	var saveNewsPath = app.basePath + 'extContent/saveOrUpdateContent';
+	var saveNewsPath = app.basePath + '/mobile/political/content';
+	
+	//查询组工动态的id
+	var findIdByCatalogNamePath = app.basePath + '/mobile/political/catalog/queryById';
+	
 	var photoBrowserPhotos = [];
 	var photoDatas = [];
 	var photoCompress = [];
 	var photoBrowserPopup = '';
 	var userPosition = '';
 	var count = 0;
+	
+	var catalogId = 0;
 
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
 	 */
 	function init(page) {
+		//设置页面不能滑动返回
+		page.view.params.swipeBackPage = false;
+		app.myApp.onPageBack("home/newsAdd", function(page){
+			page.view.params.swipeBackPage = true;
+		});
 		var loginCB = app.myApp.onPageBack('login', function(backPage) {
 			checkLogin(page);
 		});
@@ -22,8 +33,19 @@ define(['app'], function(app) {
 		app.back2Home();
 		clickEvent(page);
 		checkLogin(page);
+		getCategoryId();
 	}
-
+	
+	/*
+	 * 获取组工动态categoryId
+	 */
+	function getCategoryId(){
+		app.ajaxLoadPageContent(findIdByCatalogNamePath, {
+			query:'组工动态'
+		}, function(result) {
+			catalogId = result.data;
+		});
+	}
 	/**
 	 * 检查是否已经登陆成功
 	 * @param {Object} page
@@ -43,7 +65,7 @@ define(['app'], function(app) {
 			$$(".saveNews").show();
 			$$('.jump2LoginView').hide();
 			var photoBrowserPhotos = [];
-			clickEvent(page);
+			//clickEvent(page);
 		}
 	}
 
@@ -54,6 +76,12 @@ define(['app'], function(app) {
 		$$('.weui_uploader_input_wrp').on('click', showImgPicker);
 		//$$('.saveRecord').on('click', saveRecord);
 		$$('.saveNews').on('click',saveNews);
+		
+		$$('.newsAddBack').on('click',function(e){
+			app.myApp.confirm('您的组工动态尚未上传，是否退出？', function() {
+				app.myApp.getCurrentView().back();
+			});
+		});
 	}
 
 	/**
@@ -72,24 +100,26 @@ define(['app'], function(app) {
 					app.myApp.alert("该功能只能在移动app中使用！");
 					return;
 				}
-				window.imagePicker.getPictures(
-					function(picURLList) {
-						if(picURLList.length > 1){
-							app.myApp.alert("只能上传一张图片！");
-//							picURLList.splice(0,picURLList.length);
-						}else if(picURLList.length == 1) {
-							showPhotos(picURLList);
+				var permissions = cordova.plugins.permissions;
+				permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, function(){
+					window.imagePicker.getPictures(
+						function(picURLList) {
+							if(picURLList) {
+								showPhotos(picURLList);
+							}
+						},
+						function(error) {
+							console.log('从相册获取失败' + message);
+						}, {
+							maximumImagesCount: 9,
+							width: 800,
+							height: 800,
+							quality: 60,
 						}
-					},
-					function(error) {
-						console.log('从相册获取失败' + message);
-					}, {
-						maximumImagesCount: 9,
-						width: 800,
-						height: 800,
-						quality: 60,
-					}
-				);
+					);
+				}, function(error){
+					
+				});
 			}
 		}, {
 			text: '拍照',
@@ -146,35 +176,66 @@ define(['app'], function(app) {
 		
 		var userId = app.userId;
 		
-		var formData = new FormData();
-        formData.append("catalogId","3");
-        formData.append("title",newsTitle);
-        formData.append("content",newsContent);
-        formData.append("creatorId",userId);
-        formData.append("fromApp","1");
-        if(photoCompress.length > 0){
-        	var file = photoCompress[0];
-        	var fileName = app.utils.generateGUID() + ".png";
-        	formData.append("imageFile",file,fileName);
-        }
+		// var formData = new FormData();
+        // formData.append("catalogId",catalogId);
+        // formData.append("title",newsTitle);
+        // formData.append("content",newsContent);
+        // formData.append("creatorId",userId);
+        // formData.append("fromApp","1");
+        // if(photoCompress.length > 0){
+        // 	var file = photoCompress[0];
+        // 	var fileName = app.utils.generateGUID() + ".png";
+        // 	formData.append("imageFile",file,fileName);
+		// }
+		var formData={
+			author: "",
+			catalogId: catalogId,
+			catalogName: "",
+			content: newsContent,
+			creatTs: "",
+			creatorId: 0,
+			expiryDate: "",
+			favorite: true,
+			hasRow: 0,
+			id: 0,
+			isDailyPush: 0,
+			isTop: 0,
+			newsfrom: "",
+			sortNo: 0,
+			state: 0,
+			subTitle: "",
+			tenantId: "",
+			title: newsTitle,
+			titlePic: "",
+			used: 0,
+			userName: "",
+			visitorVolume: 0
+		}
         
+		
+		var formDatas= JSON.stringify(formData)
+		
         //提交到后台审核
         $$.ajax({
             url:saveNewsPath,
             method: 'POST',
             dataType: 'json',
-            processData: false, // 告诉jQuery不要去处理发送的数据
-            contentType: false, // 告诉jQuery不要去设置Content-Type请求头
-            data: formData,
+            // processData: false, // 告诉jQuery不要去处理发送的数据
+            contentType: 'application/json;charset:utf-8', 
+            // contentType: 'application/x-www-form-urlencoded', 
+            data: formDatas,
             cache: false,
             success:function (data) {
-            	if(data.success){
+				
+            	if(data.msg=='success'){
+					
             		photoBrowserPhotos.splice(0, photoBrowserPhotos.length);
 					photoDatas.splice(0, photoDatas.length);
 					photoCompress.splice(0, photoCompress.length);
 	            	app.myApp.toast('保存成功,等待后台审核！', 'success').show(true);
 	            	app.myApp.getCurrentView().back();
             	}else{
+					
             		app.myApp.toast('保存失败！', 'error').show(true);
             		count = 0;
             		$$('.saveNews').attr('disabled',true);

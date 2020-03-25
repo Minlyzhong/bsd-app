@@ -304,6 +304,7 @@ define(['app', 'hbs!js/hbs/changePwd'], function(app, changePwdTemplate) {
 				$$('.user-header img').attr('src', app.headPic);
 				localStorage.setItem('headPic', 0);
 				localStorage.setItem('userId', -1);
+				localStorage.setItem('lastStudyDay', 0);
 				localStorage.setItem('user', '-1');
 				localStorage.setItem('userDetail', '-1');
 				localStorage.setItem('roleId', -1);

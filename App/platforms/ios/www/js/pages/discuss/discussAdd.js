@@ -5,7 +5,7 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	//添加聊天室接口
-	var servicesAddPath = app.basePath + 'extChatPage/addChatRoom';
+	var servicesAddPath = app.basePath + '/mobile/blog/topic/add';
 
 	/**
 	 * 页面初始化 
@@ -44,22 +44,40 @@ define(['app'], function(app) {
 			return;
 		}
 		var dContent = $$('#discussContent').val();
-		app.ajaxLoadPageContent(servicesAddPath, {
-			userId: app.userId,
-			roomCreater: app.user.userName,
-			roomTitle: dName,
-			description: dContent
-		}, function(data) {
-			console.log(data);
-			if(data.success) {
-				require(['js/pages/discuss/discuss'], function(discuss) {
-					discuss.loadChatList();
-				});
-				setTimeout(function() {
-					app.myApp.getCurrentView().back();
-				}, 1000);
-			}
+		var params = {
+			// userId: app.userId,
+			// roomCreater: app.user.userName,
+			title: dName,
+			desc: dContent
+		}
+
+		var formDatas= JSON.stringify(params)
+		$$.ajax({
+            url:servicesAddPath,
+            method: 'POST',
+            dataType: 'json',
+			contentType: 'application/json;charset:utf-8',
+            data: formDatas,
+            cache: false,
+            success:function (data) {
+            	if(data.msg == 'success'&& data.code == 0) {
+					app.myApp.toast('新增成功','success').show(true);
+					require(['js/pages/discuss/discuss'], function(discuss) {
+						discuss.loadChatList();
+					});
+					setTimeout(function() {
+						app.myApp.getCurrentView().back();
+					}, 1000);
+				}else{
+					app.myApp.toast('新增失败','error').show(true);
+				}
+            },
+            error:function () {
+				app.myApp.toast('新增失败','error').show(true);
+            }
 		});
+		
+		
 	}
 
 	/**

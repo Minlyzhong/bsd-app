@@ -256,8 +256,8 @@
 	background-image: url(../img/icon/icon-comment.png);
 }
 .icon-comment1 {
-	width: 17px;
-	height: 17px;
+	width: 15px;
+	height: 15px;
 	background-image: url(../img/newIcon/icon_home_comments.png);
 }
 
@@ -1304,7 +1304,16 @@
 	line-height: 30px;
 }
 
-.messageTitle,
+.messageTitle{
+	width: 100%;
+    height: 127px;
+    line-height: 29px;
+    font-size: 14px;
+    color: gray;
+    padding-left: 5px;
+}
+
+
 .scoreInfoTitle {
 	width: 100%;
 	height: 33px;
@@ -2796,6 +2805,58 @@ label.label-checkbox i.icon-workLog-checkbox:after {
   color: #ED4C3C;
 }
 
+/* 三员九有 */
+.wrapperThere{
+    /*width:100%;
+  	margin: 50px auto;
+    border: 1px solid seagreen;*/
+    overflow: hidden;
+    border-bottom: 1px solid gainsboro;
+    border-top: 1px solid gainsboro;
+   background: #FFFFFF;
+}
+
+.wrapperThere ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+    background: #FFFFFF;
+}
+
+.wrapperThere li{
+	font-size: 16px;
+	background: #FFFFFF;
+	margin: 4px 5px;
+    /*padding: 15px 0;*/
+   	padding: 10px 0px 10px 0px;
+    color:black;
+    /*color: #B5B5B6;*/
+    float: left;
+    list-style: none;
+    /* width: 96px; */
+    /* min-width: 80px; */
+    /*margin: 10px;*/
+    text-align: center;
+    /*background: #EFEFF4;/*
+    color: #666666;
+    /*font-size: 14px;*/
+    /*border-right:1px solid gainsboro;*/
+}
+
+
+.wrapperThere li.active1{
+    /*background: red;*/
+   color: #333333;
+   background: #FFFFFF;
+   border-bottom:2px solid #ED4C3C ;
+   font-weight: bold;
+   /*color: black;*/
+  color: #ED4C3C;
+}
+
+
+
 .qs-party-card1{
 	border-bottom: 1px solid #e3e3e3;
 }
@@ -2975,6 +3036,21 @@ label.label-checkbox i.icon-workLog-checkbox:after {
     pointer-events: none;
     /*width: 100px;*/
    	width:85px;
+}
+
+
+.thereAndNineBranch {
+    display: block;
+    position: absolute;
+    border: 0;
+    height: 2px;
+    /*background-color: #48a5f4;*/
+   	/* background-color:#ED4C3C; */
+    left: 0;
+    top: 35px;
+    pointer-events: none;
+    /*width: 100px;*/
+   	width:96px;
 }
 .order-view .grid{
 	height: 70px;
@@ -3262,6 +3338,10 @@ label.label-checkbox i.icon-workLog-checkbox:after {
  .list-block ul:before{
 	height:0px!important;
 }
+
+.accordion-list  ul:before{
+	height:1px!important;
+}
 .partySmallList .list-block ul:after{
 	height:0px!important;
 }
@@ -3541,6 +3621,30 @@ label.label-checkbox i.icon-workLog-checkbox:after {
 	line-height:37px;
 }
 
+.dessize2 span{
+	font-size:15px;
+	font-family:仿宋_GB2312
+}
+.dessize2 p{
+	text-indent: 2em;
+	line-height:35px;
+}
+
+.showProcessBottom p{
+	/* text-indent: 2em; */
+	line-height:15px;
+	font-size: 13px;
+	text-align: right;
+}
+.publicityTitle{
+	text-align:center;
+}
+.publicityTitle span{
+	font-family:方正小标宋简体;
+	font-size: 20px;					
+	font-weight: 600;
+}
+
 #deptRankSearch{
 	background-color:rgba(255,255,255,0.6)!important;
 	background-image: url(../img/newIcon/search.png)!important;
@@ -3705,7 +3809,7 @@ select:focus {
     text-align: center;
 }
 .registerCircle{
-	margin: 60% auto 10%;
+	margin: 40% auto 10%;
     width: 130px;
     height: 130px;
     background: #EFA723;
@@ -3731,7 +3835,8 @@ select:focus {
     font-size: 16px;
     margin: 0px auto;
     width: 70%;
-    height: 28px;
+	height: 28px;
+	-webkit-transform: translateZ(0);
 }
 
 .limitLine{
@@ -3847,12 +3952,18 @@ select:focus {
 	overflow: hidden;
 }
 
+
 /* 一行 */
 .oneLine{
 	overflow: hidden;
     /* max-width: 110px; */
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.isSign{
+	float:right;
+	font-size: 14px;
 }
 
 #someelement img{
@@ -3872,7 +3983,7 @@ select:focus {
 }
 
 .meetingCard .item-text{
-	color:#47474a;
+	color:#37699a;
 	line-height: 25px;
 	height: 25px;
 	font-size: 14px;
@@ -3880,10 +3991,11 @@ select:focus {
 }
 
 .meetingCard .meetingTitle{
-	color:#000;
+	/* color:#000; */
+	font-weight:600;
 	font-size: 14px;
 }
-.meetingCard .processStatus{
+ .processStatus{
 	display: inline-block;
     background:#c5ddf7;
     padding: 2px 6px;
@@ -3891,7 +4003,7 @@ select:focus {
     font-weight: 500;
     color: #007aff;
 }
-.meetingCard .processUnStatus{
+ .processUnStatus{
 	display: inline-block;
     background: rgb(247, 222, 226);
     padding: 2px 6px;
@@ -3930,4 +4042,163 @@ select:focus {
 
 .signedList .mySign{
 	display: none;
+}
+
+.buildingTop{
+	height: 55px;
+	line-height: 55px;
+	padding:0px 15px;
+    flex-direction: row;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	-webkit-justify-content: space-between;
+	justify-content: space-between;
+}
+
+.buildingPicShow .uploadCell:after,.buildingPicShow .weui_cells:before,.firstSecretaryPic .weui_cells:before, .thereAndNineCard .weui_cells:before,.thereAndNineCard .uploadCell:after,.thereAndNineCard .list-block ul:after{
+	height:0px !important;
+}
+
+.buildingPicShow .weui_cells{
+	margin-top:0px;
+}
+
+
+
+.thereAndNineContent{
+	padding: 5px 15px;
+	
+	line-height: 35px;
+    /* height: 35px; */
+    border-bottom: 1px solid #e9e7e7;
+}
+
+.thereAndNineCard{
+	border: 1px solid #e9e7e7;
+	background: #fff;
+}
+.recordReview{
+	width: 41%!important;
+}
+
+#applyDetail .list-block ul{
+	background: none!important;
+	
+}
+#applyDetail .list-block .item-input{
+	margin-left: 10px;
+}
+#applyDetail .kp-label{
+	color: #E32519;
+	width: 35%;
+    -webkit-flex-shrink: 0;
+	-ms-flex: 0 0 auto;
+	font-weight: 600;
+    flex-shrink: 0;
+	font-size: 18px;
+	text-align: end;
+
+}
+.applyHand{
+	line-height: 100%;
+    width: 100%;
+	height: 100%;
+	display: flex;
+    flex-direction: row;
+	justify-content: center;
+	margin-top: 10px;
+	
+}
+
+.applyHand img{
+	line-height: 100%;
+    width: 35px;
+    height: 35px;
+    
+}
+.applyHand div{
+	display: inline-block;
+    line-height: 100%;
+	background-color: #ff0;
+	padding: 5px 8px;
+	font-size: 24px;
+}
+
+#applyDetail .selectAddress{
+	display: flex;
+    flex-direction: column;
+	width: 100%;
+	margin-left: 10px;
+
+}
+.selectAddressList{
+	display: flex;
+    flex-direction: row;
+
+}
+.applyBottom{
+	width: 100%;
+    position: fixed;
+    bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+	justify-content: center;
+	color: #ffcc00;
+	font-size: 17px;
+
+}
+
+#applyDetail ::-webkit-input-placeholder {
+	/* Chrome/Opera/Safari */
+	color: #fff;
+}
+
+#applyDetail::-moz-placeholder {
+	/* Firefox 19+ */
+	color: #fff;
+}
+
+#applyDetail:-ms-input-placeholder {
+	/* IE 10+ */
+	color: #fff;
+}
+
+#applyDetail:-moz-placeholder {
+	/* Firefox 18- */
+	color: #fff;
+}
+
+#applyDetail .list-block ul:after{
+	height: 0px;
+}
+
+#applyDetail .list-block .item-inner:after{
+	height: 0px;
+}
+
+
+
+@font-face {
+    font-family: 'maobi';
+    src: url('fonts/maobi.eot');
+    src: local('☺'), url('fonts/maobi.woff') format('woff'), url('fonts/maobi.ttf') format('truetype'), url('fonts/maobi.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+.Conv_SingleMalta{
+  font-family: 'maobi';
+}
+
+.applyTitle{
+	font-family: maobi;
+    color: #ffcc00;
+    font-size: 37px;
+	width: 100%;
+	margin: 5px auto;
+
 }

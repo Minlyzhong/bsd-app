@@ -6,7 +6,7 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//获取所选人需要缴纳的费用
-	var payMoneyByPeoplePath = app.basePath + 'payment/payMoneyByPeople';
+	var payMoneyByPeoplePath = app.basePath + '/payment/payMoneyByPeople';
 	var leaderList = [];
 	var payOwn = 0;
 	var chooseOpen = 0;

@@ -1,24 +1,21 @@
 define(['app',
-	'hbs!js/hbs/party2',
-	'hbs!js/hbs/partyList2'
+	'hbs!js/hbs/branchList',
+	'hbs!js/hbs/branchList2'
 ], function(app, template ,template1) {
 	var $$ = Dom7;
 	//滚动图接口
 	var swiperPath = app.basePath + 'extHomePage/loadMobileFacebook';
-	//首页列表接口
-	var partyPath = app.basePath + 'extHomePage/loadMobileHomeList';
-	//检查更新接口
-	var findVersionPath = app.basePath + 'extUserPage/findNewAppVersion';
-	//查询用户自定义皮肤
-	var find = app.basePath + 'userSetting/find';
-	//退出请求接口
-	var exitPath = app.basePath + 'auth/exit';
-	//登陆接口
-	var loginPath = app.basePath + 'auth/authLogin';
-	//点赞接口
-	var goodPath = app.basePath + 'extGood/saveGood';
+	//支部风采标题接口
+	var findClassifyTreePath = app.basePath + '/mobile/political/branch/template/list';
 	//加载栏目的文章列表
-	var listPath = app.basePath + 'extContent/loadPagerByCatId';
+	//var listPath = app.basePath + 'partyContent/findBranchIntroduction';
+	var listPath = app.basePath + '/mobile/political/branch/content/';
+	//保存支部位置信息
+	var saveOrUpdatePath = app.basePath + '/mobile/political/branch/save/addr/';
+	//查找单个支部位置信息
+	var findInfPath = app.basePath + '/mobile/political/branch/';
+	//
+	var findSysCityPath = app.basePath + '/mobile/village/map/center';
 	var firstIn = 1;
 	var pageDataStorage = {};
 	
@@ -29,161 +26,153 @@ define(['app',
 	var tabPosition = 0;
 	
 	var photoBrowserPhotos = [];
-	var timeOutID;
 	
-	var myScroll;
+	var myScrollBranch;
 	var left1 = 0;
 	var left2 = 0;
 	var left3 = 0;
 	var count = 1;
-	
+	//屏幕宽度参数
 	var phoneWidth = 0;
 	
 	var str = '';
+	var str1 = '';
 	
+	var lat = 0.0;
+	var lng = 0.0;
+	var addr = '';
+	
+	var paramCount = 1;
+	var sysCity = '';
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
 	 */
 	function init(page) {
+		//设置页面不能滑动返回
+		page.view.params.swipeBackPage = false;
+		app.myApp.onPageBack("branch/myBranch", function(page){
+			page.view.params.swipeBackPage = true;
+		});
 		initData(page.query);
 		ajaxLoadContent(page);		
 		app.back2Home();
 		attrDefine();
-		
-		//点击搜索
-		$$('.searchNews').on('click',function(){
-			app.myApp.getCurrentView().loadPage('searchNews.html');
-		})
-		
-		//新增文章
-		$$('.icon-camera1').on('click',function(){
-			app.myApp.getCurrentView().loadPage('newsAdd.html');
-//			app.myApp.getCurrentView().loadPage('newsAddEditor.html');
-		})
 	}
 
 	/**
 	 * 初始化模块变量
 	 */
-	function initData(pageData) {
-		//用户验证
-		verifyTheUser();
-		//确定当前用户的皮肤
-		colorConfirm();
-		console.log('图片：'+app.headPic);
-		$$('.user-header1 img').attr('src', app.headPic);
-		
-		$$('.user-header1').on('click',function(){
-			setTimeout(function(){
-				$$('.userXiabiao').click();
-			},100)
-			
-		});
-		
+	function initData(pageData) {		
 		phoneWidth = window.screen.width;
-		firstIn = 0;
+		 sysCity = '';
+		paramCount = 1;
+		firstIn = 1;
 		pageDataStorage = {};
-		
 		photoBrowserPhotos = [];
-		timeOutID = null;
-		
-		str += '<div style="color:#9E9E9E;font-size:20px;margin-left:30%">--&nbsp;已经到底啦！--</div>'
+		lat = 0.0;
+		lng = 0.0;
+		addr = '';
+		str += '<div style="color:#9E9E9E;font-size:20px;margin-left:30%">--&nbsp;已经到底啦！--</div>';
+		//地图
+		str1 = '';
+		str1 +=	'<div style="height: 450px;" id="gpsBranch">';
+		str1 +=		'<div class="item-content">';
+		str1 +=			'<div class="item-inner">';
+		str1 +=				'<div class="item-title kp-label GPSPostion">';
+		str1 +=					'<i class="icon icon-position1"></i>&nbsp;&nbsp;支部位置';
+		str1 +=				'</div>';
+		str1 +=				'<div style="display: block;margin-right:5px;" class="branchGPSUpload">';
+		str1 +=					'<button id="baiduSearch"></button><input type="text" id="branchGPS" name="branchGPS" readonly="true"/>';
+		str1 +=				'</div>';
+		str1 +=			'</div>';
+		str1 +=		'</div>';
+		str1 +=		'<div id="allmap" style="width: 100%;height: 100%;overflow: hidden;font-family:"微软雅黑";"></div>';
+		str1 += '</div>';
 	}	
-	
-	//点赞刷新
-	function refreshHome(cId){
-		//console.log(cId);
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			if(cId == pageDataStorage['catId'+i] && cId != 2){
-				pageNo[i] = 1;
-				loading[i] = true;
-				partyGetList(false,i);
-			}	
-		}
-		app.myApp.pullToRefreshDone();
+
+	/**
+	 * 点击事件
+	 */
+	function clickEvent() {
+		$$('.branchGPSUpload').on('click',function(){
+			app.myApp.confirm('确定要保存地理位置吗？', function() {
+				savaOrUploadLoc();
+			});
+		});
 	}
 	
+	function findLoc(){
+		app.ajaxLoadPageContent(findInfPath+app.user.deptId, {
+		
+		}, function(data) {
+			console.log(data);
+			if(data.data == '{}'){
+				//getPosition()
+			}else{
+				lng = data.data.lng;
+				lat = data.data.lat;
+				$$('#branchGPS').val(data.data.addr);
+			}
+		});
+	}
+	
+	function savaOrUploadLoc(){
+		app.ajaxLoadPageContent(saveOrUpdatePath+app.user.deptId, {
+			// deptId:,
+			lat:lat,
+			lng:lng,
+			address:addr,
+		}, function(data) {
+			
+			if(data.msg == 'success'){
+				setTimeout(function(){
+					app.myApp.alert('成功');
+				},100);
+			}else{
+				setTimeout(function(){
+					app.myApp.alert('失败');
+				},100);
+			}
+		},{
+			type:'POST'
+		});
+	}
 	/*
 	 * 标题栏滚动
 	 */
 	function iscrollTitle(){
 		//一个li的长度为102px
-		//var partyListLength = parseInt(pageDataStorage['partyListLength'] * 102);
-		var partyListLength = parseInt(pageDataStorage['partyListLength'] * 87);
-    	$$(".wrapper ul").css('width',partyListLength+'px');
-	    myScroll = new IScroll('.wrapper', {scrollX: true, scrollY: false});
-	    if(myScroll.maxScrollX != 0){
-	    	localStorage.setItem('maxScrollX', myScroll.maxScrollX);
+		var branchListLength = parseInt(pageDataStorage['branchListLength'] * 87);
+		console.log(branchListLength);
+    	$$(".wrapperBranch ul").css('width',branchListLength+'px');
+    	console.log(branchListLength<=phoneWidth);
+    	if(branchListLength<=phoneWidth){
+    		 myScrollBranch = new IScroll('.wrapperBranch', {scrollX: false, scrollY: false});
+    		 myScrollBranch.hasHorizontalScroll = false;
+    	}else{
+    		 myScrollBranch = new IScroll('.wrapperBranch', {scrollX: true, scrollY: false});
+    		 myScrollBranch.hasHorizontalScroll = true;
+    	}
+	   
+	    if(myScrollBranch.maxScrollX != 0){
+	    	localStorage.setItem('maxScrollXBranch', myScrollBranch.maxScrollX);
 	    }
-	    myScroll.hasHorizontalScroll = true;
 	    //再次调用让他等于他自己
-		if(myScroll.maxScrollX == 0){
-			myScroll.maxScrollX = parseInt(localStorage.getItem('maxScrollX'));
-			myScroll.isInTransition = false;
+		if(myScrollBranch.maxScrollX == 0){
+			myScrollBranch.maxScrollX = parseInt(localStorage.getItem('maxScrollXBranch'));
+			myScrollBranch.isInTransition = false;
 		}
-	   	//myScroll.crollerWidth = 815;
-	   	myScroll.crollerWidth = 612;
-	   	myScroll.wrapperHeight = 52;
-	   	myScroll.wrapperWidth = 360;
-//	   	setTimeout(function(){
-//	   		console.log(myScroll);
-//	   	},1000);
-	    myScroll.scrollToElement('.active',true,true);
-	}
-	/*
-	 * 验证用户
-	 */
-	function verifyTheUser(){
-		if(localStorage.getItem('verify') != '1'){
-			localStorage.setItem('verify','-1');
-		}
-		var loginName = localStorage.getItem('loginName');
-		var password = localStorage.getItem('password');
-		//没有登录不去检测
-		if(password != 'null' && localStorage.getItem('verify') != '-1'){
-				app.ajaxLoadPageContent(loginPath, {
-						loginName: loginName,
-						loginPwd: password
-				}, function(data) {
-					//console.log(data);
-					if(data.success) {
-						console.log('登陆了');
-					}else{
-						app.userId = -1;
-						app.user = '';
-						app.roleId = -1;
-						app.headPic = 'img/icon/icon-user_d.png';
-						$$('.user-header img').attr('src', app.headPic);
-						localStorage.setItem('headPic', 0);
-						localStorage.setItem('userId', -1);
-						localStorage.setItem('user', '-1');
-						localStorage.setItem('roleId', -1);
-						localStorage.setItem('password', null);
-						//把主题设置为默认的，移除css
-						app.removejscssfile('blue.css','css');
-						app.removejscssfile('green.css','css');
-						app.myApp.toast('密码错误！', 'error').show(true);
-						app.myApp.getCurrentView().loadPage('login.html');
-						$$('.user-header1 img').attr('src', app.headPic);
-					}
-				});
-		}else{
-			
-		}
+	   	myScrollBranch.crollerWidth = 612;
+	   	myScrollBranch.wrapperHeight = 52;
+	   	myScrollBranch.wrapperWidth = 360;
+	    myScrollBranch.scrollToElement('.active',true,true);
 	}
 	
 	/**
 	 * 属性定义（不传参，使用模块变量）
 	 */
 	function attrDefine() {
-		if(app.myApp.device.ipad) {
-			$$('.homeSwiper').css('height', '50%');
-		} else if(app.myApp.device.android) {
-			//让手机的顶部变色
-			//StatusBar.backgroundColorByHexString("#ED4C3C");
-		}
-		
 
 	}
 
@@ -191,11 +180,8 @@ define(['app',
 	 * 初始化异步请求页面数据 
 	 */
 	function ajaxLoadContent(page) {
-		//注册android的返回键事件
-		document.addEventListener("backbutton", onBackKeyDown, false);
-		getWiper();
-		getPatryList(page);
-		checkUpdate();
+		//getWiper();
+		getPatryList1(page);
 	}
 
 	/**
@@ -229,14 +215,14 @@ define(['app',
 					html:'<span class="photo-browser-zoom-container"><img src="'+app.basePath + item.imgUrl+'"></span><input type="hidden" class="homeId" value="'+item.id+'"/>'
 				};
 				photoBrowserPhotos.push(images);
-				$$('.homeSwiper .swiper-wrapper').append(
+				$$('.branchSwiper .swiper-wrapper').append(
 					'<div class="swiper-slide homeSlider" data-id="'+item.id+'"data-isgood="'+item.isGood+'">' +
 					'<img data-src="' + app.basePath + item.imgUrl + '" src="' + app.basePath + item.imgUrl + '" class="swiper-lazy">' +
 					'<div class="slider-view">' + item.title + '</div>' +
 					'</div>');
 			});
-			homeSwiper = app.myApp.swiper('.homeSwiper', {
-				pagination: '.homePager1',
+			branchSwiper = app.myApp.swiper('.branchSwiper', {
+				pagination: '.homePager2',
 				speed: 800,
 				autoplay: 3000,
 				autoplayDisableOnInteraction: false,
@@ -249,7 +235,6 @@ define(['app',
 				backLinkText: '关闭',
 				type: 'popup',
 			});
-
 			$$('.homeSlider').on('click', function() {
 				var index = $$(this).index() - 1;
 				if(index>4){
@@ -273,16 +258,18 @@ define(['app',
 
 	/**
 	 * 获取标题栏 
+	 * type:模板类型，1为党支部模板、2为村社区模板
 	 */
-	function getPatryList(page) {
-		app.ajaxLoadPageContent(partyPath, {
-
+	function getPatryList1(page) {
+		app.ajaxLoadPageContent(findClassifyTreePath, {
+			deptId: app.user.deptId,
+			type: 1
 		}, function(data) {
-			pageDataStorage['partyListLength'] = data.data.length
-			//console.log(pageDataStorage['partyListLength']);
-			pageDataStorage['partyList'] = data.data;
-			handlePartyList(data.data,page);
-			
+			var data = data.data;
+			console.log(data);
+			pageDataStorage['branchListLength'] = data.length;
+			pageDataStorage['partyList'] = data;
+			handlePartyList1(data,page);	
 		});
 	}
 
@@ -290,52 +277,59 @@ define(['app',
 	 * 加载标题栏
 	 * @param {Object} data 数据
 	 */
-	function handlePartyList(data,page) {
+	function handlePartyList1(data,page) {
 		var _data = data;
 		console.log(_data);
 		//获取catId
 		$$.each(_data,function(index,item){
+			//console.log(index);
+			//console.log(_data[index].id);
+			if(_data[index].hasSecondPage == false){
+				_data[index].hasSecondPage = 0;
+			}else{
+				_data[index].hasSecondPage = 1;
+			}
+			pageDataStorage['hasSecondPage'+index] = _data[index].hasSecondPage;
 			pageDataStorage['catId'+index] = _data[index].id;
-			//console.log(pageDataStorage['catId'+index]);
 		})
-		for(var i=0;i<=pageDataStorage['partyListLength']-1;i++){
+		for(var i=0;i<=pageDataStorage['branchListLength']-1;i++){
 			var str ='';
-			str += '<div class="swiper-slide homeSlider1"  data-number="'+i+'" style=" padding-top: 0px;width: 100%;height: 1000px;">';
-			str += '<div class="page">';
-			str += '<div class="party-list-type'+i+' page-content infinite-scroll pull-to-refresh-content" style="height: 1000px;padding-top: 0px;">';
+			str += '<div class="swiper-slide homeSlider2"  data-number="'+i+'" style=" padding-top: 0px;width: 100%;height: 1000px;">';
+			str += '<div class="page123">';
+			str += '<div class="branch-list-type'+i+' page-content infinite-scroll pull-to-refresh-content" style="height: 1000px;padding-top: 0px;margin-top:-44px;background:">';
 			str += '<div class="pull-to-refresh-layer" style="margin-top:0px">';
 			str += '<div class="preloader">';
 			str += '</div>';
 			str += '<div class="pull-to-refresh-arrow">';
 			str += '</div>';
 			str += '</div>';
-			str += '<div class="partyHome'+i+'" style="padding-bottom:570px;">';
+			str += '<div class="branchHome'+i+'" style="padding-bottom:500px;">';
 			str += '</div>';
 			str += '</div>';
 			str += '</div>';
 			str += '</div>'; 
-			$$('.partyPage .homeSwiper1 .swiper-wrapper').append(str);
+			$$('.branchPage .homeSwiper2 .swiper-wrapper').append(str);
 		}
 		//触发绑定事件
-		app.myApp.initPullToRefresh($('.page'));
-		app.myApp.initFastClicks($('.page'));
-		app.myApp.initPageInfiniteScroll($('.page'));
+		app.myApp.initPullToRefresh($('.page123'));
+		app.myApp.initFastClicks($('.page123'));
+		app.myApp.initPageInfiniteScroll($('.page123'));
 		//定义参数
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
+		for(var i=0;i<=pageDataStorage['branchListLength'];i++){
 			pageNo[i]=1;
 		}
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
+		for(var i=0;i<=pageDataStorage['branchListLength'];i++){
 			loading[i]=true;
 		}
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
+		for(var i=0;i<=pageDataStorage['branchListLength'];i++){
 			loadingCount[i]=true;
 		}
 		//向上刷新和下拉加载
 		pushAndPull(page);
 		
 		//让其适应手机屏幕phoneWidth
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			$$('.party-list-type'+i).css('width',phoneWidth+'px');
+		for(var i=0;i<=pageDataStorage['branchListLength'];i++){
+			$$('.branch-list-type'+i).css('width',phoneWidth+'px');
 		}
 				
 		var patryList = [];
@@ -343,99 +337,69 @@ define(['app',
 			$$.each(_data, function(index, item) {
 				var party = {
 					numbers:index,
-					id: 0,
-					catalogIcon: '',
-					catalogName: '',
-					creatTs: '',
-					basePath: app.basePath,
-					title: ''
-				};
-				party.id = item.id;
-				party.catalogName = item.catalogName;
-				party.catalogIcon = item.catalogIcon;
-				if(item.data) {
-					party.creatTs = item.data[0].creatTs;
-					party.title = item.data[0].title;
+					id:0,
+					name:'',
+					hasSecondPage:true
 				}
+				party.name = item.name;
+				party.id = item.id;
+				
+				party.hasSecondPage = item.hasSecondPage;
 				patryList.push(party);
 			});
-			$$('.wrapper ul').html(template(patryList));
-			$(".wrapper li:first").addClass("active1");
+
+			console.log(patryList)
+			$$('.wrapperBranch ul').html(template(patryList));
+			$(".wrapperBranch li:first").addClass("active1");
 		} else {
 			app.myApp.alert('暂无数据');
 		}
-		
 		//标题栏滚动
 		iscrollTitle();
-		
 		//加载第一个，其第二个参数为0
-		partyGetList(false,0);
+		partyGetList1(false, 0, 1);
 		//初始化滑动
-		homeSwiper1 = app.myApp.swiper('.homeSwiper1', {
+		homeSwiper2 = app.myApp.swiper('.homeSwiper2', {
 			pagination: '.homePager',
 			speed: 800,
 			onSlideChangeStart: function(swiper){
-				console.log(swiper.slidesGrid.length);
+				//console.log(swiper.slidesGrid.length);
 				for(var i=0;i<=swiper.slidesGrid.length;i++){
 					if(swiper.activeIndex != 0){
-						console.log($$('.homeSwiper'));
-						$$('.homeSwiper').css('display','none');
-						$('.homeSwiper').slideUp(400);
+						//console.log($$('.branchSwiper'));
+						$$('.branchSwiper').css('display','none');
+						$('.branchSwiper').slideUp(400);
 					}else{
-						if($('.party-list-type0')[0].scrollTop != 0){
-							$('.homeSwiper').slideUp(400);
+						if($('.branch-list-type0')[0].scrollTop != 0){
+							$('.branchSwiper').slideUp(400);
 						}
-						if($('.party-list-type0')[0].scrollTop == 0){
-							$$('.homeSwiper').css('display','block');
+						if($('.branch-list-type0')[0].scrollTop == 0){
+							$$('.branchSwiper').css('display','block');
 						}
 					}
 					if(swiper.activeIndex == i){
-						$$($$(".wrapper li").children())[i].click();
+						$$($$(".wrapperBranch li").children())[i].click();
 					}
 				}
 			}
 		});
 		//点击标题栏
-		$$($$(".wrapper li").children()).on('click',showPartyView);
+		$$($$(".wrapperBranch li").children()).on('click',showPartyView);
 		
 		//当滑动的时候触发
 		scroll(function(direction) {
 			if(direction == 'up') {
-				$('.homeSwiper').slideDown(400);
+				$('.branchSwiper').slideDown(400);
 			} else {
-				$('.homeSwiper').slideUp(400);
+				$('.branchSwiper').slideUp(400);
 			} 
 		});
 		function scroll(fn) {
-//			for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-//				$(".party-list-type"+i).on("touchstart", function(e) {
-//		　　　　		startX = e.originalEvent.changedTouches[0].pageX,
-//	　　　　			startY = e.originalEvent.changedTouches[0].pageY;
-//				});
-//			　　$(".party-list-type"+i).on("touchmove", function(e) {
-//			　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
-//			　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
-//			　　　　X = moveEndX - startX,
-//			　　　　Y = moveEndY - startY;
-//					var beforeScrollTop = $(this)[0].scrollTop;
-//					if ( Math.abs(Y) > Math.abs(X) && Y > 0) {
-//						if(beforeScrollTop == 0){
-//							fn("up");
-//						}else{
-//							fn("down");
-//						}
-//					}else if ( Math.abs(Y) > Math.abs(X) && Y < 0 ) {
-//			　　　　　　if(beforeScrollTop > 0){
-//							fn("down");
-//						}
-//			　　　　}
-//			　　});
-//			}
-			$(".party-list-type0").on("touchstart", function(e) {
+			$(".branch-list-type0").on("touchstart", function(e) {
 	　　　　		startX = e.originalEvent.changedTouches[0].pageX,
 　　　　			startY = e.originalEvent.changedTouches[0].pageY;
 			});
-		　　$(".party-list-type0").on("touchmove", function(e) {
+		　　$(".branch-list-type0").on("touchmove", function(e) {
 		　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
 		　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
 		　　　　X = moveEndX - startX,
@@ -461,206 +425,70 @@ define(['app',
 	 * @param {Object} e
 	 */
 	function showPartyView(e) {
-		//stop() 方法停止当前正在运行的动画。
-		$(".sideline").stop(true);
-		//position() 方法返回匹配元素相对于父元素的位置
-//		scrollToElement(el, time, offsetX, offsetY, easing)
+		$(".sidelineBranch").stop(true);
 		tabPosition = $$(this).parent().data('index');
-		$$('.partyPage .swiper-wrapper').css('transition-duration','800ms');
-		$$('.partyPage .swiper-wrapper').css('-webkit-transition-duration','800ms');
-		$$('.partyPage .swiper-wrapper').css('-moz-transition-duration','800ms');
-		$$('.partyPage .swiper-wrapper').css('-o-transition-duration','800ms');
-		$$('.partyPage .swiper-wrapper').css('-ms-transition-duration','800ms');
-		//console.log(tabPosition);
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
+		$$('.branchPage .swiper-wrapper').css('transition-duration','800ms');
+		$$('.branchPage .swiper-wrapper').css('-webkit-transition-duration','800ms');
+		$$('.branchPage .swiper-wrapper').css('-moz-transition-duration','800ms');
+		$$('.branchPage .swiper-wrapper').css('-o-transition-duration','800ms');
+		$$('.branchPage .swiper-wrapper').css('-ms-transition-duration','800ms');
+		console.log(tabPosition);
+		for(var i=0;i<=pageDataStorage['branchListLength']-1;i++){
 			if(tabPosition != 0){
-				$$('.homeSwiper').css('display','none');
-				$('.homeSwiper').slideUp(400);
+				$$('.gpsBranch').css('display','none');
 			}else{
-				if($('.party-list-type0')[0].scrollTop != 0){
-					$('.homeSwiper').slideUp(400);
-				}
-				if($('.party-list-type0')[0].scrollTop == 0){
-					$$('.homeSwiper').css('display','block');
-				}
+				$$('.gpsBranch').css('display','block');
 			}
 			if(tabPosition == i){
-				//left1 = 100*i;
 				left1 = 85*i;
 				left2 = 10;
 				if(tabPosition != 0){
-					//left2 = (-125)*i/2;
-					left2 = (-95)*i/2;
+					left2 = (-45)*i/2;
 				}
 				left3 = phoneWidth*i;
-				myScroll.scrollTo(left2,0,800);
-				//console.log(left3);
+				myScrollBranch.scrollTo(left2,0,800);
 				if(loadingCount[i] == 1 && i != 0){
-					partyGetList(false,i);
+					partyGetList1(false,i);
 					loadingCount[i] += 1;
 				}			
 			}
 		}
+		$$('.branchPage .swiper-wrapper').css('transform','translate3d(-'+left3+'px, 0px, 0px)');
+		$$('.branchPage .swiper-wrapper').css('-webkit-transform','translate3d(-'+left3+'px, 0px, 0px)');
+		$$('.branchPage .swiper-wrapper').css('-moz-transform','translate3d(-'+left3+'px, 0px, 0px)');
+		$$('.branchPage .swiper-wrapper').css('-o-transform','translate3d(-'+left3+'px, 0px, 0px)');
+		$$('.branchPage .swiper-wrapper').css('-ms-transform','translate3d(-'+left3+'px, 0px, 0px)');
 		
-		$$('.partyPage .swiper-wrapper').css('transform','translate3d(-'+left3+'px, 0px, 0px)');
-		$$('.partyPage .swiper-wrapper').css('-webkit-transform','translate3d(-'+left3+'px, 0px, 0px)');
-		$$('.partyPage .swiper-wrapper').css('-moz-transform','translate3d(-'+left3+'px, 0px, 0px)');
-		$$('.partyPage .swiper-wrapper').css('-o-transform','translate3d(-'+left3+'px, 0px, 0px)');
-		$$('.partyPage .swiper-wrapper').css('-ms-transform','translate3d(-'+left3+'px, 0px, 0px)');
-		
-     	$(".sideline").animate({left:left1},300);
+     	$(".sidelineBranch").animate({left:left1},300);
      	
-		if($(".wrapper li").hasClass('active1')){
-			$(".wrapper li").removeClass('active1');
+		if($(".wrapperBranch li").hasClass('active1')){
+			$(".wrapperBranch li").removeClass('active1');
 		}
 		$$(this).parent().addClass("active1");
 	}
-
-	/**
-	 * android返回，退出APP
-	 */
-	function onBackKeyDown() {
-		if($$('body').find('.modal')[0]) {
-			$$('body').find('.modal .modal-button').click();
-		} else if($$('body').find('.popup')[0]) {
-			$$('body').find('.popup .close-popup').click();
-		} else if($$('body').find('.popover')[0]) {
-
-		} else if($$('body').find('.back')[0]) {
-			if($(app.myApp.getCurrentView().container).find('.page').last().find('.back').length) {
-				$$(app.myApp.getCurrentView().container).find('.back').click();
-			}
-		} else {
-			app.myApp.toast('再按一次<br />退出系统', 'none').show(true);
-			document.removeEventListener("backbutton", onBackKeyDown, false); // 注销返回键  
-			document.addEventListener("backbutton", exitApp, false); //绑定退出事件  
-			// 3秒后重新注册  
-			var intervalID = window.setInterval(function() {
-				window.clearInterval(intervalID);
-				document.removeEventListener("backbutton", exitApp, false); // 注销返回键  
-				document.addEventListener("backbutton", onBackKeyDown, false); // 返回键  
-			}, 3000);
-		}
-	}
 		
-	/**
-	 * 检查更新(一天一次)
-	 */
-	function checkUpdate() {
-		var today = app.utils.getCurTime().split(" ")[0];
-//		if(today == localStorage.getItem('updateTime')) {
-//			console.log('今天已经检查完毕');
-//			return;
-//		}
-		var updateAjax;
-		setTimeout(function() {
-			updateAjax = $$.ajax({
-				url: findVersionPath,
-				dataType: 'json',
-				data: {
-					curVersion: app.version,
-				},
-				success: function(data) {
-					console.log(data);
-					if(timeOutID) {
-						window.clearTimeout(timeOutID);
-					}
-					timeOutID = null;
-					if(data.data.success) {
-						localStorage.setItem('updateTime', today);
-						if(app.version != data.data.appVersion) {
-							if(app.myApp.device.ios) {
-								setTimeout(function(){
-								 	app.myApp.alert('<div style="text-align: left;">' + '检查到新版本：V' + data.data.appVersion + '<br /><br />更新内容:<br />' + data.data.memo + '<br /><br />文件大小:' + data.data.appSize + 'M<br />请留意App Store提醒</div>');
-								},1500);
-							} else {
-								setTimeout(function(){
-									app.myApp.alert('<div style="text-align: left;">' + '检查到新版本：V' + data.data.appVersion + '<br /><br />更新内容:<br />' + data.data.memo + '<br /><br />文件大小:' + data.data.appSize + 'M，是否进行下载?</div>', function() {
-									open(app.basePath + data.data.appPath, '_system');
-								});
-								},1500);
-							}
-						}
-					} else {
-						console.log('已经是最新版本');
-					}
-				},
-				error: function() {
-					console.log('更新失败');
-					if(timeOutID) {
-						window.clearTimeout(timeOutID);
-					}
-					timeOutID = null;
-				}
-			});
-
-			ajaxTimeOut(updateAjax);
-		}, 1000);
-	}
-
-	//操作超时
-	function ajaxTimeOut(ajaxVar) {
-		timeOutID = setTimeout(function() {
-			ajaxVar.abort();
-			//app.myApp.alert('检查更新超时，请检查网络状态！');
-		}, 5000);
-
-	}
-
-	function exitApp() {
-		app.ajaxLoadPageContent(exitPath, {
-			userId: app.userId,
-		}, function(data) {
-			navigator.app.exitApp();
-		});
-	}
-
-	
-	/*
-	 * 确认当前用户的皮肤
-	 */
-	function colorConfirm(){
-		var link = document.createElement( "link" ); 
-		link.type = "text/css"; 
-		link.rel = "stylesheet"; 
-		app.ajaxLoadPageContent(find, {
-			userId:app.userId,
-		}, function(data) {
-			if(data.appSkin==2){
-				link.href = 'css/skin/blue.css';  
-			}else if(data.appSkin==3){
-				link.href = 'css/skin/green.css';  
-			}
-			document.getElementsByTagName( "head" )[0].appendChild( link );
-		});
-	}
-	
-	
-	//获取文章列表
-	function partyGetList(isLoadMore,i) {
-//		console.log(pageDataStorage['catId'+i]);
-//		console.log(pageNo[i]);
-//		console.log(i);
-		app.ajaxLoadPageContent1(listPath, {
-			page: pageNo[i],
-			catalogId: pageDataStorage['catId'+i],
-			userId: app.userId
+	//获取文章列表 模板类型，1为党支部模板、2为村社区模板
+	function partyGetList1(isLoadMore,i) {
+		console.log(i)
+		console.log(typeof i)
+		i = parseInt(i);
+		temId = parseInt(i+1)
+		app.ajaxLoadPageContent1(listPath + temId, {
+			// type:1
+			pageNo: pageNo[i],
+			deptId:app.user.deptId,
+			villageId:pageDataStorage['catId'+i],
+			hasSecondPage:pageDataStorage['hasSecondPage'+i]
 		}, function(result) {
-			var data = result;
-			console.log(data.data);
+			var data = result.data;
+			console.log(data);
 			//确定没有信息并且是第一页的时候
-			if(data.data.length == 0 && pageNo[i] == 1){
-				$$('.partyHome'+i).html(template1());
-				$$('.infinite-scroll-preloader').remove();
-			}
-			else if(data.data.length == 0){
-				$$('.infinite-scroll-preloader').remove();
-				$$('.partyHome'+i).append(str);
+			if(data.content.length == 0 && pageNo[i] == 1){
+				$$('.branchHome'+i).html(template1());
 			}
 			else{
-				$$('.infinite-scroll-preloader').remove();
-				pageDataStorage['partyGetList'+i] = data.data;
-				handlePartyGetList(data.data, isLoadMore,i);
+				pageDataStorage['partyGetList'+i] = data.content;
+				handlePartyGetList1(data, isLoadMore,i);
 			}
 		});
 	}
@@ -669,44 +497,84 @@ define(['app',
 	 * @param {Object} data 数据
 	 * @param {Object} isLoadMore 是否加载更多
 	 */
-	function handlePartyGetList(data, isLoadMore,i) {
-		if(data && data.length > 0) {
-			var partyData = data;
-			$$.each(partyData, function(index, item) {
-				item.basePath = app.basePath;
-				item.forwardTotal = item.forwardTotal || 0;
-				item.commentTotal = item.commentTotal || 0;
-				item.goodTotal = item.goodTotal || 0;
-				var picArr = item.titlePic.split('.');
-				var picType = picArr[picArr.length - 1];
-				if(picType == 'mp4' || picType == 'avi' || picType == 'ogg' || picType == 'webm') {
-					item.picType = 1;
-					item.videoType = picType;
-				} else {
-					item.picType = 0;
-				}
-			});
+	function handlePartyGetList1(data, isLoadMore,i) {
+		console.log(data)
+		if(data.content) {
 			if(isLoadMore == true) {
-				$$('.infinite-scroll-preloader').remove();
-				$$('.partyHome'+i).append(template1(partyData));
+				if(data.hasSecondLevel == false){
+					console.log(data)
+					$$('.branchHome'+i).append(data.content.content);
+				}else{
+					console.log(data)
+					$$('.branchHome'+i).append(template1(data.content.content));
+				}
 			} else{
-				$$('.partyHome'+i).html(template1(partyData));
-				//$$('.party-list-type').scrollTop(5, 0, null);
-			}
-			if(data.length < 10 && pageNo[i] == 1){
-					$$('.infinite-scroll-preloader').remove();
+				if(data.hasSecondLevel == false){
+					console.log(paramCount);
+					if(i != 2 ){
+						
+						var divImg = "";
+						if(data.content.coverImg != null && data.content.coverImg != ""){
+							var coverImg = data.content.coverImg;
+							divImg = '<img src="'+  coverImg + '" alt="" style="max-width:100%" width="100%" height="100%"/>';
+						}
+						console.log(data)
+						$$('.branchHome'+i).html(divImg + data.content.content);
+					}else{
+						console.log(data)
+						$$('.branchHome'+i).html(data.content.content);
+					}
+					if(paramCount == 1){
+						console.log(paramCount)
+						var token = localStorage.getItem('access_token');
+						console.log(token)
+						// var headers = {
+						// 	Authorization: bearer+' ' +token
+						// };
+						// console.log(headers)
+						setTimeout(function(){
+							$$('.branchHome'+i).append(str1);
+							$.ajax({
+								url : findSysCityPath,
+								headers: {
+									Authorization: "bearer "+token
+								},
+								data : {
+									// level : 2,
+									// level : queryStr,
+									tenantId : app.tenantId
+								},
+								success : function(data) {
+									var data = data;
+
+									// var json = $.parseJSON(data);
+									if (data.msg=='success' && data.data != null) {
+										sysCity = data.data.sysCity;
+										mapBranch();
+									}else{
+										sysCity = '合浦县';
+										mapBranch();
+									}
+								},
+								error : function() {
+								}
+							});
+							clickEvent();
+						},500);
+						paramCount += 1;
+					}	
+				}else{
+					
+					$$.each(data.content,function(index, item){
+						item.createDate = app.getnowdata(item.createDate);
+						item.coverImg = app.filePath + item.coverImg;
+					})
+					console.log(data.content)
+					$$('.branchHome'+i).html(template1(data.content));
+				}
 			}
 			//点击文章事件
-			$$('.qs-party-card1').on('click', partyContentHandle);
-
-			//点击点赞
-//			$$('.partyLike').on('click', function(e) {
-//				var likeTotal = parseInt($$(this).find('.likeTotal').html());
-//				var articleId = $$(this).parent().data('id');
-//				var thisContent = this;
-//				partyLike(articleId, likeTotal, thisContent);
-//				e.stopPropagation();
-//			});
+			$$('.branchCard').on('click', partyContentHandle);
 			loading[i] = false;
 		} else {
 
@@ -717,14 +585,158 @@ define(['app',
 	//文章列表的点击事件
 	function partyContentHandle() {
 		var catalogId = $$(this).data('id');
-		var cId = $$(this).data('catalogId');
-		var isGood = $$(this).data('isgood');
-		if(isGood == undefined){
-			isGood = false;
-		}
-		console.log(cId)
-		app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + catalogId +'&isGood='+isGood+'&cId='+cId);
+		var title = $$(this).data('title');
+		var content = $$(this).data('content');
+		var createDate = $$(this).data('createDate');
+		
+		app.myApp.getCurrentView().loadPage('branchDetail.html?id=' + catalogId + '&content='+content+'&title='+title+'&createDate='+createDate);
 	}
+	
+	/*
+	 * 地图
+	 */
+	function mapBranch(){
+		// 百度地图API功能
+		var map = new BMap.Map("allmap");    // 创建Map实例
+		//map.centerAndZoom("合浦",15); // 设置地图显示的城市 
+		console.log(sysCity);
+		map.centerAndZoom(sysCity, 15); // 显示地图中心城市和地图等级
+		map.enableScrollWheelZoom(true);     // 开启鼠标滚轮缩放
+		var top_left_navigation = new BMap.NavigationControl();  //右下角，添加默认缩放平移控件
+		map.addControl(top_left_navigation); 
+		// 添加定位控件
+		var geolocationControl = new BMap.GeolocationControl({anchor: BMAP_ANCHOR_TOP_RIGHT});
+		geolocationControl.addEventListener("locationSuccess", function(e){
+		    // 移动至地图中心点
+		    getPosition();
+		    setTimeout(function(){
+		    	 map.centerAndZoom(new BMap.Point(lng, lat), 15);
+		    },500)
+		});
+		geolocationControl.addEventListener("locationError",function(e){
+		    // 定位失败事件
+		    //app.myapp.alert(e.message);
+		});
+		map.addControl(geolocationControl);    
+		var point, marker, label;
+		map.addEventListener("tilesloaded",function(){
+			map.clearOverlays();
+			if(firstIn == 1){
+				//单个支部位置信息
+				findLoc();
+				firstIn += 1;
+				setTimeout(function(){
+					point = new BMap.Point(lng,lat);
+					marker = new BMap.Marker(point);  // 创建标注
+//					console.log(lng);
+//					console.log(lat);
+					map.addOverlay(marker);              // 将标注添加到地图中
+					label = new BMap.Label(app.user.deptName,{offset:new BMap.Size(20,-10)});
+					marker.setLabel(label);
+				},200);
+			}else{
+				point = new BMap.Point(map.getCenter().lng, map.getCenter().lat);
+				lng = map.getCenter().lng;
+				lat = map.getCenter().lat;
+				marker = new BMap.Marker(point);  // 创建标注
+				map.addOverlay(marker);              // 将标注添加到地图中
+				label = new BMap.Label(app.user.deptName,{offset:new BMap.Size(20,-10)});
+				marker.setLabel(label);
+			}
+			GetAddress();
+		});
+	}
+	
+	
+	/**
+	 * 定位 
+	 */
+	function getPosition() {
+		app.myApp.showPreloader('定位中...');
+		//开启定位服务
+		if(navigator.geolocation) {
+			signStatus = 1;
+			navigator.geolocation.getCurrentPosition(onSuccessPosition, onErrorPosition, {
+//				timeout: 2000,
+				maximumAge: 3000,
+				timeout: 5000, 
+				enableHighAccuracy: true
+			});
+		}
+	}
+	function onErrorPosition(e) {
+		app.myApp.hidePreloader();
+		if(app.myApp.device.ios) {
+			app.myApp.alert('未开启"定位"权限<br />请前往手机"设置"->"隐私"->"定位服务"');
+		} else {
+			app.myApp.showPreloader('定位中...');
+			if(e.code == '3'){
+				signStatus = 2;
+				var map = new BMap.Map();
+				var point = new BMap.Point(116.331398,39.897445);
+				var geolocation = new BMap.Geolocation();
+				geolocation.getCurrentPosition(function(r){
+					if(this.getStatus() == BMAP_STATUS_SUCCESS){
+						app.myApp.alert('您的位置：'+r.point.lng+','+r.point.lat);
+						onSuccessPosition(r);
+					}
+					else {
+						app.myApp.alert('failed:'+this.getStatus());
+					}        
+			    },{enableHighAccuracy: true})
+			}else{
+				app.myApp.alert('请打开GPS定位');
+			}
+		}
+	}
+	function onSuccessPosition(position) {
+		app.myApp.hidePreloader();
+		if(signStatus == 1){
+			var _lng = position.coords.longitude;
+			var _lat = position.coords.latitude;
+		}else if(signStatus == 2){
+			var _lng = position.point.lng;
+			var _lat = position.point.lat ;
+		}
+		//拿到GPS坐标转换成百度坐标
+		app.ajaxLoadPageContent('https://api.map.baidu.com/ag/coord/convert', {
+			from: 0,
+			to: 4,
+			x: _lng,
+			y: _lat
+		}, function(data) {
+			lng = app.utils.base64decode(data.x);
+			lat = app.utils.base64decode(data.y);
+			GetAddress();
+		}, {
+			type: 'GET',
+		});
+	}
+	/*
+	 * 根据坐标获取中心点地址
+	 */
+	function GetAddress() {
+		var _SAMPLE_ADDRESS_POST = app.utils.getAddressPost();
+		_SAMPLE_ADDRESS_POST += "&location=" + lat + "," + lng;
+		app.ajaxLoadPageContent(_SAMPLE_ADDRESS_POST, {
+			
+		}, function(data) {
+			renderReverse(data);
+		}, {
+			type: 'GET',
+		});
+//		app.myApp.hidePreloader();
+	}
+
+	function renderReverse(response) {
+		if(response.status) {
+			
+		} else {
+			var userPosition = response.result.addressComponent.street + response.result.addressComponent.street_number;
+			addr = userPosition;
+			$$('#branchGPS').val(userPosition);
+		}
+	}	
 	
 	/**
 	 * 上下拉操作 
@@ -732,10 +744,8 @@ define(['app',
 	function pushAndPull(page) {
 		//下拉刷新	
 		var ptrContent={};
-		//$("tbody").on('click',"[name='submitbutton']",function(){....});
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			ptrContent[i] = $$(page.container).find('.pull-to-refresh-content.party-list-type'+i);
-			//console.log(ptrContent[i]);
+		for(var i=0;i<=pageDataStorage['branchListLength'];i++){
+			ptrContent[i] = $$(page.container).find('.pull-to-refresh-content.branch-list-type'+i);
 		}
 		$$.each(ptrContent, function(index, item) {
 			ptrContent[index].on('refresh', function(e) {
@@ -743,7 +753,7 @@ define(['app',
 					pageNo[index] = 1;
 					loading[index] = true;
 					//这里写请求
-					partyGetList(false,index);
+					partyGetList1(false,index);
 					app.myApp.pullToRefreshDone();
 				}, 500);
 			});	
@@ -751,15 +761,15 @@ define(['app',
 
 		//滚动加载
 		var loadMoreContent={};
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			loadMoreContent[i] = $$(page.container).find('.party-list-type'+i);
+		for(var i=0;i<=pageDataStorage['branchListLength'];i++){
+			loadMoreContent[i] = $$(page.container).find('.branch-list-type'+i);
 		}
 		$$.each(loadMoreContent, function(index, item) {
 			loadMoreContent[index].on('infinite', function() {
 				if(loading[index]) return;
 				loading[index] = true;
 				pageNo[index] += 1;
-				partyGetList(true,index);
+				partyGetList1(true,index);
 			});
 		});
 	}
@@ -773,9 +783,6 @@ define(['app',
 
 	return {
 		init: init,
-		colorConfirm: colorConfirm,
-		refreshHome: refreshHome,
-		iscrollTitle: iscrollTitle,
 		resetFirstIn: resetFirstIn,
 	}
 });

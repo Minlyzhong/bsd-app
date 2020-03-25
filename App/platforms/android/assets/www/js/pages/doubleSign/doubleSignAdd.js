@@ -6,26 +6,13 @@ define(['app'], function(app) {
 	var loading = true;
 	//保存双签到信息
 	var saveUserReportDetialPath = app.basePath + '/mobile/dbSign';
-	var assessId = -1;
-	var assessScore = 0;
 	var count = 0;
-	var typeVal = 0;
+	var chooseLogType = 0;
 	var thisAppName = '';
-
-	
-	var judgmentParam = 0;
-	
 	var minDate = '';
 	//地理位置
 	var lng;
 	var lat;
-	var topicId;
-	var shykScore;
-	var thisAppName;
-	var deptId;
-	var target;
-	var	minus;
-	var	memo;
 	var peopleDetail = {};
 	/**
 	 * 页面初始化 
@@ -58,15 +45,13 @@ define(['app'], function(app) {
 		photoBrowserPhotos = [];
 		lng = 0.0;
 		lat = 0.0;
-		typeVal = 0;
-		assessId = pageData.assessId;
+		chooseLogType = 0;
 		srcName = [];
 		suffixName = [];
 		fileNames = [];
 		fileCount = 0;
 		thisAppName = pageData.thisAppName;
 		peopleDetail = {};
-		minDate = pageData.StartDate
 	}
 
 	/**
@@ -90,19 +75,24 @@ define(['app'], function(app) {
 			});
 		});
 		$$('#signType').change(function() {
-			typeVal = $$('#signType').val();
+			var typeVal = $$('#signType').val();
+			if(chooseLogType != typeVal) {
+				chooseLogType = typeVal;
+				$$('#needSign').val("");
+				peopleDetail = {};
+				app.myApp.alert('温馨提示<br />更换"签到类型"，会清空"签字人"内容');
+			}
 			console.log(typeVal);
 		});
 		//点击签字人添加
 		$$('.addneedSign').on('click',function(){
 			//跳转人员选择
-			app.myApp.getCurrentView().loadPage('showNeedSign.html?&state='+typeVal);
+			app.myApp.getCurrentView().loadPage('showNeedSign.html?&state='+chooseLogType);
 		});
 		//点击签字人移除
 		$$('.removeneedSign').on('click',function(){
 			//清空签字人
-			hostMan=[];
-			peopleDetail={};
+			peopleDetail = {};
 			$$('#needSign').val('');
 //				getAbsenteesBack();
 		});
@@ -117,8 +107,7 @@ define(['app'], function(app) {
 	}
 	//初始化日历
 	function addCalendar(contentID) {
-		//var minDate = '2018-04-01';
-		console.log(minDate);
+		
 		calID = app.myApp.calendar({
 			input: '#' + contentID,
 			toolbarCloseText: '完成',
@@ -164,59 +153,59 @@ define(['app'], function(app) {
 			$$('.sumbit').attr('disabled',false);
 		}
 		app.myApp.showPreloader('信息保存中...');
-
-		var params={
+		// "type": 0, 正常, 1 请假
+		var params = {
 			contentTitle: assessTitle,
 			deptId: app.user.deptId,
 			deptName: app.userDetail.deptName,
 			jobContent: assessContent,
 			// modifier: app.user.nickName,
 			name: app.user.nickName,
-			tenantId: app.tenantId,
+			// tenantId: app.tenantId,
 			people: peopleDetail,
 			userId: app.user.userId,
 			weather: weather,
 			week: signweek,
 			workingAddress: location,
-			type :typeVal
+			type :chooseLogType
 		}
 
 		console.log(params)
 		var formDatas= JSON.stringify(params)
-		// $$.ajax({
-        //     url:saveUserReportDetialPath,
-        //     method: 'POST',
-        //     dataType: 'json',
-		// 	contentType: 'application/json;charset:utf-8',
-        //     data: formDatas,
-        //     cache: false,
-        //     success:function (data) {
-		// 		if(data.code == 0 && data.data == true){
-		// 			console.log(data);
-		// 			app.myApp.hidePreloader();
-		// 			app.myApp.toast('保存成功', 'success').show(true);
-		// 			$$('.sumbit').html('已保存');
+		$$.ajax({
+            url:saveUserReportDetialPath,
+            method: 'POST',
+            dataType: 'json',
+			contentType: 'application/json;charset:utf-8',
+            data: formDatas,
+            cache: false,
+            success:function (data) {
+				if(data.code == 0 && data.data == true){
+					console.log(data);
+					app.myApp.hidePreloader();
+					app.myApp.toast('保存成功', 'success').show(true);
+					$$('.sumbit').html('已保存');
 					
-		// 		// 	require(['js/pages/doubleSign/doubleSign'], function(doubleSign) {
-		// 		// 		doubleSign.refresh();
-		// 		// 	});
+					require(['js/pages/doubleSign/doubleSign'], function(doubleSign) {
+						doubleSign.refresh();
+					});
 			
-		// 		
-			
-		// 		app.myApp.getCurrentView().back();
-			
-		// 		}else{
-				// app.myApp.hidePreloader();
-		// 			app.myApp.toast(data.msg , 'error').show(true);
-		// 		}
 				
 			
-		// },
-        //     error:function () {
-		// 		app.myApp.hidePreloader();
-		// 		app.myApp.alert(app.utils.callbackAjaxError());
-        //     }
-        // });
+				app.myApp.getCurrentView().back();
+			
+				}else{
+				app.myApp.hidePreloader();
+					app.myApp.toast(data.msg , 'error').show(true);
+				}
+				
+			
+		},
+            error:function () {
+				app.myApp.hidePreloader();
+				app.myApp.alert(app.utils.callbackAjaxError());
+            }
+        });
 
 
 
@@ -323,7 +312,7 @@ define(['app'], function(app) {
 	 * 选择主持人的信息显示回调
 	 */
 	function addSignInfoBack() {
-		console.log(needSignInfo);
+		console.log(peopleDetail);
 		if(peopleDetail) {
 				$$('#needSign').val(peopleDetail.name);
 		}else{

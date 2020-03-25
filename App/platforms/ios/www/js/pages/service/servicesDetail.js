@@ -4,12 +4,16 @@ define(['app'], function(app) {
 	var pageDataStorage = {};
 	var pageNo = 1;
 	var loading = true;
-	var findServicePath = app.basePath + '/extVoluntaryService/findVoluntaryService';
-	var checkPath = app.basePath + '/extVoluntaryService/isCheckRegiest';
-	var sponsorPath = app.basePath + '/extVoluntaryService/isSponsor';
-	var regiestPath = app.basePath + '/extVoluntaryService/regiest';
-	
-	var searchVolunteerPath = app.basePath + 'extVoluntaryService/searchVolunteer';
+	// 获取志愿者服务内容
+	var findServicePath = app.basePath + '/mobile/volunteer/detail/';
+	// 查询是否报名
+	var checkPath = app.basePath + '/mobile/volunteer/check/';
+	// 检查是否是召集人
+	var sponsorPath = app.basePath + '/mobile/volunteer/check/duty/';
+	// 报名志愿者服务
+	var regiestPath = app.basePath + '/mobile/volunteer/regiest/';
+	// 查看报名人
+	var searchVolunteerPath = app.basePath + '/mobile/volunteer/members/';
 	var sid = 0;
 
 	/**
@@ -78,20 +82,20 @@ define(['app'], function(app) {
 	 * 获取活动详情 
 	 */
 	function loadServiceState() {
-		app.ajaxLoadPageContent(findServicePath, {
-			serviceId: sid
+		app.ajaxLoadPageContent(findServicePath+sid, {
+			// serviceId: sid
 		}, function(data) {
 			console.log(data);
-			pageDataStorage['serviceState'] = data;
-			handleServiceState(data);
+			pageDataStorage['serviceState'] = data.data;
+			handleServiceState(data.data);
 		});
 	}
 	/**
 	 * 报名人数
 	 */
 	function loadServicePeople() {
-		app.ajaxLoadPageContent(searchVolunteerPath, {
-			serviceId: sid
+		app.ajaxLoadPageContent(searchVolunteerPath+sid, {
+			// serviceId: sid
 		}, function(data) {
 			console.log(data);
 			$$('.qs_serviceNumberOfApplicants').html('');
@@ -104,7 +108,7 @@ define(['app'], function(app) {
 				}
 				
 			});
-			$$('.qs_serviceNumberOfApplicants').append('（'+data.total+'人）');
+			$$('.qs_serviceNumberOfApplicants').append('（'+data.data.length+'人）');
 		});
 	}
 
@@ -113,55 +117,62 @@ define(['app'], function(app) {
 	 */
 	function handleServiceState(data) {
 		if(data) {
+			var serviTime = app.getnowdata(data.serviceTime)
+			var endTime = app.getnowdata(data.registEndtime)
 			$$('.qs_sTitle').html(data.serviceTitle);
 			$$('.qs_address').html(data.servicePlace);
-			$$('.qs_cTime').html(data.serviceTime);
+			$$('.qs_cTime').html(serviTime);
 			$$('.qs_creatorName').html(data.creatorName);
 			$$('.qs_creatorPhone').html(data.creatorPhone);
 			$$('.qs_totalUser').html(data.totalUser + '(人)');
 			$$('.qs_content').html(data.serviceContent);
-			$$('.qs_eTime').html(data.regiestEndtime);
+			$$('.qs_eTime').html(endTime);
 			$$('.qs_serviceArticle').html(data.serviceArticle);
-			
+			console.log(data.auditStatus)
 			//判断服务的状态
-			switch(data.state) {
+			switch(data.auditStatus) {
 				case -3:
 				case -2:
 				case -1:
+						case 0:	
+						$$('.s_bottom_btn').hide();
+							break;
 				case 1:
-				case 4:
-					$$('.s_bottom_btn').hide();
-					break;
-				case 2:
-				case 3:
-					{
-						//查看自己是否已经报名
-						app.ajaxLoadPageContent(checkPath, {
-							serviceId: sid,
-							userId: app.userId
-						}, function(data) {
-							if(data) {
-								if(data.success) {
-									$$('.s_bottom_btn').hide();
-								} else {
-									$$('.s_bottom_btn').data('stype', 1);
-									$$('.s_bottom_btn').show();
+						{
+							//查看自己是否已经报名
+							app.ajaxLoadPageContent(checkPath+sid, {
+								// serviceId: sid,
+								// userId: app.userId
+							}, function(data) {
+								if(data) {
+									if(data.data == true) {
+										$$('.s_bottom_btn').hide();
+									} else {
+										$$('.s_bottom_btn').data('stype', 1);
+										$$('.s_bottom_btn').show();
+									}
 								}
-							}
-						});
-					}
+							});
+						}
+		
+						break;
+				case 2:
+						$$('.s_bottom_btn').hide();
 					break;
-				case 5:
+				case 3:
+						$$('.s_bottom_btn').hide();
+					break;	
+				case 4:
 					{
 						//活动截至 判断当前用户是否是召集人
 						//如果是召集人则可以参与打分
 						//检查是否是召集人
-						app.ajaxLoadPageContent(sponsorPath, {
-							serviceId: sid,
+						app.ajaxLoadPageContent(sponsorPath+sid, {
+							// serviceId: sid,
 							userId: app.userId
 						}, function(data) {
 							console.log(data);
-							if(data.success) {
+							if(data.msg == 'success') {
 								$$('.s_bottom_btn').data('stype', 2);
 								$$('.s_bottom_btn').html('活动打分');
 								$$('.s_bottom_btn').show();
@@ -169,14 +180,18 @@ define(['app'], function(app) {
 						});
 						break;
 					}
-					break;
+					break;	
+				case 5:
+						{
+							$$('.s_bottom_btn').html('查看服务打分');
+							$$('.s_bottom_btn').data('stype', 3);
+							$$('.s_bottom_btn').show();
+						}
+						break;
+				case 5:
+					
 				case 6:
-					{
-						$$('.s_bottom_btn').html('查看服务打分');
-						$$('.s_bottom_btn').data('stype', 3);
-						$$('.s_bottom_btn').show();
-					}
-					break;
+					
 			}
 
 		} else {
@@ -188,20 +203,25 @@ define(['app'], function(app) {
 	 * 报名参加活动
 	 */
 	function joinService() {
-		app.ajaxLoadPageContent(regiestPath, {
-			serviceId: sid,
-			userId: app.userId
+		app.ajaxLoadPageContent(regiestPath+sid, {
+			// serviceId: sid,
+			// userId: app.userId
 		}, function(data) {
-			if(data.success) {
+			if(data.data == true) {
 				app.myApp.alert('报名成功!');
 				$$('.s_bottom_btn').hide();
 				setTimeout(function(){
 					loadServiceState();
 					loadServicePeople();
 				},200);
-			} else {
-				app.myApp.alert('报名失败!');
+			} else if(data.msg == "the service join members is full."){
+				app.myApp.toast('报名名额已满!','error').show(true);
+			}else{
+				app.myApp.toast('报名失败!','error').show(true);
+				// app.myApp.alert('报名失败!');
 			}
+		},{
+			type:'POST'
 		});
 	}
 

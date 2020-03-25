@@ -5,11 +5,11 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	//获取考核内容
-	var findDetailInfoPath = app.basePath + 'knowledgeTestpaper/findDetailInfo';
+	var findDetailInfoPath = app.basePath + '/mobile/partyAm/findDetailInfo';
 	//保存考核明细
-	var saveUserReportDetialPath = app.basePath + 'knowledgeTestpaper/saveUserReportDetial';
+	var saveUserReportDetialPath = app.basePath + '/mobile/partySpecialResult/savePartySpecialResult';
 	//上传附件
-	var uploadReportDetialPhotoPath = app.basePath + 'upload/uploadReportDetialPhoto';
+	var uploadReportDetialPhotoPath = app.basePath + '/file/upload';
 	var assessId = -1;
 	var photoBrowserPhotos = [];
 	var photoBrowserPopup = '';
@@ -17,6 +17,10 @@ define(['app'], function(app) {
 	var photoDatas = [];
 	var reWork = 0;
 	var deptName = '';
+	var imageList = [];
+	var fileList = [];
+	var resultData={};
+	var khType = 0;
 
 	/**
 	 * 页面初始化 
@@ -30,6 +34,7 @@ define(['app'], function(app) {
 //		}
 		app.back2Home();
 		attrDefine(page);
+		console.log(page.query);
 	}
 
 	/**
@@ -45,7 +50,18 @@ define(['app'], function(app) {
 		photoBrowserPopup = '';
 		assessId = pageData.assessId;
 		readonlyPicCount = 0;
+		
+		imageList = [];
+		fileList = [];
+		resultData={};
+		khType = 0;
+		console.log(pageData);
+		if(pageData.khType){
+			khType = pageData.khType;
+		}
+
 		findDetailInfo();
+
 	}
 	
 	/**
@@ -59,9 +75,9 @@ define(['app'], function(app) {
 	 * 属性定义（不传参，使用模块变量）
 	 */
 	function attrDefine(page) {
-		$$('.rankAssessTitle').html(page.query.title + '<span style="margin-left: 10px;color: #ED4C3C;">' + page.query.score + '</span>');
+		
 		$$('#assessTitle').val(page.query.name);
-		$$('#assessName').val(page.query.userName);
+		// $$('#assessName').val(page.query.userName);
 		if(page.query.reportState == -1) {
 			reWork = 1;
 			$$('.refuseContent').append(page.query.memo);
@@ -82,6 +98,8 @@ define(['app'], function(app) {
 		}
 		console.log(page.query);
 		deptName = page.query.deptName;
+		
+		
 	}
 	
 	/**
@@ -100,21 +118,24 @@ define(['app'], function(app) {
 					app.myApp.alert("该功能只能在移动app中使用！");
 					return;
 				}
-				window.imagePicker.getPictures(
-					function(picURLList) {
-						if(picURLList) {
-							showPhotos(picURLList);
+				var permissions = cordova.plugins.permissions;
+				permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, function(){
+					window.imagePicker.getPictures(
+						function(picURLList) {
+							if(picURLList) {
+								showPhotos(picURLList);
+							}
+						},
+						function(error) {
+							console.log('从相册获取失败' + message);
+						}, {
+							maximumImagesCount: 9,
+							width: 800,
+							height: 800,
+							quality: 60,
 						}
-					},
-					function(error) {
-						console.log('从相册获取失败' + message);
-					}, {
-						maximumImagesCount: 9,
-						width: 800,
-						height: 800,
-						quality: 60,
-					}
-				);
+					);
+				});
 			}
 		}, {
 			text: '拍照',
@@ -162,6 +183,7 @@ define(['app'], function(app) {
 				.then(function(results) {
 					var base64Data = results.base64;
 					photoDatas.push(base64Data);
+					uploadReportDetialPhoto(base64Data)
 				})
 				.catch(function(err) {
 					// 捕捉错误信息
@@ -186,6 +208,7 @@ define(['app'], function(app) {
 					photoContainer.remove();
 					photoBrowserPhotos.splice(piciIndex - 2, 1);
 					photoDatas.splice(piciIndex - 2 - readonlyPicCount, 1);
+					imageList.splice(piciIndex - 2 - readonlyPicCount, 1);
 					app.myApp.toast('删除成功', 'success').show(true);
 				});
 			});
@@ -208,16 +231,32 @@ define(['app'], function(app) {
 	 * 获取考核内容
 	 */
 	function findDetailInfo() {
+
+		if(khType == 1){
+			findDetailInfoPath = app.basePath+'/mobile/partyAm/findMeetDetail';
+		}else if(khType == 2){
+			findDetailInfoPath = app.basePath+'/mobile/partyAm/findALeadertMeetDetail';
+		}else{
+			findDetailInfoPath = app.basePath + '/mobile/partyAm/findDetailInfo';
+		}
 		app.ajaxLoadPageContent(findDetailInfoPath, {
 			fkId: assessId,
-		}, function(data) {
-			console.log(data);
-			console.log(data.data[0]);
-			$$('#assessTs').val(data.data[0].reportTs);
-			$$('#assessContent').val(data.data[0].contents);
-			$$('#assessdeptName').val(deptName);
-			readonlyPicCount = data.data[1].length || 0;
-			showReadonlyPhotos(data.data[1]);
+		} , function(data) {
+			resultData = data.data;
+			$$('#assessTs').val(data.data.reportTime);
+			$$('#assessContent').val(data.data.reportContext);
+			$$('#assessdeptName').val(resultData.deptName);
+			$$('#assessName').val(resultData.name);
+			if(resultData.totalScore > 0){
+				resultData.totalScore = '+'+resultData.totalScore
+			}
+			$$('.rankAssessTitle').html(resultData.topicTitle + '<span style="margin-left: 10px;color: #ED4C3C;">' +resultData.totalScore + '</span>');
+			readonlyPicCount = data.data.images.length || 0;
+//			console.log(data.data[2]);
+			imageList = data.data.images || [];
+			fileList = data.data.images || [];
+			showReadonlyPhotos(data.data.images);
+			showAndDownLoadFiles(data.data.file);
 		});
 	}
 
@@ -232,29 +271,47 @@ define(['app'], function(app) {
 			app.myApp.alert('请补全考核信息！');
 			return;
 		}
-		app.ajaxLoadPageContent(saveUserReportDetialPath, {
-			id: assessId,
-			topicId: 0,
-			reportTitle: assessTitle,
-			reportTime: assessTs,
-			reportContext: assessContent,
-			reportUserId: app.userId,
-			reportState: 0,
-			score: 0
-		}, function(data) {
-			var detailID = assessId;
-			if(detailID) {
-				if(photoDatas && photoDatas.length > 0) {
-					uploadReportDetialPhoto(photoDatas, detailID);
-				} else {
+
+		var params={
+			"deptId": resultData.deptId,
+			"deptName": resultData.deptName,
+			"file": fileList,
+			"id": assessId,
+			"images": imageList,
+			"name": resultData.name,
+			"reduceScore": resultData.reduceScore,
+			"reportContext": assessContent,
+			"reportState": resultData.reportState,
+			"reportTime": assessTs,
+			"reportTitle": assessTitle,
+			"reportUserId": app.userId,
+			"score": resultData.score,
+			"tenantId": resultData.tenantId,
+			"topicId": resultData.topicId,
+			"topicTitle": resultData.topicTitle,
+			"totalScore": resultData.totalScore,
+			"type": resultData.type,
+			"userScore": resultData.userScore
+		}
+		var formDatas= JSON.stringify(params)
+		$$.ajax({
+            url:saveUserReportDetialPath,
+            method: 'POST',
+            dataType: 'json',
+			contentType: 'application/json;charset:utf-8',
+            data: formDatas,
+            cache: false,
+            success:function (data) {
 					app.myApp.toast('保存成功', 'success').show(true);
 					$$('.rankSumbit').html('已保存');
 					app.myApp.getCurrentView().back();
-				}
-			} else {
+		
+			},
+            error:function () {
 				app.myApp.alert(app.utils.callbackAjaxError());
-			}
-		});
+            }
+        });
+	
 	}
 
 	/**
@@ -262,30 +319,40 @@ define(['app'], function(app) {
 	 * @param {Object} photoDatas 相片数组
 	 * @param {Object} detailID  考核明细ID
 	 */
-	function uploadReportDetialPhoto(photoDatas, detailID) {
+	function uploadReportDetialPhoto(photo) {
+		app.myApp.showPreloader('图片保存中...');
 		var sum = 0;
 		var ft = new FileTransfer();
-		$$.each(photoDatas, function(index, item) {
 			var uri = encodeURI(uploadReportDetialPhotoPath);
 			var options = new FileUploadOptions();
 			options.fileKey = "file";
 			options.fileName = app.utils.generateGUID() + ".png";
 			options.mimeType = "image/jpeg";
 			options.chunkedMode = false;
-			var params = {};
-			params.fkId = detailID;
-			params.userId = app.userId;
-			options.params = params;
-
-			ft.upload(item, uri, function(r) {
+			options.headers = {
+				'Authorization': "bearer " + app.access_token
+			}
+			var params = {
+				"attName": "",
+				"attPath": "",
+				"attSize": 0,
+				"attState": 0,
+				"attType": 1,
+				"tenantId": app.userDetail.tenantId,
+				"userId": app.user.userId
+			}
+			// options.params = params
+			app.myApp.hidePreloader();
+			ft.upload(photo, uri, function(r) {
 				var data = JSON.parse(r.response);
-				sum++;
-				if(data.success === true) {
-					if(sum == photoDatas.length) {
-						app.myApp.toast("保存成功！", 'success').show(true);
-						$$('.rankSumbit').html('已保存');
-						app.myApp.getCurrentView().back();
-					}
+				// sum++;
+				if(data.code === 0) {
+					var result = data.data;
+					params.attName = result.name;
+					params.attPath = result.filePath;
+					params.attSize = result.length;
+                    imageList.push(result.filePath);
+                    
 				} else {
 					ft.abort();
 					app.myApp.alert(app.utils.callbackAjaxError());
@@ -296,7 +363,7 @@ define(['app'], function(app) {
 				app.myApp.alert(app.utils.callbackAjaxError() + '图片');
 				return;
 			}, options);
-		});
+		
 	}
 
 	/**
@@ -305,14 +372,15 @@ define(['app'], function(app) {
 	 */
 	function showReadonlyPhotos(picUrlList) {
 		$$.each(picUrlList, function(index, item) {
-			photoBrowserPhotos.push(app.basePath + item);
+			photoBrowserPhotos.push(app.filePath + item.filePath);
 			var random = app.utils.generateGUID();
 			$$('.weui_uploader').append(
 				'<div class="weui_uploader_bd kpiPicture">' +
 				'<div class="picContainer" id="img_' + random + '">' +
-				'<img src="' + app.basePath + item + '" class="picSize" />' +
+				'<img src="' + app.filePath + item.filePath + '" class="picSize" />' +
 				'</div>' +
 				'</div>');
+		
 			$$('#img_' + random).on('click', function(e) {
 				var picIndex = $$(this).parent().index();
 				photoBrowserPopup = app.myApp.photoBrowser({
@@ -325,6 +393,58 @@ define(['app'], function(app) {
 				photoBrowserPopup.open(picIndex - 1 - reWork);
 			});
 		});
+	}
+	
+	/**
+	 * 显示文件
+	 * @param {Object} fileUrlList 需要显示的图片数组
+	 */
+	function showAndDownLoadFiles(fileUrlList) {
+		$$.each(fileUrlList, function(index, item) {
+			var random = app.utils.generateGUID();
+			var str = '';
+			var fileName=[];
+			fileName = item.name.split('/');
+			var typeFiles=[];
+			var typeFile = '';
+			typeFiles = item.filePath.split('.');
+			typeFile = typeFiles.pop();
+			console.log(typeFile);
+			if(typeFile == 'txt'){
+				str +='<img src="img/file/txt.png" class="fileSize" />';
+			}else if(typeFile == 'doc'){
+				str +='<img src="img/file/doc.png" class="fileSize" />';
+			}else if(typeFile == 'docx'){
+				str +='<img src="img/file/doc.png" class="fileSize" />';
+			}else if(typeFile == 'zip'){
+				str +='<img src="img/file/zip.png" class="fileSize" />';
+			}else if(typeFile == 'xls'){
+				str +='<img src="img/file/xls.png" class="fileSize" />';
+			}else if(typeFile == 'rar'){
+				str +='<img src="img/file/zip.png" class="fileSize" />';
+			}else if(typeFile == 'pdf'){
+				str +='<img src="img/file/pdf.png" class="fileSize" />';
+			}else if(typeFile == 'ppt'){
+				str +='<img src="img/file/ppt.png" class="fileSize" />';
+			}
+			//item-title kp-label
+			$$('.weui_uploader1').append(
+				'<div class="downloadFiles">'+
+				str+
+				'<input type="hidden" value="'+item.filePath+'" name="fileUrl"/>'+
+				'<a href="javascript:void(0)">'+
+//				fileName.pop()+
+				item.name+
+				'</a>'+
+				'<div>');
+		});
+		$$('.downloadFiles').on('click',function(){
+			var downUrl = $(this).find('input[name=fileUrl]').val();
+			app.myApp.confirm('确定要下载吗？', function() {
+				open(app.filePath+downUrl, '_system');	
+			});
+		})
+		
 	}
 
 	/**

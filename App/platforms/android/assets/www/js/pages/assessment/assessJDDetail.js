@@ -91,6 +91,7 @@ define(['app',
 				item.topicTitle = title;
 				item.isUserName = 1;
 				item.userName = item.name;
+				item.reportTime = item.reportTime.split(' ')[0];
 			});
 			queryData = data;
 			handleData(data, isLoadMore);

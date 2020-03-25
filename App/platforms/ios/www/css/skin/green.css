@@ -87,3 +87,20 @@
 	background:#00BA98;
 	color: #fff;
 }
+.recordBtnRow .button.active {
+	background: #00BA98;
+	color: #fff;
+	
+	height: 27px;
+	border: 1px solid #00BA98;
+}
+
+.recordBtnRow .button {
+	border: 1px solid #00BA98;
+	color: #00BA98;
+	height: 27px;
+	background: #fff;
+}
+.threeMeetingsAndOneClassPaperDetailSearchBarD, .shykuduSearchBar, .rankDeptSearchBar, .threePlusXStatisticsSearchBar, .threeMeetingsAndOneClassPaperDetailSearchBar, .assessmentResultPaperDetailSearchBar, .threeMeetingsAndOneClassSearchBar, .assessSearchBar, .assessPCSearchBar, .evaSearchBar, .evaLSearchBar, .userRankSearchBar, .payPeopleSearchBar, .payShowPeopleSearchBar, .contactsShowPeopleSearchBar, .contactsPeopleSearchBar{
+	background:#00BA98;
+}

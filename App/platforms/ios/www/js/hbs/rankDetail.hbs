@@ -1,9 +1,9 @@
 {{#.}}
 	<li>
-		<a data-id={{id}} data-memo="{{memo}}" data-reportState="{{reportState}}" data-userName="{{userName}}" class="item-link item-content rankDetail-content">
+		<a data-id={{id}} data-memo="{{memo}}" data-reportState="{{reportState}}" data-khType="{{khType}}" data-userName="{{userName}}" class="item-link item-content rankDetail-content">
 			<div class="item-inner">
-				<div class="userInfo-row item-subtitle" style="font-size: 14px;padding-top: 5px;">
-					<div class="color-gray" style="font-size: 13px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+				<div class="userInfo-row item-subtitle" style="font-size: 14px;padding-top: 5px;padding-bottom: 5px;">
+					<div class="color-gray ranktitle" style="">
 						{{#compare isUserName '==' 1}}
 						<span class="discussName">填报人：{{userName}}</span>
 						{{else}}
@@ -11,7 +11,12 @@
 						{{/compare}}
 					</div>
 					<div class="color-gray" style="font-size: 13px;">
+						{{#compare reportTime '!=' ''}}
+						<span class="discussName">{{reportTime}}</span>
+						{{else}}
 						<span class="discussName">{{reportTs}}</span>
+						{{/compare}}
+						
 					</div>
 				</div>
 				<div style="margin-top: 10px;font-size: 15px;">

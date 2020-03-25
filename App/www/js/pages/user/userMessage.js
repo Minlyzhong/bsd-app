@@ -67,7 +67,7 @@ define(['app'], function(app) {
 					if(data.code == 0){
 						$$('#chatArea').val('');
 							// app.myApp.alert('您的留言已成功发送，感谢您的支持！<br />我们会第一时间把回复反馈给您！');
-							app.myApp.toast("您的留言已成功发送，感谢您的支持！<br />我们会第一时间把回复反馈给您！", 'success').show(true);
+							app.myApp.toast("成功发送，感谢您的支持！", 'success').show(true);
 							app.myApp.getCurrentView().back();
 							// app.myApp.
 					}else{

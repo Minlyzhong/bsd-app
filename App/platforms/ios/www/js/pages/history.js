@@ -2,10 +2,10 @@ define(['app','hbs!js/hbs/history'], function(app,historyTemplate) {
 	var $$ = Dom7;
 	var firstIn = 1;
 	//查找用户所参加的会议列表接口
-	var findMeetingNoticePath = app.basePath + 'meetingNotice/findMeetingNoticeByUserId';
+	var findMeetingNoticePath = app.basePath + '/mobile/meeting/list';
 	
-	//修改信息状态接口：
-	var modifyMeetingActorStatePath = app.basePath + 'meetingNotice/modifyMeetingActorState';
+	//修改信息状态接口(删除)：
+	var modifyMeetingActorStatePath = app.basePath + '/mobile/meeting/';
 	
 	/**
 	 * 页面初始化 
@@ -30,6 +30,7 @@ define(['app','hbs!js/hbs/history'], function(app,historyTemplate) {
 			userId:app.userId,
 		}, function(data) {
 			console.log(data);
+			var data = data.data.records;
 			$$('.historyList').append(historyTemplate(data));
 			$$('.hL').on('click',function(){
 				var meetingId = $$(this).data('mid');
@@ -43,12 +44,14 @@ define(['app','hbs!js/hbs/history'], function(app,historyTemplate) {
 	}
 	//修改信息状态接口
 	function modifyMeetingActorState(meetingId){
-		app.ajaxLoadPageContent(modifyMeetingActorStatePath, {
-			userId:app.userId,
-			meetingId:meetingId
+		app.ajaxLoadPageContent(modifyMeetingActorStatePath+meetingId, {
+			// userId:app.userId,
+			// meetingId:meetingId
 		}, function(data) {
 			console.log(data);
 			findMeetingNotice();
+		},{
+			type:'DELETE'
 		});
 	}
 	

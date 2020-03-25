@@ -1,0 +1,30 @@
+{{#.}}
+    <li class="accordion-item building_{{id}}" data-id="{{id}}">
+      <a href="#" class="item-content item-link" data-id="{{id}}" data-placeName="{{positionName}}">
+        <div class="item-inner">
+          
+          <div class="item-title" style="text-align: left;">{{positionName}}</div>
+          <div class="item-title" style="text-align: left;">{{cnt}}({{unit}})</div>
+          <img class="addBuildingImg"  data-id="{{id}}" data-placeName="{{positionName}}" src="img/newIcon/addBuilding.png" alt="" style="width: 22px;">
+        </div>
+      </a>
+      <div class="accordion-item-content" style="">
+        <div class="content-block buildingPicShow">
+          
+          <div class="weui_cells weui_cells_form">
+            <div class="weui_cell uploadCell">
+              <div class="weui_cell_bd weui_cell_primary">
+                <div class="weui_uploader buildingPic_{{id}}">
+                  <div class="weui_uploader_hd weui_cell">
+                    <div class="weui_cell_bd weui_cell_primary noPic_{{id}}" style="height: 88px;
+    text-align: center; ">该资源还没有上传图片</div>
+                    <div class="weui_cell_ft"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+{{/.}}

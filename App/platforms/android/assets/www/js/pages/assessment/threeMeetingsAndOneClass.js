@@ -111,8 +111,17 @@ define(['app',
 	 * 查询3+x未读的日志数量
 	 */
 	function findShykReadRows(data) {
+		
+		var myDate = new Date();
+		
+		var month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
+		startDate = myDate.getFullYear()+'-'+ month +'-01';
+		endDate =myDate.getFullYear()+'-'+ month+'-31';
+		
 		app.ajaxLoadPageContent(findShykUnReadPath, {
-			khpl:data
+			khpl:data,
+			startDate:startDate,
+			endDate:endDate,
 		}, function(result) {
 			if(result.code == 0){
 				shykReadRows = result.data;

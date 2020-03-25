@@ -6,9 +6,9 @@ define(['app',
 		var firstIn = 1;
 		var pageDataStorage = {};
 		//获取党支部未完成的三会一课
-		var getTopicCompletedOrNotPath = app.basePath + 'statHelper/getTopicCompletedOrNot';
+		var getTopicCompletedOrNotPath = app.basePath + '/mobile/partyAm/getTopicCompletedOrNot';
 		//获取年份
-		var getYearsPath = app.basePath + 'knowledgeTopic/getYears';
+		var getYearsPath = app.basePath + '/mobile/partyAm/getYears';
 		var oldContent = '';
 		var pageNo = 1;
 		var loading = true;
@@ -28,6 +28,7 @@ define(['app',
 		var thisAppName = ''
 		var deptId = 0;
 		var branchName = '';
+		var khpl;
 		/**
 		 * 页面初始化 
 		 * @param {Object} page 页面内容
@@ -66,7 +67,15 @@ define(['app',
 			topicId = pageData.topicId;
 			type = pageData.type;
 			branchName = pageData.branchName;
-			$$('.shykUDcenter').html('('+branchName+')3+X未参与清单');
+			$$('.shykUDcenter').html('('+branchName+')三会一课未参与清单');
+
+			if(type == 0){
+				// 查未完成的三会一课
+				 getTopicCompletedOrNotPath = app.basePath + '/mobile/partyAm/getTopicCompletedOrNot';
+			}else{
+				// 已完成的三会一课
+				getTopicCompletedOrNotPath = app.basePath + '/mobile/partyAm/getTopicCompleted';
+			}
 			if(pageData.deptId != undefined){
 				deptId = pageData.deptId;
 			}
@@ -75,6 +84,9 @@ define(['app',
 			}
 			if(pageData.startTime != undefined){
 				endDate = pageData.endTime;
+			}
+			if(pageData.khpl != undefined){
+				khpl = pageData.khpl;
 			}
 			console.log(type);
 			thisAppName = pageData.appName;
@@ -160,10 +172,15 @@ define(['app',
 			var pickerDescribe1;
 			app.ajaxLoadPageContent1(getYearsPath,{
 			},function(data){
-				console.log(data);
-				result = data;
-				$$.each(data, function(index, item) {
-						result[index] = item.text.toString()+'年';
+				result = data.data;
+				if(result == null){
+					var nowDate = new Date();
+					var nowYear = nowDate.getFullYear();
+					result =[nowYear+'年']
+					
+				}
+				$$.each(data.data, function(index, item) {
+						result[index] = item.toString()+'年';
 				});
 				console.log(result);
 				pickerDescribe = app.myApp.picker({
@@ -175,7 +192,7 @@ define(['app',
 				            values:(result)
 				        },
 				        {
-				            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+				            values: ( '01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 				        },
 				    ]
 				});
@@ -188,7 +205,7 @@ define(['app',
 				            values:(result)
 				        },
 				        {
-				            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+				            values: ( '01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 				        },
 				    ]
 				});
@@ -200,12 +217,12 @@ define(['app',
 				$$('.picker-3d .close-picker').css('margin-right','20px');
 				year = pickerDescribe.value[0].substring(0,pickerDescribe.value[0].length-1);
 				month = pickerDescribe.value[1].substring(0,pickerDescribe.value[1].length-1);
-				searchStartDate = year+'-'+month+'-1';
+				searchStartDate = year+'-'+month+'-01';
 				$$('.picker-3d .close-picker').on('click',function(){
 					year = pickerDescribe.value[0].substring(0,pickerDescribe.value[0].length-1);
 					month = pickerDescribe.value[1].substring(0,pickerDescribe.value[1].length-1);
 					$("#threeMeetingsAndOneClassPaperDetailStartTime").val(year+'年 '+ month+'月');
-					searchStartDate = year+'-'+month+'-1';
+					searchStartDate = year+'-'+month+'-01';
 				});
 			});
 			$$(".threeMeetingsAndOneClassPaperDetailEndTime").on('click',function(){
@@ -228,33 +245,41 @@ define(['app',
 		 * 根据年度月份去查询
 		 */
 		function loadKnowledgeTopic(isLoadMore){
-			console.log(startDate);
-			console.log(endDate);
 			console.log(type);
 			app.ajaxLoadPageContent1(getTopicCompletedOrNotPath,{
-				userId:app.userId,
-				topicId:topicId,
+				// userId:app.userId,
+				// topicId:topicId,
 				deptId:app.user.deptId,
-				pageNo:pageNo,
-				type:type,
+				current:pageNo,
+				// type:type,
 				startDate:startDate,
 				endDate:endDate,
+				khpl:khpl
 			},function(data){
+				var data = data.data.records;
 				console.log(data);
+
+				$$.each(data, function(index, item) {
+					console.log(item);
+					item.month = item.createdDate.split('-')[1];
+				});
+				
+				
 				if(data == "" && pageNo == 1){
 					loading = true;
 					$$('.infinite-scroll-preloader').remove();	
 					$$('.threeMeetingsAndOneClassRightList ul').html("");
 				}
-				if(data.data.length>0){
+				if(data.length>0){
 					
 					if(isLoadMore == true) {
 						$$('.infinite-scroll-preloader').remove();
-						$$('.threeMeetingsAndOneClassRightList ul').append(paperTemplate(data.data));
+						$$('.threeMeetingsAndOneClassRightList ul').append(paperTemplate(data));
 					} else{
-						$$('.threeMeetingsAndOneClassRightList ul').html(paperTemplate(data.data));
+						console.log(data);
+						$$('.threeMeetingsAndOneClassRightList ul').html(paperTemplate(data));
 					}
-					if(pageNo == 1 && data.data.length<10){
+					if(pageNo == 1 && data.length<10){
 						$$('.infinite-scroll-preloader').remove();
 					}
 //					$$('.threeMeetingsAndOneClassRightList .item-content').on('click', function() {
@@ -269,6 +294,7 @@ define(['app',
 //					loading = false;
 					$$('.infinite-scroll-preloader').remove();
 				}
+
 			});
 		}	
 		function cancelAssessmentSearch(){
@@ -288,8 +314,8 @@ define(['app',
 			if(searchStartDate == "" &&  searchEndDate == ''){
 				var myDate = new Date();
 				year = myDate.getFullYear();
-				month = myDate.getMonth()+1;
-				searchStartDate = year+'-'+month+'-1';
+				month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
+				searchStartDate = year+'-'+month+'-01';
 				searchEndDate = year+'-'+month+'-31';
 			}
 			console.log(searchStartDate);
@@ -298,17 +324,18 @@ define(['app',
 			searchContent = searchContent.trim();
 			$$('.threeMeetingsAndOneClassNotFound').css('display', 'none');
 			app.ajaxLoadPageContent(getTopicCompletedOrNotPath, {
-				userId:app.userId,
-				topicId:topicId,
+				// userId:app.userId,
+				// topicId:topicId,
 				deptId:app.user.deptId,
-				pageNo:pageNo,
-				type:type,
+				current:pageNo,
+				// type:type,
 				startDate:searchStartDate,
 				endDate:searchEndDate,
 				query:searchContent,
+				khpl:khpl
 			}, function(data) {
 				console.log(data);
-				data = data.data;
+				var data = data.data.records
 				if(data.length>0){
 					console.log('11');
 					console.log(data);

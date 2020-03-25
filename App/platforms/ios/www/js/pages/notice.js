@@ -2,7 +2,7 @@ define(['app'], function(app) {
 	var $$ = Dom7;
 	var firstIn = 1;
 	//通知接口
-	var findMeetingNoticePath = app.basePath + 'meetingNotice/findMeetingNotice';
+	var findMeetingNoticePath = app.basePath + '/mobile/meeting/';
 	var meetingId = 0;
 	
 	/**
@@ -22,10 +22,11 @@ define(['app'], function(app) {
 	}
 	
 	function showNotice(){
-		app.ajaxLoadPageContent(findMeetingNoticePath, {
-			mtId:meetingId
+		app.ajaxLoadPageContent(findMeetingNoticePath+meetingId, {
+			
 		}, function(data) {
 			console.log(data);
+			var data = data.data;
 			$$('.news_title').html(data.meetingTitle);
 			$('.new-content').html(data.meetingContent);
 			$('.mettingTime').html('开始时间 : '+data.meetingTime);

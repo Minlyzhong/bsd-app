@@ -6,22 +6,19 @@ define(['app'], function(app) {
 	var loading = true;
 	var imageList = [];
 	//获取双签内容
-	var findDetailInfoPath = app.basePath + '/mobile/partyAm/findDetailInfo';
+	var findDetailInfoPath = app.basePath + '/mobile/dbSign/';
 	//上传签名
 	var saveUserReportDetialPath = app.basePath + '/mobile/dbSign/sign';
 	//上传附件
 	var uploadReportDetialPhotoPath = app.basePath + '/file/upload';
-	var assessId = -1;
-	var photoBrowserPhotos = [];
-	var photoBrowserPopup = '';
-	var readonlyPicCount = 0;
-	var reWork = 0;
+	var signId = -1;
 	var deptName = '';
 	var SignResult = {};
 	var count = 0;
 	var imgLength = 0;
 	var signPic = [];
 	var signPicParam = {};
+	var self = false;
 	
 	/**
 	 * 页面初始化 
@@ -53,16 +50,13 @@ define(['app'], function(app) {
 		pageDataStorage = {};
 		pageNo = 1;
 		loading = true;
-		photoBrowserPhotos = [];
-		reWork = 0;
 		SignResult = {};
-		photoBrowserPopup = '';
-		assessId = pageData.assessId;
-		readonlyPicCount = 0;
+		signId = pageData.id;
 		imgLength = 0;
 		count = 0;
 		signPic = [];
 		signPicParam = {};
+		self = false;
 		findDetailInfo();
 		
 		$$('#reSign').css('display','none');
@@ -93,23 +87,79 @@ define(['app'], function(app) {
 	
 
 	/**
-	 * 获取考核内容
+	 * 获取签到内容
 	 */
 	function findDetailInfo() {
-		app.ajaxLoadPageContent(findDetailInfoPath, {
-			fkId: assessId,
-//			refType:10,
-		}, function(data) {
+		app.ajaxLoadPageContent(findDetailInfoPath + signId, {
 			
-			SignResult = data.data;
-			// imageList = data.data.images || [];
-			$$('#assessTs').val(SignResult.reportTime);
-			$$('#assessContent').val(data.data.reportContext);
-			$$('#assessdeptName').val(deptName);
-			// console.log(readonlyPicCount)
-			// readonlyPicCount = imageList.length || 0;
-			// console.log(readonlyPicCount);
-			// showReadonlyPhotos(data.data.images);
+		}, function(data) {
+			if(data.code == 0 && data.data !=null){
+				SignResult = data.data;
+				// imageList = data.data.images || [];
+				var createTime = app.getnowdata(SignResult.createTime).split(' ')[0];
+				var time = createTime+', '+ SignResult.week;
+				$$('#assessTs').val(time);
+				$$('#assessContent').val(SignResult.jobContent);
+				$$('#weather').val(SignResult.weather);
+				$$('#location').val(SignResult.workingAddress);
+				$$('#assessTitle').val(SignResult.contentTitle);
+				$$('#assessdeptName').val(deptName);
+				if(SignResult.type == 0){
+					$$('#signType').val('正常');
+				}else{
+					$$('#signType').val('请假');
+				}
+	
+				if(SignResult.userId  == app.user.userId){
+					$("#sign").css('display','none');
+					$(".sumbit").css('display','none');
+					self = true;
+				}
+				
+				if(SignResult.villagePersonChargePic){
+					self = true;
+					$("#villagePerson").parent().css('display','block');
+					$("#sign").css('display','none');
+					$(".sumbit").css('display','none');
+					var i = new Image();
+					i.src = app.filePath + SignResult.villagePersonChargePic;
+					$(i).appendTo($("#villagePerson")); // append the image (SVG) to DOM.	
+					if(SignResult.vpcTime){
+						var vTime = app.getnowdata(SignResult.vpcTime)
+						$(".villagePersonTime").html(vTime);
+					}
+					
+				}
+	
+				if(SignResult.groupLeaderSingPic){
+					self = true;
+					$("#sign").css('display','none');
+					$(".sumbit").css('display','none');
+					$("#groupLeader").parent().css('display','block')
+					var i = new Image();
+					i.src = app.filePath + SignResult.groupLeaderSingPic;
+					$(i).appendTo($("#groupLeader")); // append the image (SVG) to DOM.	
+					// if(SignResult.vpcTime){
+					// 	var vTime = app.getnowdata(SignResult.vpcTime)
+					// 	$(".groupLeaderTime").html(vTime);
+					// }
+				}
+				if(SignResult.personChargeSignPic){
+					self = true;
+					$("#sign").css('display','none');
+					$(".sumbit").css('display','none');
+					$("#personCharge").parent().css('display','block')
+					var i = new Image();
+					i.src = app.filePath + SignResult.personChargeSignPic;
+					$(i).appendTo($("#personCharge")); // append the image (SVG) to DOM.	
+					if(SignResult.vpcTime){
+						var vTime = app.getnowdata(SignResult.pcsTime)
+						$(".personChargeTime").html(vTime);
+					}
+				}
+			}else{
+				app.myApp.toast('获取签到信息失败','error').show(true);
+			}
 			
 
 
@@ -136,43 +186,59 @@ define(['app'], function(app) {
 			
 		})
 		$$('.assessWorkBack').on('click',function(){
-			app.myApp.confirm('还未签名,是否退出？', function() {
+			if(self == true){
 				app.myApp.getCurrentView().back();
-			});
+			}else{
+				app.myApp.confirm('是否退出？', function() {
+					app.myApp.getCurrentView().back();
+				});
+			}
+			
 		});
 		$$('.assessWorkHome').on('click',function(){
-			app.myApp.confirm('还未签名,是否返回首页？', function() {
+			
+			app.myApp.confirm('是否返回首页？', function() {
 				app.back3Home();
 			});
 		});
 
-		// $$('').on('click',saveUserReportDetial);
+		$$('.sumbit').on('click',saveUserReportDetial);
 		
     
 	}
 
 	    
 	/**
-	 * 保存考核信息
+	 * 保存签到信息
 	 */
 	function saveUserReportDetial() {
-
-		var assessTitle = $$('#assessTitle').val();
-		var assessTs = $$('#assessTs').val();
-		var assessContent = $$('#assessContent').val();
-		// if(!assessContent || !assessTitle || !assessTs) {
-		// 	app.myApp.alert('请补签名');
-		// 	return;
-		// }
 		
-		//防止数据传输过慢多次上传
-		count = count + 1;
-		if(count > 0){
-			$$('.sumbit').attr('disabled',false);
+		if(signPic.length != 0){
+			//防止数据传输过慢多次上传
+			count = count + 1;
+			if(count > 0){
+				$$('.sumbit').attr('disabled',false);
+			}
+
+			// uploadReportDetialPhoto(signPic[1]);
+			var str = "data:" + signPic[0] + "," + signPic[1]
+			uploadReportDetialPhoto(str);
+		}else{
+			// app.myApp.alert('没有新的签名状态');
+			app.myApp.toast('没有新的签名状态','error').show(true);
+			return;
 		}
+		
+		
+		
+	
+	}
 
-		uploadReportDetialPhoto(signPic[1]);
-
+	/**
+	 * 保存签到图片
+	 */
+	function savePic(){
+		
 		var formDatas= JSON.stringify(signPicParam)
 		$$.ajax({
             url:saveUserReportDetialPath,
@@ -182,9 +248,11 @@ define(['app'], function(app) {
 			// contentType: false, // 告诉jQuery不要去设置Content-Type请求头
 			contentType: 'application/json;charset:utf-8',
             data: formDatas,
-            cache: false,
+			cache: false,
+			async: false,
             success:function (data) {
-				if(data.code == 0){
+			
+				if(data.code == 0 && data.data == true){
 					app.myApp.toast('保存成功', 'success').show(true);
 					$$('.rankSumbit').html('已保存');
 					app.myApp.getCurrentView().back();
@@ -193,7 +261,7 @@ define(['app'], function(app) {
 						doubleSign.refresh(false);
 					});
 				}else{
-					app.myApp.toast('保存失败', 'error').show(true);
+					app.myApp.toast(data.msg, 'error').show(true);
 				}
 				
 						
@@ -202,7 +270,6 @@ define(['app'], function(app) {
 				app.myApp.alert(app.utils.callbackAjaxError());
             }
         });
-	
 	}
 
 
@@ -216,7 +283,7 @@ define(['app'], function(app) {
 	 * @param {Object} detailID  考核明细ID
 	 */
 	function uploadReportDetialPhoto(photo) {
-		
+	
 		var sum = 0;
 		var ft = new FileTransfer();
 			var uri = encodeURI(uploadReportDetialPhotoPath);
@@ -236,12 +303,8 @@ define(['app'], function(app) {
 				
 			}
 			// options.params = params;
-
 			ft.upload(photo, uri, function(r) {
 				var data = JSON.parse(r.response);
-				// sum++;
-
-				// alert(data.code);
 				if(data.code == 0 && data.data != null) {
 					var result = data.data;
 					// params.ext = result.ext;
@@ -252,7 +315,8 @@ define(['app'], function(app) {
 					// params.length = result.length;
 					// imageList.push(params);
 					signPicParam = params;
-				
+					savePic();
+		
 				} else {
 					ft.abort();
 					app.myApp.alert(app.utils.callbackAjaxError()+ '图片');
@@ -265,47 +329,7 @@ define(['app'], function(app) {
 			}, options);
 	}
 
-	/**
-	 * 显示已读相片
-	 * @param {Object} picUrlList 需要显示的图片数组
-	 */
-	// function showReadonlyPhotos(picUrlList) {
-	// 	$$.each(picUrlList, function(index, item) {
-	// 		photoBrowserPhotos.push(app.filePath + item.filePath);
-	// 		var random = app.utils.generateGUID();
-	// 		$$('.weui_uploader').append(
-	// 			'<div class="weui_uploader_bd kpiPicture">' +
-	// 			'<div class="picContainer" id="img_' + random + '">' +
-	// 			'<img src="' + app.filePath + item.filePath + '" class="picSize" />' +
-	// 			'</div>' +
-	// 			'</div>');
-			
-	// 		// //添加删除图片的监听事件
-	// 		// $$('#delete_file_' + random).on('click', function(e) {
-	// 		// 	e.stopPropagation();
-	// 		// 	var photoContainer = $$(this).parent().parent();
-	// 		// 	var piciIndex = photoContainer.index();
-	// 		// 	app.myApp.confirm('确认删除该图片?', function() {
-	// 		// 		photoContainer.remove();
-	// 		// 		photoBrowserPhotos.splice(piciIndex - 2, 1);
-	// 		// 		photoDatas.splice(piciIndex - 2 , 1);
-	// 		// 		imageList.splice(piciIndex - 2 , 1);
-	// 		// 		app.myApp.toast('删除成功', 'success').show(true);
-	// 		// 	});
-	// 		// });	
-	// 		$$('#img_' + random).on('click', function(e) {
-	// 			var picIndex = $$(this).parent().index();
-	// 			photoBrowserPopup = app.myApp.photoBrowser({
-	// 				photos: photoBrowserPhotos,
-	// 				theme: 'dark',
-	// 				backLinkText: '关闭',
-	// 				ofText: '/',
-	// 				type: 'popup',
-	// 			});
-	// 			photoBrowserPopup.open(picIndex - 1 - reWork);
-	// 		});
-	// 	});
-	// }
+	
 
 		/**
 	 * 选择签名页面回调 
@@ -322,16 +346,16 @@ define(['app'], function(app) {
 	 * 选择签名的信息显示回调
 	 */
 	function addSignInfoBack() {
-		console.log(signPic);
 		if(signPic) {
 			var i = new Image();
             i.src = "data:" + signPic[0] + "," + signPic[1];
-			$(i).appendTo($("#someelement")); // append the image (SVG) to DOM.	
-
+			$(i).appendTo($("#someelement .handSign")); // append the image (SVG) to DOM.	
+			$('.mySign').css('display','block');
 			// uploadReportDetialPhoto(signPic[1]);
 		}else{
 			signPic=[];
 			$("#someelement").html('');
+			$('.mySign').css('display','none');
 		}
 //		getAbsenteesBack();
 	}

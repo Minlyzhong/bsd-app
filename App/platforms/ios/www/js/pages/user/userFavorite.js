@@ -7,7 +7,7 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//获取用户收藏文章
-	var userFavoritePath = app.basePath + 'extUserPage/loadFavoriteByUserId';
+	var userFavoritePath = app.basePath + '/mobile/political/content/userCollection';
 
 	/**
 	 * 页面初始化 
@@ -50,6 +50,7 @@ define(['app',
 		app.ajaxLoadPageContent(userFavoritePath, {
 			userId: app.userId
 		}, function(data) {
+			console.log('loadFavorite-user')
 			console.log(data);
 			pageDataStorage['favorite'] = data;
 			handleFavorite(data);
@@ -60,22 +61,31 @@ define(['app',
 	 * 加载用户收藏 
 	 */
 	function handleFavorite(data) {
-		if(data.data && data.data.length > 0) {
+		if(data.data.records && data.data.records.length > 0) {
+			
 			$$('.userFavorite-not-found').hide();
-			$$('.userFavorite-List ul').html(favoriteTemplate(data.data));
+			$$.each(data.data.records,function(index, item){
+				if(item.commentVolume == null){
+					item.commentVolume = 0;
+				}
+			})
+			$$('.userFavorite-List ul').html(favoriteTemplate(data.data.records));
 			$$('.userFavorite-content').on('click', function() {
 				var artId = $$(this).data('id');
-				loadArticle(artId);
+				var type = $$(this).data('type')|| 1;
+				console.log(artId)
+				loadArticle(artId, type);
 			});
 		} else {
+			
 			$$('.userFavorite-List ul').html("");
 			$$('.userFavorite-not-found').show();
 		}
 	}
 
 	//打开文章
-	function loadArticle(artId) {
-		app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + artId);
+	function loadArticle(artId, type) {
+		app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + artId+'&type=' + type+'&userFavorite = 1');
 	}
 
 	/**

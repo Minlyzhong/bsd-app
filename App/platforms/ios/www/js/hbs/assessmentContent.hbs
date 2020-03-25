@@ -12,7 +12,11 @@
 					<div class="item-after after-title">+{{score}}分</div>
 				</div>
 				{{#compare state '==' 1}}
-				<div style="color: #3EAB46;font-size: 14px;text-align: right;margin-right: 20px;">已得{{totalScore}}分</div>
+					{{#compare totalScore '>' 0}}
+					<div data-id="{{id}}" class="item-subtitle sub-title assessmentScoreSearch" style="color: #3EAB46;font-size: 14px;text-align: right;margin-right: 20px;"><i class="icon icon-point" style="top:-2px"></i>已得{{totalScore}}分</div>
+					{{else}}
+					<div data-id="{{id}}" class="item-subtitle sub-title assessmentScoreSearch" style="color: #ED4C3C;font-size: 14px;text-align: right;margin-right: 20px;"><i class="icon icon-point" style="top:-2px"></i>已扣{{totalScore}}分</div>
+					{{/compare}}
 				{{/compare}}
 				<div class="item-subtitle sub-title">{{target}}</div>
 			</div>

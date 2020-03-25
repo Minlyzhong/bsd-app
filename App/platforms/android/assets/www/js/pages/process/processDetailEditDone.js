@@ -1,13 +1,13 @@
 define(['app'], function(app) {
 	var $$ = Dom7;
 	var firstIn = 1;
-	//查询三会一课详情接口
-	var findDetailInfoPath = app.basePath + '/mobile/partyAm/findMeetDetail';
+	//根据项目ID获取四议会议详情
+	var findDetailInfoPath = app.basePath + '/mobile/specialDeclare/fourMeetingResultDetail';
 	//显示图片的参数
 	var photoBrowserPhotos = [];
 	var photoBrowserPopup = '';
-	var threeMeetingAndOneClassId;
-	var threeMeetingAndOneClassUserName;
+	var pId;
+	var name;
 	var dataResult = "";
 	
 	/**
@@ -29,9 +29,11 @@ define(['app'], function(app) {
 		firstIn = 0;
 		photoBrowserPhotos = [];
 		photoBrowserPopup = '';
-		threeMeetingAndOneClassId = pageData.assessId;
-		threeMeetingAndOneClassUserName = pageData.userName;
-
+		pTitle = pageData.pTitle;
+		pId = pageData.pId;
+		name = pageData.name;
+		$$('.editName').html(name);
+		$$('.pTitle').html('项目名称 : '+ pTitle);
 	}
 
 	/**
@@ -124,31 +126,33 @@ define(['app'], function(app) {
 	 * 查询三会一课详情
 	 */
 	function getDetail(){
+		console.log(pId);
 		app.ajaxLoadPageContent(findDetailInfoPath,{
-			fkId:threeMeetingAndOneClassId,
-			// refType:3,
-			// isApp: 1
+			id:pId,
+			
 		},function(data){
 			var result = data.data;
 			console.log(result);
 			dataResult = result;
 			//把获取的参数加入页面
-			$$("#meetinTime").val(result.reportTime);
-			$$("#location").val(result.meetingAddress);
+			$$("#meetinTime").val(result.meetingTime);
+			$$("#location").val(result.address);
 			$$("#host").val(result.host);
-			$$("#recorder").val(threeMeetingAndOneClassUserName);
-			$$("#attendees").val(result.participantIds);
+			$$("#arrives").val(result.arrives);
+			$$("#tos").val(result.tos);
+			$$("#recorder").val(result.record);
+			$$("#attendees").val(result.attendants);
 			$$("#listeds").val(result.attends);
 			$$("#absentees").val(result.absents);
 			$$("#meetingTitle").val(result.object);
-			$$("#meetingRecord").val(result.reportContext);
-			$$("#content").val(result.summary);
+			$$("#meetingRecord").val(result.content);
+			$$("#content").val(result.abstracts);
 			$$("#meetingDecision").val(result.resolution);
 			$$("#differentViews").val(result.different);
 			//加载图片
-			showReadonlyPhotos(result.images);
+			showReadonlyPhotos(result.enclosures);
 			//加载文件
-			showAndDownLoadFiles(result.file);
+			// showAndDownLoadFiles(result.file);
 			//展示
 			showTextArea();
 		});
@@ -191,7 +195,7 @@ define(['app'], function(app) {
 		$$.each(picUrlList, function(index, item) {
 			photoBrowserPhotos.push(app.filePath + item.filePath);
 			var random = app.utils.generateGUID();
-			$$('.weui_uploader').append(
+			$$('.weui_uploader2').append(
 				'<div class="weui_uploader_bd kpiPicture">' +
 				'<div class="picContainer" id="img_' + random + '">' +
 				'<img src="' + app.filePath + item.filePath + '" class="picSize" />' +

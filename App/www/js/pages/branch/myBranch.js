@@ -296,7 +296,7 @@ define(['app',
 			var str ='';
 			str += '<div class="swiper-slide homeSlider2"  data-number="'+i+'" style=" padding-top: 0px;width: 100%;height: 1000px;">';
 			str += '<div class="page123">';
-			str += '<div class="branch-list-type'+i+' page-content infinite-scroll pull-to-refresh-content" style="height: 1000px;padding-top: 0px;margin-top:-44px">';
+			str += '<div class="branch-list-type'+i+' page-content infinite-scroll pull-to-refresh-content" style="height: 1000px;padding-top: 0px;margin-top:-44px;background:">';
 			str += '<div class="pull-to-refresh-layer" style="margin-top:0px">';
 			str += '<div class="preloader">';
 			str += '</div>';
@@ -469,6 +469,9 @@ define(['app',
 		
 	//获取文章列表 模板类型，1为党支部模板、2为村社区模板
 	function partyGetList1(isLoadMore,i) {
+		console.log(i)
+		console.log(typeof i)
+		i = parseInt(i);
 		temId = parseInt(i+1)
 		app.ajaxLoadPageContent1(listPath + temId, {
 			// type:1

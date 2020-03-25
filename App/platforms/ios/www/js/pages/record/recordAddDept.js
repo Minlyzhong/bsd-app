@@ -7,9 +7,10 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//查找子部门
-	var findDeptPath = app.basePath + 'extWorkLog/findDept';
+	// var findDeptPath = app.basePath + 'extWorkLog/findDept';
+	var findDeptPath = app.basePath + '/mobile/political/department/list';
 	//模糊搜索部门
-	var searchDeptPeoplePath = app.basePath + 'orgUser/searchDept';
+	var searchDeptPeoplePath = app.basePath + '/mobile/political/department/list';
 	var oldContent = '';
 	var deptList = [];
 	var deptType = '';
@@ -25,7 +26,7 @@ define(['app',
 		clickEvent();
 		attrDefine();
 		pushAndPull(page);
-		ajaxLoadContent(0, '', '');
+		ajaxLoadContent(-1, '', '');
 	}
 	/**
 	 * 初始化模块变量
@@ -36,6 +37,7 @@ define(['app',
 		loading = true;
 		deptList = JSON.parse(pageData.deptList);
 		deptType = pageData.deptType;
+		console.log(deptType);
 		oldContent = '';
 		deptIdList = [];
 	}
@@ -74,7 +76,8 @@ define(['app',
 	function ajaxLoadContent(parentId, elements, currentEle) {
 		app.ajaxLoadPageContent(findDeptPath, {
 			parentId: parentId,
-			deptType: deptType,
+			userId: app.user.userId
+			// deptType: deptType,
 		}, function(result) {
 			var data = result;
 			console.log(data);
@@ -107,9 +110,9 @@ define(['app',
 		$$.each(deptData, function(index, item) {
 			appendEle.find('ul').append(
 				'<li>' +
-				'<a href="#" data-deptId="' + item.deptId + '">' + item.deptName + '</a>' +
+				'<a href="#" data-deptId="' + item.did + '">' + item.title + '</a>' +
 				'<div style="position: relative;float: right;bottom: 40px;right: 10px;">' +
-				'<img src="img/notChooseDept.png" width="28" height= "28" data-deptId="' + item.deptId + '" data-deptName="' + item.deptName + '" />' +
+				'<img src="img/notChooseDept.png" width="28" height= "28" data-deptId="' + item.did + '" data-deptName="' + item.title + '" />' +
 				'</div>' +
 				'</li>'
 			);
@@ -124,7 +127,7 @@ define(['app',
 		appendEle.find('ul').find('img').on('click', function(e) {
 			e.stopPropagation();
 			var deptId = $$(this).data('deptId');
-			var deptName = $$(this).data('deptName');
+			var label = $$(this).data('deptName');
 			if($$(this).attr('src') == 'img/chooseDept.png') {
 				$$(this).attr('src', 'img/notChooseDept.png');
 				for(var j = deptList.length - 1; j >= 0; j--) {
@@ -137,8 +140,9 @@ define(['app',
 				$$(this).attr('src', 'img/chooseDept.png');
 				deptList.push({
 					deptId: deptId,
-					deptName: deptName,
+					label: label,
 				});
+				console.log(deptList)
 				showSendDept();
 			}
 		});
@@ -209,8 +213,9 @@ define(['app',
 			return;
 		}
 		app.ajaxLoadPageContent(searchDeptPeoplePath, {
-			deptName: content,
-			pageNo: pageNo
+			query: content,
+			userId: app.user.userId
+			// pageNo: pageNo
 		}, function(data) {
 			console.log(data);
 			if(data.length > 0) {
@@ -340,7 +345,7 @@ define(['app',
 					if(index > 0) {
 						throw(' ');
 					}
-					deptHtml += item.deptName + '，';
+					deptHtml += item.label + '，';
 				})
 				$$('#sendLeader').val(deptHtml);
 			} catch(e) {

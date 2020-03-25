@@ -11,22 +11,23 @@ define(['app',
 	var loading = false;
 	var searchLoading = true;
 	var searchLoading1 = true;
-	//获取第一书记
-	var findDeptPeoplePath = app.basePath + 'firstSecretary/loadFirstSecretaryUsers';
+	// //获取第一书记
+	// var findDeptPeoplePath = app.basePath + 'firstSecretary/loadFirstSecretaryUsers';
 	//模糊搜索第一书记
-	var searchDeptPeoplePath = app.basePath + 'firstSecretary/searchFirstSecretaryUsers';
-	//模糊模糊各村的详细信息
+	var searchDeptPeoplePath = app.basePath + '/mobile/village/list/members';
+	//模糊搜索各村的详细信息
 	/*
 	 * villageName:村的名字
 	 */
-	var findPoorVilByNamePath = app.basePath + 'poorVillage/findPoorVilByName';
+	var findPoorVilByNamePath = app.basePath + '/mobile/village/search';
 
 	//获取贫困村
-	var findDeptPath = app.basePath + 'poorVillage/findVillageTree';
+	var findDeptPath = app.basePath + '/mobile/village/list';
 	//获取贫困村下的第一书记
-	var findChildPath = app.basePath + 'poorVillage/findPagerOfFirstSecretary';
+	var findChildPath = app.basePath + '/mobile/village/list/members';
 	var deptName = '';
 	var oldContent = '';
+	var childrenArr = [];
 
 	/**
 	 * 页面初始化 
@@ -60,6 +61,7 @@ define(['app',
 		searchNo = 1;
 		searchLoading = true;
 		oldContent = '';
+		childrenArr = [];
 		findDept();
 //		ajaxLoadContent(false);
 	}
@@ -93,12 +95,14 @@ define(['app',
 	 */
 	function findDept() {
 		app.ajaxLoadPageContent(findDeptPath, {
-				
+			// _roleId:app.roleId,
+			// _deptId:app.user.deptId	
 		}, function(data) {
 			console.log(data);
-			handleData(data);
+			handleData(data.data);
 		});
 	}
+	
 	
 	/**
 	 * 根据镇查找村
@@ -106,23 +110,23 @@ define(['app',
 	 * @param {Object} element 需要追加内容的元素
 	 * @param {Object} currentEle 需要点击的元素
 	 */
-	function findDept2(deptId,element, currentEle) {
-		app.ajaxLoadPageContent(findDeptPath, {
-			id:deptId
-		},function(data) {
-			console.log(data);
+	function findDept2(deptId,element, currentEle,index) {
+			console.log('根据镇查找村')
+			console.log(index)
+			var data = childrenArr[index]
+			console.log(data)
 			handleChild2(data,element,currentEle);
-		});
+
 	}
 	function handleChild2(data, element, currentEle) {
 		element.append('<ul>');
 		$$.each(data, function(index,item) {
 			element.find('ul').append('<li>' +
-				'<a href="#" data-level="' + item.hasChild + '" data-deptId="' + item.id + '">' +
-				'<span class="firstTitle">' + item.text +
+				'<a href="#" data-level="' + 'true' + '" data-deptId="' + item.id + '">' +
+				'<span class="firstTitle">' + item.villageName +
 				'</span>' +
-				'<span class="infoBtn" style="float: right;margin-top: -53px;margin-right: 30px;;position: relative;">' +
-				'<img src="img/newIcon/icon_branch_information.png" style="width: 28px;padding-top:2px"/>' +
+				'<span class="infoBtn" style="float: right;margin-top: -53px;margin-right: 30px;position: relative;">' +
+				'<img src="img/newIcon/icon_branch_information.png" style="width: 24px;padding-top:2px"/>' +
 				'</span	>' +
 				'</a>'+
 				'</li>'
@@ -157,24 +161,52 @@ define(['app',
 	 */
 	function handleData(data) {
 		var deptData = data;
+		console.log('deptData')
+		console.log(deptData)
 		$('.firstMenu').append('<ul style="padding: 0px;margin: 5px;">');
 		$$.each(deptData, function(index, item) {
 			$('.firstMenu>ul').append('<li class="li_' + index + '">' +
 				'<a href="#" data-level="' + item.hasChild + '" data-deptId="' + item.id + '">' +
-				'<span class="firstTitle">' + item.text +
+				'<span class="firstTitle">' + item.label +
 				'</span>' +
 				'</a>'
 			);
 			if(item.hasChild) {
 				$('.firstMenu .li_' + index).append('<ul>');
+				var ind = 0;
 				$$.each(item.children, function(_, cItem) {
-					$('.firstMenu .li_' + index +'>ul').append('<li>' +
-						'<a href="#" data-level="' + cItem.hasChild + '" data-deptId="' + cItem.id +'">' +
-						'<span class="firstTitle">' + cItem.text +
-						'</span>' +
-						'</a>'
-					);
+					console.log('cItem')
+					console.log(cItem)
+					
+					if(cItem.hasChild){
+						
+						console.log('cItem'+index)
+						$('.firstMenu .li_' + index +'>ul').append('<li>' +
+							'<a href="#" data-level="' + 'false' + '" data-deptId="' + cItem.id + '"  data-index="' + ind+'">' +
+							'<span class="firstTitle">' + cItem.label +
+							'</span>' +
+							'<span class="infoBtn" style="float: right;margin-top: -53px;margin-right: 30px;position: relative;">' +
+							'<img src="img/newIcon/icon_branch_information.png" style="width: 24px;padding-top:2px"/>' +
+							'</span	>' +
+							'</a>'+
+							'</li>'
+						);
+						ind += 1;
+						childrenArr.push(cItem.children)
+						
+					}else{
+						console.log('else'+index)
+						$('.firstMenu .li_' + index +'>ul').append('<li>' +
+							'<a href="#" data-level="' + cItem.hasChild + '" data-deptId="' + cItem.id +'" data-index="' + index+'">' +
+							'<span class="firstTitle">' + cItem.label +
+							'</span>' +
+							'</a>'
+						);						
+					}
 				});
+				pageDataStorage['childrenArr'] = childrenArr;
+						console.log('pageDataStorage')
+						console.log(pageDataStorage)
 			}
 		});
 		//autostart: ture/false,//初次加载是否将菜单全部展开
@@ -185,12 +217,27 @@ define(['app',
 		console.log(app.userId);
 //		console.log(app.user.id);
 		$('.firstMenu').find('a').on('click', function() {
+
 			var level = $$(this).data('level');
 			var deptId = $$(this).data('deptId');
-
+			var index = $$(this).data('index');
+			console.log('$$(this)')
+			console.log($$(this))
+			console.log('$$($$(this).parent()[0])')
+			console.log($$($$(this).parent()).text())
+			console.log(level)
 			if(level == 'false') {
-				findDept2(deptId, $$($$(this).parent()[0]), $(this));
+
+				findDept2(deptId, $$($$(this).parent()[0]), $(this), index);
+			}else{
+				findChild(deptId, $$($$(this).parent()[0]), $(this));
 			}
+		});
+		
+		$$('.infoBtn img').on('click', function(e) {
+			e.stopPropagation();
+			console.log($$(this).parent().parent().data('deptId'));
+			app.myApp.getCurrentView().loadPage('firstSecretaryOwnDaily2.html?vilId='+$$(this).parent().parent().data('deptId')+ '&userId=&userName=');
 		});
 	}
 	
@@ -202,11 +249,12 @@ define(['app',
 	 */
 	function findChild(poorVilId, element, currentEle) {
 		app.ajaxLoadPageContent(findChildPath, {
-			poorVilId: poorVilId
+			poorVilId: poorVilId,
+			// type: 3
 		}, function(data) {
 			console.log(data.data);
-			if(data.data.length!=0){
-				handleChild(data.data, element, currentEle, poorVilId);
+			if(data.data.records.length!=0){
+				handleChild(data.data.records, element, currentEle, poorVilId);
 			}
 		});
 	}
@@ -218,13 +266,14 @@ define(['app',
 	 * @param {Object} currentEle 需要点击的元素
 	 */
 	function handleChild(data, element, currentEle, poorVilId) {
-		console.log(data.length);
+		console.log(element);
 		if(element.children('ul').length<=0){
 			element.append('<ul>');
 			$$.each(data, function(index, item) {
+				var ind = parseInt(index+1)
 				element.find('ul').append('<li>' +
-					'<a href="#" class="vilClass" data-no="' + item.no + '" data-id="' + item.id + '" data-vilId="' + poorVilId + '">' +
-					'<span class="firstTitle">' + item.userName + '--' + item.deptName +
+					'<a href="#" class="vilClass" data-no="' + ind + '" data-id="' + item.userId + '" data-vilId="' + poorVilId + '"data-username="' + item.name + '">' +
+					'<span class="firstTitle">' + item.name + '--' + item.villageName +'('+item.memberType+')'+
 					'</span>' +
 					'</a>'
 				);
@@ -233,7 +282,9 @@ define(['app',
 		$(".firstMenu").vmenuModule();
 		currentEle.click();
 		element.find('.vilClass').on('click', function() {
-			app.myApp.getCurrentView().loadPage('firstSecretaryDetail.html?isVil=' + $$(this).data('vilId') + '&userId=' + $$(this).data('id'));
+			// console.log($$(this).data('vilId'))
+			// console.log($$(this).data('id'))
+			app.myApp.getCurrentView().loadPage('firstSecretaryDetail.html?isVil=' + $$(this).data('vilId') + '&userId=' + $$(this).data('id')+'&username=' + $$(this).data('username'));
 		});
 	}
 
@@ -379,10 +430,13 @@ define(['app',
 		if(!content) {
 			return;
 		}
-		app.ajaxLoadPageContent(searchDeptPeoplePath, {
-			userName: content,
+		// type搜索类型： 1、驻村队员 2、工作队长 3、第一书记 4、两委班子 5、监督委员会成员
+		app.ajaxLoadPageContent(findChildPath, {
+			query: content,
 			pageNo: searchNo,
-		}, function(data) {
+			type: 3
+		}, function(result) {
+			var  data = result.data.records;
 			console.log(data);
 			if(data.length > 0) {
 				if(data.length == 10) {
@@ -424,6 +478,7 @@ define(['app',
 			villageName: content,
 			pageNo: searchNo1,
 		}, function(data) {
+			var data = data.data.records;
 			if(data.length > 0) {
 				if(data.length == 10) {
 					searchLoading1 = false;

@@ -1,0 +1,198 @@
+<div data-page="process/processDetailEditDone" class="page navbar-fixed no-tabbar">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left ">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center editName">会议详情</div>
+			<div class="right">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+				<!--<a href="#" class="link icon-only btnEditMsg" style="margin-left: 0px;"><i class="icon icon-edit-white" style="margin-top: 3px;"></i></a>-->
+			</div>
+		</div>
+	</div>
+	<div class="page-content" style="background: white;">
+		<div class="assessDetailTitle"></div>
+		<div class="content-block-title" style="margin-top: 0px; white-space: normal; font-size: 13px;">
+			<!-- <p class="assessTarget" style="line-height: 25px;">目标要求:</p> -->
+			<p class="pTitle" style="line-height: 25px;">项目名称:</p>
+			<!-- <p class="assessScore addScore">加分:完成要求+</p> -->
+			<!-- <p class="assessScore lessScore">扣分:</p> -->
+		</div>
+		<div class="list-block recDetailList"style="margin-bottom: -1px;">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">开会时间:</div>
+							<div class="item-input">
+								<input type="text" id="meetinTime" name="meetinTime" readonly/>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">应到人数:</div>
+							<div class="item-input">
+								<input type="text" id="arrives" name="arrives" readonly />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+						<div class="item-content">
+							<div class="item-inner">
+								<div class="item-title kp-label">实到人数:</div>
+								<div class="item-input">
+									<input type="text" id="tos" name="tos" readonly />
+								</div>
+							</div>
+						</div>
+					</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">地点:</div>
+							<div class="item-input">
+								<input type="text" id="location" name="location" readonly />
+							</div>
+						</div>
+					</div>
+				</li>
+				
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">主持人:</div>
+							<div class="item-input">
+								<input type="text" id="host" name="host" readonly />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">记录人:</div>
+								<div class="item-input">
+									<input type="text" id="recorder" name="recorder" readonly/>
+								</div>
+						</div>
+					</div>
+				</li>	
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">出席人:</div>
+							<div class="item-input" style="margin-left: -2px;">
+								<textarea id="listeds" name="listeds" style="width:100%;height:40px;" readonly></textarea>
+							</div>
+						</div>
+						<icon class="icon icon-openIcon listedsIcon" style="padding-left: 10px;margin-top: 10px;"></icon>
+					</div>
+				</li>
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">列席人:</div>
+							<div class="item-input" style="margin-left: -2px;">
+								<textarea id="attendees" name="attendees" style="width:100%;height:40px;" readonly></textarea>
+							</div>
+						</div>
+						<icon class="icon icon-openIcon attendeesIcon" style="padding-left: 10px;margin-top: 10px;"></icon>
+					</div>
+				</li>
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">缺席人:</div>
+							<div class="item-input" style="margin-left: -2px;">
+								<textarea id="absentees" name="absentees" style="width:100%;height:40px;" readonly></textarea>
+							</div>
+						</div>
+						<icon class="icon icon-openIcon absenteesIcon" style="padding-left: 10px;margin-top: 10px;"></icon>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">会议主题:</div>
+							<div class="item-input">
+								<input type="text" id="meetingTitle" name="meetingTitle" readonly />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">会议记录:</div>
+							<div class="item-input" style="margin-left: -2px;">
+								<textarea id="meetingRecord" name="meetingRecord" style="width:100%;height:200px;" readonly></textarea>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">会议摘要:</div>
+							<div class="item-input tcaomContent" style="margin-left: -2px;display: none;">
+								<textarea id="content" name="content" placeholder="无" style="width:100%;height:200px;" readonly></textarea>
+							</div>
+						</div>
+						<icon class="icon icon-openIcon tcaomContentIcon" style="margin: 12px 5px 0 0;"></icon>
+					</div>
+				</li>
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">会议决议:</div>
+							<div class="item-input tcaomMeetingDecision" style="margin-left: -2px;display: none;">
+								<textarea id="meetingDecision" name="meetingDecision" placeholder="无" style="width:100%;height:200px;" readonly></textarea>
+							</div>
+						</div>
+						<icon class="icon icon-openIcon tcaomMeetingDecisionIcon" style="margin: 12px 5px 0 0;"></icon>
+					</div>
+				</li>
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">不同意见:</div>
+							<div class="item-input tcaomDifferentViews" style="margin-left: -2px;display: none;">
+								<textarea id="differentViews" name="differentViews" placeholder="无" style="width:100%;height:200px;" readonly></textarea>
+							</div>
+						</div>
+						<icon class="icon icon-openIcon tcaomDifferentViewsIcon" style="margin: 12px 5px 0 0;"></icon>
+					</div>
+				</li>
+			</ul>
+			<div class="weui_cells weui_cells_form" style="margin-top: 0;">
+				<div class="weui_cell uploadCell">
+					<div class="weui_cell_bd weui_cell_primary">
+						<div class="weui_uploader weui_uploader2">
+							<div class="weui_uploader_hd weui_cell">
+								<div class="weui_cell_bd weui_cell_primary">会议现场图片</div>
+								<div class="weui_cell_ft"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="weui_cells weui_cells_form">
+				<div class="weui_cell uploadCell">
+					<div class="weui_cell_bd weui_cell_primary">
+						<div class="weui_uploader1">
+							<div class="weui_uploader_hd weui_cell">
+								<div class="weui_cell_bd weui_cell_primary">会议材料</div>
+								<div class="weui_cell_ft"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div> -->
+		</div>
+	</div>
+</div>

@@ -1,66 +1,78 @@
 define(['app',
 	'hbs!js/hbs/party2',
-	'hbs!js/hbs/partyList2'
-], function(app, template ,template1) {
+	'hbs!js/hbs/partyList2',
+	'hbs!js/hbs/homeApplication'
+], function(app, template ,template1,appList) {
 	var $$ = Dom7;
-	//滚动图接口
-	var swiperPath = app.basePath + 'extHomePage/loadMobileFacebook';
+	//轮播图接口
+	var swiperPath = app.basePath + '/mobile/political/content/loadMobileFacebook';
 	//首页列表接口
-	var partyPath = app.basePath + 'extHomePage/loadMobileHomeList';
+	var partyPath = app.basePath + '/mobile/political/catalog/icon';
 	//检查更新接口
-	var findVersionPath = app.basePath + 'extUserPage/findNewAppVersion';
+	var findVersionPath = app.basePath + '/mobile/apkEdition/check/update';
 	//查询用户自定义皮肤
-	var find = app.basePath + 'userSetting/find';
+	var find = app.basePath + '/mobile/userSetting/';
 	//退出请求接口
-	var exitPath = app.basePath + 'auth/exit';
+	var exitPath = app.basePath + '/auth/exit';
 	//登陆接口
-	var loginPath = app.basePath + 'auth/authLogin';
+	// var loginPath = app.basePath + '/auth/authLogin';
+	var loginPath = 'http://219.159.197.209:8099/auth/authLogin';
 	//点赞接口
-	var goodPath = app.basePath + 'extGood/saveGood';
-	//加载栏目的文章列表
-	var listPath = app.basePath + 'extContent/loadPagerByCatId';
+	var goodPath = app.basePath + '/extGood/saveGood';
+	//加载主栏目的文章列表
+	var listPath = app.basePath + '/mobile/political/content/columnArticles';
+	//每日一学s
+	var studyEveryDayPath = app.basePath + '/mobile/course/content/push/';
 	var firstIn = 1;
 	var pageDataStorage = {};
-	
-	var pageNo={};
-	var loading={};
-	var loadingCount = {};
-	
-	var tabPosition = 0;
-	
+	var pageNo=1;
+	var loading=true;
+	var patryList = [];
 	var photoBrowserPhotos = [];
 	var timeOutID;
-	
-	var myScroll;
-	var left1 = 0;
-	var left2 = 0;
-	var left3 = 0;
-	var count = 1;
-	
 	var phoneWidth = 0;
-	
 	var str = '';
-	
+	var alreadyCheckVersionFlag = false;
+	var alreadyLoginFlag = false;
+	var alreadyShowStudyDialogFlag = false;
+	var alreadyGetStudyData = false;
+	var alreadyGetNewList = false;
+	var studyTimeCount = 0;
+	var studyData;
+	// var homeSwiper = null;
+	// var tenantId = 'cddkjfdkdeeeiruei8888';
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
 	 */
 	function init(page) {
+		// app.tenantId = tenantId;
+		if(app.tenantId == null || app.tenantId == undefined ||app.tenantId == '' ){
+			app.tenantId = 'cddkjfdkdeeeiruei8888'
+		}
+		console.log('page')
+		console.log(page)
 		initData(page.query);
 		ajaxLoadContent(page);		
 		app.back2Home();
 		attrDefine();
-		
 		//点击搜索
 		$$('.searchNews').on('click',function(){
 			app.myApp.getCurrentView().loadPage('searchNews.html');
-		})
-		
+		});
+		//新闻速递只给管理员，党组织管理员和乡镇管理员（3，4，5）
+		// if(app.roleId == 4 || app.roleId == 5 || app.roleId ==6){
+		// 	$$('.homeCamera').css('display','block');
+		// }else{
+		// 	$$('.homeCamera').css('display','none');
+		// }
+		// $$('.homeCamera').css('display','block');
 		//新增文章
 		$$('.icon-camera1').on('click',function(){
 			app.myApp.getCurrentView().loadPage('newsAdd.html');
-//			app.myApp.getCurrentView().loadPage('newsAddEditor.html');
 		})
+		
+		pushAndPull(page);
 	}
 
 	/**
@@ -71,8 +83,8 @@ define(['app',
 		verifyTheUser();
 		//确定当前用户的皮肤
 		colorConfirm();
-		console.log('图片：'+app.headPic);
-		$$('.user-header1 img').attr('src', app.headPic);
+		// $$('.user-header1 img').attr('src','../../../img/newIcon/home_title.png');
+		// $$('.user-header1 img').attr('alt', 'home.js');
 		
 		$$('.user-header1').on('click',function(){
 			setTimeout(function(){
@@ -84,93 +96,175 @@ define(['app',
 		phoneWidth = window.screen.width;
 		firstIn = 0;
 		pageDataStorage = {};
-		
+		patryList = [];
 		photoBrowserPhotos = [];
 		timeOutID = null;
 		
 		str += '<div style="color:#9E9E9E;font-size:20px;margin-left:30%">--&nbsp;已经到底啦！--</div>'
-	}	
+	}
+	
+	// 登录后刷新
+	function refreshLogin(){
+
+		// console.log($$('#homeTopSwiper'));
+		// 	console.log($$('#homeTopSwiper')[0].children);
+		// 	console.log($$('#homeTopSwiper')[0].children.length);
+
+		// if($$('#homeTopSwiper')[0].children.length < 5){
+		// 	getWiper();
+		// }
+
+		
+		console.log('登录后刷新');
+		partyGetList(false);
+		getPatryList();
+	}
 	
 	//点赞刷新
 	function refreshHome(cId){
-		//console.log(cId);
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			if(cId == pageDataStorage['catId'+i] && cId != 2){
-				pageNo[i] = 1;
-				loading[i] = true;
-				partyGetList(false,i);
-			}	
-		}
+		pageNo = 1;
+		loading = true;
+		console.log('点赞刷新')
+		partyGetList(false);
 		app.myApp.pullToRefreshDone();
 	}
 	
 	/*
-	 * 标题栏滚动
-	 */
-	function iscrollTitle(){
-		//一个li的长度为102px
-		//var partyListLength = parseInt(pageDataStorage['partyListLength'] * 102);
-		var partyListLength = parseInt(pageDataStorage['partyListLength'] * 87);
-    	$$(".wrapper ul").css('width',partyListLength+'px');
-	    myScroll = new IScroll('.wrapper', {scrollX: true, scrollY: false});
-	    if(myScroll.maxScrollX != 0){
-	    	localStorage.setItem('maxScrollX', myScroll.maxScrollX);
-	    }
-	    myScroll.hasHorizontalScroll = true;
-	    //再次调用让他等于他自己
-		if(myScroll.maxScrollX == 0){
-			myScroll.maxScrollX = parseInt(localStorage.getItem('maxScrollX'));
-			myScroll.isInTransition = false;
-		}
-	   	//myScroll.crollerWidth = 815;
-	   	myScroll.crollerWidth = 612;
-	   	myScroll.wrapperHeight = 52;
-	   	myScroll.wrapperWidth = 360;
-//	   	setTimeout(function(){
-//	   		console.log(myScroll);
-//	   	},1000);
-	    myScroll.scrollToElement('.active',true,true);
-	}
-	/*
 	 * 验证用户
 	 */
 	function verifyTheUser(){
-		if(localStorage.getItem('verify') != '1'){
-			localStorage.setItem('verify','-1');
+		var userstr = localStorage.getItem('user');
+		var userDetailStr = localStorage.getItem('userDetail');
+
+		var user = JSON.parse(userstr);
+		var userDetail = JSON.parse(userDetailStr);
+		if(userDetail ){
+			if(userDetail.avatar && userDetail.avatar != null ){
+				app.headPic = app.filePath + userDetail.avatar;
+				$$('.user-header img').attr('src', app.headPic);
+				localStorage.setItem('headPic', app.headPic);
+			}
 		}
-		var loginName = localStorage.getItem('loginName');
-		var password = localStorage.getItem('password');
-		//没有登录不去检测
-		if(password != 'null' && localStorage.getItem('verify') != '-1'){
-				app.ajaxLoadPageContent(loginPath, {
-						loginName: loginName,
-						loginPwd: password
-				}, function(data) {
-					//console.log(data);
-					if(data.success) {
-						console.log('登陆了');
-					}else{
-						app.userId = -1;
-						app.user = '';
-						app.roleId = -1;
-						app.headPic = 'img/icon/icon-user_d.png';
-						$$('.user-header img').attr('src', app.headPic);
-						localStorage.setItem('headPic', 0);
-						localStorage.setItem('userId', -1);
-						localStorage.setItem('user', '-1');
-						localStorage.setItem('roleId', -1);
-						localStorage.setItem('password', null);
-						//把主题设置为默认的，移除css
-						app.removejscssfile('blue.css','css');
-						app.removejscssfile('green.css','css');
-						app.myApp.toast('密码错误！', 'error').show(true);
-						app.myApp.getCurrentView().loadPage('login.html');
-						$$('.user-header1 img').attr('src', app.headPic);
-					}
-				});
+		
+		// app.tenantId = user.tenantId;
+		app.userType = localStorage.getItem('userType');
+		app.userId = localStorage.getItem('userId');
+		if(localStorage.getItem('verify') != '1'){
+				localStorage.setItem('verify','-1');
+			}
+			$$('.homeCamera').css('display','none');
+		if(user == -1 || user ==''|| user == null){
+			app.isLog = false;
+			console.log('1--')
+			alreadyLoginFlag = false;
+			app.userId = -1;
+			app.user = '';
+			app.userDetail = '';
+			app.roleId = -1;
+			app.headPic = 'img/icon/icon-user_d.png';
+			
+			localStorage.setItem('headPic', app.headPic);
+			localStorage.setItem('userId', -1);
+			localStorage.setItem('user', '-1');
+			localStorage.setItem('userDetail', '-1');
+			localStorage.setItem('access_token', null);
+			localStorage.setItem('roleId', -1);
+			localStorage.setItem('password', null);
+			localStorage.setItem('lastStudyDay', 0);
+			//把主题设置为默认的，移除css
+			app.removejscssfile('blue.css','css');
+			app.removejscssfile('green.css','css');
+			// app.myApp.toast('密码错误！', 'error').show(true);
+			// app.myApp.getCurrentView().loadPage('login.html');
+			// $$('.user-header1 img').attr('src', app.headPic);
+			// $$('.user-header1 img').attr('src', '../../../img/newIcon/home_title.png');
+			// $$('.user-header1 img').attr('alt', 'home.js');
+			// if(app.roleId == 4 || app.roleId == 5 || app.roleId == 6){
+			// 	$$('.homeCamera').css('display','block');
+			// }else{
+			// 	$$('.homeCamera').css('display','none');
+			// }
+			
+			// app.myApp.getCurrentView().loadPage('login.html');
+			// app.myApp.toast('请登录', 'error').show(true);
+
+		}else{
+			console.log('2--')
+			
+			app.user = user;
+			app.userDetail = userDetail;
+			// app.userId = userDetail.userId;
+			app.access_token=user.access_token;
+			// app.roleId = user.roles;
+			app.roleId = app.user.roleId;
+			alreadyLoginFlag = true;
+			app.isLog = true;
+			// app.roleId = 1;
+			// app.headPic = 'img/icon/icon-user_d.png';
+		}
+
+
+
+		
+	}
+	
+	function getStudyEveryDayData(){
+		console.log(app.user)
+		if(app.user == -1 || app.user ==''|| app.user == null|| app.user == undefined){
+			return;
 		}else{
 			
+		app.ajaxLoadPageContent(studyEveryDayPath+app.userId, {
+				// userId:app.userId
+				}, function(data) {
+					
+					if(data.code == 0){
+						console.log(data);
+						studyData = data.data;
+						alreadyGetStudyData = true;
+						var curDay = app.utils.getCurTime().split(" ")[0];
+						if(app.isLog == true){
+							alreadyLoginFlag = true;
+						}	
+						var today = app.utils.getCurTime().split(" ")[0];
+						if(today == localStorage.getItem('updateTime')) {
+							console.log('今天已经检查完毕');
+							alreadyCheckVersionFlag = true;
+						}
+									
+						showStudyEveryDayDialog();
+						// setTimeout(showStudyEveryDayDialog(),1000);
+					}
+					
+				});
+	}
 		}
+		
+	
+	/**
+	 * 展示每日一学弹出框
+	 */
+	function showStudyEveryDayDialog(){
+
+		
+		// console.log(alreadyGetNewList)
+		var curDay = app.utils.getCurTime().split(" ")[0];
+		if(curDay == localStorage.getItem('lastStudyDay')){
+			return;
+		}else if(app.isLog && alreadyLoginFlag && alreadyGetStudyData && alreadyGetNewList && alreadyCheckVersionFlag ){
+			console.log('弹出框')
+			setTimeout(function(){
+				if(studyData != null && studyData != undefined && JSON.stringify(studyData) != "{}"){
+					localStorage.setItem('lastStudyDay',curDay);
+					app.myApp.alert(studyData.contentTitle, '每日一学',function () {
+				    	app.myApp.getCurrentView().loadPage('dailyLearning.html');
+					});
+				}
+			},1000);
+		}
+		// else {
+		// 	setTimeout(showStudyEveryDayDialog(),1000);
+		// }
 	}
 	
 	/**
@@ -193,24 +287,52 @@ define(['app',
 	function ajaxLoadContent(page) {
 		//注册android的返回键事件
 		document.addEventListener("backbutton", onBackKeyDown, false);
+		
 		getWiper();
-		getPatryList(page);
+		// 待定partyGetList
+		// console.log('待定partyGetList')
+		// partyGetList(false)
+		//先检查更新
+		// 暂时注释
+		
 		checkUpdate();
+		
+		
+
+		getPatryList(page);
+		
+		//获取每日一学数据
+		// getStudyEveryDayData();
+//		showStudyEveryDayDialog();
+		
 	}
 
 	/**
 	 * 获取滚动页
 	 */
 	function getWiper() {
-		app.ajaxLoadPageContent(swiperPath, {
-			userId:app.userId,
+	console.log(pageDataStorage['wiper'])
+
+	if(pageDataStorage['wiper']){
+		// $$('.homeSwiper .swiper-wrapper').html('');
+		// $$('.homeSwiper .swiper-pagination').html('');
+		
+	}
+	app.ajaxLoadPageContent(swiperPath, {
+			catalogId:2,
+			size:5,
+			// tenantId: app.tenantId
+			tenantId: app.tenantId
 		}, function(data) {
-			pageDataStorage['wiper'] = data.data[0].data;
-			pageDataStorage['partyFirstId'] = data.data[0].id;
-			console.log(data.data[0].id);
-			console.log(data.data[0].data);
-			handleWiper(data.data[0].data);
-		});
+			console.log(data);
+			pageDataStorage['wiper'] = data.data;
+			pageDataStorage['partyFirstId'] = data.id;
+			handleWiper(data.data);
+		},{
+			type:'GET',
+			dataType:'json'
+	});
+	
 	}
 
 	/**
@@ -221,20 +343,42 @@ define(['app',
 		if(data) {
 			photoBrowserPhotos = [];
 			var datas = data;
-			
+			// patryList = [];
+			// for(var i= 0;i< datas.length;i++){
+			// 	if(datas[i].titlePic==null||datas[i].titlePic=='after-title'){
+			// 		datas.splice(i,1);
+			// 	}
+				
+			// }
+
+			// console.log(datas);
 			$$.each(datas, function(index, item) {
+				// console.log('item')
+				// console.log(item)
+				
 				var images = {
-					url: app.basePath + item.imgUrl,
+					url: app.filePath + item.titlePic,
 					caption: item.title,
-					html:'<span class="photo-browser-zoom-container"><img src="'+app.basePath + item.imgUrl+'"></span><input type="hidden" class="homeId" value="'+item.id+'"/>'
+					html:'<span class="photo-browser-zoom-container"><img src="'+app.filePath + item.titlePic+'"></span><input type="hidden" class="homeId" value="'+item.id+'"/>'
 				};
 				photoBrowserPhotos.push(images);
+
+				
+
 				$$('.homeSwiper .swiper-wrapper').append(
-					'<div class="swiper-slide homeSlider" data-id="'+item.id+'"data-isgood="'+item.isGood+'">' +
-					'<img data-src="' + app.basePath + item.imgUrl + '" src="' + app.basePath + item.imgUrl + '" class="swiper-lazy">' +
-					'<div class="slider-view">' + item.title + '</div>' +
-					'</div>');
+					'<div class="swiper-slide homeSlider" data-id="'+item.id+'"data-isgood="'+item.isGood+' data-type= 1">' +
+					'<img data-src="' + app.filePath + item.titlePic + '" src="' + app.filePath + item.titlePic + '" class="swiper-lazy">'
+					 +
+					'<div class="slider-view" style="padding:5px 5px 5px 5px;">' + item.title + '</div>' +
+					'</div>'
+					);
 			});
+
+			console.log($$('#homeTopSwiper'));
+			console.log($$('#homeTopSwiper')[0].children);
+			console.log($$('#homeTopSwiper')[0].children.length);
+			
+
 			homeSwiper = app.myApp.swiper('.homeSwiper', {
 				pagination: '.homePager1',
 				speed: 800,
@@ -242,6 +386,7 @@ define(['app',
 				autoplayDisableOnInteraction: false,
 				loop: true,
 			});
+			
 			//photoBrowser图片浏览器
 			var photoBrowserPopup = app.myApp.photoBrowser({
 				photos: photoBrowserPhotos,
@@ -252,20 +397,22 @@ define(['app',
 
 			$$('.homeSlider').on('click', function() {
 				var index = $$(this).index() - 1;
-				if(index>4){
+				if(index > 4){
 					//跳回第一张index设置为0
-					index=0;
+					index = 0;
 				}else if(index == -1){
 					//从第一张跳回最后一张index设置为4
 					index = 4;
 				}
-				console.log(index);
-				photoBrowserPopup.open(index);
+				var type = 1;
+				app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + $$($$(this)[0]).data('id') +'&cid='+pageDataStorage['partyFirstId']+'&type='+type);
+				//photoBrowserPopup.open(index);
 				$$('.photo-browser-zoom-container').on('click',function(){
 					//需要点击两次
 					$$('.photo-browser-close-link').click();
 					$$('.photo-browser-close-link').click();
-					app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + $$(this).next('.homeId').val() +'&cId='+pageDataStorage['partyFirstId']);
+					
+					app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + $$(this).next('.homeId').val() +'&cid='+pageDataStorage['partyFirstId']+'&type='+type);
 				})
 			});
 		}
@@ -275,14 +422,19 @@ define(['app',
 	 * 获取标题栏 
 	 */
 	function getPatryList(page) {
+		console.log(app.tenantId);
 		app.ajaxLoadPageContent(partyPath, {
-
+			tenantId:app.tenantId
+			// tenantId: 'cddkjfdkdeeeiruei8888'
 		}, function(data) {
-			pageDataStorage['partyListLength'] = data.data.length
-			//console.log(pageDataStorage['partyListLength']);
+			console.log('获取标题栏')
+			console.log(data)
 			pageDataStorage['partyList'] = data.data;
-			handlePartyList(data.data,page);
+			handlePartyList(data.data);
 			
+		},{
+			
+			dataType:'json'
 		});
 	}
 
@@ -290,55 +442,8 @@ define(['app',
 	 * 加载标题栏
 	 * @param {Object} data 数据
 	 */
-	function handlePartyList(data,page) {
+	function handlePartyList(data) {
 		var _data = data;
-		console.log(_data);
-		//获取catId
-		$$.each(_data,function(index,item){
-			pageDataStorage['catId'+index] = _data[index].id;
-			//console.log(pageDataStorage['catId'+index]);
-		})
-		for(var i=0;i<=pageDataStorage['partyListLength']-1;i++){
-			var str ='';
-			str += '<div class="swiper-slide homeSlider1"  data-number="'+i+'" style=" padding-top: 0px;width: 100%;height: 1000px;">';
-			str += '<div class="page">';
-			str += '<div class="party-list-type'+i+' page-content infinite-scroll pull-to-refresh-content" style="height: 1000px;padding-top: 0px;">';
-			str += '<div class="pull-to-refresh-layer" style="margin-top:0px">';
-			str += '<div class="preloader">';
-			str += '</div>';
-			str += '<div class="pull-to-refresh-arrow">';
-			str += '</div>';
-			str += '</div>';
-			str += '<div class="partyHome'+i+'" style="padding-bottom:570px;">';
-			str += '</div>';
-			str += '</div>';
-			str += '</div>';
-			str += '</div>'; 
-			$$('.partyPage .homeSwiper1 .swiper-wrapper').append(str);
-		}
-		//触发绑定事件
-		app.myApp.initPullToRefresh($('.page'));
-		app.myApp.initFastClicks($('.page'));
-		app.myApp.initPageInfiniteScroll($('.page'));
-		//定义参数
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			pageNo[i]=1;
-		}
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			loading[i]=true;
-		}
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			loadingCount[i]=true;
-		}
-		//向上刷新和下拉加载
-		pushAndPull(page);
-		
-		//让其适应手机屏幕phoneWidth
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			$$('.party-list-type'+i).css('width',phoneWidth+'px');
-		}
-				
-		var patryList = [];
 		if(_data) {
 			$$.each(_data, function(index, item) {
 				var party = {
@@ -346,175 +451,144 @@ define(['app',
 					id: 0,
 					catalogIcon: '',
 					catalogName: '',
-					creatTs: '',
+					catalogUrl:'',
 					basePath: app.basePath,
-					title: ''
+					hasChilds:false,
+					childs:[],
 				};
 				party.id = item.id;
 				party.catalogName = item.catalogName;
-				party.catalogIcon = item.catalogIcon;
-				if(item.data) {
-					party.creatTs = item.data[0].creatTs;
-					party.title = item.data[0].title;
+				if(item.catalogIcon){
+					party.catalogIcon = app.filePath+item.catalogIcon;
 				}
+				
+				party.hasChilds = item.haschild;
+				if(item.haschild){
+					party.childs = item.children;
+				}
+				party.catalogUrl = item.catalogUrl;
+				// party.hasChilds = item.children!=null;
+				// if(item.childs != null){
+					// party.childs = item.children;
+				// 	party.hasChilds = true;
+				// }else{
+				// 	party.hasChilds = false;
+				// }
 				patryList.push(party);
 			});
-			$$('.wrapper ul').html(template(patryList));
-			$(".wrapper li:first").addClass("active1");
-		} else {
-			app.myApp.alert('暂无数据');
+		}
+		console.log('patryList-----')
+		console.log(patryList)
+		if(patryList.length>8){
+			
+			// var n=Math.ceil(patryList.length/8)
+			// $$.each(n,(index,item)=>{
+			// 	var patryList''+''item = patryList.slice(0,item*8);
+			// })
+			
+			var patryList1=patryList.slice(0,8);
+			var patryList2=patryList.slice(8,16);
+			
+		$$('.homeListmin1').html(appList(patryList1));
+		$$('.homeListmin2').html(appList(patryList2));
+		
+		}else{
+			$$('.homeListmin1').html(appList(patryList))
 		}
 		
-		//标题栏滚动
-		iscrollTitle();
-		
-		//加载第一个，其第二个参数为0
-		partyGetList(false,0);
-		//初始化滑动
-		homeSwiper1 = app.myApp.swiper('.homeSwiper1', {
-			pagination: '.homePager',
-			speed: 800,
-			onSlideChangeStart: function(swiper){
-				console.log(swiper.slidesGrid.length);
-				for(var i=0;i<=swiper.slidesGrid.length;i++){
-					if(swiper.activeIndex != 0){
-						console.log($$('.homeSwiper'));
-						$$('.homeSwiper').css('display','none');
-						$('.homeSwiper').slideUp(400);
-					}else{
-						if($('.party-list-type0')[0].scrollTop != 0){
-							$('.homeSwiper').slideUp(400);
-						}
-						if($('.party-list-type0')[0].scrollTop == 0){
-							$$('.homeSwiper').css('display','block');
-						}
-					}
-					if(swiper.activeIndex == i){
-						$$($$(".wrapper li").children())[i].click();
-					}
-				}
-			}
-		});
-		//点击标题栏
-		$$($$(".wrapper li").children()).on('click',showPartyView);
-		
-		//当滑动的时候触发
-		scroll(function(direction) {
-			if(direction == 'up') {
-				$('.homeSwiper').slideDown(400);
-			} else {
-				$('.homeSwiper').slideUp(400);
-			} 
-		});
-		function scroll(fn) {
-//			for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-//				$(".party-list-type"+i).on("touchstart", function(e) {
-//		　　　　		startX = e.originalEvent.changedTouches[0].pageX,
-//	　　　　			startY = e.originalEvent.changedTouches[0].pageY;
-//				});
-//			　　$(".party-list-type"+i).on("touchmove", function(e) {
-//			　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
-//			　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
-//			　　　　X = moveEndX - startX,
-//			　　　　Y = moveEndY - startY;
-//					var beforeScrollTop = $(this)[0].scrollTop;
-//					if ( Math.abs(Y) > Math.abs(X) && Y > 0) {
-//						if(beforeScrollTop == 0){
-//							fn("up");
-//						}else{
-//							fn("down");
-//						}
-//					}else if ( Math.abs(Y) > Math.abs(X) && Y < 0 ) {
-//			　　　　　　if(beforeScrollTop > 0){
-//							fn("down");
-//						}
-//			　　　　}
-//			　　});
-//			}
-			$(".party-list-type0").on("touchstart", function(e) {
-	　　　　		startX = e.originalEvent.changedTouches[0].pageX,
-　　　　			startY = e.originalEvent.changedTouches[0].pageY;
-			});
-		　　$(".party-list-type0").on("touchmove", function(e) {
-		　　　　moveEndX = e.originalEvent.changedTouches[0].pageX,
-		　　　　moveEndY = e.originalEvent.changedTouches[0].pageY,
-		　　　　X = moveEndX - startX,
-		　　　　Y = moveEndY - startY;
-				var beforeScrollTop = $(this)[0].scrollTop;
-				if ( Math.abs(Y) > Math.abs(X) && Y > 0) {
-					if(beforeScrollTop == 0){
-						fn("up");
-					}else{
-						fn("down");
-					}
-				}else if ( Math.abs(Y) > Math.abs(X) && Y < 0 ) {
-		　　　　　　if(beforeScrollTop > 0){
-						fn("down");
-					}
-		　　　　}
-		　　});
-		}
+		// $$('.homeList').html(appList(patryList))
+//		showStudyEveryDayDialog();
+		$$('.homeListApp').on('click',showDetail);
+		console.log('加载标题栏')
+		partyGetList(false);
+
 	}
 
-	/**
-	 * 跳转到详情页面 
-	 * @param {Object} e
-	 */
-	function showPartyView(e) {
-		//stop() 方法停止当前正在运行的动画。
-		$(".sideline").stop(true);
-		//position() 方法返回匹配元素相对于父元素的位置
-//		scrollToElement(el, time, offsetX, offsetY, easing)
-		tabPosition = $$(this).parent().data('index');
-		$$('.partyPage .swiper-wrapper').css('transition-duration','800ms');
-		$$('.partyPage .swiper-wrapper').css('-webkit-transition-duration','800ms');
-		$$('.partyPage .swiper-wrapper').css('-moz-transition-duration','800ms');
-		$$('.partyPage .swiper-wrapper').css('-o-transition-duration','800ms');
-		$$('.partyPage .swiper-wrapper').css('-ms-transition-duration','800ms');
-		//console.log(tabPosition);
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			if(tabPosition != 0){
-				$$('.homeSwiper').css('display','none');
-				$('.homeSwiper').slideUp(400);
-			}else{
-				if($('.party-list-type0')[0].scrollTop != 0){
-					$('.homeSwiper').slideUp(400);
+	function showDetail(){
+		console.log('$$(this)')
+		console.log($$(this))
+		console.log($$(this).data('title'))
+		console.log($$(this).data('cChild'))
+		var id = $$(this).data('id');
+		var title = $$(this).data('title');
+		var curl = $$(this).data('cUrl');
+		var cChild = $$(this).data('cChild');
+
+		// 跳转方式不同看cChild,就是hasChilds
+		if(cChild){
+			console.log('2')
+			var list=[];
+			console.log('patryList')
+			console.log(patryList)
+			$.each(patryList,function(index,item){
+
+				if(item.id == id){
+					console.log(item.id == id)
+					$.each(item.childs,function(index,item1){
+						
+						var party1 = {
+							id: 0,
+							catalogName: '',
+							catalogUrl:'',
+							catalogIcon:'',
+							basePath: app.basePath,
+							dataFirst:'',
+						};
+						party1.id = item1.id;
+						party1.catalogName = item1.catalogName;
+						party1.catalogUrl = item1.catalogUrl;
+						if(party1.catalogIcon){
+							party1.catalogIcon = item1.catalogIcon;
+						}else{
+							party1.catalogIcon = 'img/newIcon/background3.png'
+						}
+						
+						// 标题
+						if(item1.data){
+							console.log(item1.data)
+							if(JSON.parse(JSON.stringify(item1.data))[0]){
+								console.log('3')
+								party1.dataFirst = JSON.parse(JSON.stringify(item1.data))[0].title;
+							}
+						}
+						
+
+						
+						list.push(party1);
+					});
+					console.log('list===')
+					console.log(list)
+					
+					var result = [];
+				 	var obj = {};
+				   for(var i =0; i<list.length; i++){
+				      if(!obj[list[i].id]){
+				         result.push(list[i]);
+				         obj[list[i].id] = true;
+				      }
+					}
+					list = result;
+					console.log('list2===')
+					console.log(result)
+					// $$.each(list, function(index, item){
+					// 	if(item.indexOf(arr[i])==-1){
+					// 		hash.push(arr[i]);
+					// 	   }
+					// })
 				}
-				if($('.party-list-type0')[0].scrollTop == 0){
-					$$('.homeSwiper').css('display','block');
-				}
-			}
-			if(tabPosition == i){
-				//left1 = 100*i;
-				left1 = 85*i;
-				left2 = 10;
-				if(tabPosition != 0){
-					//left2 = (-125)*i/2;
-					left2 = (-95)*i/2;
-				}
-				left3 = phoneWidth*i;
-				myScroll.scrollTo(left2,0,800);
-				//console.log(left3);
-				if(loadingCount[i] == 1 && i != 0){
-					partyGetList(false,i);
-					loadingCount[i] += 1;
-				}			
-			}
+			});
+			app.myApp.getCurrentView().loadPage('partyList2.html?id='+id+'&title='+title+'&List='+JSON.stringify(list));
+		}
+		if(curl != '' && curl != undefined){
+			app.myApp.getCurrentView().loadPage(curl+'?appName='+title);
+		}
+		if(curl == undefined && curl != ''){
+			console.log("curl == undefined && curl != ''--远程教育，通知公告，组工动态，不忘初心牢记使命")
+			app.myApp.getCurrentView().loadPage('partyList.html?id='+id+'&title='+title);
 		}
 		
-		$$('.partyPage .swiper-wrapper').css('transform','translate3d(-'+left3+'px, 0px, 0px)');
-		$$('.partyPage .swiper-wrapper').css('-webkit-transform','translate3d(-'+left3+'px, 0px, 0px)');
-		$$('.partyPage .swiper-wrapper').css('-moz-transform','translate3d(-'+left3+'px, 0px, 0px)');
-		$$('.partyPage .swiper-wrapper').css('-o-transform','translate3d(-'+left3+'px, 0px, 0px)');
-		$$('.partyPage .swiper-wrapper').css('-ms-transform','translate3d(-'+left3+'px, 0px, 0px)');
-		
-     	$(".sideline").animate({left:left1},300);
-     	
-		if($(".wrapper li").hasClass('active1')){
-			$(".wrapper li").removeClass('active1');
-		}
-		$$(this).parent().addClass("active1");
 	}
+
 
 	/**
 	 * android返回，退出APP
@@ -533,7 +607,8 @@ define(['app',
 		} else {
 			app.myApp.toast('再按一次<br />退出系统', 'none').show(true);
 			document.removeEventListener("backbutton", onBackKeyDown, false); // 注销返回键  
-			document.addEventListener("backbutton", exitApp, false); //绑定退出事件  
+			// 暂时注释 退出登录
+			// document.addEventListener("backbutton", exitApp, false); //绑定退出事件  
 			// 3秒后重新注册  
 			var intervalID = window.setInterval(function() {
 				window.clearInterval(intervalID);
@@ -547,64 +622,81 @@ define(['app',
 	 * 检查更新(一天一次)
 	 */
 	function checkUpdate() {
+		console.log('checkUpdate')
 		var today = app.utils.getCurTime().split(" ")[0];
-//		if(today == localStorage.getItem('updateTime')) {
-//			console.log('今天已经检查完毕');
-//			return;
-//		}
-		var updateAjax;
-		setTimeout(function() {
-			updateAjax = $$.ajax({
-				url: findVersionPath,
-				dataType: 'json',
-				data: {
-					curVersion: app.version,
-				},
-				success: function(data) {
-					console.log(data);
-					if(timeOutID) {
-						window.clearTimeout(timeOutID);
-					}
-					timeOutID = null;
-					if(data.data.success) {
-						localStorage.setItem('updateTime', today);
-						if(app.version != data.data.appVersion) {
-							if(app.myApp.device.ios) {
-								setTimeout(function(){
-								 	app.myApp.alert('<div style="text-align: left;">' + '检查到新版本：V' + data.data.appVersion + '<br /><br />更新内容:<br />' + data.data.memo + '<br /><br />文件大小:' + data.data.appSize + 'M<br />请留意App Store提醒</div>');
-								},1500);
-							} else {
-								setTimeout(function(){
-									app.myApp.alert('<div style="text-align: left;">' + '检查到新版本：V' + data.data.appVersion + '<br /><br />更新内容:<br />' + data.data.memo + '<br /><br />文件大小:' + data.data.appSize + 'M，是否进行下载?</div>', function() {
-									open(app.basePath + data.data.appPath, '_system');
-								});
-								},1500);
-							}
+		if(today == localStorage.getItem('updateTime')) {
+			console.log('今天已经检查完毕');
+			alreadyCheckVersionFlag = true;
+			return;
+		}
+
+		
+			var updateAjax;
+			setTimeout(function() {
+				updateAjax = $$.ajax({
+					url: findVersionPath,
+					dataType: 'json',
+					method: 'GET',
+					data: {
+						tenantId: app.tenantId,
+					},
+					success: function(data) {
+						console.log('checkUpdate')
+						console.log(data)
+						if(timeOutID) {
+							window.clearTimeout(timeOutID);
 						}
-					} else {
-						console.log('已经是最新版本');
+						timeOutID = null;
+						
+						if(data.msg == 'success') {
+							localStorage.setItem('updateTime', today);
+							console.log(app.version);
+							console.log(data.data.appVersion);
+							var size = data.data.appSize/1024/1024;
+							if(app.version != data.data.appVersion) {
+								if(app.myApp.device.ios) {
+									setTimeout(function(){
+										 app.myApp.alert('<div style="text-align: left;">' + '检查到新版本：V' + data.data.appVersion + '<br /><br />更新内容:<br />' + data.data.memo + '<br /><br />文件大小:' + size.toFixed(2) + 'M<br />请留意App Store提醒</div>');
+									},1200);
+								} else {
+									setTimeout(function(){
+										app.myApp.alert('<div style="text-align: left;">' + '检查到新版本：V' + data.data.appVersion + '<br /><br />更新内容:<br />' + data.data.memo + '<br /><br />文件大小:' + size.toFixed(2) + 'M，是否进行下载?</div>', function() {
+										open(app.filePath + data.data.appUrl, '_system');
+									});
+									},1200);
+								}
+							}else{
+								alreadyCheckVersionFlag = true;
+									getStudyEveryDayData();
+							}
+							
+							
+
+						}
+					},
+					error: function() {
+						alreadyCheckVersionFlag = true;
+						console.log('更新失败');
+						if(timeOutID) {
+							window.clearTimeout(timeOutID);
+						}
+						timeOutID = null;
 					}
-				},
-				error: function() {
-					console.log('更新失败');
-					if(timeOutID) {
-						window.clearTimeout(timeOutID);
-					}
-					timeOutID = null;
-				}
-			});
-
-			ajaxTimeOut(updateAjax);
-		}, 1000);
-	}
-
-	//操作超时
-	function ajaxTimeOut(ajaxVar) {
-		timeOutID = setTimeout(function() {
-			ajaxVar.abort();
-			//app.myApp.alert('检查更新超时，请检查网络状态！');
-		}, 5000);
-
+				});
+	
+				ajaxTimeOut(updateAjax);
+			}, 4000);
+		}
+	
+		//操作超时
+		function ajaxTimeOut(ajaxVar) {
+			timeOutID = setTimeout(function() {
+				ajaxVar.abort();
+				//app.myApp.alert('检查更新超时，请检查网络状态！');
+			}, 5000);
+	
+		
+		
 	}
 
 	function exitApp() {
@@ -620,163 +712,153 @@ define(['app',
 	 * 确认当前用户的皮肤
 	 */
 	function colorConfirm(){
+		if(app.user == ''||app.user==null){
+			return;
+		}
 		var link = document.createElement( "link" ); 
 		link.type = "text/css"; 
 		link.rel = "stylesheet"; 
-		app.ajaxLoadPageContent(find, {
-			userId:app.userId,
+		app.ajaxLoadPageContent(find+app.userId, {
+			
 		}, function(data) {
-			if(data.appSkin==2){
-				link.href = 'css/skin/blue.css';  
-			}else if(data.appSkin==3){
-				link.href = 'css/skin/green.css';  
+			if(data.data){
+				console.log('更换肤色')
+				console.log(data)
+				if(data.data.appSkin == 2){
+					link.href = 'css/skin/blue.css';  
+				}else if(data.data.appSkin == 3){
+					link.href = 'css/skin/green.css';  
+				}
 			}
+		
 			document.getElementsByTagName( "head" )[0].appendChild( link );
-		});
+		},{
+			type:'GET'
+		}
+		);
 	}
 	
 	
 	//获取文章列表
-	function partyGetList(isLoadMore,i) {
-//		console.log(pageDataStorage['catId'+i]);
-//		console.log(pageNo[i]);
-//		console.log(i);
+	function partyGetList(isLoadMore) {
 		app.ajaxLoadPageContent1(listPath, {
-			page: pageNo[i],
-			catalogId: pageDataStorage['catId'+i],
-			userId: app.userId
+			// page: pageNo,
+			// catalogId: 17,
+			tenantId: app.tenantId,
+			// tenantId: 'cddkjfdkdeeeiruei8888',
+			current:pageNo
 		}, function(result) {
+			console.log('获取文章列表')
+			console.log(result)
 			var data = result;
-			console.log(data.data);
 			//确定没有信息并且是第一页的时候
-			if(data.data.length == 0 && pageNo[i] == 1){
-				$$('.partyHome'+i).html(template1());
+			if(data.data.length == 0 && pageNo == 1){
+				$$('.homeList1').html(template1());
 				$$('.infinite-scroll-preloader').remove();
-			}
-			else if(data.data.length == 0){
+			}else if(data.data.length == 0){
 				$$('.infinite-scroll-preloader').remove();
-				$$('.partyHome'+i).append(str);
-			}
-			else{
+				//$$('.homeList1').append(str);
+			}else{
 				$$('.infinite-scroll-preloader').remove();
-				pageDataStorage['partyGetList'+i] = data.data;
-				handlePartyGetList(data.data, isLoadMore,i);
+				handlePartyGetList(data.data, isLoadMore);
 			}
-		});
+			alreadyGetNewList = true;
+			console.log('获取文章列表-每日一学');
+			getStudyEveryDayData();
+		},
+		);
 	}
 	/**
 	 * 加载文章列表
 	 * @param {Object} data 数据
 	 * @param {Object} isLoadMore 是否加载更多
 	 */
-	function handlePartyGetList(data, isLoadMore,i) {
+	function handlePartyGetList(data, isLoadMore) {
 		if(data && data.length > 0) {
 			var partyData = data;
+			console.log('partyData')
+			console.log(partyData)
+			
 			$$.each(partyData, function(index, item) {
-				item.basePath = app.basePath;
+				item.basePath = app.filePath;
 				item.forwardTotal = item.forwardTotal || 0;
-				item.commentTotal = item.commentTotal || 0;
+				item.commentTotal = item.commentVolume || 0;
 				item.goodTotal = item.goodTotal || 0;
-				var picArr = item.titlePic.split('.');
-				var picType = picArr[picArr.length - 1];
-				if(picType == 'mp4' || picType == 'avi' || picType == 'ogg' || picType == 'webm') {
-					item.picType = 1;
-					item.videoType = picType;
-				} else {
-					item.picType = 0;
+				if(item.titlePic){
+					item.titlePic = app.filePath+item.titlePic;
+				}else{
+					item.titlePic ='';
 				}
+				
+				if(item.titlePic){
+					var picArr = item.titlePic.split('.');
+					var picType = picArr[picArr.length - 1];
+					if(picType == 'mp4' || picType == 'avi' || picType == 'ogg' || picType == 'webm') {
+						item.picType = 1;
+						item.videoType = picType;
+					} else {
+						item.picType = 0;
+					}
+				}	
 			});
 			if(isLoadMore == true) {
 				$$('.infinite-scroll-preloader').remove();
-				$$('.partyHome'+i).append(template1(partyData));
+				$$('.homeList1').append(template1(partyData));
 			} else{
-				$$('.partyHome'+i).html(template1(partyData));
-				//$$('.party-list-type').scrollTop(5, 0, null);
+				$$('.homeList1').html(template1(partyData));
 			}
-			if(data.length < 10 && pageNo[i] == 1){
+			if(data.length < 10 && pageNo == 1){
 					$$('.infinite-scroll-preloader').remove();
 			}
 			//点击文章事件
 			$$('.qs-party-card1').on('click', partyContentHandle);
-			//点击点赞
-//			$$('.partyLike').on('click', function(e) {
-//				var likeTotal = parseInt($$(this).find('.likeTotal').html());
-//				var articleId = $$(this).parent().data('id');
-//				var thisContent = this;
-//				partyLike(articleId, likeTotal, thisContent);
-//				e.stopPropagation();
-//			});
-			loading[i] = false;
+
+			loading = false;
 		} else {
 
 		}
 	}
 
+
 	
 	//文章列表的点击事件
-	function partyContentHandle() {
-		//var aa = $$($$($$(this)[0].childNodes[5])[0].childNodes[1])[0].childNodes[1]
-		
+	function partyContentHandle() {	
 		var catalogId = $$(this).data('id');
 		var cId = $$(this).data('catalogId');
 		var isGood = $$(this).data('isgood');
+		var type = $$(this).data('type');
 		if(isGood == undefined){
 			isGood = false;
-		}
-		console.log(cId);
-		
-//		var video = document.getElementById('video1');
-//		
-//		if(video != null){
-//			video.pause();
-//			$$(video).on('click',function(){
-//				console.log('123');
-//				if(video.paused)
-//				video.play();
-//				else
-//				video.pause();
-//				
-//				return;
-//			});
-//		}		
-		app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + catalogId +'&isGood='+isGood+'&cId='+cId);
+		}	
+		app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + catalogId +'&isGood='+isGood+'&cid='+cId+'&type='+type);
 	}
+	
 	
 	/**
 	 * 上下拉操作 
 	 */
 	function pushAndPull(page) {
 		//下拉刷新	
-		var ptrContent={};
-		//$("tbody").on('click',"[name='submitbutton']",function(){....});
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			ptrContent[i] = $$(page.container).find('.pull-to-refresh-content.party-list-type'+i);
-			//console.log(ptrContent[i]);
-		}
-		$$.each(ptrContent, function(index, item) {
-			ptrContent[index].on('refresh', function(e) {
-				setTimeout(function() {
-					pageNo[index] = 1;
-					loading[index] = true;
-					//这里写请求
-					partyGetList(false,index);
-					app.myApp.pullToRefreshDone();
-				}, 500);
-			});	
+		var ptrContent = $$(page.container).find('.pull-to-refresh-content.homePage');
+		ptrContent.on('refresh', function(e) {
+			setTimeout(function() {
+				pageNo = 1;
+				loading = true;
+				//这里写请求
+				console.log('上下拉操作')
+				partyGetList(false);
+				app.myApp.pullToRefreshDone();
+			}, 500);
 		});
 
 		//滚动加载
-		var loadMoreContent={};
-		for(var i=0;i<=pageDataStorage['partyListLength'];i++){
-			loadMoreContent[i] = $$(page.container).find('.party-list-type'+i);
-		}
-		$$.each(loadMoreContent, function(index, item) {
-			loadMoreContent[index].on('infinite', function() {
-				if(loading[index]) return;
-				loading[index] = true;
-				pageNo[index] += 1;
-				partyGetList(true,index);
-			});
+		var loadMoreContent = $$(page.container).find('.homePage');
+		loadMoreContent.on('infinite', function() {
+			if(loading) return;
+			loading = true;
+			pageNo += 1;
+			console.log('滚动加载')
+			partyGetList(true);
 		});
 	}
 	
@@ -791,7 +873,8 @@ define(['app',
 		init: init,
 		colorConfirm: colorConfirm,
 		refreshHome: refreshHome,
-		iscrollTitle: iscrollTitle,
 		resetFirstIn: resetFirstIn,
+		ajaxLoadContent: ajaxLoadContent,
+		refreshLogin:refreshLogin
 	}
 });

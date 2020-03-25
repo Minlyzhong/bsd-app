@@ -1,14 +1,14 @@
 {{#.}}
 <li>
-	<a data-id="{{id}}" data-userName="{{userName}}" data-userId="{{userId}}" data-logType="{{logType}}" class="item-link item-content">
+	<a data-id="{{id}}" data-userName="{{name}}" data-userId="{{userId}}" data-logType="{{logTypeId}}" class="item-link item-content">
 		<div class="item-inner">
 			<div class="item-subtitle" style="font-size: 14px;padding-top: 5px;">
 				<div style="font-size: 13px;">
-					<span class="color-orange">{{ts}}</span>
+					<span class="color-orange">{{createTime}}</span>
 				</div>
 			</div>
 			<div style="margin-top: 10px;font-size: 15px;">
-				<span class="color-gray"><span class="userName" style="color: #369;    font-weight: bold;">{{userName}}</span>发表了<span id="logType">{{logType}}</span>，标题为《<span style="color: #369;    font-weight: bold;">{{logTitle}}</span>》</span>
+				<span class="color-gray"><span class="userName" style="color: #369;    font-weight: bold;">{{name}}</span>发表了<span id="logType">{{logTypeId}}</span>，标题为《<span style="color: #369;    font-weight: bold;">{{logTitle}}</span>》</span>
 			</div>
 		</div>
 	</a>

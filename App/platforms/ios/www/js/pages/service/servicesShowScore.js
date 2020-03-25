@@ -6,7 +6,8 @@ define(['app',
 	var pageDataStorage = {};
 	var pageNo = 1;
 	var loading = true;
-	var actorPath = app.basePath + '/extVoluntaryService/findVoluntaryActor';
+	// 获取服务参与人
+	var actorPath = app.basePath + '/mobile/volunteer/joins/';
 	var sid = 0;
 
 	/**
@@ -31,14 +32,14 @@ define(['app',
 	}
 
 	function showScore() {
-		app.ajaxLoadPageContent(actorPath, {
-			serviceId: sid
+		app.ajaxLoadPageContent(actorPath + sid, {
+			// serviceId: sid
 		}, function(data) {
 			console.log(data);
-			if(data.users) {
-				var users = data.users;
-				var max = data.max == undefined ? 10 : data.max;
-				var min = data.min == undefined ? 0 : data.min;
+			if(data.data.actors) {
+				var users = data.data.actors;
+				var max = data.data.max == undefined ? 10 : data.data.max;
+				var min = data.data.min == undefined ? 0 : data.data.min;
 				$$('.showScoretitle').html('当前打分规则:分数在' + min + '～' + max + '之间 不能超过这个分数区间');
 				for(var i = 0; i < users.length; i++) {
 					if(users[i].score == undefined) {

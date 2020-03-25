@@ -7,7 +7,7 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//个人考核明细接口
-	var rankInfoPath = app.basePath + 'knowledgeTestpaper/loadKnowledgeReportDetial';
+	var rankInfoPath = app.basePath + '/mobile/partyAm/partySpecialResultByMonthAndUserId';
 	var queryData = '';
 
 	/**
@@ -71,9 +71,9 @@ define(['app',
 		}, function(data) {
 			if(data.data && data.data.length > 0) {
 				console.log(data);
-				queryData = data.data;
-				handleRankInfo(data.data);
-				pageDataStorage['rankInfo'] = data.data;
+				queryData = data.data.records;
+				handleRankInfo(data.data.records);
+				pageDataStorage['rankInfo'] = data.data.records;
 			}
 		});
 	}

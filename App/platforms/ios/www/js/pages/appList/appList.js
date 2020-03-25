@@ -8,22 +8,35 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//加载应用信息
-	var loadAppInfoPath = app.basePath + 'extApplicationPage/loadAppMenus';
+	var loadAppInfoPath = app.basePath + '/mobile/menu/byUserMenuList';
 	//查询日志信箱未审阅条数
-	var findLogNotReviewSumPath = app.basePath + 'extWorkLog/findLogNotReviewSum';
+	var findLogNotReviewSumPath = app.basePath + '/mobile/worklog/box/';
 	//查询党建考核未完成条数
-	var findUnCompletionNumPath = app.basePath + 'statHelper/findUnCompletionNum';
+	var findUnCompletionNumPath = app.basePath + '/mobile/partyAm/findUnCompletionNum/';
 	//查询微动态未读的日志数量
 	var findNewRecordUnReadPath = app.basePath + 'extWorkOver/findUnReadRows';
 	//查询3+x未读的日志数量
-	var findShykUnReadPath = app.basePath + 'statHelper/getUnCompletedTotal';
+	var findShykUnReadPath = app.basePath + '/mobile/partyAm/getUnCompletedTotal';
+	//查询一把手考核未完成条数
+	var findLeaderPath = app.basePath + '/mobile/partyAm/getLeaderTotal';
+	//查询每一日学未学习的数量
+	var dailyLearningNumPath = app.basePath + '/mobile/course/content/nostudy/';
+	//每日一学最新一条数据
+	var studyEveryDayPath = app.basePath + '/mobile/course/content/push/';
 	var notReviewSum = 0;
 	var UnReadRows = 0;
 	var shykReadRows = 0;
+	var dailyLearningNum = 0;
 	var notAssessSum = {};
+	var LeadernotAssessSum = {};
 	var lat = 0.0;
 	var lng = 0.0;
 	var scanInfo = '';
+	var alreadyGetStudyData = false;
+	var alreadyGetOtherData = false;
+	var startDate;
+	var endDate
+
 
 	/**
 	 * 页面初始化 
@@ -32,8 +45,9 @@ define(['app',
 	function init(page) {
 		var loginCB = app.myApp.onPageBack('login', function(backPage) {
 			//获取用户信息
-			console.log('重新获取应用信息');
+			//console.log('重新获取应用信息');
 			initData(page.query);
+			// getStudyEveryDayData();
 		});
 		app.pageStorageClear('appList/appList', [
 			loginCB,
@@ -43,6 +57,8 @@ define(['app',
 		} else {
 			loadStorage(page);
 		}
+
+		window.filePath=app.filePath;
 	}
 
 	/**
@@ -57,6 +73,11 @@ define(['app',
 		lat = 0.0;
 		lng = 0.0;
 		scanInfo = '';
+		var myDate = new Date();
+		
+		var month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
+		startDate = myDate.getFullYear()+'-'+ month +'-01';
+		endDate =myDate.getFullYear()+'-'+ month+'-31';
 		var user = new Object();
 		user.role = app.roleId;
 //		app.myApp.alert(app.roleId);
@@ -69,15 +90,21 @@ define(['app',
 			notReviewSum = 0;
 			UnReadRows = 0;
 			shykReadRows = 0;
+			dailyLearningNum = 0;
 			notAssessSum = {};
+			LeadernotAssessSum = {};
 			//查询日志信箱未审阅条数
 			findLogNotReviewSum();
 			//查询党建考核未完成条数
-			findUnCompletionNum();
+			// findUnCompletionNum();
+			// 查询一把手考核未完成条数 
+			findLeaderUnCompletionNum();
 			//查询微动态未读状态
-			findUnReadRows();
+//			findUnReadRows();
 			//查询三会一课
 			findShykReadRows(); 
+			//查询每日一学
+			findDailyLearningNum(); 
 //			setInterval(
 //				function(){
 //					reSetUnReadRows();
@@ -111,13 +138,13 @@ define(['app',
 	 *  查询日志信箱未审阅条数
 	 */
 	function findLogNotReviewSum() {
-		app.ajaxLoadPageContent(findLogNotReviewSumPath, {
-			userId: app.userId,
+		app.ajaxLoadPageContent(findLogNotReviewSumPath+ app.userId+'/unread', {
+			// userId: app.userId,
+			// tenantId:
 		}, function(result) {
-			var data = result;
-			console.log(data.sum);
-			pageDataStorage['reviewSum'] = data.sum;
-			notReviewSum = data.sum;
+			var data = result.data;
+			pageDataStorage['reviewSum'] = data;
+			notReviewSum = data;
 		}, {
 			async: false
 		});
@@ -130,7 +157,6 @@ define(['app',
 		app.ajaxLoadPageContent(findNewRecordUnReadPath, {
 			userId: app.userId,
 		}, function(result) {
-			console.log(result.total);
 			pageDataStorage['UnReadRows'] = result.total;
 			UnReadRows = result.total;
 		},{
@@ -143,20 +169,32 @@ define(['app',
 	 */
 	function findShykReadRows() {
 		var myDate = new Date();
-		var startDate = myDate.getFullYear()+'-'+(myDate.getMonth()+1)+'-01';
-		var endDate =myDate.getFullYear()+'-'+(myDate.getMonth()+1)+'-31';
-		console.log(startDate);
-		console.log(endDate);
+		
 		app.ajaxLoadPageContent(findShykUnReadPath, {
-			deptId:app.user.deptId,
+			// deptId:app.user.deptId,
 			startDate:startDate,
-			endDate:endDate
+			endDate:endDate,
+			khpl:2
 		}, function(result) {
-			console.log(result);
-			pageDataStorage['shykReadRows'] = result;
-			shykReadRows = result;
+			pageDataStorage['shykReadRows'] = result.data;
+			shykReadRows = result.data;
 		},{
 			async: false
+		});
+	}
+	
+	/**
+	 * 查询每日一学未完成数量
+	 */
+	function findDailyLearningNum() {
+		app.ajaxLoadPageContent(dailyLearningNumPath+app.userId, {
+			// userId:app.userId
+		}, function(result) {
+			pageDataStorage['dailyLearningNum'] = result.data;
+			dailyLearningNum = result.data;
+		},{
+			async: false,
+			type:'GET'
 		});
 	}
 
@@ -165,17 +203,16 @@ define(['app',
 	 */
 	function findUnCompletionNum() {
 		$$.ajax({
-			url: findUnCompletionNumPath,
-			method: 'POST',
+			url: findUnCompletionNumPath+app.user.deptId,
+			method: 'GET',
 			dataType: 'json',
-			data: {
-				deptId: app.user.deptId,
-			},
+			// data: {
+			// 	deptId: app.user.deptId,
+			// },
 			success: function(result) {
 				notAssessSum = result;
-				console.log(notAssessSum);
 				if(notAssessSum.totalNum) {
-					pageDataStorage['assessTotal'] = notAssessSum.totalNum;
+					pageDataStorage['assessFirstTotal'] = notAssessSum.totalNum;
 					var total = notAssessSum.totalNum > 99 ? '99+' : notAssessSum.totalNum;
 					var result = $$($$('.appContentList .appList')[0]).find('.grid');
 					$$.each(result, function(index, item) {
@@ -192,72 +229,128 @@ define(['app',
 	}
 
 	/**
+	 * 查询一把手考核未完成条数 
+	 */
+	function findLeaderUnCompletionNum() {
+		$$.ajax({
+			url: findLeaderPath,
+			method: 'GET',
+			dataType: 'json',
+			data: {
+				startDate:startDate,
+				endDate:endDate,
+			},
+			success: function(data) {
+				if(data.data == null){
+					data.data = 0;
+				}
+				LeadernotAssessSum = data.data;
+				if(LeadernotAssessSum) {
+					pageDataStorage['assessLeaderTotal'] = LeadernotAssessSum;
+					var total = LeadernotAssessSum > 99 ? '99+' : LeadernotAssessSum;
+					var result = $$($$('.appContentList .appList')[0]).find('.grid');
+					$$.each(result, function(index, item) {
+						if($$(item).data('name') == '一把手考核') {
+							$(item).find('img').before('<span class="appBadge bg-red assessFirstBadge">' + total + '</span>');
+						}
+					});
+				}
+			},
+			error: function() {
+				app.myApp.alert(app.utils.callbackAjaxError());
+			}
+		});
+	}
+
+
+	/**
 	 * 异步请求页面数据 
 	 */
 	function ajaxLoadContent() {
 		app.ajaxLoadPageContent(loadAppInfoPath, {
-			userId: app.userId
+			// userId: app.userId
+			userId: app.userId,
 		}, function(data) {
-			console.log(data);
-			if(data && data.length > 0) {
+			// console.log('应用页图标')
+			// console.log(data)
+			if(data.data && data.data.length > 0) {
 				var pageArr = [];
-				$$.each(data, function(_, menuItem) {
+				$$.each(data.data, function(_, menuItem) {
+					// console.log('menuItem')
+					// console.log(menuItem)
+					// console.log('app.roleId')
+					// console.log(app.roleId)
 					$$.each(menuItem.children, function(_, appItem) {
-						//原本app.roleId != 1 改了 才会出现第一书记
-						console.log(app.roleId);	
-						if(!(app.roleId == 1 || app.roleId ==4) && appItem.appUrl == "firstSecretary.html") {
-							appItem.appUrl = -1;
+						appItem.menuIcon=app.filePath+appItem.menuIcon;
+						
+						if(app.roleId < 1 && appItem.menuUrl == "assessTopicList.html") {
+							appItem.menuUrl = -1;
+							
 							return true;
 						}
-						if(app.roleId <= 1 && appItem.appUrl == "assessTopicList.html") {
-							appItem.appUrl = -1;
+						// console.log(app.roleId);
+						if(app.roleId == 1 && appItem.menuUrl == "threePlusStatistics.html") {
+							console.log('1----');
+							console.log(app.roleId);
+							appItem.menuUrl = 'rankTest.html';
+							// appItem.menuIcon = app.filePath+'images/threePlusXStatistics.png';
 							return true;
 						}
-						if(app.roleId == 1 && appItem.appUrl == "threePlusStatistics.html") {
-							console.log('11');
-							appItem.appUrl = 'rankTest.html';
-							appItem.appIcon = app.basePath+'images/threePlusXStatistics.png';
+						else if(app.roleId == 5 && appItem.menuUrl == "threePlusStatistics.html") {
+							console.log('2----')
+							appItem.menuUrl = 'shykDUD1.html?deptName='+app.userDetail.deptName;
+							// appItem.menuIcon = app.filePath+'images/threePlusXStatistics.png';
 							return true;
 						}
-						else if(app.roleId == 5 && appItem.appUrl == "threePlusStatistics.html") {
-							appItem.appUrl = 'shykDUD1.html?deptName='+app.user.deptName;
-							appItem.appIcon = app.basePath+'images/threePlusXStatistics.png';
+						else if(app.roleId == 6 && appItem.menuUrl == "threePlusStatistics.html") {
+							console.log('3----')
+							appItem.menuUrl = 'shykDUD1.html?deptName='+app.userDetail.deptName;
+							// appItem.menuIcon = app.filePath+'images/threePlusXStatistics.png';
 							return true;
 						}
-						//						if(appItem.appUrl == "eduVideo.html") {
-						//							appItem.appUrl = -1;
-						//							return true;
-						//						}
-						//						if(appItem.appUrl == "payment.html") {
-						//							appItem.appUrl = -1;
-						//							return true;
-						//						}
-						if(appItem.appUrl.indexOf('.') != -1) {
-							if(appItem.appUrl == 'assessTopicList.html') {
-								pageArr.push('assessment/' + appItem.appUrl.split('.')[0]);
+						else if(appItem.menuUrl == "threePlusStatistics.html"){
+							console.log(app.roleId);
+							appItem.menuUrl = 'rankTest.html';
+							// appItem.menuUrl = 'shykDUD1.html?deptName='+app.userDetail.deptName;
+							return true;
+						}
+						
+						if(app.roleId == 6 && appItem.menuUrl == "partyEvaluation.html") {
+							appItem.menuUrl = 'partyEvaluationLeader.html';
+							// appItem.menuIcon = app.filePath+'images/assessment.png';
+							return true;
+						}
+						if(appItem.menuUrl == "assessmentResult.html") {
+							appItem.menuUrl = 'assessmentResultEntrance.html';
+							// appItem.menuIcon = app.filePath+'images/result.png';
+							return true;
+						}
+						if(appItem.menuUrl.indexOf('.') != -1) {
+							if(appItem.menuUrl == 'assessTopicList.html') {
+								// appItem.menuIcon=app.filePath+appItem.menuIcon;
+								pageArr.push('assessment/' + appItem.menuUrl.split('.')[0]);
 							} else {
-								pageArr.push(appItem.appUrl.split('.')[0] + '/' + appItem.appUrl.split('.')[0]);
+								pageArr.push(appItem.menuUrl.split('.')[0] + '/' + appItem.menuUrl.split('.')[0]);
 							}
 						}
 						appItem.badgeCount = 0;
-						appItem.appLower = appItem.appUrl.split('.')[0];
+						appItem.appLower = appItem.menuUrl.split('.')[0];
 						appItem.appBasePath = app.basePath;
-						//console.log(app.roleId);
-						//console.log(appItem.appUrl);	
-						//console.log(appItem);
 					});
 				});
 				setPageStorageClear(pageArr);
-				pageDataStorage['app'] = data;
-				handleApp(data);
+				pageDataStorage['app'] = data.data;
+				handleApp(data.data);
 			} else {
 				app.myApp.alert('还没有添加应用！');
 			}
 			var result = $$($$('.appContentList .appList')).find('.grid');
 			$$.each(result, function(index, item) {
+				// console.log('result')
+				// console.log(result)
 				if($$(item).data('name') == '工作日志') {
 					if(notReviewSum != 0) {
-						$(item).find('img').before('<span class="appBadge bg-red appRecordBadge">' + notReviewSum + '</span>');
+						$(item).find('img').before('<span class="appBadge bg-red appRecordBadge1">' + notReviewSum + '</span>');
 					}
 				}
 				if($$(item).data('name') == '微动态') {
@@ -265,12 +358,24 @@ define(['app',
 						$(item).find('img').before('<span class="appBadge1 bg-red appRecordBadge"></span>');
 					}
 				}
-				if($$(item).data('name') == '3+X考核') {
+				if($$(item).data('name') == '三会一课考核统计') {
 					if(shykReadRows != '0') {
 						$(item).find('img').before('<span class="appBadge bg-red appRecordBadge shykBadge">' + shykReadRows + '</span>');
 					}
 				}
+				// if($$(item).data('name') == '一把手考核') {
+				// 	if(LeadernotAssessSum != '0') {
+				// 		$(item).find('img').before('<span class="appBadge bg-red assessFirstBadge shykBadge">' + LeadernotAssessSum + '</span>');
+				// 	}
+				// }
+				if($$(item).data('name') == '每日一学') {
+					if(dailyLearningNum != '0') {
+						$(item).find('img').before('<span class="appBadge bg-red appRecordBadge dlBadge">' + dailyLearningNum + '</span>');
+					}
+				}
 			});
+			alreadyGetOtherData = true;
+			getStudyEveryDayData();
 		});
 	}
 
@@ -287,6 +392,8 @@ define(['app',
 	 * 加载信息 
 	 */
 	function handleApp(data) {
+		console.log('加载信息')
+		console.log(data)
 		$$('.app-content').html(appTemplate(data));
 		$$('.MenuList').on('click', function() {
 			if($$(this).attr("data-option") == "off") {
@@ -298,21 +405,34 @@ define(['app',
 			}
 		});
 		$$('.app-content .grid').on('click', function() {
+			
 			if(app.userId <= 0) {
 				toLogin();
 				return;
 			}
 			var appId = $$(this).data('id');
-			var appName = $$(this).data('name');
+			var menuName = $$(this).data('name');
+			console.log(appId);
+			if(appId == undefined){
+				app.myApp.toast('该功能正在开发中','none').show(true);
+				return;
+			}
 			if(appId == 'villageCheck') {
 				userScan();
 			} else if(appId == 'assessment.html') {
+				console.log(notAssessSum.child)
 				if(!notAssessSum.child) {
 					notAssessSum.child = [];
 				}
-				app.myApp.getCurrentView().loadPage(appId + '?appName=' + appName + '&notAssess=' + JSON.stringify(notAssessSum.child));
+				app.myApp.getCurrentView().loadPage(appId + '?appName=' + menuName + '&notAssess=' + JSON.stringify(notAssessSum.child));
+			}else if(appId == 'assessmentFirstHand.html') {
+				console.log(LeadernotAssessSum.child);
+				if(!LeadernotAssessSum.child) {
+					LeadernotAssessSum.child = [];
+				}
+				app.myApp.getCurrentView().loadPage(appId + '?appName=' + menuName + '&notAssess=' + JSON.stringify(LeadernotAssessSum.child));
 			} else {
-				app.myApp.getCurrentView().loadPage(appId + '?appName=' + appName);
+				app.myApp.getCurrentView().loadPage(appId + '?appName=' + menuName);
 			}
 		});
 	}
@@ -326,10 +446,10 @@ define(['app',
 				result.text = JSON.parse(result.text);
 				if(result.text.type && result.text.id) {
 					scanInfo = result.text;
-					app.myApp.showPreloader("登记中...");
+					app.myApp.showPreloader("加载中...");
 					sendUserRecord();
 				} else if(result.cancelled == "1") {
-					app.myApp.toast('取消扫描', 'none').show(true);
+					app.myApp.toast('取消扫描', 'error').show(true);
 				} else {
 					app.myApp.alert("扫描出错，请检查二维码是否正确");
 				}
@@ -432,7 +552,12 @@ define(['app',
 	 */
 	function setRecordBadge() {
 		pageDataStorage['reviewSum'] = pageDataStorage['reviewSum'] - 1;
-		$$('.appRecordBadge').html(pageDataStorage['reviewSum']);
+
+		if(pageDataStorage['reviewSum'] <= 0) {
+			$$('.appRecordBadge1').html(0);
+		}else{
+			$$('.appRecordBadge1').html(pageDataStorage['reviewSum']);
+		}
 	}
 	/**
 	 * 设置微动态未读条数 
@@ -440,12 +565,11 @@ define(['app',
 	function setUnReadRows() {
 		if(pageDataStorage['UnReadRows']>0){
 			pageDataStorage['UnReadRows'] = pageDataStorage['UnReadRows'] - 1;
-			console.log(pageDataStorage['UnReadRows']);
 			if(pageDataStorage['UnReadRows'] == 0){
 				$$('.appBadge1').css('display','none');
 			}
 		}else{
-			console.log('已经等于0，不能再减了')
+			console.log('已经等于0，不能再减了');
 		}
 	}
 	
@@ -456,11 +580,25 @@ define(['app',
 		app.ajaxLoadPageContent(findNewRecordUnReadPath, {
 			userId: app.userId,
 		}, function(result) {
-			console.log(result.total);
 			if(result.total>0){
 				$$('.appBadge1').css('display','block');
 			}else{
 				$$('.appBadge1').css('display','none');
+			}
+		});
+	}
+	
+	/*
+	 * 每日一学未读条数（定时） 
+	 */
+	function reSetDlNum(){
+		app.ajaxLoadPageContent(dailyLearningNumPath+app.userId, {
+			// userId: app.userId,
+		}, function(result) {
+			if(result.data != '0'){
+				$$('.dlBadge').html(result.data);
+			}else{
+				$$('.dlBadge').css('display','none');
 			}
 		});
 	}
@@ -472,22 +610,59 @@ define(['app',
 		var myDate = new Date();
 		var startDate = myDate.getFullYear()+'-'+(myDate.getMonth()+1)+'-01';
 		var endDate =myDate.getFullYear()+'-'+(myDate.getMonth()+1)+'-31';
-		console.log(startDate);
-		console.log(endDate);
 		app.ajaxLoadPageContent(findShykUnReadPath, {
-			deptId:app.user.deptId,
-			startDate:startDate,
-			endDate:endDate
+			// deptId:app.user.deptId,
+			// startDate:startDate,
+			// endDate:endDate,
+			// khpl:3
 		}, function(result) {
-			console.log(result);
+			console.log(result)
 			if(result != '0'){
-				$$('.shykBadge').html(result);
+				$$('.shykBadge').html(result.data);
 			}else{
 				$$('.shykBadge').css('display','none');
 			}
 		});
 	}
 
+	/**
+	 * 获取每日一学最新一条数据
+	 */
+	function getStudyEveryDayData(){
+		if(user == -1 || user ==''|| user == null){
+			return;
+		}else{
+			app.ajaxLoadPageContent(studyEveryDayPath+app.userId, {
+				// userId:app.userId
+		}, function(data) {
+			alreadyGetStudyData = true;
+			// showStudyEveryDayDialog(data.data);
+		});
+		}
+		
+	}
+	
+	/**
+	 * 展示每日一学弹出框
+	 */
+	function showStudyEveryDayDialog(studyData){
+		console.log('弹出框');
+		var curDay = app.utils.getCurTime().split(" ")[0];
+		if(curDay == localStorage.getItem('lastStudyDay')){
+			return;
+		}else if(app.isLog && alreadyLoginFlag &&alreadyGetStudyData && alreadyGetOtherData){
+			setTimeout(function(){
+				if(studyData != null && studyData != undefined && JSON.stringify(studyData) != "{}"){
+					localStorage.setItem('lastStudyDay',curDay);
+					app.myApp.alert(studyData.contentTitle, '每日一学',function () {
+				       		app.myApp.getCurrentView().loadPage('dailyLearning.html');
+					});
+				}
+			},1000);
+		}else {
+			setTimeout(showStudyEveryDayDialog(studyData),1000);
+		}
+	}
 	/**
 	 * 重置firstIn变量 
 	 */
@@ -509,6 +684,21 @@ define(['app',
 			}
 		});
 	}
+	/**
+	 * 减少一次未完成的数量
+	 */
+	function minusAssessFirstNum() {
+		console.log(pageDataStorage['assessLeaderTotal']);
+		pageDataStorage['assessLeaderTotal'] -= 1;
+		var total = pageDataStorage['assessLeaderTotal'];
+		var total = total > 99 ? '99+' : total;
+		$$('.assessFirstBadge').html(total);
+		// $$.each(LeadernotAssessSum.child, function(index, item2) {
+		// 	if(item2.knowledgePaperId == tpId) {
+		// 		item2.totalNum = item2.totalNum - 1;
+		// 	}
+		// });
+	}
 
 	return {
 		init: init,
@@ -516,6 +706,8 @@ define(['app',
 		setRecordBadge: setRecordBadge,
 		setUnReadRows :setUnReadRows,
 		reSetshykReadRows:reSetshykReadRows,
+		reSetDlNum:reSetDlNum,
 		minusAssessNum: minusAssessNum,
+		minusAssessFirstNum: minusAssessFirstNum
 	}
 });

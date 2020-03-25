@@ -38,6 +38,7 @@ define(['app',
 		app.ajaxLoadPageContent(userPath, {
 			
 		}, function(data) {
+
 			infoData = data.data;
 //			if(infoData && infoData.length > 0) {
 //				var userInfo = {};
@@ -89,7 +90,8 @@ define(['app',
 				loading = false;
 			} else {
 				if(isLoadmore == false) {
-					app.myApp.alert('您还没积分哦，积极参与活动吧！');
+					console.log('您还没积分哦，积极参与活动吧！');
+					app.myApp.toast('暂时没有排名信息', 'none').show(true);
 				}
 			}
 		});

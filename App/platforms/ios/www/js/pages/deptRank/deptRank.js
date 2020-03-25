@@ -7,9 +7,9 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//支部排名
-	var loadDeptRankPath = app.basePath + 'deptRank/deptBranchRank';
+	var loadDeptRankPath = app.basePath + '/mobile/partyAm/deptBranchRank';
 	//模糊搜索支部名称
-	var searchDeptNamePath = app.basePath + 'deptRank/searchDeptRank';
+	var searchDeptNamePath = app.basePath + '/mobile/partyAm/deptBranchRank';
 	var deptName = '';
 	//	var deptId = 0;
 	var deptDate = '';
@@ -67,6 +67,7 @@ define(['app',
 	 * 属性定义（不传参，使用模块变量）
 	 */
 	function attrDefine(page) {
+		console.log(deptName);
 		$$('.deptR .pageTitle').html(page.query.appName);
 		$$('#deptRankName').val(deptName);
 		$$('#deptRankDate').val(deptDate);
@@ -132,10 +133,11 @@ define(['app',
 		$$('.deptRankNameBox').show();
 		var content = $$(this).val();
 		app.ajaxLoadPageContent(searchDeptNamePath, {
-			deptName: content,
+			query: content,
 			deptId: app.user.deptId,
 			userId: app.userId
 		}, function(data) {
+			var data = data.data.records;
 			console.log(data);
 			if(data.length > 0) {
 				var html = '';
@@ -197,14 +199,15 @@ define(['app',
 	 */
 	function ajaxLoadContent(isLoadMore) {
 		app.ajaxLoadPageContent(loadDeptRankPath, {
-			pageNo: pageNo,
-			userId: app.userId,
+			current: pageNo,
+			// userId: app.userId,
 			deptId: app.user.deptId,
 			date: deptDate,
-			deptName: $$('#deptRankName').val(),
+			query: $$('#deptRankName').val(),
 			sortType: state
 		}, function(data) {
 			console.log(data);
+			var data = data.data.records;
 			if(isLoadMore) {
 				pageDataStorage['rank'] = pageDataStorage['rank'].concat(data);
 			} else {

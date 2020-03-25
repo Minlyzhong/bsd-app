@@ -1,0 +1,31 @@
+{{#.}}
+	<li>
+		<a data-id={{id}} data-memo="{{remarks}}" data-reportState="{{reportState}}" data-userName="{{name}}" class="item-link item-content rankDetail-content">
+			<div class="item-inner" style="padding-right:0px">
+				<div class="userInfo-row item-subtitle" style="font-size: 14px;padding-top: 5px;">
+					<div class="color-gray" style="font-size: 13px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+						<span class="discussName">填报人：{{name}}</span><br/><br/> 
+						<span class="discussName">考核时间：{{reportTime}}</span>
+					</div>
+				</div>
+				<div class="rankDetailcontent" >
+					<span class="rankDetailTitle" style="color: #369;">考核清单：{{topicTitle}}；</span>
+					<span class="rankDetailScore color-red">+{{totalScore}}</span>
+				</div>
+				<div class="rankDetailcontent" >
+					<span class="rankDetailName" style="color: #008000;">标题：{{reportTitle}}</span>
+					{{!-- {{#compare reportState '==' 0}}
+					<span class="checkassess">未审核</span>
+					{{/compare}}
+					{{#compare reportState '==' 1}}
+					<span class="checkassess">已审核</span>
+					{{/compare}} --}}
+					{{#compare reportState '==' 1}}
+					<span class="checkassess">已退回</span>
+					{{/compare}}
+				</div>
+			</div>
+		</a>
+	</li>
+	
+{{/.}}

@@ -11,24 +11,28 @@ define(['app',
 	var pageNo1 = 1;
 	var loading1 = true;
 	//查找子部门
-	var findDeptPath = app.basePath + 'extContact/findDept';
+	var findDeptPath = app.basePath + '/mobile/political/department/list';
 	//选择部门人员
-	var findDeptPeoplePath = app.basePath + 'orgUser/findDeptPeople';
+	var findDeptPeoplePath = app.basePath + '/mobile/user/findDeptPeople/';
 	//模糊搜索部门人员
-	var searchDeptPeoplePath = app.basePath + 'extContact/searchDeptPeople';
+	var searchDeptPeoplePath = app.basePath + '/mobile/user/searchDeptPeople';
 	//模糊搜索部门query=藤县中&pageNo=1
-	var findDeptByConditonPath = app.basePath + 'extContact/findDeptByConditon';
-	//	根据组织机构ID，查询最新党员队伍统计信
-	var findPartyMemberInfoPath = app.basePath + 'partyMemberStat/findPartyMemberInfo';
+	var findDeptByConditonPath = app.basePath + '/mobile/political/department/findDeptByConditon';
+	//	根据组织机构ID，查询最新党员队伍统计信息
+	var findPartyMemberInfoPath = app.basePath + '/mobile/user/findPartyMemberInfo/';
 	//查询最新党组织统计信息
-	var findPartyStatInfoPath = app.basePath + 'partyStat/findPartyStatInfo';
+	var findPartyStatInfoPath = app.basePath + '/mobile/political/department/statistics';
 	//查询党建考核进度信息
-	var findCompRateOfPartyPath = app.basePath + 'statHelper/findCompRateOfParty';
+	var findCompRateOfPartyPath = app.basePath + '/mobile/partyAm/findCompRateOfParty/';
 	//获取已参与考核的党支部列表
-	var findCompPagerOfPartyInDZB = app.basePath + 'statHelper/findCompPagerOfPartyInDZB';
+	var findCompPagerOfPartyInDZB = app.basePath + '/mobile/partyAm/findCompPagerOfPartyInDZB/';
+	//每日一学最新一条数据
+	var studyEveryDayPath = app.basePath + '/mobile/course/content/push/';
 	//用于判断该部门是否请求过数据
 	var deptIdList = {};
 	var oldContent = '';
+	var alreadyGetStudyData = false;
+	var alreadyGetOtherData = false;
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -39,18 +43,15 @@ define(['app',
 			console.log('重新获取通讯录信息');
 			$$('.contactMenu').html("");
 			initData(page);
+//			getStudyEveryDayData();
 		});
+		// 销毁子页面缓存
 		app.pageStorageClear('contacts/contacts', [
-//			'contacts/contactsShowPeople',
-//			'contacts/contactsUserInfo',
 			loginCB
 		]);
-//		if(firstIn) {
-			initData(page);
-//		} else {
-//			loadStorage(page);
-//		}
+		initData(page);
 		app.back2Home();
+
 	}
 
 	/**
@@ -65,6 +66,10 @@ define(['app',
 		loading1 = true;
 		var user = new Object();
 		user.role = app.roleId;
+		// user.role = 1;
+		console.log('contact.js')
+		console.log(user)
+		
 		$$('.contactPage').html(contactPageTemplate(user));
 		if(app.roleId == -1) {
 			$$('.assessLogin').on('click', function() {
@@ -75,50 +80,11 @@ define(['app',
 			oldContent = '';
 			pushAndPull(page);
 			clickEvent();
-			findDept(app.user.deptId, '', '', 0);
+			// findDept(app.user.deptId, '', '', 0);
+			findDept(-1, '', '', 0);
 			handleDict();
 		}
 	}
-
-	/**
-	 * 读取缓存数据 
-	 */
-//	function loadStorage(page) {
-//		var user = new Object();
-//		user.role = app.roleId;
-//		$$('.contactPage').html(contactPageTemplate(user));
-//		clickEvent();
-//
-//		$$('.contactMenu').html(pageDataStorage['dept']);
-//		$('.contactMenu').vmenuModule();
-//		var appendEle = pageDataStorage['appendEle'] || $$('.contactMenu');
-//		$$('.contactMenu').find('a').on('click', function() {
-//			var deptId = $$(this).data('deptId');
-//			if(deptId && !deptIdList[deptId]) {
-//				findDept(deptId, $$($$(this).parent()[0]), $(this), 1);
-//			}
-//		});
-//		$$('.contactMenu').find('ul').find('.userBtn img').on('click', function(e) {
-//			e.stopPropagation();
-//			var deptId = $$(this).data('deptId');
-//			var deptName = $$(this).data('deptName');
-//			if(deptId) {
-//				findDeptPeople(deptId, deptName);
-//			}
-//		});
-//		$$('.contactMenu').find('ul').find('.infoBtn img').on('click', function(e) {
-//			//stopImmediatePropagation()不仅会阻止事件向祖辈元素的传播，还会阻止该元素绑定的其他(尚未执行的)事件处理函数的执行
-//			e.stopPropagation();
-//			var deptId = $$(this).data('deptId');
-//			var deptName = $$(this).data('deptName');
-//			var deptType = $$(this).data('deptType');
-//			if(deptId) {
-//				console.log('1');
-//				showDeptInfo(deptId, deptName, deptType);
-//			}
-//		});
-//		pushAndPull(page);
-//	}
 
 	/**
 	 * 点击事件
@@ -205,13 +171,11 @@ define(['app',
 //		} else {
 //			$$('.contactsPeopleSearchBar .searchbar-clear').css('opacity', '1');
 //		}
-		console.log($("#contactsId").val())
 		if($("#contactsId").val() == 0){
 			var searchContent = $$('#contactName').val();
 			searchPeople(searchContent, false);
 		}else{
 			var searchContent = $$('#deptName').val();
-			console.log(searchContent);
 			searchDept(searchContent, false);
 		}
 	}
@@ -248,13 +212,14 @@ define(['app',
 			return;
 		}
 		app.ajaxLoadPageContent(searchDeptPeoplePath, {
-			deptId: app.user.deptId,
-			userName: content,
-			pageNo: pageNo,
-			userId: app.userId,
-			type: 0,
+			// deptId: app.user.deptId,
+			// userName: content,
+			// pageNo: pageNo,
+			// userId: app.userId,
+			// type: 0,
+			name:content
 		}, function(data) {
-			console.log(data);
+			var data = data.data;
 			if(data.length > 0) {
 				if(data.length == 10) {
 					loading = false;
@@ -286,19 +251,19 @@ define(['app',
 		if(!content) {
 			return;
 		}
-		console.log(content);
 		app.ajaxLoadPageContent(findDeptByConditonPath, {
-			query: content,
-			pageNo: pageNo1,
+			// query: content,
+			// pageNo: pageNo1,
+			deptName:content
 		}, function(data) {
-			console.log(data);
-			if(data.data.length > 0) {
-				if(data.data.length == 10) {
+			if(data.length > 0) {
+				if(data.length == 10) {
 					loading1 = false;
 				}
-				$$('.contactSearchList ul').append(contactsDeptTemplate(data.data));
+				$$('.contactSearchList ul').append(contactsDeptTemplate(data));
 				$$('.contactSearchList ul .item-content .userBtn img').on('click', function() {
 						//e.stopPropagation();
+						
 						var deptId = $$(this).data('deptId');
 						var deptName = $$(this).data('deptName');
 						if(deptId) {
@@ -307,14 +272,15 @@ define(['app',
 				});
 				$$('.contactSearchList ul .item-content .infoBtn img').on('click', function() {
 						//e.stopPropagation();
+						
 						var deptId = $$(this).data('deptId');
 						var deptName = $$(this).data('deptName');
 						var deptType = $$(this).data('deptType');
+						var deptCode = $$(this).data('deptCode');
 						var parentDeptId = $$($$(this).parent().parent().parent().parent().parent().parent().find('a')[0]).data('deptId');
 						var parentDeptName = $$($$(this).parent().parent().parent().parent().parent().parent().find('a')[0])[0].innerText;
 						if(deptId) {
-							console.log(parentDeptName);
-							showDeptInfo(deptId, deptName, deptType,parentDeptName,parentDeptId);
+							showDeptInfo(deptId, deptName, deptType,parentDeptName,parentDeptId,deptCode);
 						}
 				});
 			} else if(isLoadMore) {
@@ -323,6 +289,8 @@ define(['app',
 				$$('.contactSearchList ul').html("");
 				$$('.contactsDeptNotFound').css('display', 'block');
 			}
+			alreadyGetOtherData = true;
+//			getStudyEveryDayData();
 		});
 		
 	}
@@ -332,29 +300,31 @@ define(['app',
 	 */
 	function findDept(parentId, elements, currentEle, type) {
 		app.ajaxLoadPageContent(findDeptPath, {
+			// parentId: -1,
 			parentId: parentId,
-			type: type,
+			// type: type,
 			userId: app.userId,
 		}, function(data) {
 			if(type) {
 				deptIdList[parentId] = 1;
 			}
-			handleDept(data, elements, currentEle);
+			handleDept(data, elements, currentEle,parentId);
 		});
 	}
 
 	/**
 	 * 加载部门 
 	 */
-	function handleDept(data, elements, currentEle) {
-		console.log(data);
+	function handleDept(data, elements, currentEle,parentId) {
 		if(data.length) {
 			handleData(data, elements);
 			if(elements) {
 				currentEle.click();
 			}
-		} else {
-			app.myApp.alert('该单位已经是最后一级');
+		} else if(data.length<=0 && parentId != -1){
+			console.log('该单位已经是最后一级');
+			// app.myApp.alert('该单位已经是最后一级');
+			app.myApp.toast('该单位已经是最后一级', 'none').show(true);
 		}
 	}
 
@@ -365,29 +335,60 @@ define(['app',
 	 */
 	function handleData(data, elements) {
 		var deptData = data;
+		console.log('处理返回的数据')
+		console.log(data)
+		console.log(elements)
 		//elements不为空，则为该元素追加数据；否则为主表格追加
 		var appendEle = elements || $('.contactMenu');
 		if(elements) {
+			console.log('elements')
 			appendEle.append('<ul>');
+
+			$$.each(deptData, function(index, item) {
+				appendEle.find('ul').append(
+					
+							'<li class="">' +
+							'<a href="#" data-deptId="' + item.id + '" data-deptCode="' + item.deptCode + '">' +
+							'<span class="contactTitle">' + item.title +
+							'</span>' +
+							'<span class="userBtn" style="position: relative;float: right;line-height:20px; margin-right: 10px; margin-top: 10px;margin-left: 2px;">' +
+							'<img src="img/newIcon/icon_branch_personnel.png" style="width: 22px;padding-top: 2px;padding-left:11px" data-deptId="' + item.id + '" data-deptName="' + item.title + '" data-deptCode="' + item.deptCode + '"/>' +
+							'</span>' +
+							'<span class="infoBtn" style="position: relative;float: right;margin-right: 3px;margin-top: 7px;">' +
+							'<img src="img/newIcon/icon_branch_information.png" style="width: 22px;padding-top: 2px;" data-deptType="' + item.deptType + '" data-deptId="' + item.id + '" data-deptName="' + item.label + '" data-deptCode="' + item.deptCode + '"/>' +
+							'</span	>' +
+							'</a>' +
+							'</li>'
+				
+				);
+			});
 		} else {
+			console.log('no-elements')
 			appendEle.append('<ul style="padding: 0px;margin: 5px;">');
+			$$.each(deptData, function(index, item) {
+				appendEle.find('ul').append(
+					'<div class="card-content">'+
+							'<div class="card-content-inner">'+
+							'<li class="card">' +
+							'<a href="#" data-deptId="' + item.id + '" data-deptCode="' + item.deptCode + '">' +
+							'<span class="contactTitle">' + item.title +
+							'</span>' +
+							'<span class="userBtn" style="position: relative;float: right;margin-top: 6px;margin-right: 10px;margin-left: 2px;">' +
+							'<img src="img/newIcon/icon_branch_personnel.png" style="width: 22px;padding-top: 2px;padding-left:11px" data-deptId="' + item.id + '" data-deptName="' + item.title + '" data-deptCode="' + item.deptCode + '"/>' +
+							'</span>' +
+							'<span class="infoBtn" style="position: relative;float: right;margin-top: 7px;margin-right: 3px;">' +
+							'<img src="img/newIcon/icon_branch_information.png" style="width: 22px;padding-top: 2px;" data-deptType="' + item.deptType + '" data-deptId="' + item.id + '" data-deptName="' + item.label + '" data-deptCode="' + item.deptCode + '"/>' +
+							'</span	>' +
+							'</a>' +
+							'</li>'+
+							'</div>'+
+					'</div>'
+					
+					
+				);
+			});
 		}
-		$$.each(deptData, function(index, item) {
-			appendEle.find('ul').append(
-				'<li>' +
-				'<a href="#" data-deptId="' + item.deptId + '">' +
-				'<span class="contactTitle">' + item.deptName +
-				'</span>' +
-				'<span class="userBtn" style="position: relative;float: right;margin-top: 4px;margin-right: 3px;">' +
-				'<img src="img/newIcon/icon_branch_personnel.png" style="width: 28px;padding-top: 2px;padding-left:3px" data-deptId="' + item.deptId + '" data-deptName="' + item.deptName + '" />' +
-				'</span>' +
-				'<span class="infoBtn" style="position: relative;float: right;margin-top: 4px;margin-right: 3px;">' +
-				'<img src="img/newIcon/icon_branch_information.png" style="width: 28px;padding-top: 2px;" data-deptType="' + item.deptType + '" data-deptId="' + item.deptId + '" data-deptName="' + item.deptName + '" />' +
-				'</span	>' +
-				'</a>' +
-				'</li>'
-			);
-		});
+		
 		$(".contactMenu").vmenuModule();
 		pageDataStorage['dept'] = $$('.contactMenu').html();
 		pageDataStorage['appendEle'] = appendEle;
@@ -402,11 +403,11 @@ define(['app',
 			var deptId = $$(this).data('deptId');
 			var deptName = $$(this).data('deptName');
 			var deptType = $$(this).data('deptType');
+			var deptCode = $$(this).data('deptCode');
 			var parentDeptId = $$($$(this).parent().parent().parent().parent().parent().parent().find('a')[0]).data('deptId');
 			var parentDeptName = $$($$(this).parent().parent().parent().parent().parent().parent().find('a')[0])[0].innerText;
 			if(deptId) {
-				console.log(parentDeptName);
-				showDeptInfo(deptId, deptName, deptType,parentDeptName,parentDeptId);
+				showDeptInfo(deptId, deptName, deptType,parentDeptName,parentDeptId,deptCode);
 			}
 		});
 		appendEle.find('ul').find('.userBtn img').on('click', function(e) {
@@ -431,14 +432,14 @@ define(['app',
 	/**
 	 * 判断事业单位类型
 	 */
-	function showDeptInfo(deptId, deptName, deptType,parentDeptName,parentDeptId) {
+	function showDeptInfo(deptId, deptName, deptType,parentDeptName,parentDeptId,deptCode) {
 		if(deptType == 2) {
 			app.myApp.alert('该单位暂无简介信息');
 			return;
 		}
 		app.myApp.showPreloader('加载中');
 		window.setTimeout(function() {
-			app.myApp.getCurrentView().loadPage('partyInfo.html?deptId='+deptId+'&deptName='+deptName+'&deptType='+deptType+'&parentDeptId='+parentDeptId+'&parentDeptName='+parentDeptName);
+			app.myApp.getCurrentView().loadPage('partyInfo.html?deptId='+deptId+'&deptName='+deptName+'&deptType='+deptType+'&parentDeptId='+parentDeptId+'&parentDeptName='+parentDeptName+'&deptCode='+deptCode);
 			//showInfo(deptId, deptName, deptType);
 		}, 500);
 	}
@@ -458,27 +459,29 @@ define(['app',
 		});
 
 		function scroll(fn) {
-			$('.contactSearch')[0].addEventListener("scroll", function() {
-				var afterScrollTop = $('.contactSearch')[0].scrollTop;
-				if(afterScrollTop>=130){
-					if($("#contactsId").val() == 1){
-						if(loading1) return;
-						loading1 = true;
-						pageNo1 += 1;
-						//这里写请求
-						searchDept(oldContent, true);
-					}else{
-						if(loading) return;
-						loading = true;
-						pageNo += 1;
-						//这里写请求
-						searchPeople(oldContent, true);
+			if($('.contactSearch')[0]){
+				$('.contactSearch')[0].addEventListener("scroll", function() {
+					var afterScrollTop = $('.contactSearch')[0].scrollTop;
+					if(afterScrollTop>=130){
+						if($("#contactsId").val() == 1){
+							if(loading1) return;
+							loading1 = true;
+							pageNo1 += 1;
+							//这里写请求
+							searchDept(oldContent, true);
+						}else{
+							if(loading) return;
+							loading = true;
+							pageNo += 1;
+							//这里写请求
+							searchPeople(oldContent, true);
+						}
 					}
-				}
-			}, false);
+				}, false);
+			}
+			
 		}
 		loadMoreContent.on('infinite', function() {
-			console.log('1');
 			if($("#contactsId").val() == 1){
 				if(loading1) return;
 				loading1 = true;
@@ -494,6 +497,39 @@ define(['app',
 			}
 			
 		});
+	}
+	
+	/**
+	 * 获取每日一学最新一条数据
+	 */
+	function getStudyEveryDayData(){
+		app.ajaxLoadPageContent(studyEveryDayPath+app.userId, {
+						// userId:app.userId
+				}, function(data) {
+					alreadyGetStudyData = true;
+					showStudyEveryDayDialog(data.data);
+				});
+	}
+	
+	/**
+	 * 展示每日一学弹出框
+	 */
+	function showStudyEveryDayDialog(studyData){
+		// var curDay = app.utils.getCurTime().split(" ")[0];
+		// if(curDay == localStorage.getItem('lastStudyDay')){
+		// 	return;
+		// }else if(alreadyGetStudyData && alreadyGetOtherData){
+		// 	setTimeout(function(){
+		// 		if(studyData != null && studyData != undefined && JSON.stringify(studyData) != "{}"){
+		// 			localStorage.setItem('lastStudyDay',curDay);
+		// 			app.myApp.alert(studyData.contentTitle, '每日一学',function () {
+		// 		       		app.myApp.getCurrentView().loadPage('dailyLearning.html');
+		// 			});
+		// 		}
+		// 	},1000);
+		// }else {
+		// 	setTimeout(showStudyEveryDayDialog(studyData),1000);
+		// }
 	}
 
 	/**

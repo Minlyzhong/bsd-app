@@ -52,7 +52,15 @@ define(['app','hbs!js/hbs/dailyLearning'], function(app,dLTemplate) {
 				dLResult.contentId = item.contentId;
 				dLResult.catalogId = item.catalogId;
 				dLResult.contentTitle = item.contentTitle;
-				dLResult.titlePic = app.filePath + item.titlePic;
+				console.log(item.titlePic)
+				console.log(item.titlePic !=null);
+				console.log(item.titlePic !='');
+				if(item.titlePic && item.titlePic != null){
+					dLResult.titlePic = app.filePath + item.titlePic;
+				}else{
+					dLResult.titlePic ="img/nopic5.png"
+				}
+				
 				dLResult.isStudy = item.isStudy.toString();
 				dataResult.push(dLResult);
 			});

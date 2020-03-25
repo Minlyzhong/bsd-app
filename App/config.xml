@@ -31,4 +31,5 @@
     <plugin name="cordova-plugin-battery-status" spec="^1.2.4" />
     <plugin name="cordova-plugin-baidupush" spec="^1.0.5" />
     <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
+	<preference name="loadUrlTimeoutValue" value="100000" />
 </widget>

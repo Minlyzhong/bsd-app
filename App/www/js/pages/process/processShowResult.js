@@ -3,11 +3,18 @@ define(['app'], function(app) {
 	var firstIn = 1;
 	//根据项目ID获取两公开详情
 	var findDetailInfoPath = app.basePath + '/mobile/specialDeclare/resolutionPublicityDetail';
+	//根据项目ID获取项目详情
+	var personalProcessDetailsPath = app.basePath + '/mobile/specialDeclare/';
+	//通过ID查询支部信息
+	var departmentPath = app.basePath + '/mobile/political/department/';
+	//通过ID查询村社区信息
+	var departmentName = app.basePath + '/mobile/village/detail/';
 	//显示图片的参数
 	var photoBrowserPhotos = [];
 	var photoBrowserPopup = '';
-	var threeMeetingAndOneClassId;
-	var threeMeetingAndOneClassUserName;
+	var eventId =0 ;
+	var pTitle='';
+	var pId;
 	var name = "";
 	
 	/**
@@ -26,13 +33,17 @@ define(['app'], function(app) {
 	 * 初始化模块变量
 	 */
 	function initData(pageData) {
+		
 		firstIn = 0;
 		photoBrowserPhotos = [];
 		photoBrowserPopup = '';
 		eventId = pageData.eventId;
 		pId = pageData.pId;
 		name = pageData.name;
+		pTitle = pageData.pTitle;
+		
 		$$('.resultName').html(name);
+		$$('.fundsOwnName').html(pTitle);
 	}
 
 	/**
@@ -40,13 +51,25 @@ define(['app'], function(app) {
 	 */
 	function attrDefine(page) {
 		 getDetail();
+		 loadProcessDetail(eventId);
+		 getVillageId();
+		 
 	}
 	
 	/**
 	 * 点击事件
 	 */
 	function clickEvent(page) {
-	
+	//项目内容
+	$$('.fundsDetailIcon').on('click',function(){
+		changeStateForText($$(this));
+		$('.fundsDetail').slideToggle(200);
+	});
+	//项目预算内容
+	$$('.fundsProDetailIcon').on('click',function(){
+		changeStateForText($$(this));
+		$('.fundsProDetail').slideToggle(200);
+	});
 	}
 	/*
 	 * 改变文本框的状态
@@ -55,62 +78,123 @@ define(['app'], function(app) {
 		
 	}
 	/*
+	 * 加载数据
+	 */
+	function loadProcessDetail(eventId){
+		app.ajaxLoadPageContent(personalProcessDetailsPath+eventId, {
+			
+		}, function(data) {
+			var result = data.data;
+			
+			
+			$$('#fundsProDetail').val(result.budgetDetailed);
+			$$('#fundsDetail').val(result.projectContent);
+			
+			console.log(result)
+			//加载图片
+			// showReadonlyPhotos(result.enclosures);
+		});	
+	}
+	/**
+	 * 获取村(社区)id
+	 */
+
+	function getVillageId(){
+		app.ajaxLoadPageContent(departmentPath + app.user.deptId, {
+			// honorId:honorId,
+		}, function(data) {
+			if(data.code == 0 && data.data != null){
+				
+				villageId = data.data.villageId;
+				app.ajaxLoadPageContent(departmentName + villageId, {
+					// honorId:honorId,
+				}, function(data) {
+					if(data.code == 0 && data.data != null){
+						var villageName = data.data.villageName;
+						$$('.Bottom1').html(villageName+'（社区）党（总）支部');
+						$$('.Bottom2').html(villageName+'（居）民委员会');
+						// $$('.vName').html(villageName);
+					}
+				});
+			}
+		});
+		
+	 }
+	/*
 	 * 查询公示详情
 	 */
 	function getDetail(){
 		app.ajaxLoadPageContent(findDetailInfoPath,{
 			id:pId,
-			// refType:3,
-			// isApp: 1
+			
 		},function(data){
 			var result = data.data;
 			console.log(result);
 			//把获取的参数加入页面
-			// $$("#meetinTime").val(result.reportTime);
-			var time1 = result.openEndDate.split(' ')[0];
+			// $$("#meetinTime").val(result.reportTime)
+			var endTime = result.openEndDate
 			var time2 = result.openStartDate.split(' ')[0];
-			$$("#beginTime1").val(time2);
-			$$("#endTime1").val(time1);
-			$$("#phone1").val(result.phone);
+			var time1 = endTime.split(' ')[0];
+			var time = result.createdDate.split(' ')[0];
+			
+
+			var endDate = new Date(endTime.replace(/-/g, '/'));  //结束时间  
+			var time3 = endDate.getTime();
+			console.log(time3)
+
+			var myDate = new Date();
+			var nowData = myDate.getTime();
+			
+			if(nowData >= time3){
+				$$('.show1').css('display','none');
+				$$('.show2').css('display','block');
+				// var year = myDate.getFullYear();
+				// var month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
+				// var date = myDate.getDate()+1<10? "0"+(myDate.getDate()):myDate.getDate();
+				// console.log(year+'-'+month+'-'+date); 
+				$$('.showTime').html(time1);
+				$$(".fundStartTime").html(time2);
+				$$(".fundEndTime").html(time1);
+			}else{
+				$$('.show1').css('display','block');
+				$$('.show2').css('display','none');
+
+				$$(".fundStartTime").html(time2);
+				$$(".fundEndTime").html(time1);
+				$$(".phone1").html(result.phone);
+				$$('.showTime').html(time);
+			}
+			
+
+			
+			
+			
 			
 			//加载图片
 			showReadonlyPhotos(result.enclosures);
 			//加载文件
 			// showAndDownLoadFiles(result.file);
 			//展示
-			showTextArea();
+			// showTextArea();
 		});
 	}
 	/*
 	 * 是否展示
 	 */
 	function showTextArea(){
-		if($$("#content").val() != ''){
-			changeStateForText($$('.tcaomContentIcon'));
-			$('.tcaomContent').slideToggle(200);
-		}
-		if($$("#meetingDecision").val() != ''){
-			changeStateForText($$('.tcaomMeetingDecisionIcon'));
-			$('.tcaomMeetingDecision').slideToggle(200);
-		}
-		if($$("#differentViews").val() != ''){
-			changeStateForText($$('.tcaomDifferentViewsIcon'));
-			$('.tcaomDifferentViews').slideToggle(200);
-		}
-		if($$("#listeds").val() != ''){
-			changeStateForText($$('.listedsIcon'));
-			$('#listeds').animate({height:"200px"},200);
-		};
-		if($$("#absentees").val() != ''){
-			changeStateForText($$('.absenteesIcon'));
-			$('#absentees').animate({height:"200px"},200);
-		};
-		if($$("#attendees").val() != ''){
-			changeStateForText($$('.attendeesIcon'));
-			$('#attendees').animate({height:"200px"},200);
-		}
+		// if($$("#contfundsDetailent").val() != ''){
+		// 	changeStateForText($$('.tcaomContentIcon'));
+		// 	$('.tcaomContent').slideToggle(200);
+		// }
+		// if($$("#fundsProDetail").val() != ''){
+		// 	changeStateForText($$('.fundsProDetailIcon'));
+		// 	$('.fundsProDetail').slideToggle(200);
+		// }
+		
 		
 	}
+
+
 	/**
 	 * 显示已读相片
 	 * @param {Object} picUrlList 需要显示的图片数组

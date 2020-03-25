@@ -5,15 +5,15 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//获取贫困村详细信息
-	var findPoorVilPath = app.basePath + 'poorVillage/findPoorVilById';
+	var findPoorVilPath = app.basePath + '/mobile/village/detail/';
 	//上传村社区图片
-	var uploadVillagePhotoPath = app.basePath + 'upload/uploadVillagePhoto';
+	// var uploadVillagePhotoPath = app.basePath + 'upload/uploadVillagePhoto';
 	//显示村社区图片
-	var showVillagePhotoPath = app.basePath + 'poorVillage/findPhotosOfVillage';
+	var showVillagePhotoPath = app.basePath + '/mobile/village/pictures/';
 	//显示村社区图片的权限
-	var showVillageAuthorityPath = app.basePath + 'firstSecretary/isMemberOfVillage';
+	var showVillageAuthorityPath = app.basePath + '/mobile/village/valid/';
 	//删除村社区图片 
-	var deleteVillagePhotoPath = app.basePath + 'poorVillage/delPhotosOfVillage';
+	var deleteVillagePhotoPath = app.basePath + '/mobile/village/pictures/';
 	
 	var userId = 0;
 	var userName = '';
@@ -80,22 +80,20 @@ define(['app',
 	 * 读取贫困村信息
 	 */
 	function findPoorVillage() {
-		app.ajaxLoadPageContent(findPoorVilPath, {
-			poorVilId: poorVilId
+		app.ajaxLoadPageContent(findPoorVilPath+poorVilId, {
+			// poorVilId: poorVilId
 		}, function(result) {
 			var data = result.data;
 			console.log(data);
 			$$('.fsodHead .content').html(data.memo);
 			$$('.fsodHead .title').html(data.villageName + '简介');
-			if(data.picUrl) {
-				$$('.fsodHead img').attr('src', app.basePath + data.picUrl);
-			}
+			
 			if(data.groups!= ''){
-				$$('.groupsContent').append(data.groups);
+				$$('.groupsContent').append(data.supervisoryCommittee);
 				$$('.groups').css('display','block');
 			}
 			if(data.teams != ''){
-				$$('.teamsContent').append(data.teams);
+				$$('.teamsContent').append(data.twoCommittees);
 				$$('.teams').css('display','block');
 			}
 		});
@@ -105,12 +103,21 @@ define(['app',
 	 * 读取村社区图片
 	 */
 	function showVillagePhoto(){
-		app.ajaxLoadPageContent(showVillagePhotoPath,{
-			vilId: poorVilId
+		app.ajaxLoadPageContent(showVillagePhotoPath+poorVilId,{
+			// vilId: poorVilId
+			tenantId: app.tenantId
 		}, function(data) {
-			console.log(data.data);	
-			photoBrowserPhotos = [];
-			showReadonlyPhotos(data.data)
+			var result = data.data
+			if(result) {
+				$$.each(result, function(index, item){
+					var str = '<img src="'+app.filePath + item.attPath +'">';	
+						$$('.fsodHead .img').append(str);
+				})
+				
+			}
+			// console.log(data.data);	
+			// photoBrowserPhotos = [];
+			// showReadonlyPhotos(data.data)
 		});
 	}
 	
@@ -132,21 +139,26 @@ define(['app',
 					app.myApp.alert("该功能只能在移动app中使用！");
 					return;
 				}
-				window.imagePicker.getPictures(
-					function(picURLList) {
-						if(picURLList) {
-							showPhotos(picURLList);
+				var permissions = cordova.plugins.permissions;
+				permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, function(){
+					window.imagePicker.getPictures(
+						function(picURLList) {
+							if(picURLList) {
+								showPhotos(picURLList);
+							}
+						},
+						function(error) {
+							console.log('从相册获取失败' + message);
+						}, {
+							maximumImagesCount: 9,
+							width: 800,
+							height: 800,
+							quality: 60,
 						}
-					},
-					function(error) {
-						console.log('从相册获取失败' + message);
-					}, {
-						maximumImagesCount: 9,
-						width: 800,
-						height: 800,
-						quality: 60,
-					}
-				);
+					);
+				}, function(error){
+					
+				});
 			}
 		}, {
 			text: '拍照',
@@ -269,17 +281,17 @@ define(['app',
 		$$.each(picUrlList, function(index, item) {
 			//var item = item.attPath;
 			//console.log(item);
-			photoBrowserPhotos.push(app.basePath + item.attPath);
-			console.log(app.basePath + item.attPath);
+			photoBrowserPhotos.push(app.filePath + item.attPath);
+			console.log(app.filePath + item.attPath);
 			var random = app.utils.generateGUID();
 			setTimeout(function() {
 				showVillagePicAuthority(poorVilId);
 				$$('.weui_uploader1').append(
 					'<div class="weui_uploader_bd kpiPicture">' +
 					'<div class="picContainer" id="img_' + random + '">' +
-					'<img src="' + app.basePath + item.attPath + '" class="picSize" />' +
+					'<img src="' + app.filePath + item.attPath + '" class="picSize" />' +
 					'<div class="file-panel" id="delete_file_' + random + '">' +
-					'<input type="hidden" value="'+item.attId+'" class="attId"/>'+
+					'<input type="hidden" value="'+item.id+'" class="attId"/>'+
 					'<i class="icon icon-delete"></i>' +
 					'</div>' +
 					'</div>' +
@@ -321,8 +333,8 @@ define(['app',
 	 */
 	function deleteVillagePhoto(attId){
 		console.log(attId)
-		app.ajaxLoadPageContent(deleteVillagePhotoPath, {
-			attId: attId,
+		app.ajaxLoadPageContent(deleteVillagePhotoPath+attId, {
+			// attId: attId,
 		}, function(result) {
 			app.myApp.toast("删除成功！", 'success').show(true);
 		});
@@ -333,19 +345,20 @@ define(['app',
 	 */
 	function showVillagePicAuthority(poorVilId){
 		//验证是否有权限添加图片
-		app.ajaxLoadPageContent(showVillageAuthorityPath, {
-			vilId: poorVilId,
-			userId: app.userId
-		}, function(result) {
-			console.log(result);
-			if(result.success == true){
-				$$('.weui_uploader_input_wrp').css('display','block');
-				$$('.file-panel').css('display','block');
-			}else{
+		// app.ajaxLoadPageContent(showVillageAuthorityPath+poorVilId+'/'+app.userId, {
+			// vilId: poorVilId,
+			// userId: app.userId
+		// }, function(result) {
+		// 	console.log(result);
+		// 	if(result.success == true){
+			// 上传图片
 				$$('.weui_uploader_input_wrp').css('display','none');
-				$$('.file-panel').css('display','none');
-			}
-		});
+				$$('.file-panel').css('display','block');
+			// }else{
+			// 	$$('.weui_uploader_input_wrp').css('display','none');
+			// 	$$('.file-panel').css('display','none');
+			// }
+		// });
 	}
 	
 	/**

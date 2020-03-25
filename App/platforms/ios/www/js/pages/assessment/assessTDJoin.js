@@ -7,10 +7,11 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//获取已参与的党支部名单
-	var findCompletionOfPartyPath = app.basePath + 'statHelper/findCompletionOfParty';
+	var findCompletionOfPartyPath = app.basePath + '/mobile/partyAm/findCompletionOfParty';
 	var topicId = 0;
 	var deptId = 0;
-
+	var startDate = '';
+	var endDate = '';
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -39,6 +40,8 @@ define(['app',
 		loading = true;
 		topicId = pageData.topicId;
 		deptId = pageData.deptId;
+		startDate = pageData.startDate;
+		endDate = pageData.endDate;
 		ajaxLoadContent(false);
 	}
 
@@ -66,10 +69,10 @@ define(['app',
 			deptId: deptId,
 			knowledgePaperId: topicId,
 			type: 1,
-			page: pageNo,
-			limit: 10,
+			current: pageNo,
+			size: 20,
 		}, function(data) {
-			var result = data.data;
+			var result = data.data.records;
 			console.log(result);
 			if(isLoadMore) {
 				pageDataStorage['party'] = pageDataStorage['party'].concat(result);
@@ -90,12 +93,15 @@ define(['app',
 			} else {
 				$$('.atdjList ul').html(tdjTemplate(result));
 			}
+			loading = false;
 			$$('.atdjList .item-content').off('click', loadPage);
 			$$('.atdjList .item-content').on('click', loadPage);
-			if(result.length == 10) {
-				loading = false;
-			}
+			// console.log(result.length)
+			// if(result.length == 10) {
+				
+			// }
 		}
+		console.log(loading)
 	}
 	
 	/**
@@ -110,7 +116,7 @@ define(['app',
 		head = head.replace(regn, '').replace(regt, '').replace(rege, 'equal');
 		var name = $$(this).data('name');
 		var id = $$(this).data('id');
-		app.myApp.getCurrentView().loadPage('assessTDJDetail.html?head=' + head + '&id=' + id + '&name=' + name + '&deptId=' + deptId + '&topicId=' + topicId);
+		app.myApp.getCurrentView().loadPage('assessTDJDetail.html?head=' + head + '&id=' + id + '&name=' + name + '&deptId=' + deptId + '&topicId=' + topicId+'&startDate='+startDate+'&endDate='+endDate);
 	}
 
 	/**
@@ -120,6 +126,7 @@ define(['app',
 		//加载更多
 		var loadMoreContent = $$(page.container).find('.infinite-scroll');
 		loadMoreContent.on('infinite', function() {
+			console.log(loading);
 			if(loading) return;
 			loading = true;
 			pageNo += 1;

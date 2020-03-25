@@ -111,7 +111,7 @@ define(['app'
 					var str = '<li class="villNameEdit">';
 					str += '<div class="item-content">';
 					str += '<div class="item-inner">';
-					str += '<div class="item-title kp-label">所驻村(社区):</div>';
+					str += '<div class="item-title kp-label recordReview">所驻村(社区):</div>';
 					str += '<div class="item-input">';
 					str += '<input type="text" id="villageNameEdit" name="villageNameEdit" placeholder="" readonly />';
 					str += '</div>';

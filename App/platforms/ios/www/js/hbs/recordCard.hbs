@@ -1,23 +1,30 @@
 {{#.}}
-<div class="card recordCard" data-id = "{{workId}}" data-userId = "{{userId}}" data-loadTypeId = "{{loadTypeId}}" data-state = "{{state}}">
+<div class="card recordCard" data-id = "{{id}}" data-userId = "{{userId}}" data-loadTypeId = "{{loadType}}" data-logTypeId = "{{logTypeId}}"  data-state = "{{isRead}}">
 	<div class="card-header item-content level-blue">
 		<div class="recordCardTitle">{{logTitle}}</div>
 		{{#compare loadTypeId '==' 1}}
 			<div class="reviewState">
-			{{#compare state '==' 0}}
-			<div class="notReview">未审阅</div>
+			{{#compare isRead '==' false}}
+			<!--<div class="notReview">未审阅</div>-->
+			<div class="notReview">未阅</div>
 			{{else}}
-			<div class="reviewed">已审阅</div>
+			<!--<div class="reviewed">已审阅</div>-->
+			<div class="reviewed">已阅</div>
 			{{/compare}}</div>	
 		{{/compare}}
 	</div>
 	<div class="card-content"> 
 		<div class="card-content-inner">
-			<p class="color-gray workType">日志类型：{{logType}}</p>
-			<p class="color-gray">创建人：{{creator}}</p>
+			{{#compare logTypeId '==' 1}}
+			<p class="color-gray workType">日志类型：党员活动</p>
+			{{/compare}}
+			{{#compare logTypeId '==' 2}}
+			<p class="color-gray workType">日志类型：工作日志</p>
+			{{/compare}}	
+			<p class="color-gray">创建人：{{name}}</p>
 	  		<p class="color-gray">所属组织：{{deptName}}</p>
-	  		<p class="color-gray">创建时间：{{logTime}}</p>
-	  		<div class="sendName" style="display: none;">{{userName}}</div>
+	  		<p class="color-gray">创建时间：{{createTime}}</p>
+	  		<div class="sendName" style="display: none;">{{name}}</div>
 			<!--<p class="color-gray reviewName">
 				{{#compare loadTypeId '==' 0}}
 					审阅者：
@@ -45,11 +52,11 @@
 	      			{{/compare}}
 	      		{{/compare}}">
       		</i>
-      		<span class="likeTotal">{{goodTotal}}</span>
+      		<span class="likeTotal">{{likeSize}}</span>
       	</a>
     		<a href=# class="partyComment"style="margin-right: 20px;">
     			<i class="icon icon-comment"></i>
-    			<span class="commentTotal">{{commentTotal}}</span>
+    			<span class="commentTotal">{{commentSize}}</span>
     		</a>
   	</div>
 </div>

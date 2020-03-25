@@ -7,7 +7,7 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//支部考核接口
-	var deptRankInfoPath = app.basePath + 'deptRank/loadDeptDetial';
+	var deptRankInfoPath = app.basePath + '/mobile/partyAm/loadDeptDetial';
 	var deptId = 0;
 
 	/**
@@ -60,8 +60,12 @@ define(['app',
 	function loadRankInfo(isLoadMore) {
 		app.ajaxLoadPageContent(deptRankInfoPath, {
 			deptId: deptId,
-			pageNo: pageNo
+			current: pageNo
 		}, function(data) {
+			var data = data.data.records;
+			$$.each(data, function(index, item){
+				item.reportTime = item.reportTime.split(' ')[0];
+			})
 			console.log(data);
 			if(isLoadMore) {
 				pageDataStorage['rankInfo'] = pageDataStorage['rankInfo'].concat(data);
@@ -97,7 +101,8 @@ define(['app',
 		var score = $$(this).find('.rankDetailScore').html();
 		var title = $$(this).find('.rankDetailTitle').html().split("：")[1];
 		var name = $$(this).find('.rankDetailName').html().split("：")[1];
-		app.myApp.getCurrentView().loadPage('rankAssessDetail.html?assessId=' + id + '&title=' + title + '&score=' + score + '&name=' + name + '&reportState=0&userName=' + userName);
+		var khType = $$(this).data('khType');
+		app.myApp.getCurrentView().loadPage('rankAssessDetail.html?assessId=' + id + '&title=' + title + '&score=' + score + '&name=' + name + '&reportState=0&userName=' + userName+'&khType=' + khType);
 	}
 
 	/**

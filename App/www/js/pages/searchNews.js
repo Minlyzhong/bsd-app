@@ -29,6 +29,9 @@ define(['app','hbs!js/hbs/partyList3'], function(app,template) {
 		pageNo = 1;
 		loading = true;
 		newsKey = '';
+		
+		//$$('.searchNews').html('');
+		
 	}
 	
 	/**
@@ -36,8 +39,8 @@ define(['app','hbs!js/hbs/partyList3'], function(app,template) {
 	 */
 	function clickEvent(page) {
 		$$('#ShowNewsSearch').on('focus',searchRecord);
-		$$('.ShowNewsSearchBar .searchCancelBtn').on('click', hideSearchList);
-		$$('#ShowNewsSearch').on('keyup', keyupContent);
+		$$('.ShowNewsSearchBar .searchNewsBtn').on('click', keyupContent);
+		// $$('#ShowNewsSearch').on('keyup', keyupContent);
 	}
 	
 	function searchRecord(){
@@ -47,7 +50,7 @@ define(['app','hbs!js/hbs/partyList3'], function(app,template) {
 		$$(this).css('text-align', 'left');
 		//$$('.searchNews').html('');
 		$$('.newsNotFound').css('display', 'none');
-		$$('.ShowNewsSearchBar .searchCancelBtn').css('display', 'block');
+		$$('.ShowNewsSearchBar .searchNewsBtn').css('display', 'block');
 	}
 	function hideSearchList(){
 		pageNo = 1;
@@ -67,12 +70,14 @@ define(['app','hbs!js/hbs/partyList3'], function(app,template) {
 		if(!newsKey) {
 			return;
 		}
+
 		findSearchNews(false);
 	}
 	
 	
 	//模糊查询新闻
 	function findSearchNews(isLoadMore){
+		app.myApp.showPreloader('加载中...');
 		app.ajaxLoadPageContent1(findSearchNewsPath, {
 			query:newsKey,
 			current:pageNo,
@@ -80,6 +85,7 @@ define(['app','hbs!js/hbs/partyList3'], function(app,template) {
 			tenantId:app.tenantId
 			// pageNo:pageNo
 		}, function(result) {
+			app.myApp.hidePreloader();
 			var data = result.data.records;
 			
 			//确定没有信息并且是第一页的时候
@@ -110,6 +116,8 @@ define(['app','hbs!js/hbs/partyList3'], function(app,template) {
 				item.forwardTotal = item.forwardTotal || 0;
 				item.commentTotal = item.commentTotal || 0;
 				item.goodTotal = item.goodTotal || 0;
+				item.creatTs = item.creatTs.split(' ')[0];
+
 				if(item.titlePic){
 					var picArr = item.titlePic.split('.');
 					var picType = picArr[picArr.length - 1];

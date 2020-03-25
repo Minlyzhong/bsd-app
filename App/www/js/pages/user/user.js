@@ -130,6 +130,7 @@ define(['app',
 				localStorage.setItem('user', '-1');
 				localStorage.setItem('userDetail', '-1');
 				localStorage.setItem('access_token', null);
+				localStorage.setItem('lastStudyDay', 0);
 				//localStorage.setItem('loginName', null);
 				localStorage.setItem('password', null);
 				localStorage.setItem('verify', '1');
@@ -327,7 +328,8 @@ define(['app',
 				if(appId == 'villageCheck') {
 					// 暂时注释
 					userScan();
-					// app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+'志愿服务'+'&id=23'+'&type=' + 'ZYFW');
+					// app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+'众志成城'+'&id=41'+'&type=' + 'ZYFW');
+					// app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+'志愿服务'+'&id=41'+'&type=' + 'ZYFW');
 					// app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+'会议'+'&id=13'+'&type=' + 'MEETING');
 				}else if(appId == '/app/KeDaXunFei.apk'){
 					//下载科大讯飞

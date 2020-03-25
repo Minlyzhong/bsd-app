@@ -6382,7 +6382,9 @@ body>.photo-browser .toolbar {
 }
 
 .photo-browser-captions {
-	pointer-events: none;
+	/*以前是none*/
+	/*pointer-events: none;*/
+	pointer-events: auto;
 	position: absolute;
 	left: 0;
 	width: 100%;
@@ -6391,6 +6393,10 @@ body>.photo-browser .toolbar {
 	opacity: 1;
 	-webkit-transition-duration: 400ms;
 	transition-duration: 400ms;
+	
+	/*-o-transition: 400ms;
+	-moz-transition-duration: 400ms;
+	-ms-transition-duration: 400ms;*/
 }
 
 .photo-browser-captions.photo-browser-captions-exposed {
@@ -6401,16 +6407,28 @@ body>.photo-browser .toolbar {
 	bottom: 44px;
 	-webkit-transform: translate3d(0, 0px, 0);
 	transform: translate3d(0, 0px, 0);
+	
+	/*-ms-transform:translate3d(0, 0px, 0);
+	-moz-transform:translate3d(0, 0px, 0);
+	-o-transform:translate3d(0, 0px, 0);*/
 }
 
 .photo-browser-exposed .toolbar~.photo-browser-captions {
 	-webkit-transform: translate3d(0, 44px, 0);
 	transform: translate3d(0, 44px, 0);
+	
+	/*-ms-transform:translate3d(0, 44px, 0);
+	-moz-transform:translate3d(0, 44px, 0);
+	-o-transform:translate3d(0, 44px, 0);*/
 }
 
 .toolbar~.photo-browser-captions.photo-browser-captions-exposed {
 	-webkit-transform: translate3d(0, 0px, 0);
 	transform: translate3d(0, 0px, 0);
+	
+	/*-ms-transform:translate3d(0, 0px, 0);
+	-moz-transform:translate3d(0, 0px, 0);
+	-o-transform:translate3d(0, 0px, 0);*/
 }
 
 .photo-browser-caption {
@@ -6426,6 +6444,11 @@ body>.photo-browser .toolbar {
 	text-align: center;
 	color: #fff;
 	background: rgba(0, 0, 0, 0.8);
+	
+	
+	/*-ms-transition-duration:300ms;
+	-moz-transition-duration:300ms;
+	-o-transition-duration:300ms;*/
 }
 
 .photo-browser-caption:empty {
@@ -6456,6 +6479,10 @@ body>.photo-browser .toolbar {
 	background: #fff;
 	-webkit-transition-duration: 400ms;
 	transition-duration: 400ms;
+	
+	/*-ms-transition-duration:400ms;
+	-moz-transition-duration:400ms;
+	-o-transition-duration:400ms;*/
 }
 
 .photo-browser-swiper-wrapper {
@@ -6501,6 +6528,10 @@ body>.photo-browser .toolbar {
 .photo-browser-slide.transitioning {
 	-webkit-transition-duration: 400ms;
 	transition-duration: 400ms;
+	
+	/*-ms-transition-duration:400ms;
+	-moz-transition-duration:400ms;
+	-o-transition-duration:400ms;*/
 }
 
 .photo-browser-slide span.photo-browser-zoom-container {

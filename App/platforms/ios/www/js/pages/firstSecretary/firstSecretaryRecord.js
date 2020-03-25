@@ -6,8 +6,8 @@ define(['app',
 	var pageDataStorage = {};
 	var pageNo = 1;
 	var loading = true;
-	//加载工作日志
-	var loadLogPath = app.basePath + 'extWorkLog/checkOwnWorkLog';
+	//加载工作日志.查询工作日志或微动态
+	var loadLogPath = app.basePath + '/mobile/worklog/page/list/';
 	var userId = 0;
 	var query = '';
 	var endTime = '';
@@ -29,9 +29,9 @@ define(['app',
 			var backContainer = $$(backPage.container);
 			$$.each($$('.recordCard'), function(index, item) {
 				if($$(item).data('id') == recordId) {
-					var likeLength = backContainer.find('.recLikeTotal').html();
+					var likeLength = backContainer.find('.recLikeTotal').html() || 0;
 					$$(item).find('.likeTotal').html(likeLength);
-					var commentLength = backContainer.find('.recCommentTotal').html();
+					var commentLength = backContainer.find('.recCommentTotal').html() || 0;
 					$$(item).find('.commentTotal').html(commentLength);
 				}
 			});
@@ -100,15 +100,15 @@ define(['app',
 	 * @param {Object} isLoadMore 是否加载更多
 	 */
 	function loadRecord(isLoadMore) {
-		app.ajaxLoadPageContent(loadLogPath, {
-			userId: userId,
+		app.ajaxLoadPageContent(loadLogPath+2, {
+			// userId: userId,
 			pageNo: pageNo,
-			loadType: 0,
-			logTitle: query,
-			startDate: startTime,
-			endDate: endTime,
+			// loadType: 0,
+			// logTitle: query,
+			// startDate: startTime,
+			// endDate: endTime,
 		}, function(result) {
-			var data = result;
+			var data = result.data;
 			console.log(data);
 			if(isLoadMore) {
 				pageDataStorage['record'] = pageDataStorage['record'].concat(data);

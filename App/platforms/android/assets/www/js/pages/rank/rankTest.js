@@ -595,7 +595,10 @@ define(['app',
 		}, function(result) {
 			console.log(result);
 			var data = result.data.records;
-			
+			$$.each(data, function(index, item){
+				item.completedPercent = (item.completedPercent*100).toFixed(2);
+				
+			})
 			handleCompletedStatus1(data,isLoadMore);
 		});
 	}

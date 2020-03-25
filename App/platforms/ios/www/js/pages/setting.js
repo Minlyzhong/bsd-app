@@ -6,11 +6,18 @@ define(['app', 'hbs!js/hbs/changePwd'], function(app, changePwdTemplate) {
 	var loading = true;
 	var timeOutID;
 	//检查更新接口
-	var findVersionPath = app.basePath + 'extUserPage/findNewAppVersion';
+	var findVersionPath = app.basePath + '/mobile/apkEdition/check/update';
 	//修改密码
-	var changePwdPath = app.basePath + 'extUserPage/changePwd';
+	var changePwdPath = app.basePath + '/mobile/user/resetPwd';
+	
 	var myPopup = '';
 	var channel_id = '';
+
+	var client_id = 'app';
+	var client_secret='app';
+	var grant_type='password';
+	var scope ='app';
+	var word = 'welcome,bestinfo';
 
 	/**
 	 * 页面初始化 
@@ -83,13 +90,13 @@ define(['app', 'hbs!js/hbs/changePwd'], function(app, changePwdTemplate) {
 			'<div class="page-content">' +
 			'<div class="ecode">' +
 			'<div class="tab">' +
-			'<img id="andImg" src="' + app.basePath + 'images/android.png" width="200" height="200" />' +
+			'<img id="andImg" src="img/android.png" width="200" height="200" />' +
 			'<div>' + andTitle + '</div>' +
 			'</div>' +
 			'<canvas id="myCanvas" width="165px" height="145px" style="display:none">'+
 			'</canvas>'+
 			'<div class="tab">' +
-			'<img id="iosImg" src="' + app.basePath + 'images/ios.png" width="200" height="200" />' +
+			'<img id="iosImg" src="'+ 'images/ios.png" width="200" height="200" />' +
 			'<div>' + iosTitle + '</div>' +
 			'</div>' +
 			'</div>' +
@@ -234,6 +241,9 @@ define(['app', 'hbs!js/hbs/changePwd'], function(app, changePwdTemplate) {
 		$$('.save').on('click', function() {
 			var oldPwd = $$('#oldPwd').val();
 			var newPwd = $$('#newPwd').val();
+
+			
+
 			var againPwd = $$('#againPwd').val();
 			if(oldPwd == '' || oldPwd == null) {
 				app.myApp.alert('原密码不能为空！');
@@ -250,9 +260,19 @@ define(['app', 'hbs!js/hbs/changePwd'], function(app, changePwdTemplate) {
 				$$('#newPwd').val('');
 				$$('#againPwd').val('');
 			} else {
+				console.log(oldPwd)
+				console.log(newPwd)
 				changePwd(oldPwd, newPwd);
 			}
 		});
+	}
+
+	function getAesString(word,_key){
+		var key = CryptoJS.enc.Utf8.parse(_key); //十六位十六进制数作为密钥
+		var iv = CryptoJS.enc.Utf8.parse(_key); 
+		let srcs = CryptoJS.enc.Utf8.parse(word);
+		let encrypted = CryptoJS.AES.encrypt(srcs, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.ZeroPadding });
+		return encrypted.toString();//返回的是base64格式的密文
 	}
 
 	/**
@@ -261,14 +281,19 @@ define(['app', 'hbs!js/hbs/changePwd'], function(app, changePwdTemplate) {
 	 * @param {Object} newPwd 新密码
 	 */
 	function changePwd(oldPwd, newPwd) {
+		var oldP = getAesString(oldPwd,word);
+		var newP = getAesString(newPwd,word);
+
+		console.log(oldP)
+		console.log(newP)
 		app.myApp.showPreloader('正在保存新密码...');
 		app.ajaxLoadPageContent(changePwdPath, {
 			userId: app.userId,
-			oldPwd: oldPwd,
-			newPwd: newPwd
+			passwcord: oldP,
+			passwcordNew: newP
 		}, function(data) {
 			app.myApp.hidePreloader();
-			if(data.success == true) {
+			if(data.msg == 'success') {
 				app.myApp.closeModal(myPopup);
 				app.myApp.toast('修改成功！', 'success').show(true);
 //				app.myApp.alert('密码修改成功！');
@@ -279,7 +304,9 @@ define(['app', 'hbs!js/hbs/changePwd'], function(app, changePwdTemplate) {
 				$$('.user-header img').attr('src', app.headPic);
 				localStorage.setItem('headPic', 0);
 				localStorage.setItem('userId', -1);
+				localStorage.setItem('lastStudyDay', 0);
 				localStorage.setItem('user', '-1');
+				localStorage.setItem('userDetail', '-1');
 				localStorage.setItem('roleId', -1);
 				//localStorage.setItem('loginName', null);
 				localStorage.setItem('password', null);
@@ -289,8 +316,13 @@ define(['app', 'hbs!js/hbs/changePwd'], function(app, changePwdTemplate) {
 				app.removejscssfile('green.css','css');
 				app.myApp.getCurrentView().loadPage('login.html');
 			} else {
+				console.log('data')
+				console.log(data)
 				$$('#oldPwd').val('');
 				app.myApp.alert('原密码错误！');
+				// app.myApp.alert(data.data);
+				
+
 			}
 		});
 	}
@@ -299,14 +331,19 @@ define(['app', 'hbs!js/hbs/changePwd'], function(app, changePwdTemplate) {
 	 * 检查更新
 	 */
 	function checkUpdate() {
+		console.log('checkUpdate')
+		if(app.userId == null ||app.userId ==undefined ) {	
+			return;
+		}
 		app.myApp.showPreloader('正在检查更新...');
 		var updateAjax;
 		setTimeout(function() {
 			updateAjax = $$.ajax({
 				url: findVersionPath,
 				dataType: 'json',
+				method: 'GET',
 				data: {
-					curVersion: app.version,
+					tenantId: app.tenantId,
 				},
 				success: function(data) {
 					console.log(data);
@@ -315,22 +352,27 @@ define(['app', 'hbs!js/hbs/changePwd'], function(app, changePwdTemplate) {
 						window.clearTimeout(timeOutID);
 					}
 					timeOutID = null;
-					if(data.data.success) {
+					if(data.code == 0) {
+						var size = data.data.appSize/1024/1024;
 						if(app.version != data.data.appVersion) {
 							if(app.myApp.device.ios) {
-								app.myApp.alert('<div style="text-align: left;">' + '检查到新版本：V' + data.data.appVersion + '<br /><br />更新内容:<br />' + data.data.memo + '<br /><br />文件大小:' + data.data.appSize + 'M<br />请留意App Store提醒</div>');
+								app.myApp.alert('<div style="text-align: left;">' + '检查到新版本：V' + data.data.appVersion + '<br /><br />更新内容:<br />' + data.data.memo + '<br /><br />文件大小:' + size.toFixed(2) + 'M<br />请留意App Store提醒</div>');
 							} else {
-								app.myApp.confirm('<div style="text-align: left;">' + '检查到新版本：V' + data.data.appVersion + '<br /><br />更新内容:<br />' + data.data.memo + '<br /><br />文件大小:' + data.data.appSize + 'M，是否进行下载?</div>', function() {
-									open(app.basePath + data.data.appPath, '_system');
+								app.myApp.confirm('<div style="text-align: left;">' + '检查到新版本：V' + data.data.appVersion + '<br /><br />更新内容:<br />' + data.data.memo + '<br /><br />文件大小:' + size.toFixed(2) + 'M，是否进行下载?</div>', function() {
+									open(app.filePath + data.data.appUrl, '_system');
 								});
 							}
+						}else{
+							app.myApp.toast("已经是最新版本", 'success').show(true);
 						}
 					} else {
-						app.myApp.alert('已经是最新版本');
+						app.myApp.toast("检查更新失败", 'error').show(true);
+						// app.myApp.alert('已经是最新版本');
 					}
 				},
 				error: function() {
 					app.myApp.hidePreloader();
+					app.myApp.toast("检查更新失败", 'error').show(true);
 					if(timeOutID) {
 						window.clearTimeout(timeOutID);
 					}

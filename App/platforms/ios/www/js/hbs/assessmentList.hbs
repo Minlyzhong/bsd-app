@@ -1,12 +1,12 @@
 {{#.}}
 <li>
 	<a href="#" class="item-link item-content assessListContent" data-id="{{id}}" data-name="{{name}}" data-point="{{point}}">
-		<div class="item-media media-avater">
+		{{!-- <div class="item-media media-avater">
 			<img src="img/icon/icon-plan.png" />
-		</div>
-		<div class="item-inner">
+		</div> --}}
+		<div class="item-inner" style="padding: 10px 25px 9px 10px;">
 			<div class="item-title-row">
-				<div class="item-title k-group-t">{{name}}</div>
+				<div class="item-title k-group-t" style="color:#36689a" >{{name}}</div>
 				{{#compare point '>' 0}}
 				<div class="item-after k-group-after" style="color: green !important;">总分: {{point}}分</div>
 				{{else}}

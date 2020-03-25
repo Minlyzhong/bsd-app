@@ -1,19 +1,27 @@
 <li class="item-content">
 	<div class="item-inner">
-		<div class="item-title  label">职称：</div>
+		<div class="item-title  label">用户名：</div>
 		<div class="item-input">
-			<input type="text" placeholder="填写职称" id="officerName" name="officerName" value="{{officerName}}" />
+			<input type="text" placeholder="填写用户名" id="userName" name="userName" value="{{userName}}" />
 		</div>
 	</div>
 </li>
 <li class="item-content">
+	<div class="item-inner">
+		<div class="item-title  label">职务：</div>
+		<div class="item-input">
+			<input type="text" placeholder="填写职务" id="officerName" name="officerName" value="{{officerName}}" />
+		</div>
+	</div>
+</li>
+{{!-- <li class="item-content">
 	<div class="item-inner">
 		<div class="item-title  label">身份证：</div>
 		<div class="item-input">
 			<input type="text" placeholder="填写身份证" id="cardNo" name="cardNo" value="{{cardNo}}" />
 		</div>
 	</div>
-</li>
+</li> --}}
 <li class="item-content">
 	<div class="item-inner">
 		<div class="item-title  label">入党时间：</div>
@@ -44,10 +52,10 @@
 		<div class="item-input">
 			<select id="sex" name="sex">
 				{{#each sexArr}}
-					{{#compare key 'equalNumber' ../sex}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare subKey 'equalNumber' ../sex}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>
@@ -60,10 +68,10 @@
 		<div class="item-input">
 			<select id="politics" name="politics">
 				{{#each politicsArr}}
-					{{#compare  key 'equalNumber' ../politics}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare  subKey 'equalNumber' ../politics}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>
@@ -76,10 +84,10 @@
 		<div class="item-input">
 			<select id="minority" name="minority">
 				{{#each minorityArr}}
-					{{#compare key 'equalNumber' ../minority}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare subKey 'equalNumber' ../minority}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>
@@ -90,12 +98,12 @@
 	<div class="item-inner">
 		<div class="item-title  label">学历：</div>
 		<div class="item-input">
-			<select id="education" name="education">
+			<select id="educat" name="educat">
 				{{#each educationArr}}
-					{{#compare key 'equalNumber' ../education}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare subKey 'equalNumber' ../educat}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>
@@ -108,10 +116,10 @@
 		<div class="item-input">
 			<select id="marital" name="marital">
 				{{#each maritalArr}}
-					{{#compare key 'equalNumber' ../marital}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare subKey 'equalNumber' ../marital}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>
@@ -124,10 +132,10 @@
 		<div class="item-input">
 			<select id="ryfl" name="ryfl">
 				{{#each ryflArr}}
-					{{#compare key 'equalNumber' ../ryfl}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare subKey 'equalNumber' ../ryfl}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>
@@ -140,10 +148,10 @@
 		<div class="item-input">
 			<select id="rybz" name="rybz">
 				{{#each rybzArr}}
-					{{#compare key 'equalNumber' ../rybz}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare subKey 'equalNumber' ../rybz}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>
@@ -156,10 +164,10 @@
 		<div class="item-input">
 			<select id="zyfl" name="zyfl">
 				{{#each zyflArr}}
-					{{#compare key 'equalNumber' ../zyfl}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare subKey 'equalNumber' ../zyfl}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>
@@ -172,10 +180,10 @@
 		<div class="item-input">
 			<select id="zzzt" name="zzzt">
 				{{#each zzztArr}}
-					{{#compare key 'equalNumber' ../zzzt}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare subKey 'equalNumber' ../zzzt}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>
@@ -188,10 +196,10 @@
 		<div class="item-input">
 			<select id="xzzw" name="xzzw">
 				{{#each xzzwArr}}
-					{{#compare key 'equalNumber' ../xzzw}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare subKey 'equalNumber' ../xzzw}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>
@@ -204,10 +212,10 @@
 		<div class="item-input">
 			<select id="zwjb" name="zwjb">
 				{{#each zwjbArr}}
-					{{#compare key 'equalNumber' ../zwjb}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare subKey 'equalNumber' ../zwjb}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>

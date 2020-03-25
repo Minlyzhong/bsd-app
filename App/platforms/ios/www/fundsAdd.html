@@ -1,0 +1,129 @@
+<div data-page="funds/funds" class="page navbar-fixed no-tabbar">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left sliding">
+				<a href="#" class="link icon-only FundsBack"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center sliding">经费申报</div>
+			<div class="right sliding">
+				<a href="#" class="link icon-only"><i class="icon icon-home FundsHome"></i></a>
+				<div class="saveFunds">上传</div>
+			</div>
+		</div>
+	</div>
+	<div class='page-content'>
+		<div class="list-block funds-block">
+			<ul>
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;width: 135px;">项目名称:</div>
+							<div class="item-input" style="margin-left: -2px;">
+								<input type="text" id="FundsName" name="FundsName" placeholder="请输入项目名称" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="align-top" style="">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">项目主要内容:</div>
+							<div class="item-input tcaomFundsDetails" style="margin-left: -2px;display: none;">
+								<textarea id="fundsDetails" name="fundsDetails" placeholder="项目主要内容:" style="width:100%;height:200px;"></textarea>
+							</div>
+						</div>
+					<icon class="icon icon-openIcon tcaomFundsDetailsIcon" style="margin: 12px 5px 0 0;"></icon>
+					</div>
+				</li>
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">资金预算(万元):</div>
+							<div class="item-input" style="margin-left: -2px;">
+								<input type="text" id="fee" name="fee" placeholder="请输入金额" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="align-top" style="">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">预算具体情况:</div>
+							<div class="item-input tcaomBudgetDetails" style="margin-left: -2px;display: none;">
+								<textarea id="fundsBudgetDetails" name="fundsBudgetDetails" placeholder="预算具体情况:" style="width:100%;height:200px;"></textarea>
+							</div>
+						</div>
+					<icon class="icon icon-openIcon tcaomBudgetDetailsIcon" style="margin: 12px 5px 0 0;"></icon>
+					</div>
+				</li>
+				
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">预计开始时间:</div>
+							<div class="item-input">
+								<input type="text" id="beginTime" name="beginTime " placeholder="项目预计开始时间" />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">预计完成时间:</div>
+							<div class="item-input">
+								<input type="text" id="endTime" name="endTime " placeholder="项目预计完成时间" />
+							</div>
+						</div>
+					</div>
+				</li>
+
+				<li class="swipeout">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">村社区:</div>
+							<div class="item-input">
+								<input type="text" id="VillageCom" name="VillageCom" placeholder="向左滑动选择村社区" readonly/>
+							</div>
+						</div>
+					</div>
+					<div class="swipeout-actions-right">
+						<a href="#" class="swipeout-close addVillage" style="background-color: #1296db;">添加</a>
+						<a href="#" class="swipeout-close bg-red removeVillage">移除</a>
+					</div>
+				</li>
+
+				<!-- <li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">村社区:</div>
+							<div class="item-input" style="margin-left: -2px;">
+								<input type="text" id="grantOrganization" name="grantOrganization" placeholder="请输入名称" />
+							</div>
+						</div>
+					</div>
+				</li> -->
+				
+				
+			</ul>
+			<div class="weui_cells weui_cells_form">
+				<div class="weui_cell uploadCell">
+					<div class="weui_cell_bd weui_cell_primary">
+						<div class="weui_uploader">
+							<div class="weui_uploader_hd weui_cell">
+								<div class="weui_cell_bd weui_cell_primary">项目实施前照片(涉及施工类的项目)</div>
+								<div class="weui_cell_ft"></div>
+							</div>
+							<div class="weui_uploader_bd kpiPicture">
+								<div class="weui_uploader_input_wrp">
+									<img src='' class='weui_uploader_input' />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	

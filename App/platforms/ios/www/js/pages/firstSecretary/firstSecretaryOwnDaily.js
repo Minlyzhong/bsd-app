@@ -4,11 +4,15 @@ define(['app',
 	var $$ = Dom7;
 	var pageNo = 1;
 	var loading = true;
-	//加载工作日志
-	//var loadLogPath = app.basePath + 'extWorkLog/checkOwnWorkLog';
-	var loadLogPath = app.basePath + 'extWorkLog/findWorkLogOfUser';
+	//加载工作日志 查询工作日志
+	
+	var loadLogPath = app.basePath + '/mobile/worklog/page/list/';
 	//获取贫困村详细信息
-	var findPoorVilPath = app.basePath + 'poorVillage/findPoorVilById';
+	var findPoorVilPath = app.basePath + '/mobile/village/detail/';
+
+	//显示村社区图片
+	var showVillagePhotoPath = app.basePath + '/mobile/village/pictures/';
+
 	var userId = 0;
 	var userName = '';
 	var poorVilId = 0;
@@ -40,6 +44,7 @@ define(['app',
 		console.log(poorVilId);
 		if(poorVilId>0){
 			findPoorVillage();
+			showVillagePhoto();
 		}else{
 			$$(".fsodHead").css('display','none');
 		}
@@ -63,8 +68,8 @@ define(['app',
 	 * 读取贫困村信息
 	 */
 	function findPoorVillage() {
-		app.ajaxLoadPageContent(findPoorVilPath, {
-			poorVilId: poorVilId
+		app.ajaxLoadPageContent(findPoorVilPath+poorVilId, {
+			// poorVilId: poorVilId
 		}, function(result) {
 			var data = result.data;
 			console.log(data);
@@ -77,25 +82,48 @@ define(['app',
 	}
 
 	/**
+	 * 读取村社区图片
+	 */
+	function showVillagePhoto(){
+		app.ajaxLoadPageContent(showVillagePhotoPath+poorVilId,{
+			// vilId: poorVilId
+			tenantId: app.tenantId
+		}, function(data) {
+			var result = data.data
+			if(result) {
+				$$.each(result, function(index, item){
+					var str = '<img src="'+app.filePath + item.attPath +'">';	
+						$$('.fsodHead .img').append(str);
+				})
+				
+			}
+			// console.log(data.data);	
+			// photoBrowserPhotos = [];
+			// showReadonlyPhotos(data.data)
+		});
+	}
+	
+
+	/**
 	 *  读取工作日志 
 	 * @param {Object} isLoadMore 是否加载更多
 	 */
 	function loadRecord(isLoadMore) {
-		app.ajaxLoadPageContent(loadLogPath, {
+		app.ajaxLoadPageContent(loadLogPath+2, {
 			userId: userId,
 			pageNo: pageNo,
-			loadType: 0,
-			logTitle: '',
-			startDate: '',
-			endDate: '',
+			// loadType: 0,
+			// logTitle: '',
+			// startDate: '',
+			// endDate: '',
 		}, function(result) {
-			var data = result;
+			var data = result.data.records;
 			$$.each(data, function(index, item) {
 				item.userName = userName;
-				if(!item.logPic) {
+				if(!item.images) {
 					item.logPic = 'img/logo.png';
 				} else {
-					item.logPic = app.basePath + item.logPic;
+					item.logPic = app.filePath + item.images[0].attPath;
 				}
 			});
 			console.log(data);
@@ -130,6 +158,8 @@ define(['app',
 	 * 跳转详细页面 
 	 */
 	function loadRecordDetail() {
+		console.log('$$(this)')
+		console.log($$(this))
 		var recordId = $$(this).data('id');
 		var loadTypeId = $$(this).data('loadTypeId');
 		var state = -1;
@@ -139,12 +169,18 @@ define(['app',
 		if(b == '(第一书记'){
 			reviewName = reviewName.substring(0,reviewName.indexOf('('));
 		}
-//		console.log(recordId);
-//		console.log(userId);
-//		console.log(loadTypeId);
-//		console.log(state);
-//		console.log(a);
-//		console.log(workType)
+		// console.log('recordId');
+		// console.log(recordId);
+		// console.log('userId');
+		// console.log(userId);
+		// console.log('loadTypeId');
+		// console.log(loadTypeId);
+		// console.log('state');
+		// console.log(state);
+		// console.log('b');
+		// console.log(b);
+		// console.log('workType')
+		// console.log(workType)
 		app.myApp.getCurrentView().loadPage('recordDetail2.html?id=' + recordId + '&userId=' + userId + '&workType=' + workType + '&state=' + state + '&reviewName=' + reviewName);
 	}
 

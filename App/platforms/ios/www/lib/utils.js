@@ -341,13 +341,15 @@ define(function() {
 	 * 定位 转换 地址
 	 */
 	function getAddressPost() {
-		var baiduMapKey = ['UXTxGY2P3obB5GZ0IBEYBPui0NkUdG0o',
-			'4EbLDZEpOBz82NM3PiRMCe3po6KznDpa',
-			'WaxLw3GXkWYfxey3OXIlxM1i'
-		];
+//		var baiduMapKey = ['UXTxGY2P3obB5GZ0IBEYBPui0NkUdG0o',
+//			'4EbLDZEpOBz82NM3PiRMCe3po6KznDpa',
+//			'WaxLw3GXkWYfxey3OXIlxM1i'
+//		];
 		// 创建一个0-3的随机数
-		var number = Math.floor(Math.random() * 3);
-		return "http://api.map.baidu.com/geocoder/v2/?ak=" + baiduMapKey[number] + "&callback=renderReverse&output=json&pois=1";
+//		var number = Math.floor(Math.random() * 3);
+		var baiduMapKey = ['UXTxGY2P3obB5GZ0IBEYBPui0NkUdG0o'];
+		
+		return "http://api.map.baidu.com/geocoder/v2/?ak=" + baiduMapKey[0] + "&callback=renderReverse&output=json&pois=1";
 	}
 
 	/**

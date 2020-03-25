@@ -1,12 +1,12 @@
 {{#.}}
 <li>
-	<div class="item-content" data-id="{{id}}" data-score="{{totalScore}}" data-rank="{{rank}}" data-useTime="{{useTime}}" data-userName="{{userName}}" data-yes="{{yes}}">
+	<div class="item-content" data-id="{{id}}" data-score="{{totalScore}}" data-rank="{{rank}}" data-useTime="{{useTime}}" data-userName="{{userName}}" data-yes="{{totalRight}}">
 		<div class="item-media media-avater">
 			{{#examRank_rank rank}}{{/examRank_rank}}
 		</div>
 		<div class="rankInner">
 			<div class="item-media rankImg">
-				{{#compare headPic '==' ''}}
+				{{#compare headPic '==' null}}
 				<img src="img/avater.png" />
 				{{else}}
 				<img src="{{basePath}}{{headPic}}"/>			
@@ -20,7 +20,7 @@
 					{{else}}
 						{{userName}}
 					{{/compare}}</div>
-				<div class="item-after rankPoint">{{useTime}}</div>
+				<div class="item-after rankPoint">{{useTime}}分钟</div>
 				{{else}}
 				<div class="item-title" style="line-height: 2.5;font-size: 16px;">您还没上榜，再接再厉！</div>
 				{{/compare}}

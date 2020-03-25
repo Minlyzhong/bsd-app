@@ -4,17 +4,15 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 	var pageDataStorage = {};
 	var pageNo = 1;
 	var loading = true;
-	//获取建设任务详情
-	var getUserReportDetialPath = app.basePath + '/mobile/position/building/detail/';
+	//获取支部信息
+	var getUserReportDetialPath = app.basePath + '/mobile/political/department/';
 	//上传建设任务
-	// var saveUserReportDetialPath = app.basePath +'/political/position/building';
 	var saveUserReportDetialPath = app.basePath + '/mobile/position/building/save';
 	//上传图片
 	var uploadReportDetialPhotoPath = app.basePath + '/file/upload';
 	//上传文件
-	var uploadWorkFilePath = app.basePath + '/file/upload';
-	var assessId = -1;
-	var id = 0;
+	// var uploadWorkFilePath = app.basePath + '/file/upload';
+	var pId = -1;
 	var photoBrowserPhotos = [];
 	var photoDatas = [];
 	var photoBrowserPopup = '';
@@ -28,10 +26,8 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 	var fileNames = [];
 	var fileCount = 0;
 	var attType = 0;
-	var formDatas =[];
-	var judgmentParam = 0;
 	
-	var minDate = '';
+	var deptType = 0;
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -39,7 +35,7 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 	function init(page) {
 		//设置页面不能滑动返回
 		page.view.params.swipeBackPage = false;
-		app.myApp.onPageBack("workPlace/workPlace", function(page){
+		app.myApp.onPageBack("workPlace/workPlaceDetail", function(page){
 			page.view.params.swipeBackPage = true;
 		});
 		count = 0;
@@ -68,21 +64,17 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 		fileList = [];
 		formDatas =[];
 		attType = 0;
-		name = pageData.name;
-		id = pageData.id;
-		if(pageData.judgmentParam){
-			judgmentParam = pageData.judgmentParam;
-		}else{
-			judgmentParam = 0;
-		}
-		console.log(judgmentParam == 1);
+		deptType = 0;
+		name = pageData.placeName;
+		console.log(pageData)
+		pId = pageData.id;
+		
 		srcName = [];
 		suffixName = [];
 		fileNames = [];
 		fileCount = 0;
 		// thisAppName = pageData.thisAppName;
-		$$('.placeName').text(name);
-		minDate = pageData.StartDate;
+		$$('.assessMemo').text('资源名称 : '+name);
 
 	}
 
@@ -90,12 +82,12 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 	 * 获取建设任务
 	 */
 	function getWorkPlaceDetail(){
-		app.ajaxLoadPageContent(getUserReportDetialPath+2, {
+		app.ajaxLoadPageContent(getUserReportDetialPath+app.userId, {
 			
 		}, function(data) {
 			var result = data.data;
-			result = [{'buildName':'桌子'},{'buildName':'椅子'}]
-			$$('.detailList').prepend(buildTemplate(result));
+			deptType = result.deptType;
+			// $$('.detailList').prepend(buildTemplate(result));
 		});	
 	}	
 
@@ -105,109 +97,19 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 	 */
 	function clickEvent() {
 		$$('.weui_uploader_input_wrp').on('click', function() {
-			var id = $$(this).data('id');
-			showImgPicker(id);
+			// var id = $$(this).data('id');
+			showImgPicker();
 		});
 		$$('.sumbit').on('click', saveUserReportDetial);
 		
-		$$("#fileinput").on('change', function () {
-		    var oFReader = new FileReader();
-		    var file = document.getElementById('fileinput').files[0];
-		    if(file.size > 20971520){
-		    	app.myApp.alert('文件不能大于20MB！！');
-		    	return;
-		    }
-		    oFReader.readAsDataURL(file);
-		    oFReader.onloadend = function(oFRevent){
-		        var path = $$('#fileinput').val();
-		        var strs = [];
-		        var strs1 = [];
-		        var typeFile = '';
-		        var str = '';
-		        var str123 = '';
-		        strs=path.split(".");
-		        strs1=path.split("\\");
-		        str123 = strs1.pop()
-		        typeFile= strs.pop();
-				console.log(str123);
-				if(typeFile == 'txt'
-				|| typeFile == 'doc'
-				|| typeFile == 'docx'
-				|| typeFile == 'zip'
-				|| typeFile == 'xls'
-				|| typeFile == 'rar'
-				|| typeFile == 'pdf'
-				|| typeFile == 'ppt'){
-					
-				}else{
-					app.myApp.alert('选择文件类型不符合上传');
-					return;
-				}
-				fileNames.push(str123);
-				srcName.push(oFRevent.target.result);
-				suffixName.push(typeFile);
-				wordUpload(oFRevent.target.result,str123 )
-				if(typeFile == 'txt'){
-					str +='<img src="img/file/txt.png" class="picSize" />';
-				}else if(typeFile == 'doc'){
-					str +='<img src="img/file/doc.png" class="picSize" />';
-				}else if(typeFile == 'docx'){
-					str +='<img src="img/file/doc.png" class="picSize" />';
-				}else if(typeFile == 'zip'){
-					str +='<img src="img/file/zip.png" class="picSize" />';
-				}else if(typeFile == 'xls'){
-					str +='<img src="img/file/xls.png" class="picSize" />';
-				}else if(typeFile == 'rar'){
-					str +='<img src="img/file/zip.png" class="picSize" />';
-				}else if(typeFile == 'pdf'){
-					str +='<img src="img/file/pdf.png" class="picSize" />';
-				}else if(typeFile == 'ppt'){
-					str +='<img src="img/file/ppt.png" class="picSize" />';
-				}
-				var random1 = app.utils.generateGUID();
-				$$('.weui_uploader1').append(
-				'<div class="weui_uploader_bd kpiPicture" >' +
-				'<div class="picContainer" style="margin-top:8px;">' +
-				str+
-				'<div class="item-title kp-label" style="margin-left:18px;position:absolute;top:79px;">'+
-				str123+
-				'</div>'+
-				'<div class="file-panel">' +
-				'<i class="icon icon-delete" id="file_delete'+random1+'" data-index="'+fileCount+'"></i>' +
-				'</div>' +
-				'</div>' +
-				'</div>');
-				fileCount += 1;
-				//添加删除文件的监听事件
-				$$('#file_delete'+random1).on('click', function(e) {
-					e.stopPropagation();
-					var fileContainer = $$(this).parent().parent();
-					var fileIndex = $$(this).data('index');
-					app.myApp.confirm('确认删除该文件?', function() {
-						fileContainer.remove();
-						suffixName.splice(fileIndex,1);
-						srcName.splice(fileIndex,1);
-						fileList.splice(fileIndex,1);
-						fileNames.splice(fileIndex,1);
-						fileCount = fileCount-1;
-						console.log(suffixName);
-						console.log(srcName)
-						app.myApp.toast('删除成功', 'success').show(true);
-					});
-				});
-				console.log(srcName);
-		        console.log(suffixName);
-			}
-			
-		});
 		
 		$$('.assessWorkBack').on('click',function(){
-			app.myApp.confirm('您的考核尚未上传，是否退出？', function() {
+			app.myApp.confirm('您填写的内容尚未上传，是否退出？', function() {
 				app.myApp.getCurrentView().back();
 			});
 		});
 		$$('.assessWorkHome').on('click',function(){
-			app.myApp.confirm('您的考核尚未上传，是否返回首页？', function() {
+			app.myApp.confirm('您填写的内容尚未上传，是否返回首页？', function() {
 				app.back3Home();
 			});
 		});
@@ -219,123 +121,10 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 	function attrDefine(pageData) {
 	
 	}
-	/*
-	 * 文档上传
-	 */
-	function wordUpload(srcNameData, str) {
-		app.myApp.showPreloader('文档保存中...');
-		
-		var ft1 = new FileTransfer();
-		
-			var uri1 = encodeURI(uploadWorkFilePath);
-			var options1 = new FileUploadOptions();
-			options1.fileKey = "file";
-			//随机数加后缀名
-			//options1.fileName = app.utils.generateGUID() + "."+suffixName[index];
-			options1.fileName = str;
-			options1.headers = {
-				'Authorization': "bearer " + app.access_token
-			}
-			//判断类型
-			
-			if(suffixName == 'docx'){
-				options1.mimeType = "application/msword";
-				attType = 4;
-			}else if(suffixName == 'doc'){
-				attType = 4;
-				options1.mimeType = "application/msword";
-			}else if(suffixName == 'txt'){
-				options1.mimeType = "text/plain";
-				attType = 7;
-			}else if(suffixName == 'xls'){
-				options1.mimeType = "application/vnd.ms-excel";
-				attType = 5;
-			}else if(suffixName == 'zip'){
-				options1.mimeType = "application/zip";
-				attType = 8;
-			}else if(suffixName == 'rar'){
-				options1.mimeType = "application/zip";
-				attType = 9;
-			}else if(suffixName == 'pdf'){
-				options1.mimeType = "application/pdf";
-				attType = 6;
-			}else if(suffixName == 'ppt'){
-				options1.mimeType = "application/vnd.ms-powerpoint";
-				attType = 10;
-			}
-			options1.chunkedMode = false;
-			var params = {
-				"attName": "",
-				"attPath": "",
-				"attSize": 0,
-				"attState": 0,
-				"attType": attType,
-				"tenantId": app.userDetail.tenantId,
-				"userId": app.userDetail.userId
-			}
-			// params.fkId = detailID;
-			// params.userId = app.userId;
-//			if(judgmentParam == 1){
-//				params.refType = 10;
-//			}else{
-//				params.refType = 3;
-//			}
-			// params.refType = 3;
-			// options1.params = params;
-			
-			ft1.upload(srcNameData, uri1, function(r) {
-				app.myApp.hidePreloader();
-				var data = JSON.parse(r.response);
-				if(data.code == 0) {
-					var result = data.data;
-					params.ext = result.ext;
-					params.name = result.name;
-					params.filePath = result.filePath;
-					params.length = result.length;
-					fileList.push(params);
-					
-				} else {
-					app.myApp.hidePreloader();
-					ft1.abort();
-					app.myApp.alert(app.utils.callbackAjaxError());
-					return;
-				}
-			}, function(error) {
-				app.myApp.hidePreloader();
-				ft1.abort();
-				app.myApp.alert(app.utils.callbackAjaxError());
-				return;
-			}, options1);
-		
-		app.myApp.hidePreloader();
-		// app.myApp.toast("保存成功！", 'success').show(true);
-		// app.myApp.getCurrentView().back();
-		// //refresh();		
-		// require(['js/pages/assessment/assessment'], function(assessment) {
-		// 	assessment.addCallback();
-		// });
-	}
-	//初始化日历
-	function addCalendar(contentID) {
-		//var minDate = '2018-04-01';
-		console.log(minDate);
-		calID = app.myApp.calendar({
-			input: '#' + contentID,
-			toolbarCloseText: '完成',
-			headerPlaceholder: '选择的日期',
-			monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-			monthNamesShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-			dayNames: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
-			dayNamesShort: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
-			dateFormat: 'yyyy-mm-dd',
-			closeOnSelect: true,
-			maxDate: new Date(),
-			// minDate:minDate,
-		});
-	}
-
+	
+	
 	//选择附件方式
-	function showImgPicker(id) {
+	function showImgPicker() {
 		var buttons1 = [{
 			text: '选择附件方式',
 			label: true
@@ -353,7 +142,7 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 					window.imagePicker.getPictures(
 						function(picURLList) {
 							if(picURLList) {
-								showPhotos(picURLList,id);
+								showPhotos(picURLList);
 							}
 						},
 						function(error) {
@@ -378,7 +167,7 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 				navigator.camera.getPicture(function(picURL) {
 						if(picURL) {
 							var picURLList = [picURL];
-							showPhotos(picURLList,id);
+							showPhotos(picURLList);
 						}
 					},
 					function(message) {
@@ -401,13 +190,10 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 
 	//保存考核信息
 	function saveUserReportDetial() {
-		var assessTitle = $$('#assessTitle').val();
-		var assessTs = $$('#assessTs').val();
-		var assessContent = $$('#assessContent').val();
-		// if(!assessContent || !assessTitle || !assessTs) {
-		// 	app.myApp.alert('请补全考核信息！');
-		// 	return;
-		// }
+	
+		var buildingMemo = $$('#buildingMemo').val();
+	
+	
 		//防止数据传输过慢多次上传
 		count = count + 1;
 		if(count > 0){
@@ -415,52 +201,31 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 		}
 		app.myApp.showPreloader('信息保存中...');
 
-		var params={
-			branchId: 0,
-			createdDate: 0,
-			creator: "",
-			creatorId: 0,
-			id: 0,
-			memo: "",
-			pid: 0,
-			tenantId: "",
-			type: 0,
-			url: "",
-		}
-
-		// var params={
-		// 	"cnt": 0,
-		// 	// "createdDate": 0,
-		// 	"exist": 2,
-		// 	"memo": "",
-		// 	"positionName": "凳子",
-		// 	// "tenantId": "",
-		// 	"type": 0,
-		// 	"unit": "个",
-		// 	"villageId": 3,
-		// 	"villageName": "上新村"
-		// }
-		
-		formDatas.push(params);
+		$$.each(imageList, function(index, item){
+			item.memo = buildingMemo;
+		})
 		 
+	
+		
 		
 		$$.ajax({
             url:saveUserReportDetialPath,
             method: 'POST',
             dataType: 'json',
 			contentType: 'application/json;charset:utf-8',
-            data: JSON.stringify(params),
+            data: JSON.stringify(imageList),
             // data: JSON.stringify({images:formDatas}),
             cache: false,
             success:function (data) {
-				if(data.code == 0){
+			
+				if(data.code == 0 && data.data !=null){
 					console.log(data);
 					app.myApp.hidePreloader();
 					app.myApp.toast('保存成功', 'success').show(true);
 					$$('.sumbit').html('已保存');
 					
-					require(['js/pages/assessment/assessmentFirstHand'], function(assessmentFirstHand) {
-						assessmentFirstHand.resetFirstIn();
+					require(['js/pages/workPlace/workPlace'], function(workPlace) {
+						workPlace.refresh();
 					});
 			
 				app.myApp.getCurrentView().back();
@@ -470,7 +235,9 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 				
 			
 		},
-            error:function () {
+            error:function (error) {
+				var text = JSON.parse(error.responseText)
+			
 				app.myApp.hidePreloader();
 				app.myApp.alert(app.utils.callbackAjaxError());
             }
@@ -484,9 +251,9 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 	/**
 	 *  上传图片
 	 * @param {Object} photoDatas 相片数组
-	 * @param {Object} detailID  考核明细ID
+	 * @param {Object} detailID  
 	 */
-	function uploadReportDetialPhoto(photo, id) {
+	function uploadReportDetialPhoto(photo) {
 		app.myApp.showPreloader('图片保存中...');
 		// var sum = 0;
 
@@ -501,24 +268,27 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 			options.headers = {
 				'Authorization': "bearer " + app.access_token
 			}
-			var params = {
-				"ext": "",
-				"filePath": "",
-				"length": 0,
-				"name": 0,
-				
+			var params={
+				branchId: app.user.deptId,
+				creator: app.user.nickName,
+				creatorId: app.userId,
+				memo: "",
+				pid: pId,
+				tenantId: app.tenantId,
+				type: deptType,
+				url: "",
 			}
 			ft.upload(photo, uri, function(r) {
 				var data = JSON.parse(r.response);
 				// sum++;
 				app.myApp.hidePreloader();
-				if(data.code == 0) {
+			
+				if(data.code == 0 && data.data != null) {
 					var result = data.data;
-					params.ext = result.ext;
-					params.name = result.name;
-					params.filePath = result.filePath;
-					params.length = result.length;
-					params.id = id;
+					// params.ext = result.ext;
+					// params.name = result.name;
+					params.url = result.filePath;
+					// params.length = result.length;
 					imageList.push(params);
 
 				}else{
@@ -547,7 +317,7 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 	 * 显示待上传的相片 
 	 * @param {Object} picUrlList  相片数组
 	 */
-	function showPhotos(picUrlList,id) {
+	function showPhotos(picUrlList) {
 		$$.each(picUrlList, function(index, item) {
 			photoBrowserPhotos.push(item);
 			//压缩图片
@@ -557,14 +327,14 @@ define(['app','hbs!js/hbs/workPlaceDetail'], function(app, buildTemplate) {
 				.then(function(results) {
 					var base64Data = results.base64;
 					
-					uploadReportDetialPhoto(base64Data,id);
+					uploadReportDetialPhoto(base64Data);
 				})
 				.catch(function(err) {
 					// 捕捉错误信息
 					// 以上的then都不会执行
 				});
 			var random = app.utils.generateGUID();
-			$$('.weui_uploader').append(
+			$$('.weui_uploader7').append(
 				'<div class="weui_uploader_bd kpiPicture">' +
 				'<div class="picContainer" id="img_' + random + '">' +
 				'<img src="' + item + '" class="picSize" />' +

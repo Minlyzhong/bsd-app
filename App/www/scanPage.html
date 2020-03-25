@@ -1,4 +1,4 @@
-<div data-page="user/scanpage" class="page no-tabbar">
+<div data-page="user/scanpage" class="page no-tabbar applyBackGround" style="background-image: url(img/applyScreen.jpg);background-repeat: no-repeat;background-size: cover;">
 	<div class="navbar">
 		<div class="navbar-inner">
 			<div class="left sliding">
@@ -15,12 +15,119 @@
 	
 	<div class="page-content">
 		<div style="height: 4%;"></div>
-			<div class="registTitle"></div>
-			<div class="registTitleContent"></div>
-			<div class="registerCircle">
+			<div class="registTitle type1"></div>
+			<div class="registTitleContent type1"></div>
+			<div class="registTitle applyTitle type2"></div>
+			<div class="registTitleContent applyTitle type2"></div>
+			<div id="applyDetail" style="display: none;" class="type2">
+				<div class="list-block">
+					<ul >
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label">姓名 :</div>
+									<div class="item-input">
+										<input type="text" id="applyName" name="applyName" placeholder="请输入姓名" />
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label">联系方式 :</div>
+									<div class="item-input">
+										<input type="text" id="applyPhone" name="applyPhone" placeholder="请输入联系方式" />
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label">年龄 :</div>
+									<div class="item-input">
+										<input type="text" id="applyAge" name="applyAge" placeholder="请输入年龄" />
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label">身体状况 :</div>
+									<div class="item-input">
+										<input type="text" id="applyHealth" name="applyHealth" placeholder="请输入身体状况" />
+									</div>
+								</div>
+							</div>
+						</li>
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label">所在党支部 :</div>
+									<div class="item-input">
+										<input type="text" id="applyPartyName" name="applyPartyName" placeholder="请输入所在党支部名称" />
+									</div>
+								</div>
+							</div>
+						</li>
+
+
+						<li>
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title  kp-label">居住地 :</div>
+									<div class="selectAddress">
+										<div class="selectAddressList">
+											<div style="width: 100px; color:#E32519;font-weight:600;">
+												乡镇
+												</div>
+												<div class="item-input" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position: 80px 17px;">
+													<select id="township">
+													</select>
+												</div>
+										
+										</div>
+										
+
+									<div class="selectAddressList">
+										<div style="width: 100px; color:#E32519;font-weight:600;">
+											村社区
+											</div>
+											<div class="item-input" style="background-image: url(img/more.png);background-repeat: no-repeat;background-size: 18px;background-position: 80px 17px;">
+												<select id="community">
+												</select>
+											</div>
+									</div>
+										
+									</div>
+									
+								</div>
+							</div>
+						</li>
+
+						<li>
+							<div class="item-content" style="text-align: center;">
+								<div class="applyHand"><img src="img/hand.png"></img>
+									<div class="Conv_SingleMalta applyHold" style="color:red">我要请战</div></div>
+							</div>
+						</li>
+
+						
+					</ul>
+					<div class="applyBottom">
+						<div>紧紧依靠人民群众</div>
+						<div>坚决打赢疫情防控阻击战</div>
+					</div>
+					
+			</div>
+			
+			
 				
 			</div>
-			<div class="registTime">
+			<div class="registerCircle type1"></div>
+			<div class="registTime type1">
 				<div class="serviceTime"></div>
 				<div class="serviceAdress"></div>
 				<div class="serviceContent"></div>

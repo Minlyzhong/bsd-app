@@ -9,8 +9,13 @@
 					</div>
 				</div>
 				<div class="rankDetailcontent" >
-					<span class="rankDetailTitle" style="color: #369;">内容：{{content}}；</span>
+					<span class="rankDetailTitle" style="color: #369;">内容：{{content}}</span>
 				</div>
+				{{#compare hasMemo '==' 1}}
+				<div class="rankDetailcontent" >
+					<span class="rankDetailTitle" style="color: #008000;">意见反馈：{{memo}}</span>
+				</div>
+				{{/compare}}
 				{{!-- <div class="rankDetailcontent" >
 					<span class="rankDetailName" style="color: #008000;">标题：{{reportTitle}}</span>
 				</div> --}}

@@ -183,7 +183,12 @@ define(['app',
 		if(data.length) {
 
 			$$.each(data, function(index, item){
-				
+
+				if(item.groupLeaderSign == null && item.personChargeSign == null && item.villagePersonCharge == null){
+					item.isSign = 0;
+				}else{
+					item.isSign = 1;
+				}
 			})
 
 
@@ -210,6 +215,14 @@ define(['app',
 	 */
 	function handleSearchRecord(data, isLoadMore) {
 		if(data.length) {
+			$$.each(data, function(index, item){
+
+				if(item.groupLeaderSign == null && item.personChargeSign == null && item.villagePersonCharge == null){
+					item.isSign = 0;
+				}else{
+					item.isSign = 1;
+				}
+			})
 			if(isLoadMore) {
 				$$('.firstShowPeopleList ul').append(vilDailyTemplate(data));
 			} else {

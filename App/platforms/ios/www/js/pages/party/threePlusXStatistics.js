@@ -2,9 +2,9 @@ define(['app',
 ], function(app) {
 	var $$ = Dom7;
 	//查询党支部三会一课考核进度信息
-	var getTopicPieChartPath = app.basePath + 'statHelper/getTopicPieChart';
+	var getTopicPieChartPath = app.basePath + '/mobile/partyAm/getTopicPieChart';
 	//获取年份
-	var getYearsPath = app.basePath + 'knowledgeTopic/getYears';
+	var getYearsPath = app.basePath + '/mobile/partyAm/getYears';
 	var deptId = '';
 	var deptName = '';
 	var year = '';
@@ -27,6 +27,8 @@ define(['app',
 	var clickStartDate = '';
 	var clickEndDate = '';
 	var CompRateOfThreePlusXAppName;
+	
+	var khpl = 2;
 
 	/**
 	 * 页面初始化 
@@ -44,9 +46,10 @@ define(['app',
 	 */
 	function initData(pageData) {
 		deptId = app.user.deptId;
-		deptName = app.user.deptName;
+		deptName = app.userDetail.deptName;
 		console.log(app.user);
 		CompRateOfThreePlusXAppName = pageData.appName
+		console.log(pageData.appName);
 		firstIn = 0;
 		pageDataStorage = {};	
 		year = '';
@@ -66,6 +69,7 @@ define(['app',
 		//点击时间
 		clickStartDate = '';
 		clickEndDate = '';
+		khpl = 2;
 		$$('.threePlusXStatisticsTitle').html(pageData.appName);
 		window.setTimeout(function() {
 			showInfo(deptId, deptName);
@@ -132,10 +136,18 @@ define(['app',
 		app.ajaxLoadPageContent1(getYearsPath,{
 		},function(data){
 			console.log(data);
-			result = data;
-			$$.each(data, function(index, item) {
-					result[index] = item.text.toString()+'年';
+			result = data.data;
+			if(result == null){
+				var nowDate = new Date();
+				var nowYear = nowDate.getFullYear();
+				result =[nowYear+'年']
+				
+			}else{
+				$$.each(data.data, function(index, item) {
+					result[index] = item.toString()+'年';
 			});
+			}
+			
 			console.log(result);
 			pickerDescribe = app.myApp.picker({
 	    		input: '#picker-describe',
@@ -146,7 +158,7 @@ define(['app',
 			            values:(result)
 			        },
 			        {
-			            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+			            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 			        },
 			    ]
 			});
@@ -176,10 +188,11 @@ define(['app',
 		});
 		var myDate = new Date();
 		year = myDate.getFullYear();
-		month = myDate.getMonth()+1;
+		month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
 		//月份时间判断
 		$("#picker-describe").val(year+'年 '+ month+'月');
-		threeplusMonthStartDate = year+'-'+month+'-1';
+		
+		threeplusMonthStartDate = year+'-'+month+'-01';
 		threeplusMonthEndDate = year+'-'+month+'-31';
 		$$(".threePlusMonthTime").on('click',function(){
 			pickerDescribe.open();
@@ -197,7 +210,7 @@ define(['app',
 				year = pickerDescribe.value[0].substring(0,pickerDescribe.value[0].length-1);
 				month = pickerDescribe.value[1].substring(0,pickerDescribe.value[1].length-1);
 				$("#picker-describe").val(year+'年 '+ month+'月');
-				threeplusMonthStartDate = year+'-'+month+'-1';
+				threeplusMonthStartDate = year+'-'+month+'-01';
 				threeplusMonthEndDate = year+'-'+month+'-31';
 				setTimeout(function(){
 					showInfo(deptId, deptName);
@@ -209,19 +222,19 @@ define(['app',
 		//季度时间判断
 		if(month<=3){
 			$("#picker-describeSeason").val(year+'年 '+ '第一季度');
-			threeplusSeasonStartDate = year+'-1-1';
-			threeplusSeasonEndDate = year+'-3-31';
+			threeplusSeasonStartDate = year+'-01-01';
+			threeplusSeasonEndDate = year+'-03-31';
 		}else if(month>3 && month<=6){
 			$("#picker-describeSeason").val(year+'年 '+ '第二季度');
-			threeplusSeasonStartDate = year+'-4-1';
-			threeplusSeasonEndDate = year+'-6-31';
+			threeplusSeasonStartDate = year+'-04-01';
+			threeplusSeasonEndDate = year+'-06-31';
 		}else if(month>6 && month<=9){
 			$("#picker-describeSeason").val(year+'年 '+ '第三季度');
-			threeplusSeasonStartDate = year+'-7-1';
-			threeplusSeasonEndDate = year+'-9-31';
+			threeplusSeasonStartDate = year+'-07-01';
+			threeplusSeasonEndDate = year+'-09-31';
 		}else if(month>9 && month<=12){
 			$("#picker-describeSeason").val(year+'年 '+ '第四季度');
-			threeplusSeasonStartDate = year+'-10-1';
+			threeplusSeasonStartDate = year+'-10-01';
 			threeplusSeasonEndDate = year+'-12-31';
 		}
 		$$(".threePlusSeasonTime").on('click',function(){
@@ -233,16 +246,16 @@ define(['app',
 				year = pickerDescribeSeason.value[0].substring(0,pickerDescribeSeason.value[0].length-1);
 				season = pickerDescribeSeason.value[1].substring(0,pickerDescribeSeason.value[1].length);
 				if(season == '第一季度'){
-					threeplusSeasonStartDate = year+'-1-1';
-					threeplusSeasonEndDate = year+'-3-31';
+					threeplusSeasonStartDate = year+'-01-01';
+					threeplusSeasonEndDate = year+'-03-31';
 				}else if(season == '第二季度'){
-					threeplusSeasonStartDate = year+'-4-1';
-					threeplusSeasonEndDate = year+'-6-31';
+					threeplusSeasonStartDate = year+'-04-01';
+					threeplusSeasonEndDate = year+'-06-31';
 				}else if(season == '第三季度'){
-					threeplusSeasonStartDate = year+'-7-1';
-					threeplusSeasonEndDate = year+'-9-31';
+					threeplusSeasonStartDate = year+'-07-01';
+					threeplusSeasonEndDate = year+'-09-31';
 				}else if(season == '第四季度'){
-					threeplusSeasonStartDate = year+'-10-1';
+					threeplusSeasonStartDate = year+'-10-01';
 					threeplusSeasonEndDate = year+'-12-31';
 				}
 				$("#picker-describeSeason").val(year+'年 '+ season);
@@ -255,7 +268,7 @@ define(['app',
 		
 		//年份时间判断
 		$("#picker-describeYear").val(year+'年 ');
-		threeplusYearStartDate= year+'-1-1';
+		threeplusYearStartDate= year+'-01-01';
 		threeplusYearEndDate= year+'-12-31';
 		$$(".threePlusYearTime").on('click',function(){
 			pickerDescribeYear.open();
@@ -264,7 +277,7 @@ define(['app',
 			$$('.picker-3d .close-picker').on('click',function(){
 				$$('.shykNotFound').css('display','none');
 				year = pickerDescribeYear.value[0].substring(0,pickerDescribeYear.value[0].length-1);
-				threeplusYearStartDate= year+'-1-1';
+				threeplusYearStartDate= year+'-01-01';
 				threeplusYearEndDate= year+'-12-31';
 				$("#picker-describeYear").val(year+'年 ');
 				setTimeout(function(){
@@ -277,12 +290,14 @@ define(['app',
 		//点击tab标签
 		//月份
 		$$('.buttonShyk').on('click',function(){
+			khpl = 2;
 //			setTimeout(function(){
 //				showInfo(deptId, deptName);
 //			},100);
 		});
 		//季度
 		$$('.buttonShykSeason').on('click',function(){
+			khpl = 1;
 			console.log(seasonPluxCount);
 			if(seasonPluxCount == 1){
 				setTimeout(function(){
@@ -294,6 +309,7 @@ define(['app',
 		});
 		//年份
 		$$('.buttonShykYear').on('click',function(){
+			khpl = 0;
 			console.log(yearPluxCount);
 			if(yearPluxCount == 1){
 				setTimeout(function(){
@@ -342,12 +358,14 @@ define(['app',
 		var partyCompRateHtml= '';
 		console.log(deptId);
 		app.ajaxLoadPageContent(getTopicPieChartPath, {
-			deptId: deptId,
+			// deptId: deptId,
 			startDate:threeplusMonthStartDate,
 			endDate:threeplusMonthEndDate,
-			userId:app.userId,
+			// userId:app.userId,
+			khpl:khpl
 		}, function(result) {
 			console.log(result);
+			var data = result.data;
 			partyCompRateHtml = '<div class="signChart" id="atdChart"></div>' +	
 				'<div class="row no-gutter signList">' +
 					'<div class="col-50 grid good grid1" data-type="yes">' +
@@ -357,7 +375,7 @@ define(['app',
 						'未参与：<span style="display: inline;"></span>' +
 					'</div>' +
 				'</div>';
-			pageDataStorage['CompRate'] = result;
+			pageDataStorage['CompRate'] = data;
 			pageDataStorage['deptName'] = deptName;
 			console.log(deptId)
 			pageDataStorage['deptId1'] = deptId;
@@ -368,13 +386,14 @@ define(['app',
 		handleCompletion(pageDataStorage['CompRate'],pageDataStorage['deptName'],pageDataStorage['deptId1']);
 		app.myApp.hidePreloader();
 	}
-	function handleCompletion(result,deptName,deptId){
-		console.log(result);
+	function handleCompletion(data,deptName,deptId){
+		console.log(data);
 		console.log(deptId);
-		$$('.good span').html(result['topicCompleted']);
-		$$('.notYet span').html(result['unCompletedTotal']);
+		$$('.good span').html(data['completedTotal']);
+		$$('.notYet span').html(data['unCompletedTotal']);
 		$$('.no-gutter .grid1').on('click', gridClick);
-		loadChart('atdChart', '3+x统计进度信息', result,deptName,deptId);
+
+		loadChart('atdChart', '三会一课统计进度信息', data,deptName,deptId);
 	}
 	
 	//季度
@@ -388,8 +407,10 @@ define(['app',
 			startDate:threeplusSeasonStartDate,
 			endDate:threeplusSeasonEndDate,
 			userId:app.userId,
+			khpl:1
 		}, function(result) {
-			console.log(result);
+			var data = result.data;
+			console.log(data);
 			partyCompRateHtmlSeason = '<div class="signChart" id="atdChartSeason"></div>' +	
 				'<div class="row no-gutter signList">' +
 					'<div class="col-50 grid goodSeason grid1Season" data-type="yes">' +
@@ -399,7 +420,7 @@ define(['app',
 						'未参与：<span style="display: inline;"></span>' +
 					'</div>' +
 				'</div>';
-			pageDataStorage['CompRateSeason'] = result;
+			pageDataStorage['CompRateSeason'] = data;
 			pageDataStorage['deptNameSeason'] = deptName;
 			console.log(deptId)
 			pageDataStorage['deptId1'] = deptId;
@@ -410,13 +431,13 @@ define(['app',
 		handleCompletionBySeason(pageDataStorage['CompRateSeason'],pageDataStorage['deptNameSeason'],pageDataStorage['deptId1']);
 		app.myApp.hidePreloader();
 	}
-	function handleCompletionBySeason(result,deptName,deptId){
-		console.log(result);
+	function handleCompletionBySeason(data,deptName,deptId){
+		console.log(data);
 		console.log(deptId);
-		$$('.goodSeason span').html(result['topicCompleted']);
-		$$('.notYetSeason span').html(result['unCompletedTotal']);
+		$$('.goodSeason span').html(data['completedTotal']);
+		$$('.notYetSeason span').html(data['unCompletedTotal']);
 		$$('.no-gutter .grid1Season').on('click', gridClick);
-		loadChart('atdChartSeason', '3+x统计进度信息', result,deptName,deptId);
+		loadChart('atdChartSeason', '三会一课统计进度信息', data,deptName,deptId);
 	}
 	
 	//年度
@@ -430,8 +451,10 @@ define(['app',
 			startDate:threeplusYearStartDate,
 			endDate:threeplusYearEndDate,
 			userId:app.userId,
+			khpl:0
 		}, function(result) {
-			console.log(result);
+			var data = result.data;
+			console.log(data);
 			partyCompRateHtmlYear = '<div class="signChart" id="atdChartYear"></div>' +	
 				'<div class="row no-gutter signList">' +
 					'<div class="col-50 grid goodYear grid1Year" data-type="yes">' +
@@ -441,7 +464,7 @@ define(['app',
 						'未参与：<span style="display: inline;"></span>' +
 					'</div>' +
 				'</div>';
-			pageDataStorage['CompRateYear'] = result;
+			pageDataStorage['CompRateYear'] = data;
 			pageDataStorage['deptNameYear'] = deptName;
 			console.log(deptId)
 			pageDataStorage['deptId1'] = deptId;
@@ -452,13 +475,13 @@ define(['app',
 		handleCompletionByYear(pageDataStorage['CompRateYear'],pageDataStorage['deptNameYear'],pageDataStorage['deptId1']);
 		app.myApp.hidePreloader();
 	}
-	function handleCompletionByYear(result,deptName,deptId){
-		console.log(result);
+	function handleCompletionByYear(data,deptName,deptId){
+		console.log(data);
 		console.log(deptId);
-		$$('.goodYear span').html(result['topicCompleted']);
-		$$('.notYetYear span').html(result['unCompletedTotal']);
+		$$('.goodYear span').html(data['completedTotal']);
+		$$('.notYetYear span').html(data['unCompletedTotal']);
 		$$('.no-gutter .grid1Year').on('click', gridClick);
-		loadChart('atdChartYear', '3+x统计进度信息', result,deptName,deptId);
+		loadChart('atdChartYear', '三会一课统计进度信息', data,deptName,deptId);
 	}
 	
 	/**
@@ -486,7 +509,7 @@ define(['app',
 				y: 25,
 			},
 			subtitle: {
-				text: deptName+'计划参与次数：' + data['topicTotal'] + '次',
+				text: deptName+'计划参与次数：' + data['totalTimes'] + '次',
 				y: 45
 			},
 			tooltip: {
@@ -523,7 +546,7 @@ define(['app',
 				type: 'pie',
 				name: '比例',
 				data: [
-					['已参与', data['topicCompleted']],
+					['已参与', data['completedTotal']],
 					['未参与', data['unCompletedTotal']],
 				]
 			}]
@@ -553,12 +576,15 @@ define(['app',
 		console.log(seasonClassName);
 		console.log(yearClassName);
 		if(monthClassName){
+			khpl = 2;
 			clickStartDate = threeplusMonthStartDate;
 			clickEndDate = threeplusMonthEndDate;
 		}else if(seasonClassName){
+			khpl = 1;
 			clickStartDate = threeplusSeasonStartDate;
 			clickEndDate = threeplusSeasonEndDate;
 		}else if(yearClassName){
+			khpl = 0;
 			clickStartDate = threeplusYearStartDate;
 			clickEndDate = threeplusYearEndDate;
 		}
@@ -569,9 +595,9 @@ define(['app',
 		console.log(clickEndDate);
 		console.log('123');
 		if(type == '已参与') {
-			app.myApp.getCurrentView().loadPage('threeMeetingsAndOneClassD.html?type=1&startTime='+clickStartDate+'&endTime='+clickEndDate+'&topicId=0'+'&branchName='+deptName+'&deptId='+deptId);
+			app.myApp.getCurrentView().loadPage('threeMeetingsAndOneClassD.html?type=1&startTime='+clickStartDate+'&endTime='+clickEndDate+'&topicId=0'+'&branchName='+deptName+'&deptId='+deptId+'&khpl='+khpl);
 		} else {
-			app.myApp.getCurrentView().loadPage('ThreeMeetingsAndOneClassUD.html?type=0&startTime='+clickStartDate+'&endTime='+clickEndDate+'&topicId=0'+'&branchName='+deptName+'&deptId='+deptId);
+			app.myApp.getCurrentView().loadPage('ThreeMeetingsAndOneClassUD.html?type=0&startTime='+clickStartDate+'&endTime='+clickEndDate+'&topicId=0'+'&branchName='+deptName+'&deptId='+deptId+'&khpl='+khpl);
 		}
 	}
 	

@@ -267,11 +267,17 @@ define(['app',
 				shyk.TsMonth = item.reportTime.substring(5,7);
 				List.push(shyk);
 			});
+			console.log('1111111111');
+			console.log(List);
 			if(isLoadMore) {
 				$$('.shykDDetailDetailList ul').append(tMAOCDetailTemplate(List));
-			} else if(pageNo==1 && data.length<10){
+				// if(pageNo == 1 && data.length < 10)
+			}else if(pageNo == 1 && data.length < 10){
 				$$('.shykDDetailDetailList ul').html(tMAOCDetailTemplate(List));
 				$$('.infinite-scroll-preloader').remove();
+			} else {
+				console.log('2222');
+				$$('.shykDDetailDetailList ul').html(tMAOCDetailTemplate(List));
 			}
 			$$('.shykDDetailDetailList .item-content').on('click', function() {
 				var id = $$(this).data('id');

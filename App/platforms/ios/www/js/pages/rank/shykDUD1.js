@@ -14,9 +14,9 @@ define(['app',
 	var pageNo4 = 1;
 	var loading4 = true;
 	//获取年份
-	var getYearsPath = 	app.basePath + 'knowledgeTopic/getYears';
+	var getYearsPath = 	app.basePath + '/mobile/partyAm/getYears';
 	//获取党委下面已完成未完成的支部
-	var getOneDepartmentCompletionStatusPath = 	app.basePath + 'knowledgeTopic/getOneDepartmentCompletionStatus';
+	var getOneDepartmentCompletionStatusPath = 	app.basePath + '/mobile/partyAm/getOneDepartmentCompletionStatus';
 	//获取三会一课分类
 	var getAllThreeAndOnePath = app.basePath + 'knowledgeTopic/findThreePlusXTopic';
 	var queryByDeptName1 = '';
@@ -60,6 +60,15 @@ define(['app',
 	
 	var countHead = '';
 	var uDoneHead = '';
+
+	var monthDoneHead = 0;
+	var monthUDoneHead = 0;
+	var seasonDoneHead = 0;
+	var seasonUDoneHead = 0;
+	var yearDoneHead = 0;
+	var yearUDoneHead = 0;
+
+	var khpl;
 	
 	/**
 	 * 页面初始化 
@@ -76,6 +85,7 @@ define(['app',
 	 * 初始化模块变量
 	 */
 	function initData(page) {
+		khpl = 2;
 		queryByDeptName1 = ''
 		firstIn = 0;
 		pageDataStorage = {};
@@ -94,18 +104,30 @@ define(['app',
 		type=1;
 		topicId = 0;
 		deptId = app.user.deptId;
-		deptN = page.query.deptName;
+		if(deptN){
+			deptN = page.query.deptName;
+		}else{
+			deptN = app.userDetail.deptName;
+		}
+		
 		//月份
 		startDate = "";
 		endDate="";
 		udCount = 0;
 		dCount = 0;
+
+		monthDoneHead = -1;
+		monthUDoneHead = -1;
+		seasonDoneHead = -1;
+		seasonUDoneHead = -1;
+		yearDoneHead = -1;
+		yearUDoneHead = -1;
 		//查询
 		dSearchCount = 1;
 		udSearchCount = 0;
 		dudStartDate = '';
 		dudEndDate = '';
-		$$(".shykdN").html('('+deptN+')3+X考核统计');
+		$$(".shykdN").html('('+deptN+')三会一课考核统计');
 		if(page.query.deptId != undefined){
 			deptId = page.query.deptId;
 		}
@@ -140,7 +162,7 @@ define(['app',
 		//方法
 		pushAndPull(page);
 		loadTime();	
-		loadSort();
+		// loadSort();
 		loadshykD(false);
 		
 		
@@ -148,13 +170,13 @@ define(['app',
 	}
 	
 	
-	function loadSort(){		
-		app.ajaxLoadPageContent(getAllThreeAndOnePath, {
-		}, function(data) {
-			console.log(data);
-			handleSort(data);
-		});
-	}
+	// function loadSort(){		
+	// 	app.ajaxLoadPageContent(getAllThreeAndOnePath, {
+	// 	}, function(data) {
+	// 		console.log(data);
+	// 		handleSort(data);
+	// 	});
+	// }
 	
 	function handleSort(data){
 //		$$("#shykSearchType").append("<option value='全部' selected>sddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</option>");
@@ -178,10 +200,10 @@ define(['app',
 		app.ajaxLoadPageContent1(getYearsPath,{
 		},function(data){
 			console.log(data);
-			result = data;
-			$$.each(data, function(index, item) {
-					result[index] = item.text.toString()+'年';
-			});
+			result = data.data;
+				$$.each(data.data, function(index, item) {
+						result[index] = item.toString()+'年';
+				});
 			console.log(result);
 			pickerDescribe = app.myApp.picker({
 	    		input: '#picker-describeOther',
@@ -192,7 +214,7 @@ define(['app',
 			            values:(result)
 			        },
 			        {
-			            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+			            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 			        },
 			    ]
 			});
@@ -223,10 +245,10 @@ define(['app',
 
 		var myDate = new Date();
 		year = myDate.getFullYear();
-		month = myDate.getMonth()+1;
+		month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
 		//月份时间判断
 		$("#picker-describe").val(year+'年 '+ month+'月');
-		startDate = year+'-'+month+'-1';
+		startDate = year+'-'+month+'-01';
 		endDate = year+'-'+month+'-31';
 		$$(".shykdudTimeMonth").on('click',function(){
 			setTimeout(function(){
@@ -242,10 +264,12 @@ define(['app',
 				pickerDescribe.params.cols[1].setValue(month+'月');		
 				$$('.toolbar-inner .right').css('margin-right','20px');	
 				$$('.picker-3d .close-picker').on('click',function(){
+					udCount = 0;
+       				dCount = 0;
 					year = pickerDescribe.value[0].substring(0,pickerDescribe.value[0].length-1);
 					month = pickerDescribe.value[1].substring(0,pickerDescribe.value[1].length-1);
 					$("#picker-describe").val(year+'年 '+ month+'月');
-					startDate = year+'-'+month+'-1';
+					startDate = year+'-'+month+'-01';
 					endDate = year+'-'+month+'-31';
 					if(type==1){
 						loadshykD(false);
@@ -259,19 +283,19 @@ define(['app',
 		//季度时间判断
 		if(month<=3){
 			$("#picker-describeSeason").val(year+'年 '+ '第一季度');
-			dudSeasonStartDate = year+'-1-1';
-			dudSeasonEndDate = year+'-3-31';
+			dudSeasonStartDate = year+'-01-01';
+			dudSeasonEndDate = year+'-03-31';
 		}else if(month>3 && month<=6){
 			$("#picker-describeSeason").val(year+'年 '+ '第二季度');
-			dudSeasonStartDate = year+'-4-1';
-			dudSeasonEndDate = year+'-6-31';
+			dudSeasonStartDate = year+'-04-10';
+			dudSeasonEndDate = year+'-06-31';
 		}else if(month>6 && month<=9){
 			$("#picker-describeSeason").val(year+'年 '+ '第三季度');
-			dudSeasonStartDate = year+'-7-1';
-			dudSeasonEndDate = year+'-9-31';
+			dudSeasonStartDate = year+'-07-01';
+			dudSeasonEndDate = year+'-09-31';
 		}else if(month>9 && month<=12){
 			$("#picker-describeSeason").val(year+'年 '+ '第四季度');
-			dudSeasonStartDate = year+'-10-1';
+			dudSeasonStartDate = year+'-10-01';
 			dudSeasonEndDate = year+'-12-31';
 		}
 		$$(".shykdudTimeSeason").on('click',function(){
@@ -280,19 +304,21 @@ define(['app',
 				$$('.picker-3d .close-picker').text('完成');
 				$$('.toolbar-inner .right').css('margin-right','20px');	
 				$$('.picker-3d .close-picker').on('click',function(){
+					dudSeasonCount = 1;
+        			udSeasonCount = 0;
 					year = pickerDescribeSeason.value[0].substring(0,pickerDescribeSeason.value[0].length-1);
 					season = pickerDescribeSeason.value[1].substring(0,pickerDescribeSeason.value[1].length);
 					if(season == '第一季度'){
-						dudSeasonStartDate = year+'-1-1';
-						dudSeasonEndDate = year+'-3-31';
+						dudSeasonStartDate = year+'-01-01';
+						dudSeasonEndDate = year+'-03-31';
 					}else if(season == '第二季度'){
-						dudSeasonStartDate = year+'-4-1';
-						dudSeasonEndDate = year+'-6-31';
+						dudSeasonStartDate = year+'-04-01';
+						dudSeasonEndDate = year+'-06-31';
 					}else if(season == '第三季度'){
-						dudSeasonStartDate = year+'-7-1';
-						dudSeasonEndDate = year+'-9-31';
+						dudSeasonStartDate = year+'-07-01';
+						dudSeasonEndDate = year+'-09-31';
 					}else if(season == '第四季度'){
-						dudSeasonStartDate = year+'-10-1';
+						dudSeasonStartDate = year+'-10-01';
 						dudSeasonEndDate = year+'-12-31';
 					}
 					$("#picker-describeSeason").val(year+'年 '+ season);
@@ -307,7 +333,7 @@ define(['app',
 		
 		//年份时间判断
 		$("#picker-describeYear").val(year+'年 ');
-		dudYearStartDate= year+'-1-1';
+		dudYearStartDate= year+'-01-01';
 		dudYearEndDate= year+'-12-31';
 		$$(".shykdudTimeYear").on('click',function(){
 			setTimeout(function(){
@@ -315,8 +341,10 @@ define(['app',
 				$$('.picker-3d .close-picker').text('完成');
 				$$('.toolbar-inner .right').css('margin-right','20px');	
 				$$('.picker-3d .close-picker').on('click',function(){
+					dudYearCount = 1;
+        			udYearCount = 0;
 					year = pickerDescribeYear.value[0].substring(0,pickerDescribeYear.value[0].length-1);
-					dudYearStartDate= year+'-1-1';
+					dudYearStartDate= year+'-01-01';
 					dudYearEndDate= year+'-12-31';
 					$("#picker-describeYear").val(year+'年 ');
 					if(type==1){
@@ -332,10 +360,19 @@ define(['app',
 		//点击tab标签
 		//月份
 		$$('.shykdudSelect .buttonShyk').on('click',function(){
+			khpl = 2;
+			console.log(monthDoneHead);
+			console.log(monthUDoneHead);
 			console.log(type);
+			console.log($$('.shykdudTab').css('display') == 'none');
+
+			$$('.alrdone').html();
+			$$('.uDone').html();
+
 			if($$('.shykdudTab').css('display') == 'none'){
 				if(type==1){
 					searchshykD(false);
+
 				}else{
 					searchshykUD(false);
 				}
@@ -345,11 +382,26 @@ define(['app',
 						if(dCount == 1){
 							loadshykD(false);
 							 dCount += 1;
+						}else{
+							if(monthDoneHead != -1){
+								$$('.alrdone').html('('+monthDoneHead+')');
+							}
+							if(monthUDoneHead != -1){
+								$$('.uDone').html('('+monthUDoneHead+')');
+							}
 						}
+
 					}else{
 						if(udCount == 0){
 							loadshykUD(false);
 							udCount += 1;
+						}else{
+							if(monthDoneHead != -1){
+								$$('.alrdone').html('('+monthDoneHead+')');
+							}
+							if(monthUDoneHead != -1){
+								$$('.uDone').html('('+monthUDoneHead+')');
+							}
 						}
 					}
 					
@@ -360,7 +412,16 @@ define(['app',
 		});
 		//季度
 		$$('.shykdudSelect .buttonShykSeason').on('click',function(){
+			khpl = 1;
+
 			console.log(type);
+			console.log(seasonDoneHead);
+			console.log(seasonUDoneHead);
+			console.log($$('.shykdudTab').css('display') == 'none');
+
+			$$('.alrdone').html();
+			$$('.uDone').html();
+
 			if($$('.shykdudTab').css('display') == 'none'){
 				if(type==1){
 					searchshykD(false);
@@ -373,11 +434,25 @@ define(['app',
 						if(dudSeasonCount == 1){
 							loadshykDBySeason(false);
 							dudSeasonCount += 1;
+						}else{
+							if(seasonDoneHead != -1){
+								$$('.alrdone').html('('+seasonDoneHead+')');
+							}
+							if(seasonUDoneHead != -1){
+								$$('.uDone').html('('+seasonUDoneHead+')');
+							}
 						}
 					}else{
 						if(udSeasonCount == 0){
 							loadshykUDBySeason(false);
 							udSeasonCount += 1;
+						}else{
+							if(seasonDoneHead != -1){
+								$$('.alrdone').html('('+seasonDoneHead+')');
+							}
+							if(seasonUDoneHead != -1){
+								$$('.uDone').html('('+seasonUDoneHead+')');
+							}
 						}
 					}
 				},100);
@@ -385,6 +460,15 @@ define(['app',
 		});
 		//年份
 		$$('.shykdudSelect .buttonShykYear').on('click',function(){
+			khpl = 0;
+			console.log(yearDoneHead);
+			console.log(yearUDoneHead);
+			console.log(type);
+
+			$$('.alrdone').html();
+			$$('.uDone').html();
+
+			console.log($$('.shykdudTab').css('display') == 'none');
 			if($$('.shykdudTab').css('display') == 'none'){
 				if(type==1){
 					searchshykD(false);
@@ -397,11 +481,25 @@ define(['app',
 						if(dudYearCount == 1){
 							loadshykDByYear(false);
 							dudYearCount += 1;
+						}else{
+							if(yearDoneHead != -1){
+								$$('.alrdone').html('('+yearDoneHead+')');
+							}
+							if(yearUDoneHead != -1){
+								$$('.uDone').html('('+yearUDoneHead+')');
+							}
 						}
 					}else{
 						if(udYearCount == 0){
 							loadshykUDByYear(false);
 							dudYearCount += 1;
+						}else{
+							if(yearDoneHead != -1){
+								$$('.alrdone').html('('+yearDoneHead+')');
+							}
+							if(yearUDoneHead != -1){
+								$$('.uDone').html('('+yearUDoneHead+')');
+							}
 						}
 					}
 				},100);
@@ -436,8 +534,8 @@ define(['app',
 		
 		$$('.shykDSearch').css('margin-top','-10px');
 		$$('.shykUDSearch').css('margin-top','-10px');
-		$$('.abc').css('margin-top','35px');
-		$$('.atdjdTab').css('margin-top','0px');
+		$$('.abc').css('margin-top','47px');
+		$$('.atdjdTab').css('margin-top','10px');
 //		$$('.shykD').css('display','none');
 //		$$('.shykUD').css('display','none');
 		console.log(type);
@@ -448,12 +546,15 @@ define(['app',
 		console.log(seasonClassName);
 		console.log(yearClassName);
 		if(monthClassName){
+			khpl = 2;
 			dudStartDate = startDate;
 			dudEndDate = endDate;
 		}else if(seasonClassName){
+			khpl = 1;
 			dudStartDate = dudSeasonStartDate;
 			dudEndDate = dudSeasonEndDate;
 		}else if(yearClassName){
+			khpl = 0;
 			dudStartDate = dudYearStartDate;
 			dudEndDate = dudYearEndDate;
 		}
@@ -486,8 +587,9 @@ define(['app',
 //			$$('.shykD').css('display', 'block');
 //			$$('.shykUD').css('display', 'none');
 			type = 1;
-//			$$('.shykUDSearch').css('display','none');
-//			$$('.shykDSearch').css('display','block');
+			$$('.shykUDSearch').css('display','none');
+			$$('.shykDSearch').css('display','block');
+
 			$$('.shykD').css('display','block');
 			$$('.shykUD').css('display','none');
 			$$('.shykDSeason').css('display','block');
@@ -524,6 +626,9 @@ define(['app',
 			}	
 		} else {
 			type = 0;
+			$$('.shykUDSearch').css('display','block');
+			$$('.shykDSearch').css('display','none');
+
 			$$('.shykD').css('display','none');
 			$$('.shykUD').css('display','block');
 			$$('.shykDSeason').css('display','none');
@@ -572,10 +677,10 @@ define(['app',
 		$$('.shykuduSearchBar #shykuduSearch').css('text-align', 'center');
 		$$('.shykuduSearchBar .searchCancelBtn').css('display','none');
 		$$('.shykdudTab').css('display','block');
-		$$('.done').html('('+countHead+')');
+		$$('.alrdone').html('('+countHead+')');
 		$$('.uDone').html('('+uDoneHead+')');
 		$$('.atdjdTab').css('margin-top','40px');
-		$$('.abc').css('margin-top','70px');
+		$$('.abc').css('margin-top','77px');
 		$$('.shykUDSearch').css('margin-top','40px');
 		$$('.shykDSearch').css('margin-top','40px');
 		
@@ -656,24 +761,27 @@ define(['app',
 		app.ajaxLoadPageContent1(getOneDepartmentCompletionStatusPath, {
 			type:type,
 			deptId:deptId,
-			pageNo:pageNo,
+			current:pageNo,
 			startDate:startDate,
 			endDate:endDate,
-			topicId:topicId,
+			// topicId:topicId,
+			khpl:2
 		}, function(result) {
 			console.log(result);
 			var data = result.data;
-			console.log(result == '');
-			if(result == ''){
-				$$('.done').html('(0)');
+			console.log(data.records == '');
+			if(data.records == ''){
+				$$('.alrdone').html('(0)');
 				countHead = '0';
+				monthDoneHead='0';
 				$$('.infinite-scroll-preloader').remove();
 			}else{
-				countHead = result.recordsTotal;
-				$$('.done').html('('+result.recordsTotal+')');
+				monthDoneHead = data.total;
+				countHead = data.total;
+				$$('.alrdone').html('('+data.total+')');
 			}	
 			setTimeout(function(){
-				handleCompletedStatus(data,isLoadMore);
+				handleCompletedStatus(data.records, isLoadMore);
 			},100);
 		});
 	}
@@ -683,10 +791,10 @@ define(['app',
 	 */
 	function handleCompletedStatus(data,isLoadMore){
 		console.log(data);
-		if(data == undefined && pageNo == 1){
+		if(data.length == 0 && pageNo == 1){
 			$$('.shykD .kpi-a-list ul').html("");
 		}
-		if(data == undefined){
+		if(data.length == 0){
 			$$('.infinite-scroll-preloader').remove();
 			//$$('.shykD .kpi-a-list ul').html("");
 		}
@@ -703,7 +811,7 @@ define(['app',
 				}
 				$$('.shykD .item-content').on('click',function(){
 					console.log('已参与');
-					app.myApp.getCurrentView().loadPage('threeMeetingsAndOneClassD.html?type=1&deptId='+$$(this).data('id')+'&topicId='+topicId+'&branchName='+$$(this).data('name')+'&startTime='+startDate+'&endTime='+endDate);
+					app.myApp.getCurrentView().loadPage('threeMeetingsAndOneClassD.html?type=1&deptId='+$$(this).data('id')+'&topicId='+topicId+'&branchName='+$$(this).data('name')+'&startTime='+startDate+'&endTime='+endDate+'&khpl=2');
 				});
 				$$('.infinite-scroll-preloader').remove();
 				loading = false;
@@ -718,33 +826,36 @@ define(['app',
 		app.ajaxLoadPageContent1(getOneDepartmentCompletionStatusPath, {
 			type:type,
 			deptId:deptId,
-			pageNo:pageNo1,
+			current:pageNo1,
 			startDate:startDate,
 			endDate:endDate,
-			topicId:topicId,
+			// topicId:topicId,
+			khpl:2
 		}, function(result) {
 			console.log(result);
 			var data = result.data;
-			if(result == ''){
+			if(data.records == ''){
 				$$('.uDone').html('(0)');
 				uDoneHead = '0';
+				monthUDoneHead = '0';
 				$$('.infinite-scroll-preloader').remove();
 			}else{
-				uDoneHead = result.recordsTotal;
-				$$('.uDone').html('('+result.recordsTotal+')');
+				uDoneHead = data.total;
+				monthUDoneHead = data.total;
+				$$('.uDone').html('('+data.total+')');
 			}
 			setTimeout(function(){
-				handleUCompletedStatus(data,isLoadMore);
+				handleUCompletedStatus(data.records,isLoadMore);
 			},100)
 		});
 	}
 	//月份
 	function handleUCompletedStatus(data,isLoadMore){
 		console.log('未完成月份');
-		if(data == undefined && pageNo1 == 1){
+		if(data.length == 0 && pageNo1 == 1){
 			$$('.shykUD .kpi-a-list ul').html("");
 		}
-		if(data == undefined){
+		if(data.length == 0){
 			$$('.infinite-scroll-preloader').remove();
 		}
 		if(data){
@@ -776,24 +887,27 @@ define(['app',
 		app.ajaxLoadPageContent1(getOneDepartmentCompletionStatusPath, {
 			type:type,
 			deptId:deptId,
-			pageNo:pagedudSeason,
+			current:pagedudSeason,
 			startDate:dudSeasonStartDate,
 			endDate:dudSeasonEndDate,
-			topicId:topicId,
+			// topicId:topicId,
+			khpl:1
 		}, function(result) {
 			console.log(result);
 			var dataSeason = result.data;
 			console.log(result == '');
-			if(result == ''){
-				$$('.done').html('(0)');
-				countHead = 0;
+			if(dataSeason.records == ''){
+				$$('.alrdone').html('(0)');
+				countHead = '0';
+				seasonDoneHead = '0';
 				$$('.infinite-scroll-preloader').remove();
 			}else{
-				countHead = result.recordsTotal;
-				$$('.done').html('('+result.recordsTotal+')');
+				countHead = dataSeason.total;
+				seasonDoneHead = dataSeason.total;
+				$$('.alrdone').html('('+dataSeason.total+')');
 			}	
 			setTimeout(function(){
-				handleCompletedStatusBySeason(dataSeason,isLoadMore);
+				handleCompletedStatusBySeason(dataSeason.records,isLoadMore);
 			},100);
 		});
 	}
@@ -801,10 +915,10 @@ define(['app',
 	 * 处理各级党委部门下的支部完成情况(季度)
 	 */
 	function handleCompletedStatusBySeason(dataSeason,isLoadMore){
-		if(dataSeason == undefined && pagedudSeason == 1){
+		if(dataSeason.length == 0 && pagedudSeason == 1){
 			$$('.shykDSeason .kpi-a-list ul').html("");
 		}
-		if(dataSeason == undefined){
+		if(dataSeason.length == 0){
 			$$('.infinite-scroll-preloader').remove();
 			//$$('.shykDSeason .kpi-a-list ul').html("");
 		}
@@ -821,7 +935,7 @@ define(['app',
 				}
 				$$('.shykDSeason .item-content').on('click',function(){
 					console.log('已参与');
-					app.myApp.getCurrentView().loadPage('threeMeetingsAndOneClassD.html?type=1&deptId='+$$(this).data('id')+'&topicId='+topicId+'&branchName='+$$(this).data('name')+'&startTime='+dudSeasonStartDate+'&endTime='+dudSeasonEndDate);
+					app.myApp.getCurrentView().loadPage('threeMeetingsAndOneClassD.html?type=1&deptId='+$$(this).data('id')+'&topicId='+topicId+'&branchName='+$$(this).data('name')+'&startTime='+dudSeasonStartDate+'&endTime='+dudSeasonEndDate+'&khpl=1');
 				});
 				loadingdudSeason = false;
 			} else {
@@ -837,33 +951,36 @@ define(['app',
 		app.ajaxLoadPageContent1(getOneDepartmentCompletionStatusPath, {
 			type:type,
 			deptId:deptId,
-			pageNo:pageudSeason,
+			current:pageudSeason,
 			startDate:dudSeasonStartDate,
 			endDate:dudSeasonEndDate,
-			topicId:topicId,
+			// topicId:topicId,
+			khpl:1
 		}, function(result) {
 			console.log(result);
 			var data = result.data;
-			if(result == ''){
+			if(data.records == ''){
 				$$('.uDone').html('(0)');
 				uDoneHead = '0';
+				seasonUDoneHead = '0';
 				$$('.infinite-scroll-preloader').remove();
 			}else{
-				uDoneHead = result.recordsTotal;
-				$$('.uDone').html('('+result.recordsTotal+')');
+				uDoneHead = data.total;
+				seasonUDoneHead = data.total;
+				$$('.uDone').html('('+data.total+')');
 			}
 			setTimeout(function(){
-				handleUCompletedStatusBySeason(data,isLoadMore);
+				handleUCompletedStatusBySeason(data.records,isLoadMore);
 			},100);
 		});
 	}
 	//季度
 	function handleUCompletedStatusBySeason(data,isLoadMore){
 		console.log('未完成季度');
-		if(data == undefined && pageudSeason == 1){
+		if(data.length == 0 && pageudSeason == 1){
 			$$('.shykUDSeason .kpi-a-list ul').html("");
 		}
-		if(data == undefined){
+		if(data.length == 0){
 			$$('.infinite-scroll-preloader').remove();
 		}
 		if(data){
@@ -895,24 +1012,27 @@ define(['app',
 		app.ajaxLoadPageContent1(getOneDepartmentCompletionStatusPath, {
 			type:type,
 			deptId:deptId,
-			pageNo:pagedudYear,
+			current:pagedudYear,
 			startDate:dudYearStartDate,
 			endDate:dudYearEndDate,
-			topicId:topicId,
+			// topicId:topicId,
+			khpl:0
 		}, function(result) {
 			console.log(result);
 			var dataYear = result.data;
 			console.log(result == '');
-			if(result == ''){
-				$$('.done').html('(0)');
-				countHead = result.recordsTotal;
+			if(dataYear.records == ''){
+				$$('.alrdone').html('(0)');
+				countHead = '0';
+				yearDoneHead = '0';
 				$$('.infinite-scroll-preloader').remove();
 			}else{
-				countHead = result.recordsTotal;
-				$$('.done').html('('+result.recordsTotal+')');
+				countHead = dataYear.total;
+				yearDoneHead = dataYear.total;
+				$$('.alrdone').html('('+dataYear.total+')');
 			}	
 			setTimeout(function(){
-				handleCompletedStatusByYear(dataYear,isLoadMore);
+				handleCompletedStatusByYear(dataYear.records,isLoadMore);
 			},100);
 		});
 	}
@@ -920,10 +1040,10 @@ define(['app',
 	 * 处理各级党委部门下的支部完成情况(年度)
 	 */
 	function handleCompletedStatusByYear(dataYear,isLoadMore){
-		if(dataYear == undefined && pagedudYear == 1){
+		if(dataYear.length == 0 && pagedudYear == 1){
 			$$('.shykDYear .kpi-a-list ul').html("");
 		}
-		if(dataYear == undefined){
+		if(dataYear.length == 0){
 			$$('.infinite-scroll-preloader').remove();
 			//$$('.shykDYear .kpi-a-list ul').html("");
 		}
@@ -940,7 +1060,7 @@ define(['app',
 				}
 				$$('.shykDYear .item-content').on('click',function(){
 					console.log('已参与');
-					app.myApp.getCurrentView().loadPage('threeMeetingsAndOneClassD.html?type=1&deptId='+$$(this).data('id')+'&topicId='+topicId+'&branchName='+$$(this).data('name')+'&startTime='+dudYearStartDate+'&endTime='+dudYearEndDate);
+					app.myApp.getCurrentView().loadPage('threeMeetingsAndOneClassD.html?type=1&deptId='+$$(this).data('id')+'&topicId='+topicId+'&branchName='+$$(this).data('name')+'&startTime='+dudYearStartDate+'&endTime='+dudYearEndDate+'&khpl=0');
 				});
 				loadingdudYear = false;
 			} else {
@@ -956,33 +1076,36 @@ define(['app',
 		app.ajaxLoadPageContent1(getOneDepartmentCompletionStatusPath, {
 			type:type,
 			deptId:deptId,
-			pageNo:pageudYear,
+			current:pageudYear,
 			startDate:dudYearStartDate,
 			endDate:dudYearEndDate,
-			topicId:topicId,
+			// topicId:topicId,
+			khpl:0
 		}, function(result) {
 			console.log(result);
 			var data = result.data;
-			if(result == ''){
+			if(data.records == ''){
 				$$('.uDone').html('(0)');
 				uDoneHead = '0';
+				yearUDoneHead = '0';
 				$$('.infinite-scroll-preloader').remove();
 			}else{
-				uDoneHead = result.recordsTotal;
-				$$('.uDone').html('('+result.recordsTotal+')');
+				uDoneHead = data.total;
+				yearUDoneHead = data.total;
+				$$('.uDone').html('('+data.total+')');
 			}
 			setTimeout(function(){
-				handleUCompletedStatusByYear(data,isLoadMore);
+				handleUCompletedStatusByYear(data.records,isLoadMore);
 			},100);
 		});
 	}
 	//年度
 	function handleUCompletedStatusByYear(data,isLoadMore){
 		console.log('未完成年度');
-		if(data == undefined && pageudYear == 1){
+		if(data.length == 0 && pageudYear == 1){
 			$$('.shykUDYear .kpi-a-list ul').html("");
 		}
-		if(data == undefined){
+		if(data.length == 0){
 			$$('.infinite-scroll-preloader').remove();
 		}
 		if(data){
@@ -1016,26 +1139,28 @@ define(['app',
 			type:type,
 			deptId:deptId,
 			query:queryByDeptName1,
-			pageNo:pageNo3,
+			current:pageNo3,
 			startDate:dudStartDate,
 			endDate:dudEndDate,
-			topicId:topicId,
+			// topicId:topicId,
+			khpl:khpl
 		}, function(result) {
 			console.log(result);
 			var data = result.data;
-			if(result == ''){
-				$$('.done').html('(0)');;
+			if(data.records == ''){
+				$$('.alrdone').html('(0)');;
 				$$('.infinite-scroll-preloader').remove();
 			}else{
-				$$('.done').html('('+result.recordsTotal+')');
+				$$('.alrdone').html('('+data.total+')');
 			}
-			SearchCompletedStatus(data,isLoadMore);
+			SearchCompletedStatus(data.records,isLoadMore,khpl);
 		});
 	}
 	/*
 	 * 处理各级党委部门下的支部完成情况
 	 */
-	function SearchCompletedStatus(data,isLoadMore){
+	function SearchCompletedStatus(data,isLoadMore,khpl){
+		console.log(data)
 		if(data == "" && pageNo3 == 1){
 			$$('.shykDSearch .kpi-a-list ul').html("");
 			$$('.shykDNotFound').css('display','block');
@@ -1055,7 +1180,7 @@ define(['app',
 			}
 			$$('.shykDSearch .item-content').on('click',function(){
 				console.log('已参与查询');
-				app.myApp.getCurrentView().loadPage('threeMeetingsAndOneClassD.html?type=1&deptId='+$$(this).data('id')+'&startTime='+dudStartDate+'&endTime='+dudEndDate+'&topicId='+topicId+'&branchName='+$$(this).data('name'));
+				app.myApp.getCurrentView().loadPage('threeMeetingsAndOneClassD.html?type=1&deptId='+$$(this).data('id')+'&startTime='+dudStartDate+'&endTime='+dudEndDate+'&topicId='+topicId+'&branchName='+$$(this).data('name')+'&khpl='+khpl);
 			});
 			loading3 = false;
 		} else {
@@ -1064,6 +1189,7 @@ define(['app',
 	}
 	//未完成支部
 	function searchshykUD(isLoadMore) {
+		
 		console.log(dudStartDate);
 		console.log(dudEndDate);
 		console.log(type);
@@ -1071,23 +1197,25 @@ define(['app',
 			type:type,
 			deptId:deptId,
 			query:queryByDeptName1,
-			pageNo:pageNo4,
+			current:pageNo4,
 			startDate:dudStartDate,
 			endDate:dudEndDate,
-			topicId:topicId,
+			// topicId:topicId,
+			khpl:khpl
 		}, function(result) {
 			console.log(result);
 			var data = result.data;
-			if(result == ''){
+			if(data.records == ''){
 				$$('.uDone').html('(0)');;
 				$$('.infinite-scroll-preloader').remove();
 			}else{
-				$$('.uDone').html('('+result.recordsTotal+')');
+				$$('.uDone').html('('+data.total+')');
 			}
-			SearchUCompletedStatus(data,isLoadMore);
+			SearchUCompletedStatus(data.records,isLoadMore);
 		});
 	}
 	function SearchUCompletedStatus(data,isLoadMore){
+		console.log(data)
 		if(data == "" && pageNo4 == 1){
 			$$('.shykUDSearch .kpi-a-list ul').html("");
 			$$('.shykUDNotFound').css('display','block');

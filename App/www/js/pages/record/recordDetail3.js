@@ -169,6 +169,7 @@ define(['app',
 	 * @param {Object} recordId 日志ID
 	 */
 	function loadRecordDetail(recordId) {
+		app.myApp.showPreloader('加载中...');
 		console.log(userId);
 		photoBrowserPhotos = [];
 		photoBrowserPopup = '';
@@ -179,6 +180,7 @@ define(['app',
 			// dictCode: 'RZLX',,
 			tenantId:app.userDetail.tenantId
 		}, function(result) {
+			app.myApp.hidePreloader();
 			var data = result.data;
 			reviewName = data.name;
 			console.log(data);
@@ -215,7 +217,7 @@ define(['app',
 					var str = '<li class="villName">';
 					str += '<div class="item-content">';
 					str += '<div class="item-inner">';
-					str += '<div class="item-title kp-label">所驻村(社区):</div>';
+					str += '<div class="item-title kp-label recordReview">所驻村(社区):</div>';
 					str += '<div class="item-input">';
 					str += '<input type="text" id="villageName" name="villageName" placeholder="" readonly />';
 					str += '</div>';
@@ -483,10 +485,15 @@ define(['app',
 			// isClick:1
 			tenantId: app.user.tenantId
 		}, function(result) {
-			console.log(result);
-			app.myApp.toast('推荐成功', 'success').show(true);
-			// isRecommend = result.data;
-			checkRecommend();
+			if(result.code == 0 && result.data == true){
+				console.log(result);
+				app.myApp.toast('推荐成功', 'success').show(true);
+				// isRecommend = result.data;
+				checkRecommend();
+			}else{
+				app.myApp.toast('推荐失败,请稍后再试', 'error').show(true);
+			}
+			
 		},{
 			type:'POST'
 		});
@@ -501,17 +508,22 @@ define(['app',
 			// isClick:1
 			tenantId: app.user.tenantId
 		}, function(result) {
-			console.log(result);
-			app.myApp.toast('取消成功', 'success').show(true);
-			isRecommend = result.data;
-			if(isRecommend == false){
-				$$('.recommendRecord').css('display','block');
-				$$('.cancelRecord').css('display','none');
+
+			if(result.code == 0 && result.data == true){
+				console.log(result);
+				app.myApp.toast('取消成功', 'success').show(true);
+				isRecommend = result.data;
+				if(isRecommend == false){
+					$$('.recommendRecord').css('display','block');
+					$$('.cancelRecord').css('display','none');
+				}else{
+					$$('.cancelRecord').css('display','block');
+					$$('.recommendRecord').css('display','none');
+				}
+				checkRecommend();
 			}else{
-				$$('.cancelRecord').css('display','block');
-				$$('.recommendRecord').css('display','none');
+				app.myApp.toast('取消失败,请稍后再试', 'error').show(true);
 			}
-			checkRecommend();
 		},{
 			type:'POST'
 		});

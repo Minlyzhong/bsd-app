@@ -7,84 +7,83 @@
 			<div class="center resultName">会议决议公示</div>
 			<div class="right">
 				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
-				<!--<a href="#" class="link icon-only btnEditMsg" style="margin-left: 0px;"><i class="icon icon-edit-white" style="margin-top: 3px;"></i></a>-->
+				
 			</div>
 		</div>
 	</div>
 	<div class="page-content" style="background: white;">
-		<div class="list-block recDetailList funds-block"style="margin-bottom: -1px;">
-			<ul>
-				<!-- <li>
-					<div class="item-content">
-						<div class="item-inner">
-							<div class="item-title kp-label">开会时间:</div>
-							<div class="item-input">
-								<input type="text" id="meetinTime" name="meetinTime" readonly/>
-							</div>
-						</div>
-					</div>
-				</li> -->
-				<li>
-					<div class="item-content">
-						<div class="item-inner">
-							<div class="item-title kp-label">公示开始时间:</div>
-							<div class="item-input">
-								<input type="text" id="beginTime1" name="beginTime1" readonly />
-							</div>
-							</div>
-						</div>
-					</li>
-				<li>
-						<div class="item-content">
-							<div class="item-inner">
-								<div class="item-title kp-label">公示结束时间
-										:</div>
-								<div class="item-input">
-									<input type="text" id="endTime1" name="endTime1"  readonly/>
-								</div>
-							</div>
-						</div>
-					</li>
-				
-				<li class="align-top">
-					<div class="item-content">
-						<div class="item-inner">
-							<div class="item-title kp-label" style="margin-top: 3px;">联系电话:</div>
-							<div class="item-input" style="margin-left: -2px;">
-								<input type="text" id="phone1" name="phone1"  readonly/>
-							</div>
-						</div>
-					</div>
-				</li>
-				
-				
-				
+		<div class="list-block recDetailList funds-block dessize2"style="margin-bottom: -1px;padding: 15px;font-size: 16px;">
 			
-			</ul>
+				<div class="publicity show1 publicityTitle">
+						<span >决议公示</span>
+				</div>
+				<div class="publicity show2 publicityTitle">
+						<span >公示证明</span>
+				</div>
+
+				<p class="show1" style="display: none;">经过村（社区）党支部提议、“两委”会商议、党员大会审议、村民代表大会决议，现将决议通过的 <strong><span class="fundsOwnName" style="font-size: 16px;"></span></strong>
+					事项进行公示：
+				</p>
+				<p class="show2" style="display: block;margin-bottom: 0px;">我村（社区）将党支部提议、“两委”会商议、党员大会审议、村民（代表）大会决议的 <strong><span class="fundsOwnName" style="font-size: 16px;"></span></strong> 事项，于 <strong><span class="fundStartTime"></span></strong> 至 <strong><span class="fundEndTime"></span></strong> 在我村（居）委会公开栏公示七天，公示期满党员、群众无异议。
+				
+				</p>
+				<p class="show2" style="margin-top: 0px;">特此证明。</p>
+				<ul class="show1" style="display: none;">
+					<li class="align-top">
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label" style="margin-top: 3px;">项目主要内容:</div>
+									<div class="item-input fundsDetail" style="margin-left: -2px;display: none;">
+										<textarea id="fundsDetail" name="fundsDetail" style="width:100%;height:200px;" readonly></textarea>
+
+									</div>
+								</div>
+								<icon class="icon icon-openIcon fundsDetailIcon" style="margin: 12px 5px 0 0;"></icon>
+							</div>
+					</li>
+					<li class="align-top">
+							<div class="item-content">
+								<div class="item-inner">
+									<div class="item-title kp-label" style="margin-top: 3px;">项目预算内容:</div>
+									<div class="item-input fundsProDetail" style="margin-left: -2px;display: none;">
+										<textarea id="fundsProDetail" name="fundsProDetail" style="width:100%;height:200px;" readonly></textarea>
+									</div>
+								</div>
+								<icon class="icon icon-openIcon fundsProDetailIcon" style="margin: 12px 5px 0 0;"></icon>
+							</div>
+					</li>
+
+				</ul>
+					
+				
+
+				<p class="show1" style="display: none;">
+						公示期（<strong><span class="fundStartTime"></span></strong> 至 <strong><span class="fundEndTime"></span></strong>，共七天），如对公示的项目使用情况有异议，请在公示期间向本村党（总）支部、村委会反映。（联系电话：<span class="phone1"></span>）
+				</p>
+					
+					<!-- （涉及工程类项目，要详细列出预算内容，此项决议内容可另附页公示） -->
+					<div class="showProcessBottom">
+							<p class="Bottom1">合浦县镇村（社区）党（总）支部</p>
+							<p class="Bottom2">合浦县镇村（居）民委员会</p>
+							
+							<p class="showTime"></p>
+					</div>
+		</div>
+	
+			
 			<div class="weui_cells weui_cells_form" style="margin-top: 0;">
 				<div class="weui_cell uploadCell">
 					<div class="weui_cell_bd weui_cell_primary">
+							
 						<div class="weui_uploader weui_uploader3">
-							<div class="weui_uploader_hd weui_cell">
-								<div class="weui_cell_bd weui_cell_primary">公示照片</div>
-								<div class="weui_cell_ft"></div>
-							</div>
+								<div class="weui_uploader_hd weui_cell">
+										<div class="weui_cell_bd weui_cell_primary">公示照片</div>
+										<div class="weui_cell_ft"></div>
+								</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<!-- <div class="weui_cells weui_cells_form">
-				<div class="weui_cell uploadCell">
-					<div class="weui_cell_bd weui_cell_primary">
-						<div class="weui_uploader1">
-							<div class="weui_uploader_hd weui_cell">
-								<div class="weui_cell_bd weui_cell_primary">会议材料</div>
-								<div class="weui_cell_ft"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div> -->
-		</div>
-	</div>
+
+			
 </div>

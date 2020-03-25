@@ -118,6 +118,7 @@ define(['app',
 
 			var params = app.departDetail;
 			params.partyType = newData.partyType;
+			
 			console.log(params);
 			
 			var formDatas= JSON.stringify(params);
@@ -161,13 +162,14 @@ define(['app',
 		} else {
 
 			var params = app.userDetail;
+
 			var _partyUser = params.partyUser;
 			$$.each(newData,function(item){
 				if(_partyUser.hasOwnProperty(item)){
 					_partyUser[item] = newData[item];
 				}
 			});
-
+			params.username = newData.userName;
 			_partyUser.partyTime=newData.partyTime.split(' ')[0]+' 00:00:00';
 			_partyUser.birthday=newData.birthday.split(' ')[0]+' 00:00:00';
 			_partyUser.workTime=newData.workTime.split(' ')[0]+' 00:00:00';	

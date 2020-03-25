@@ -4,10 +4,12 @@ define(['app'], function(app) {
 	var pageDataStorage = {};
 	var pageNo = 1;
 	var loading = true;
-	//保存考核明细
-	var saveUserReportDetialPath = app.basePath + 'knowledgeTestpaper/saveUserReportDetial';
-	//上传附件
-	var uploadReportDetialPhotoPath = app.basePath + 'upload/uploadReportDetialPhoto';
+	//保存专项考核明细
+	var saveUserReportDetialPath = app.basePath + '/mobile/partySpecialResult/savePartySpecialResult';
+	//上传图片
+	var uploadReportDetialPhotoPath = app.basePath + '/file/upload';
+	//上传文件
+	var uploadWorkFilePath = app.basePath + '/file/upload';
 	var assessId = -1;
 	var assessScore = 0;
 	var photoBrowserPhotos = [];
@@ -16,17 +18,32 @@ define(['app'], function(app) {
 	var count = 0;
 	
 	var thisAppName = '';
-
+	var imageList = [];
+	var fileList = [];
+	var srcName = [];
+	var suffixName = [];
+	var fileNames = [];
+	var fileCount = 0;
+	var attType = 0;
+	
+	var judgmentParam = 0;
+	
+	var minDate = '';
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
 	 */
 	function init(page) {
+		//设置页面不能滑动返回
+		page.view.params.swipeBackPage = false;
+		app.myApp.onPageBack("assess/assessWork", function(page){
+			page.view.params.swipeBackPage = true;
+		});
 		count = 0;
 //		if(firstIn) {
 			initData(page.query);
 //		}
-		app.back2Home();
+		//app.back2Home();
 		clickEvent();
 		attrDefine(page.query);
 		pushAndPull(page);
@@ -43,10 +60,24 @@ define(['app'], function(app) {
 		photoBrowserPhotos = [];
 		photoDatas = [];
 		photoBrowserPopup = '';
+		imageList = [];
+		fileList = [];
+		attType = 0;
 		assessId = pageData.assessId;
 		assessScore = pageData.score;
-		
+		if(pageData.judgmentParam){
+			judgmentParam = pageData.judgmentParam;
+		}else{
+			judgmentParam = 0;
+		}
+		console.log(judgmentParam == 1);
+		srcName = [];
+		suffixName = [];
+		fileNames = [];
+		fileCount = 0;
 		thisAppName = pageData.thisAppName;
+		
+		minDate = pageData.StartDate
 	}
 
 	/**
@@ -57,6 +88,108 @@ define(['app'], function(app) {
 			showImgPicker();
 		});
 		$$('.sumbit').on('click', saveUserReportDetial);
+		
+		$$("#fileinput").on('change', function () {
+		    var oFReader = new FileReader();
+		    var file = document.getElementById('fileinput').files[0];
+		    if(file.size > 20971520){
+		    	app.myApp.alert('文件不能大于20MB！！');
+		    	return;
+		    }
+		    oFReader.readAsDataURL(file);
+		    oFReader.onloadend = function(oFRevent){
+		        var path = $$('#fileinput').val();
+		        var strs = [];
+		        var strs1 = [];
+		        var typeFile = '';
+		        var str = '';
+		        var str123 = '';
+		        strs=path.split(".");
+		        strs1=path.split("\\");
+		        str123 = strs1.pop()
+		        typeFile= strs.pop();
+				console.log(str123);
+				if(typeFile == 'txt'
+				|| typeFile == 'doc'
+				|| typeFile == 'docx'
+				|| typeFile == 'zip'
+				|| typeFile == 'xls'
+				|| typeFile == 'rar'
+				|| typeFile == 'pdf'
+				|| typeFile == 'ppt'){
+					
+				}else{
+					app.myApp.alert('选择文件类型不符合上传');
+					return;
+				}
+				fileNames.push(str123);
+				srcName.push(oFRevent.target.result);
+				suffixName.push(typeFile);
+				wordUpload(oFRevent.target.result,str123 )
+				if(typeFile == 'txt'){
+					str +='<img src="img/file/txt.png" class="picSize" />';
+				}else if(typeFile == 'doc'){
+					str +='<img src="img/file/doc.png" class="picSize" />';
+				}else if(typeFile == 'docx'){
+					str +='<img src="img/file/doc.png" class="picSize" />';
+				}else if(typeFile == 'zip'){
+					str +='<img src="img/file/zip.png" class="picSize" />';
+				}else if(typeFile == 'xls'){
+					str +='<img src="img/file/xls.png" class="picSize" />';
+				}else if(typeFile == 'rar'){
+					str +='<img src="img/file/zip.png" class="picSize" />';
+				}else if(typeFile == 'pdf'){
+					str +='<img src="img/file/pdf.png" class="picSize" />';
+				}else if(typeFile == 'ppt'){
+					str +='<img src="img/file/ppt.png" class="picSize" />';
+				}
+				var random1 = app.utils.generateGUID();
+				$$('.weui_uploader1').append(
+				'<div class="weui_uploader_bd kpiPicture" >' +
+				'<div class="picContainer" style="margin-top:8px;">' +
+				str+
+				'<div class="item-title kp-label" style="margin-left:18px;position:absolute;top:79px;">'+
+				str123+
+				'</div>'+
+				'<div class="file-panel">' +
+				'<i class="icon icon-delete" id="file_delete'+random1+'" data-index="'+fileCount+'"></i>' +
+				'</div>' +
+				'</div>' +
+				'</div>');
+				fileCount += 1;
+				//添加删除文件的监听事件
+				$$('#file_delete'+random1).on('click', function(e) {
+					e.stopPropagation();
+					var fileContainer = $$(this).parent().parent();
+					var fileIndex = $$(this).data('index');
+					app.myApp.confirm('确认删除该文件?', function() {
+						fileContainer.remove();
+						suffixName.splice(fileIndex,1);
+						srcName.splice(fileIndex,1);
+						fileList.splice(fileIndex,1);
+						fileNames.splice(fileIndex,1);
+						fileCount = fileCount-1;
+						console.log(suffixName);
+						console.log(srcName)
+						app.myApp.toast('删除成功', 'success').show(true);
+					});
+				});
+				console.log(srcName);
+		        console.log(suffixName);
+			}
+			
+		});
+		
+		$$('.assessWorkBack').on('click',function(){
+			app.myApp.confirm('您的考核尚未上传，是否退出？', function() {
+				app.myApp.getCurrentView().back();
+			});
+		});
+		$$('.assessWorkHome').on('click',function(){
+			app.myApp.confirm('您的考核尚未上传，是否返回首页？', function() {
+				app.back3Home();
+			});
+		});
 	}
 
 	/**
@@ -64,7 +197,16 @@ define(['app'], function(app) {
 	 */
 	function attrDefine(pageData) {
 		$$('.assessDetailTitle').html(pageData.title);
-		$$('.assessScore').append(pageData.score + '分');
+		if(assessScore>0){
+			$$('.addScore').css('display','block');
+			$$('.addScore').append(pageData.score + '分');
+			$$('.lessScore').css('display','none');
+		}else{
+			$$('.addScore').css('display','none');
+			$$('.lessScore').css('display','block');
+			$$('.lessScore').append(pageData.score + '分');
+		}
+		//$$('.assessScore').append(pageData.score + '分');
 		$$('.assessTarget').append(pageData.target);
 		if(pageData.memo == '无'){
 			$$('.assessMemo').css('display','none');
@@ -72,10 +214,111 @@ define(['app'], function(app) {
 			$$('.assessMemo').append(pageData.memo);
 		}
 		addCalendar('assessTs');
+		// addCalendar('beginTime');
 	}
-
+	/*
+	 * 文档上传
+	 */
+	function wordUpload(srcNameData, str) {
+		app.myApp.showPreloader('文档保存中...');
+		
+		var ft1 = new FileTransfer();
+		
+			var uri1 = encodeURI(uploadWorkFilePath);
+			var options1 = new FileUploadOptions();
+			options1.fileKey = "file";
+			//随机数加后缀名
+			//options1.fileName = app.utils.generateGUID() + "."+suffixName[index];
+			options1.fileName = str;
+			options1.headers = {
+				'Authorization': "bearer " + app.access_token
+			}
+			//判断类型
+			
+			if(suffixName == 'docx'){
+				options1.mimeType = "application/msword";
+				attType = 4;
+			}else if(suffixName == 'doc'){
+				attType = 4;
+				options1.mimeType = "application/msword";
+			}else if(suffixName == 'txt'){
+				options1.mimeType = "text/plain";
+				attType = 7;
+			}else if(suffixName == 'xls'){
+				options1.mimeType = "application/vnd.ms-excel";
+				attType = 5;
+			}else if(suffixName == 'zip'){
+				options1.mimeType = "application/zip";
+				attType = 8;
+			}else if(suffixName == 'rar'){
+				options1.mimeType = "application/zip";
+				attType = 9;
+			}else if(suffixName == 'pdf'){
+				options1.mimeType = "application/pdf";
+				attType = 6;
+			}else if(suffixName == 'ppt'){
+				options1.mimeType = "application/vnd.ms-powerpoint";
+				attType = 10;
+			}
+			options1.chunkedMode = false;
+			var params = {
+				"attName": "",
+				"attPath": "",
+				"attSize": 0,
+				"attState": 0,
+				"attType": attType,
+				"tenantId": app.userDetail.tenantId,
+				"userId": app.userDetail.userId
+			}
+			// params.fkId = detailID;
+			// params.userId = app.userId;
+//			if(judgmentParam == 1){
+//				params.refType = 10;
+//			}else{
+//				params.refType = 3;
+//			}
+			// params.refType = 3;
+			// options1.params = params;
+			
+			ft1.upload(srcNameData, uri1, function(r) {
+				app.myApp.hidePreloader();
+				var data = JSON.parse(r.response);
+				if(data.code == 0 && data.data != null) {
+					var result = data.data;
+					params.ext = result.ext;
+					params.name = result.name;
+					params.filePath = result.filePath;
+					params.length = result.length;
+					fileList.push(params);
+					
+				} else {
+					app.myApp.hidePreloader();
+					ft1.abort();
+					app.myApp.alert(app.utils.callbackAjaxError());
+					return;
+				}
+			}, function(error) {
+				app.myApp.hidePreloader();
+				ft1.abort();
+				app.myApp.alert(app.utils.callbackAjaxError());
+				return;
+			}, options1);
+		
+		app.myApp.hidePreloader();
+		// app.myApp.toast("保存成功！", 'success').show(true);
+		// app.myApp.getCurrentView().back();
+		// //refresh();		
+		// require(['js/pages/assessment/assessment'], function(assessment) {
+		// 	assessment.addCallback();
+		// });
+	}
 	//初始化日历
 	function addCalendar(contentID) {
+		// var minDate = '2018-04-02';
+		// console.log(minDate);
+		var str = minDate.split('-')[2];
+		console.log(str);
+		
 		calID = app.myApp.calendar({
 			input: '#' + contentID,
 			toolbarCloseText: '完成',
@@ -87,6 +330,7 @@ define(['app'], function(app) {
 			dateFormat: 'yyyy-mm-dd',
 			closeOnSelect: true,
 			maxDate: new Date(),
+			// minDate:minDate,
 		});
 	}
 
@@ -104,21 +348,24 @@ define(['app'], function(app) {
 					app.myApp.alert("该功能只能在移动app中使用！");
 					return;
 				}
-				window.imagePicker.getPictures(
-					function(picURLList) {
-						if(picURLList) {
-							showPhotos(picURLList);
+				var permissions = cordova.plugins.permissions;
+				permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, function(){
+					window.imagePicker.getPictures(
+						function(picURLList) {
+							if(picURLList) {
+								showPhotos(picURLList);
+							}
+						},
+						function(error) {
+							console.log('从相册获取失败' + message);
+						}, {
+							maximumImagesCount: 9,
+							width: 800,
+							height: 800,
+							quality: 60,
 						}
-					},
-					function(error) {
-						console.log('从相册获取失败' + message);
-					}, {
-						maximumImagesCount: 9,
-						width: 800,
-						height: 800,
-						quality: 60,
-					}
-				);
+					);
+				});
 			}
 		}, {
 			text: '拍照',
@@ -167,51 +414,78 @@ define(['app'], function(app) {
 			$$('.sumbit').attr('disabled',false);
 		}
 		app.myApp.showPreloader('信息保存中...');
-		app.ajaxLoadPageContent(saveUserReportDetialPath, {
-			id: 0,
+
+		var params={
+			// id: 0,
 			topicId: assessId,
 			reportTitle: assessTitle,
-			reportTime: assessTs,
+			// reportTime: assessTs,
 			reportContext: assessContent,
 			reportUserId: app.userId,
 			reportState: 0,
-			score: assessScore
-		}, function(data) {
-			console.log(data);
-			var detailID = data.data.id;
-			if(detailID) {
-				if(photoDatas && photoDatas.length > 0) {
-					uploadReportDetialPhoto(photoDatas, detailID);
-				} else {
+			score: assessScore,
+			images : imageList,
+			file: fileList 
+		}
+		var formDatas= JSON.stringify(params)
+		$$.ajax({
+            url:saveUserReportDetialPath,
+            method: 'POST',
+            dataType: 'json',
+			contentType: 'application/json;charset:utf-8',
+            data: formDatas,
+            cache: false,
+            success:function (data) {
+				if(data.code == 0){
+					console.log(data);
+					app.myApp.hidePreloader();
 					app.myApp.toast('保存成功', 'success').show(true);
 					$$('.sumbit').html('已保存');
-					if(thisAppName == undefined){
-						require(['js/pages/assessment/assessment'], function(assessment) {
-							assessment.addCallback();
-						});
-					}else if(thisAppName == 'UD'){
-						require(['js/pages/assessment/threeMeetingsAndOneClassUD'], function(threeMeetingsAndOneClassUD) {
-							threeMeetingsAndOneClassUD.refreshThreeMeetingsAndOneClassPaperUD();
-						});
-						require(['js/pages/party/threePlusXStatistics'], function(threePlusXStatistics) {
-							threePlusXStatistics.refreshPlusX();
-						});
-					}
-					else{
-						require(['js/pages/assessment/threeMeetingsAndOneClass'], function(threeMeetingsAndOneClass) {
-							threeMeetingsAndOneClass.refreshThreeMeetingsAndOneClassPaper();
-						});
-						require(['js/pages/appList/appList'], function(appList) {
-							appList.reSetshykReadRows();
-						});
-					}
 					
-					app.myApp.getCurrentView().back();
+				// 	require(['js/pages/assessment/assessment'], function(assessment) {
+				// 		assessment.addCallback();
+				// 	});
+			
+				// app.myApp.getCurrentView().back();
+				console.log(thisAppName);
+				if(thisAppName == undefined){
+					require(['js/pages/assessment/assessment'], function(assessment) {
+						assessment.addCallback();
+					});
+				}else if(thisAppName == 'UD'){
+					require(['js/pages/assessment/threeMeetingsAndOneClassUD'], function(threeMeetingsAndOneClassUD) {
+						threeMeetingsAndOneClassUD.refreshThreeMeetingsAndOneClassPaperUD();
+					});
+					require(['js/pages/party/threePlusXStatistics'], function(threePlusXStatistics) {
+						threePlusXStatistics.refreshPlusX();
+					});
 				}
-			} else {
+				else{
+					require(['js/pages/assessment/threeMeetingsAndOneClass'], function(threeMeetingsAndOneClass) {
+						threeMeetingsAndOneClass.refreshThreeMeetingsAndOneClassPaper();
+					});
+					require(['js/pages/appList/appList'], function(appList) {
+						appList.reSetshykReadRows();
+					});
+				}
+				
+				app.myApp.getCurrentView().back();
+			
+				}else{
+					app.myApp.toast(data.msg , 'error').show(true);
+				}
+				
+			
+		},
+            error:function () {
+				app.myApp.hidePreloader();
 				app.myApp.alert(app.utils.callbackAjaxError());
-			}
-		});
+            }
+        });
+
+
+
+		
 	}
 
 	/**
@@ -219,31 +493,43 @@ define(['app'], function(app) {
 	 * @param {Object} photoDatas 相片数组
 	 * @param {Object} detailID  考核明细ID
 	 */
-	function uploadReportDetialPhoto(photoDatas, detailID) {
+	function uploadReportDetialPhoto(photo) {
 		app.myApp.showPreloader('图片保存中...');
-		var sum = 0;
+		// var sum = 0;
+
 		var ft = new FileTransfer();
-		$$.each(photoDatas, function(index, item) {
+		
 			var uri = encodeURI(uploadReportDetialPhotoPath);
 			var options = new FileUploadOptions();
 			options.fileKey = "file";
 			options.fileName = app.utils.generateGUID() + ".png";
 			options.mimeType = "image/jpeg";
 			options.chunkedMode = false;
-			var params = {};
-			params.fkId = detailID;
-			params.userId = app.userId;
-			options.params = params;
-
-			ft.upload(item, uri, function(r) {
+			options.headers = {
+				'Authorization': "bearer " + app.access_token
+			}
+			var params = {
+				"ext": "",
+				"filePath": "",
+				"length": 0,
+				"name": 0,
+				
+			}
+			ft.upload(photo, uri, function(r) {
 				var data = JSON.parse(r.response);
-				sum++;
-				if(data.success === true) {
-					if(sum == photoDatas.length) {
-						
-					}
-				} else {
-					app.myApp.hidePreloader();
+				// sum++;
+				app.myApp.hidePreloader();
+				
+				if(data.code == 0 && data.data != null) {
+					var result = data.data;
+					params.ext = result.ext;
+					params.name = result.name;
+					params.filePath = result.filePath;
+					params.length = result.length;
+					imageList.push(params);
+
+				}else{
+					
 					ft.abort();
 					app.myApp.alert(app.utils.callbackAjaxError());
 					return;
@@ -254,11 +540,14 @@ define(['app'], function(app) {
 				app.myApp.alert(app.utils.callbackAjaxError());
 				return;
 			}, options);
-		});
-		app.myApp.toast("保存成功！", 'success').show(true);
-		$$('.sumbit').html('已保存');
-		app.myApp.hidePreloader();
-		app.myApp.getCurrentView().back();
+		
+		// app.myApp.toast("保存成功！", 'success').show(true);
+		// $$('.sumbit').html('已保存');
+		// app.myApp.hidePreloader();
+		// app.myApp.getCurrentView().back();
+		// require(['js/pages/assessment/assessment'], function(assessment) {
+		// 	assessment.addCallback();
+		// });
 	}
 
 	/**
@@ -274,7 +563,8 @@ define(['app'], function(app) {
 				})
 				.then(function(results) {
 					var base64Data = results.base64;
-					photoDatas.push(base64Data);
+					
+					uploadReportDetialPhoto(base64Data);
 				})
 				.catch(function(err) {
 					// 捕捉错误信息
@@ -299,6 +589,7 @@ define(['app'], function(app) {
 					photoContainer.remove();
 					photoBrowserPhotos.splice(piciIndex - 2, 1);
 					photoDatas.splice(piciIndex - 2, 1);
+					imageList.splice(piciIndex - 2, 1);
 					app.myApp.toast('删除成功', 'success').show(true);
 				});
 			});
@@ -315,6 +606,8 @@ define(['app'], function(app) {
 				photoBrowserPopup.open(picIndex - 2);
 			});
 		});
+		
+		
 	}
 
 	/**

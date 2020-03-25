@@ -10,6 +10,7 @@ define(['app',
 	var loadPaperPath = app.basePath + '/mobile/partyAm/loadPaperByTopicId';
 	var deptId = 0;
 	var topicId = 0;
+	var topicTitle = '';
 	var startDate = '';
 	var endDate = '';
 
@@ -60,6 +61,7 @@ define(['app',
 	 */
 	function attrDefine(page) {
 		$$('.paperListTitle').html(page.query.name);
+		topicTitle = page.query.name;
 	}
 
 	/**
@@ -100,7 +102,7 @@ define(['app',
 			$$('.assessPaperListContent').on('click', function() {
 				var id = $$(this).data("id");
 				var userName = $$(this).data('userName');
-				var title = $$('.rankDetailTitle').html().split("：")[1];
+				var title = topicTitle;
 				var name = $$('.rankDetailName').html().split("：")[1];
 				var score = $$('.rankDetailScore').html();
 				app.myApp.getCurrentView().loadPage('rankAssessDetail.html?assessId=' + id + '&title=' + title + '&score=' + score + '&name=' + name + '&reportState=0&userName=' + userName);

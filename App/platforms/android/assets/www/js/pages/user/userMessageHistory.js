@@ -58,6 +58,13 @@ define(['app','hbs!js/hbs/userMessageList'], function(app,personalMessageListTem
 			if(result.length > 0 ){
 				$$.each(result, function(index, item){
 					item.createTime = app.getnowdata(item.createTime); 
+					item.memo = item.memo || null; 
+					if(item.memo){
+						item.hasMemo = 1;
+					}else{
+						item.hasMemo = 0;
+					}
+					
 				})
 				
 				if(isLoadMore){

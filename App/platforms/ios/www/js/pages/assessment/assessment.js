@@ -10,13 +10,13 @@ define(['app',
 		var pageNo = 1;
 		var loading = true;
 		//考核责任项
-		var loadPartyMenuPath = app.basePath + 'knowledgeTestpaper/loadTestPaper';
+		var loadPartyMenuPath = app.basePath + '/mobile/partyAm/loadTestPaperList';
 		//查找考核清单
-		var searchPaperPath = app.basePath + 'knowledgeTestpaper/searchAssessmentPaper';
-		//加载考核清单
-		var loadTopicPath = app.basePath + 'knowledgeTestpaper/loadTopic';
+		var searchPaperPath = app.basePath + '/mobile/partyAm/loadTestPaper';
+		//查询未填报的专项考核责任项下的清单列表
+		var loadTopicPath = app.basePath + '/mobile/partyAm/loadTestPaper';
 		//获取三会一课年份
-		var getYearsPath = app.basePath + 'knowledgeTopic/getYears';
+		var getYearsPath = app.basePath + '/mobile/partyAm/getYears';
 		//根据年月查询考核清单
 		//var loadKnowledgeTopicByYearAndMonthPath = app.basePath + 'knowledgeTopic/loadKnowledgeTopicByYearAndMonth';
 		
@@ -59,8 +59,11 @@ define(['app',
 		//年度
 		var asessmentYearStartDate = '';
 		var asessmentYearEndDate = '';
+		var asessmentYearStartDate1 = '';
+		var asessmentYearEndDate1 = '';
 		var pageAYear = 1;
 		var loadingAYear = true;
+		var asessmentYearCount = 1;
 		//查询
 		var asessmentSearchStartDate = '';
 		var asessmentSearchEndDate = '';
@@ -79,6 +82,7 @@ define(['app',
 //				'assessment/assessWork',
 //			]);
 //			if(firstIn) {
+				console.log(page)
 				initData(page.query);
 //			} else {
 //				loadStorage();
@@ -89,14 +93,15 @@ define(['app',
 			//pushAndPull(page);
 			clickEvent();
 			
-			//ajaxLoadContent();
-			ajaxLoadContentByYear();
+			ajaxLoadContent();
+			//ajaxLoadContentByYear();
 		}
 
 		/**
 		 * 初始化模块变量
 		 */
 		function initData(pageData) {
+			$$('.assessmenTitle').html(pageData.appName);
 			firstIn = 0;
 			pageDataStorage = {};
 			//月份
@@ -115,8 +120,11 @@ define(['app',
 			//年度
 			asessmentYearStartDate = '';
 			asessmentYearEndDate = '';
+			asessmentYearStartDate1 = '';
+			asessmentYearEndDate1 = '';
 			pageAYear = 1;
 			loadingAYear = true;
+			asessmentYearCount = 1;
 			//查询
 			asessmentSearchStartDate = '';
 			asessmentSearchEndDate = '';
@@ -132,6 +140,7 @@ define(['app',
 			assessTpId = 0;
 			assessWorkCB = '';
 			notAssess = JSON.parse(pageData.notAssess);
+			console.log('123'+notAssess);
 			//季度
 			tpArrSeason = {};
 			assessTpIdSeason = 0;
@@ -153,11 +162,20 @@ define(['app',
 		function loadStorage() {
 			//arguments[0]获取其传回来的第一个参数
 			if(arguments[0] >= 0) {
+				console.log(pageDataStorage)
 				loadTopic(pageDataStorage['tpId']);
 				$$($$('.assesserLeftList .item-inner')[arguments[0]]).click();
+				loadTopicBySeason(pageDataStorage['tpIdSeason']);
+				$$($$('.assesserLeftListSeason .item-inner')[arguments[0]]).click();
+				loadTopicByYear(pageDataStorage['tpIdYear']);
+				$$($$('.assesserLeftListYear .item-inner')[arguments[0]]).click();
 			} else {
 				$$('.assesserLeftList ul').html(itemTemplate(pageDataStorage['left']));
 				loadEvent(pageDataStorage['left']);
+				$$('.assesserLeftListSeason ul').html(itemTemplate(pageDataStorage['leftSeason']));
+				loadEventBySeason(pageDataStorage['leftSeason']);
+				$$('.assesserLeftListYear ul').html(itemTemplate(pageDataStorage['leftYear']));
+				loadEventByYear(pageDataStorage['leftYear ']);
 			}
 		}
 
@@ -174,10 +192,18 @@ define(['app',
 			app.ajaxLoadPageContent1(getYearsPath,{
 			},function(data){
 				console.log(data);
-				result = data;
-				$$.each(data, function(index, item) {
-						result[index] = item.text.toString()+'年';
+				result = data.data;
+				if(result == null){
+					var nowDate = new Date();
+					var nowYear = nowDate.getFullYear();
+					result =[nowYear+'年']
+					console.log(result);
+				}else{
+					$$.each(result, function(index, item) {
+						result[index] = item.toString()+'年';
 				});
+				}
+				
 				console.log(result);
 				pickerDescribe = app.myApp.picker({
 		    		input: '#picker-describe',
@@ -188,7 +214,7 @@ define(['app',
 				            values:(result)
 				        },
 				        {
-				            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+				            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 				        },
 				    ]
 				});
@@ -218,13 +244,17 @@ define(['app',
 			});
 			var myDate = new Date();
 			year = myDate.getFullYear();
-			month = myDate.getMonth()+1;
+			
+			month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
+			console.log(month);
 			//月份时间判断
+			
 			$("#picker-describe").val(year+'年 '+ month+'月');
-			asessmentMonthStartDate = year+'-'+month+'-1';
+			asessmentMonthStartDate = year+'-'+month+'-01';
 			asessmentMonthEndDate = year+'-'+month+'-31';
 			$$(".assessmentTime").on('click',function(){
 				pickerDescribe.open();
+
 				$("#picker-describe").val(year+'年 '+ month+'月');
 				$$('.picker-3d .close-picker').text('完成');
 				//设置一开始被选中的年月份
@@ -239,10 +269,13 @@ define(['app',
 					$$('.shykNotFound').css('display','none');
 					year = pickerDescribe.value[0].substring(0,pickerDescribe.value[0].length-1);
 					month = pickerDescribe.value[1].substring(0,pickerDescribe.value[1].length-1);
+
+					console.log(pickerDescribe.value);
 					$("#picker-describe").val(year+'年 '+ month+'月');
 					pageNo = 1;
 					loading = true;
-					asessmentMonthStartDate = year+'-'+month+'-1';
+					console.log(asessmentMonthStartDate);
+					asessmentMonthStartDate = year+'-'+month+'-01';
 					asessmentMonthEndDate = year+'-'+month+'-31';
 					$$('.assesserRightList ul').html('');
 					ajaxLoadContent();
@@ -253,19 +286,19 @@ define(['app',
 			//季度时间判断
 			if(month<=3){
 				$("#picker-describeSeason").val(year+'年 '+ '第一季度');
-				asessmentSeasonStartDate = year+'-1-1';
-				asessmentSeasonEndDate = year+'-3-31';
+				asessmentSeasonStartDate = year+'-01-01';
+				asessmentSeasonEndDate = year+'-03-31';
 			}else if(month>3 && month<=6){
 				$("#picker-describeSeason").val(year+'年 '+ '第二季度');
-				asessmentSeasonStartDate = year+'-4-1';
-				asessmentSeasonEndDate = year+'-6-31';
+				asessmentSeasonStartDate = year+'-04-01';
+				asessmentSeasonEndDate = year+'-06-31';
 			}else if(month>6 && month<=9){
 				$("#picker-describeSeason").val(year+'年 '+ '第三季度');
-				asessmentSeasonStartDate = year+'-7-1';
-				asessmentSeasonEndDate = year+'-9-31';
+				asessmentSeasonStartDate = year+'-07-01';
+				asessmentSeasonEndDate = year+'-09-31';
 			}else if(month>9 && month<=12){
 				$("#picker-describeSeason").val(year+'年 '+ '第四季度');
-				asessmentSeasonStartDate = year+'-10-1';
+				asessmentSeasonStartDate = year+'-10-01';
 				asessmentSeasonEndDate = year+'-12-31';
 			}
 			$$(".assessmentTimeSeason").on('click',function(){
@@ -276,16 +309,16 @@ define(['app',
 					year = pickerDescribeSeason.value[0].substring(0,pickerDescribeSeason.value[0].length-1);
 					season = pickerDescribeSeason.value[1].substring(0,pickerDescribeSeason.value[1].length);
 					if(season == '第一季度'){
-						asessmentSeasonStartDate = year+'-1-1';
-						asessmentSeasonEndDate = year+'-3-31';
+						asessmentSeasonStartDate = year+'-01-01';
+						asessmentSeasonEndDate = year+'-03-31';
 					}else if(season == '第二季度'){
-						asessmentSeasonStartDate = year+'-4-1';
-						asessmentSeasonEndDate = year+'-6-31';
+						asessmentSeasonStartDate = year+'-04-01';
+						asessmentSeasonEndDate = year+'-06-31';
 					}else if(season == '第三季度'){
-						asessmentSeasonStartDate = year+'-7-1';
-						asessmentSeasonEndDate = year+'-9-31';
+						asessmentSeasonStartDate = year+'-07-01';
+						asessmentSeasonEndDate = year+'-09-31';
 					}else if(season == '第四季度'){
-						asessmentSeasonStartDate = year+'-10-1';
+						asessmentSeasonStartDate = year+'-10-01';
 						asessmentSeasonEndDate = year+'-12-31';
 					}
 					$("#picker-describeSeason").val(year+'年 '+ season);
@@ -299,23 +332,25 @@ define(['app',
 			
 			//年份时间判断
 			$("#picker-describeYear").val(year+'年 ');
-//			asessmentYearStartDate= year+'-1-1';
-//			asessmentYearEndDate= year+'-12-31';
-			asessmentYearStartDate = year;
+			asessmentYearStartDate1= year+'-01-01';
+			asessmentYearEndDate1= year+'-12-31';
+			asessmentYearStartDate = year +'-01-01';
+			asessmentYearEndDate = year +'-12-31';
 			$$(".assessmentTimeYear").on('click',function(){
 				pickerDescribeYear.open();
 				$$('.picker-3d .close-picker').text('完成');
 				$$('.toolbar-inner .right').css('margin-right','20px');	
 				$$('.picker-3d .close-picker').on('click',function(){
 					year = pickerDescribeYear.value[0].substring(0,pickerDescribeYear.value[0].length-1);
-					//asessmentYearStartDate= year+'-1-1';
-					asessmentYearStartDate = year;
-					//asessmentYearEndDate= year+'-12-31';
+					asessmentYearStartDate1= year+'-01-01';
+					asessmentYearEndDate1= year+'-12-31';
+					asessmentYearStartDate = year+'-01-01';
+					asessmentYearEndDate = year+'-12-31';
 					$("#picker-describeYear").val(year+'年 ');
 					pageAYear = 1;
 					loadingAYear = true;
 					$$('.assesserRightListYear ul').html('');
-					ajaxLoadContentByYear(false);
+					ajaxLoadContentByYear();
 				});
 			});
 			
@@ -341,7 +376,7 @@ define(['app',
 //				$$('#assessmentContext').val('');
 //			});
 
-//			$$('.searchbar-clear').on('click', function() {
+//			$$('.assessSearchClear').on('click', function() {
 //				oldContent = '';
 //				$$(this).css('opacity', '0');
 //				$$('.assesserSearchList ul').html("");
@@ -354,11 +389,6 @@ define(['app',
 					setTimeout(function(){
 						searchAssessment1();
 					},100);
-				}else{
-					if(asessmentMonthCount == 1){
-						ajaxLoadContent();
-						asessmentMonthCount += 1;
-					}
 				}
 			});
 			//季度
@@ -380,15 +410,25 @@ define(['app',
 					setTimeout(function(){
 						searchAssessment1();
 					},100);
+				}else{
+					if(asessmentYearCount == 1){
+						ajaxLoadContentByYear();
+						asessmentYearCount += 1;
+					}
 				}
+			});
+
+			//点击时间图标
+			$$('.assessmentPage .icon-history').on('click',function(){
+				app.myApp.getCurrentView().loadPage('assessmentHistoryPaperDetail.html');
 			});
 		}
 		
 		//搜索条件
 		function searchAssessment1(){
-			var monthClassName = $('#tab3').hasClass('active');
+			var monthClassName = $('#tab1').hasClass('active');
 			var seasonClassName = $('#tab2').hasClass('active');
-			var yearClassName = $('#tab1').hasClass('active');
+			var yearClassName = $('#tab3').hasClass('active');
 			console.log(monthClassName);
 			console.log(seasonClassName);
 			console.log(yearClassName);
@@ -469,10 +509,10 @@ define(['app',
 			//var searchContent = $$('#assessmentContext').val();
 			if(!searchContent) {
 				oldContent = '';
-				$$('.searchbar-clear').css('opacity', '0');
+				$$('.assessSearchClear').css('opacity', '0');
 				$$('.assesserSearchList ul').html("");
 			} else {
-				$$('.searchbar-clear').css('opacity', '1');
+				$$('.assessSearchClear').css('opacity', '1');
 			}
 			
 			searchPaper(searchContent);
@@ -483,10 +523,10 @@ define(['app',
 			//var searchContent = $$('#assessmentContext').val();
 			if(!searchContent) {
 				oldContent = '';
-				$$('.searchbar-clear').css('opacity', '0');
+				$$('.assessSearchClear').css('opacity', '0');
 				$$('.assesserSearchList ul').html("");
 			} else {
-				$$('.searchbar-clear').css('opacity', '1');
+				$$('.assessSearchClear').css('opacity', '1');
 			}
 			
 			searchPaperByYear(searchContent);
@@ -503,40 +543,57 @@ define(['app',
 			$$('.assessSearchBar .searchCancelBtn').css('display','none');
 			$$('.assesserSearchList ul').html("");
 			$$('.assesserSearchList').css('display', 'none');
-			//$$('.searchbar-clear').css('opacity', '0');
+			$$('.assessSearchClear').css('opacity', '0');
 			$$('.assessNotFound').css('display', 'none');
+			// $$('.assessSearchClear').css('display', 'none');
 		}
-
+		$$('.assessSearchClear').on('click', function() {
+			console.log('searchbar')
+			oldContent = '';
+			$$(this).css('opacity', '0');
+			$$('.assesserSearchList ul').html("");
+			$$('#assessSearch').val("");
+		});
 		/**
 		 * 异步请求页面数据 (月份)
+		 * khpl考核频率类型 年 0 ， 季 1，月 2
 		 */
 		function ajaxLoadContent() {
 			console.log(asessmentMonthStartDate);
 			console.log(asessmentMonthEndDate);
 			app.ajaxLoadPageContent(loadPartyMenuPath, {
-				deptId: app.user.deptId,
-				type:1,
+				// deptId: app.user.deptId,
+				// type:1,
 				startDate:asessmentMonthStartDate,
 				endDate:asessmentMonthEndDate,
+				// userId:app.userId,
+				khpl:2,
 			}, function(result) {
-				var data = result;
-				console.log(data);
-				pageDataStorage['left'] = data;
-				$$('.assesserLeftList ul').html(itemTemplate(data));
-				if(notAssess.length) {
-					$$.each($$('.assesserLeftList .item-inner'), function(index, item1) {
-						$$.each(notAssess, function(index, item2) {
-							if($$(item1).data('tpid') == item2.knowledgePaperId) {
-								if(item2.totalNum) {
-									$$(item1).prepend('<span class="appBadge bg-red assessBadge" style="font-size: 13px;right: 0;top: 0;text-align: center;">' + item2.totalNum + '</span>');
+				if(result.data == null){
+					$$('.assesserRightList ul').html('<div class="noresult">没有需要考核的内容</div>')
+				}else{
+					var data = result.data;
+					console.log('loadPartyMenuPath');
+					console.log(data);
+					pageDataStorage['left'] = data;
+					$$('.assesserLeftList ul').html(itemTemplate(data));
+					if(notAssess.length) {
+						$$.each($$('.assesserLeftList .item-inner'), function(index, item1) {
+							$$.each(notAssess, function(index, item2) {
+								if($$(item1).data('tpid') == item2.knowledgePaperId) {
+									if(item2.totalNum) {
+										$$(item1).prepend('<span class="appBadge bg-red assessBadge" style="font-size: 13px;right: 0;top: 0;text-align: center;">' + item2.totalNum + '</span>');
+									}
 								}
-							}
+							});
 						});
-					});
+					}
+					setTimeout(function(){
+						console.log('loadEvent')
+						loadEvent(data);
+					},100)
 				}
-				setTimeout(function(){
-					loadEvent(data);
-				},100)
+				
 				
 			});
 		}
@@ -548,28 +605,37 @@ define(['app',
 			console.log(asessmentSeasonEndDate);
 			app.ajaxLoadPageContent(loadPartyMenuPath, {
 				deptId: app.user.deptId,
-				type:1,
+				// type:1,
 				startDate:asessmentSeasonStartDate,
 				endDate:asessmentSeasonEndDate,
+				// userId:app.userId,
+				khpl:1,
 			}, function(result) {
-				var data = result;
-				console.log(data);
-				pageDataStorage['leftSeason'] = data;
-				$$('.assesserLeftListSeason ul').html(itemTemplate(data));
-				if(notAssessSeason.length) {
-					$$.each($$('.assesserLeftListSeason .item-inner'), function(index, item1) {
-						$$.each(notAssessSeason, function(index, item2) {
-							if($$(item1).data('tpid') == item2.knowledgePaperId) {
-								if(item2.totalNum) {
-									$$(item1).prepend('<span class="appBadge bg-red assessBadgeSeason" style="font-size: 13px;right: 0;top: 0;text-align: center;">' + item2.totalNum + '</span>');
+
+				if(result.data == null){
+					$$('.assesserRightListSeason ul').html('<div class="noresult">没有需要考核的内容</div>')
+				}else{
+					var data = result.data;
+					console.log(data);
+					pageDataStorage['leftSeason'] = data;
+					$$('.assesserLeftListSeason ul').html(itemTemplate(data));
+					if(notAssessSeason.length) {
+						$$.each($$('.assesserLeftListSeason .item-inner'), function(index, item1) {
+							$$.each(notAssessSeason, function(index, item2) {
+								if($$(item1).data('tpid') == item2.knowledgePaperId) {
+									if(item2.totalNum) {
+										$$(item1).prepend('<span class="appBadge bg-red assessBadgeSeason" style="font-size: 13px;right: 0;top: 0;text-align: center;">' + item2.totalNum + '</span>');
+									}
 								}
-							}
+							});
 						});
-					});
+					}
+					setTimeout(function(){
+						loadEventBySeason(data);
+					},100);
 				}
-				setTimeout(function(){
-					loadEventBySeason(data);
-				},100);
+
+				
 			});
 		}
 		/**
@@ -579,27 +645,36 @@ define(['app',
 			console.log(asessmentYearStartDate)
 			app.ajaxLoadPageContent(loadPartyMenuPath, {
 				deptId: app.user.deptId,
-				type:0,
-				year:asessmentYearStartDate,
+				// type:0,
+				startDate:asessmentYearStartDate,
+				endDate:asessmentYearEndDate,
+				// year:asessmentYearStartDate,
+				// userId:app.userId,
+				khpl:0,
 			}, function(result) {
-				var data = result;
-				console.log(data);
-				pageDataStorage['leftYear'] = data;
-				$$('.assesserLeftListYear ul').html(itemTemplate(data));
-				if(notAssessYear.length) {
-					$$.each($$('.assesserLeftListYear .item-inner'), function(index, item1) {
-						$$.each(notAssessYear, function(index, item2) {
-							if($$(item1).data('tpid') == item2.knowledgePaperId) {
-								if(item2.totalNum) {
-									$$(item1).prepend('<span class="appBadge bg-red assessBadgeYear" style="font-size: 13px;right: 0;top: 0;text-align: center;">' + item2.totalNum + '</span>');
+				if(result.data == null){
+					$$('.assesserListYear ul').html('<div class="noresult">没有需要考核的内容</div>')
+				}else{
+					var data = result.data;
+					console.log(data);
+					pageDataStorage['leftYear'] = data;
+					$$('.assesserLeftListYear ul').html(itemTemplate(data));
+					if(notAssessYear.length) {
+						$$.each($$('.assesserLeftListYear .item-inner'), function(index, item1) {
+							$$.each(notAssessYear, function(index, item2) {
+								if($$(item1).data('tpid') == item2.knowledgePaperId) {
+									if(item2.totalNum) {
+										$$(item1).prepend('<span class="appBadge bg-red assessBadgeYear" style="font-size: 13px;right: 0;top: 0;text-align: center;">' + item2.totalNum + '</span>');
+									}
 								}
-							}
+							});
 						});
-					});
+					}
+					setTimeout(function(){
+						loadEventByYear(data);
+					},100);
+					
 				}
-				setTimeout(function(){
-					loadEventByYear(data);
-				},100);
 				
 			});
 		}
@@ -620,6 +695,7 @@ define(['app',
 				var tpId = $$(this).data('tpId');
 				pageDataStorage['tpId'] = tpId;
 				if(tpId && !tpArr[tpId]) {
+
 					loadTopic(tpId);
 				} else {
 					handleTopic(tpId);
@@ -682,15 +758,18 @@ define(['app',
 			console.log(asessmentMonthStartDate);
 			console.log(asessmentMonthEndDate);
 			app.ajaxLoadPageContent(loadTopicPath, {
+				deptId:app.user.deptId,
 				tpId: tpId,
-				userId: app.userId,
+
+				// userId: app.userId,
 				type:1,
 				startDate:asessmentMonthStartDate,
 				endDate:asessmentMonthEndDate,
+				khpl:2,
 			}, function(result) {
-				var data = result;
-				console.log(result);
-				tpArr[tpId] = result;
+				var data = result.data;
+				console.log(data);
+				tpArr[tpId] = data;
 				handleTopic(tpId);
 			});
 		}
@@ -702,15 +781,17 @@ define(['app',
 			console.log(asessmentSeasonStartDate);
 			console.log(asessmentSeasonEndDate);
 			app.ajaxLoadPageContent(loadTopicPath, {
+				deptId:app.user.deptId,
 				tpId: tpIdSeason,
-				userId: app.userId,
+				// userId: app.userId,
 				type:1,
 				startDate:asessmentSeasonStartDate,
 				endDate:asessmentSeasonEndDate,
+				khpl:1,
 			}, function(result) {
-				var data = result;
-				console.log(result);
-				tpArrSeason[tpIdSeason] = result;
+				var data = result.data;
+				console.log(data);
+				tpArrSeason[tpIdSeason] = data;
 				handleTopicBySeason(tpIdSeason);
 			});
 		}
@@ -721,14 +802,17 @@ define(['app',
 		function loadTopicByYear(tpIdYear) {
 			console.log(asessmentYearStartDate);
 			app.ajaxLoadPageContent(loadTopicPath, {
+				deptId:app.user.deptId,
 				tpId: tpIdYear,
-				userId: app.userId,
+				// userId: app.userId,
 				type:0,
-				year:asessmentYearStartDate,
+				startDate:asessmentYearStartDate,
+				endDate:asessmentYearEndDate,
+				khpl:0,
 			}, function(result) {
-				var data = result;
-				console.log(result);
-				tpArrYear[tpIdYear] = result;
+				var data = result.data;
+				console.log(data);
+				tpArrYear[tpIdYear] = data;
 				handleTopicByYear(tpIdYear);
 			});
 		}
@@ -755,6 +839,12 @@ define(['app',
 					appList.minusAssessNum(parseInt(assessTpId));
 				});
 			}
+			tpArr = {};
+			tpArrSeason = {};
+			tpArrYear = {};
+			ajaxLoadContent();
+			ajaxLoadContentBySeason();
+			ajaxLoadContentByYear();
 		}
 
 		/**
@@ -773,7 +863,14 @@ define(['app',
 				var target = $$(this).data('target') || '无';
 				var minus = $$(this).data('minus') || 0;
 				var memo = $$(this).data('memo') || '无';
-				app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo);
+				app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo+'&StartDate='+asessmentMonthStartDate);
+			});
+			
+			//点击分数的时候
+			$$('.assessmentScore').on('click',function(){
+				//跳转到详细页面
+				var id = $$(this).data('id');
+				app.myApp.getCurrentView().loadPage('assessmentResultPaperDetail.html?deptId='+app.user.deptId+'&topicId='+id+'&startDate='+asessmentMonthStartDate+'endDate='+asessmentMonthEndDate);
 			});
 		}
 		/**
@@ -792,7 +889,14 @@ define(['app',
 				var target = $$(this).data('target') || '无';
 				var minus = $$(this).data('minus') || 0;
 				var memo = $$(this).data('memo') || '无';
-				app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo);
+				app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo+'&StartDate='+asessmentSeasonStartDate);
+			});
+			
+			//点击分数的时候
+			$$('.assessmentScore').on('click',function(){
+				//跳转到详细页面
+				var id = $$(this).data('id');
+				app.myApp.getCurrentView().loadPage('assessmentResultPaperDetail.html?deptId='+app.user.deptId+'&topicId='+id+'&startDate='+asessmentSeasonStartDate+'endDate='+asessmentSeasonEndDate);
 			});
 		}
 		/**
@@ -801,7 +905,6 @@ define(['app',
 		 */
 		function handleTopicByYear(tpIdYear) {
 			var topicContentYear = tpArrYear[tpIdYear];
-			console.log('1111');
 			$$('.assesserRightListYear ul').html(paperTemplate(topicContentYear));
 			
 			//点击事件
@@ -812,7 +915,14 @@ define(['app',
 				var target = $$(this).data('target') || '无';
 				var minus = $$(this).data('minus') || 0;
 				var memo = $$(this).data('memo') || '无';
-				app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo);
+				app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo='+ memo+'&StartDate='+asessmentYearStartDate);
+			});
+			
+			//点击分数的时候
+			$$('.assessmentScore').on('click',function(){
+				//跳转到详细页面
+				var id = $$(this).data('id');
+				app.myApp.getCurrentView().loadPage('assessmentResultPaperDetail.html?deptId='+app.user.deptId+'&topicId='+id+'&startDate='+asessmentYearStartDate1+'endDate='+asessmentYearEndDate1);
 			});
 		}
 
@@ -830,9 +940,10 @@ define(['app',
 			}
 			console.log(asessmentSearchStartDate);
 			console.log(asessmentSearchEndDate);
+			//type考核对象类型0、党委 1、支部 2、个人
 			app.ajaxLoadPageContent(searchPaperPath, {
 				deptId: app.user.deptId,
-				searchContent: content,
+				query: content,
 				type:1,
 				startDate:asessmentSearchStartDate,
 				endDate:asessmentSearchEndDate,
@@ -842,12 +953,20 @@ define(['app',
 					$$('.assesserSearchList ul').html(contentTemplate(data.data));
 					$$('.assesserSearchList .item-content').on('click', function() {
 						var id = $$(this).data('id');
-						var title = $$(this).find('.kpi-title').html();
-						var score = $$(this).data("score");
-						var target = $$(this).data('target');
-						var minus = $$(this).data('minus');
-						var memo = $$(this).data('memo');
-						app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo=' + memo);
+						var title = $$(this).find('.kpi-title').html() || '无标题';
+						var score = $$(this).data("score")|| 0;
+						var target = $$(this).data('target')|| '无';
+						var minus = $$(this).data('minus') || 0;
+						var memo = $$(this).data('memo')|| '无';
+						
+						app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo=' + memo+'&StartDate='+asessmentSearchStartDate);
+					});
+					
+					//点击分数的时候
+					$$('.assessmentScoreSearch').on('click',function(){
+						//跳转到详细页面
+						var id = $$(this).data('id');
+						app.myApp.getCurrentView().loadPage('assessmentResultPaperDetail.html?deptId='+app.user.deptId+'&topicId='+id+'&startDate='+asessmentSearchStartDate+'endDate='+asessmentSearchEndDate);
 					});
 				} else {
 					$$('.assesserSearchList ul').html("");
@@ -871,9 +990,10 @@ define(['app',
 			console.log(asessmentYearStartDate);
 			app.ajaxLoadPageContent(searchPaperPath, {
 				deptId: app.user.deptId,
-				searchContent: content,
+				query: content,
 				type:0,
-				year:asessmentYearStartDate
+				startDate:asessmentYearStartDate,
+				endDate:asessmentYearEndDate
 			}, function(data) {
 				console.log(data);
 				if(data.data && data.data.length > 0) {
@@ -886,6 +1006,13 @@ define(['app',
 						var minus = $$(this).data('minus');
 						var memo = $$(this).data('memo');
 						app.myApp.getCurrentView().loadPage('assessWork.html?assessId=' + id + '&title=' + title + '&score=' + score + '&target=' + target + '&minus=' + minus +'&memo=' + memo);
+					});
+					
+					//点击分数的时候
+					$$('.assessmentScoreSearch').on('click',function(){
+						//跳转到详细页面
+						var id = $$(this).data('id');
+						app.myApp.getCurrentView().loadPage('assessmentResultPaperDetail.html?deptId='+app.user.deptId+'&topicId='+id+'&startDate='+asessmentYearStartDate1+'endDate='+asessmentYearEndDate1);
 					});
 				} else {
 					$$('.assesserSearchList ul').html("");

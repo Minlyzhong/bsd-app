@@ -5,11 +5,11 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//查询最新党组织统计信息
-	var findPartyStatInfoPath = app.basePath + 'partyStat/findPartyStatInfo';
+	var findPartyStatInfoPath = app.basePath + '/mobile/political/department/statistics';
 	//查询党建考核进度信息
-	var findCompRateOfPartyPath = app.basePath + 'statHelper/findCompRateOfParty';
+	var findCompRateOfPartyPath = app.basePath + '/mobile/partyAm/findCompRateOfParty/';
 	//	根据组织机构ID，查询最新党员队伍统计信
-	var findPartyMemberInfoPath = app.basePath + 'partyMemberStat/findPartyMemberInfo';
+	var findPartyMemberInfoPath = app.basePath + '/mobile/user/findPartyMemberInfo/';
 	var deptId = '';
 	var deptName = '';
 	var deptType = '';
@@ -35,13 +35,18 @@ define(['app',
 		deptType = pageData.deptType;
 		parentDeptName = pageData.parentDeptName;
 		parentDeptId = pageData.parentDeptId;
+		deptCode = pageData.deptCode;
 		firstIn = 0;
 		pageDataStorage = {};
 		pageNo = 1;
 		loading = true;
 		//loadRecord(false);
+		console.log('pageData')
+		console.log(pageData)
 		$$('.partyTitle').html(deptName);
+		app.myApp.showPreloader('加载中...');
 		window.setTimeout(function() {
+			
 			showInfo(deptId, deptName, deptType);
 		}, 500);
 	}
@@ -71,23 +76,28 @@ define(['app',
 		var partyCompRateHtml= '';
 		var partyHtml = '';
 		console.log(deptId);
-		app.ajaxLoadPageContent(findPartyMemberInfoPath, {
-			deptId: deptId,
+		
+		app.ajaxLoadPageContent(findPartyMemberInfoPath+deptId, {
+			// deptId: deptId,
 		}, function(result) {
+			
+			console.log('findPartyMemberInfoPath');
 			console.log(result);
 			memberData = result.data;
 			partyMemberHtml = '<div class="partyInfo">' +
 				'<div style="font-weight: bold;text-align: center;">' + deptName + '</div>' +
-				'<div style="margin-bottom: 30px;">党员总数<span>' + memberData.totalMember + '</span>名。</div>' +
-				'<div style="margin-bottom: 10px;"><span style="font-weight: bold; color:black;">党员性别、民族和学历：</span><br />女党员<span>' + memberData.female + '</span>名，占党员总数的<span>' + memberData.femaleRate + '</span>%；<br />少数民族党员总数的<span>' + memberData.minorityRate + '</span>%；<br />大专及以上学历党员<span>' + memberData.dzys + '</span>名，占党员总数的<span>' + memberData.dzysRate + '</span>%。</div>' +
-				'<div style="margin-bottom: 10px;"><span style="font-weight: bold; color:black;">党员的年龄：</span><br />35岁及以下的党员<span>' + memberData.group1 + '</span>名，占党员总数的<span>' + memberData.group1Rate + '</span>%；<br />36岁至45岁的党员<span>' + memberData.group2 + '</span>名，占党员总数的<span>' + memberData.group2Rate + '</span>%；<br />46岁至60岁的党员<span>' + memberData.group3 + '</span>名，占党员总数的<span>' + memberData.group3Rate + '</span>%；<br />61岁及以上的党员<span>' + memberData.group4 + '</span>名，占党员总数的<span>' + memberData.group4Rate + '</span>%。</div>' +
-				'<div style="margin-bottom: 10px;"><span style="font-weight: bold; color:black;">党员的职业：</span><br />工人<span>' + memberData.worker + '</span>名，<br />农牧渔民<span>' + memberData.farmer + '</span>名，<br />企事业单位、民办非企业单位专业技术人员<span>' + memberData.artisan + '</span>名，<br />企事业单位、民办非企业单位管理人员<span>' + memberData.manager + '</span>名，<br />党政机关工作人员<span>' + memberData.leader + '</span>名，<br />学生及其他职业人员<span>' + memberData.student + '</span>名，<br />离退休人员<span>' + memberData.retiree + '</span>名。</div>';
+				'<div style="margin-bottom: 30px;">党员总数<span>' + memberData.total + '</span>名。</div>' +
+				'<div style="margin-bottom: 10px;"><div style="font-weight: bold; color:black;">党员性别、民族和学历：</div>女党员<span>' + memberData.female + '</span>名，占党员总数的<span>' + memberData.femalePercentage + '</span>%；<br />少数民族党员总数的<span>' + memberData.ethnicMinorityPercentage + '</span>%；<br />大专及以上学历党员<span>' + memberData.juniorCollege + '</span>名，占党员总数的<span>' + memberData.juniorCollegePercentage + '</span>%。</div>' +
+				'<div style="margin-bottom: 10px;"><div style="font-weight: bold; color:black;">党员的年龄：</div>35岁及以下的党员<span>' + memberData.thirtyFive + '</span>名，占党员总数的<span>' + memberData.thirtyFivePercentage + '</span>%；<br />36岁至45岁的党员<span>' + memberData.thirtySix + '</span>名，占党员总数的<span>' + memberData.thirtySixPercentage + '</span>%；<br />46岁至60岁的党员<span>' + memberData.fortySix + '</span>名，占党员总数的<span>' + memberData.fortySixPercentage + '</span>%；<br />61岁及以上的党员<span>' + memberData.sixtyOne + '</span>名，占党员总数的<span>' + memberData.sixtyOnePercentage + '</span>%。</div>' +
+				'<div style="margin-bottom: 10px;"><div style="font-weight: bold; color:black;">党员的职业：</div>国家机关负责人<span>' + memberData.country + '</span>名，<br />党政机关工作人员<span>' + memberData.partyAndGovernment + '</span>名，<br />企业负责人<span>' + memberData.enterpriseResponsibility + '</span>名，<br />事业单位负责人<span>' + memberData.careerResponsibility + '</span>名，<br />专业技术人员<span>' + memberData.technology + '</span>名，<br />办事人员和有关人员<span>' + memberData.work + '</span>名，<br />商业、服务业人员<span>' + memberData.business + '</span>名，<br />农业生产人员<span>' + memberData.agriculture + '</span>名，<br />林业生产人员<span>' + memberData.forestry + '</span>名，<br />畜牧业生产人员<span>' + memberData.animalHusbandry + '</span>名，<br />渔业生产人员<span>' + memberData.fisheries + '</span>名，<br />水利业生产人员<span>' + memberData.waterConservancy + '</span>名，<br />生产、运输设备操作人员及有关人员<span>' + memberData.production + '</span>名，<br />军人<span>' + memberData.soldier + '</span>名，<br />其他从业人员<span>' + memberData.other + '</span>名，<br />聘用人员<span>' + memberData.employ + '</span>名。</div>';
 		}, {
 			async: false
 		});
-		app.ajaxLoadPageContent(findCompRateOfPartyPath, {
-			deptId: deptId,
+		app.ajaxLoadPageContent(findCompRateOfPartyPath+deptId, {
+			// deptId: deptId,
 		}, function(result) {
+
+			console.log('findCompRateOfPartyPath');
 			console.log(result);
 			partyCompRateHtml = '<div class="signChart" id="atdChart"></div>' +	
 				'<div class="row no-gutter signList">' +
@@ -98,29 +108,29 @@ define(['app',
 						'未参与：<span style="display: inline;"></span>个' +
 					'</div>' +
 				'</div>';
-			pageDataStorage['CompRate'] = result;
+			pageDataStorage['CompRate'] = result.data;
 			pageDataStorage['deptName'] = deptName;
 			console.log(deptId)
 			pageDataStorage['deptId1'] = deptId;
+			
 		}, {
 			async: false
 		});
 		app.ajaxLoadPageContent(findPartyStatInfoPath, {
-			deptId: deptId,
+			deptCode: deptCode,
 		}, function(result) {
+
+			console.log('findPartyStatInfoPath');
 			console.log(result);
 			partyData = result.data;
 			partyHtml = '<div class="partyInfo">' +
 				'<div style="font-weight: bold;text-align: center;">' + deptName + '</div>' +
-				'<div style="margin-bottom: 30px;">已建立党的基层组织<span>' + partyData.jczz + '</span>个，其中，党委<span>' + partyData.dw + '</span>个，党总支<span>' + partyData.dzz + '</span>个，党支部<span>' + partyData.dzb + '</span>个。</div>' +
+				'<div style="margin-bottom: 30px;">已建立党的基层组织<span>' + partyData.total + '</span>个，其中，省委组织<span>' + partyData.provincialCommitteeTotal + '</span>个，市委组织<span>' + partyData.municipalCommitteeTotal + '</span>个，县委组织<span>' + partyData.countyCommitteeTotal + '</span>个，党总支<span>' + partyData.generalCommitteeTotal + '</span>个，党支部<span>' + partyData.partyBranch + '</span>个，党工组织<span>' + partyData.peopleDoingCommitteeTotal + '</span>个。</div>' +
 				'<div style="font-weight: bold;">已建立的党组织中：</div>' +
-				'<div><span style="font-weight: bold;">城市街道</span>（含城市社区居委会）建立党组织<span>' + partyData.cszz + '</span>个，占基层党组织总数的<span>' + partyData.cszzRate + '</span>%；</div>' +
-				'<div><span style="font-weight: bold;">乡镇</span>（含乡镇社区居委会）建立党组织<span>' + partyData.xzzz + '</span>个，占基层党组织总数的<span>' + partyData.xzzzRate + '</span>%；</div>' +
-				'<div><span style="font-weight: bold;">机关单位</span>建立党组织<span>' + partyData.jgzz + '</span>个，占基层党组织总数的<span>' + partyData.jgzzRate + '</span>%；</div>' +
-				'<div><span style="font-weight: bold;">事业单位</span>建立党组织<span>' + partyData.syzz + '</span>个，占基层党组织总数的<span>' + partyData.syzzRate + '</span>%；</div>' +
-				'<div><span style="font-weight: bold;">公有企业单位</span>建立党组织<span>' + partyData.gyzz + '</span>个，占基层党组织总数的<span>' + partyData.gyzzRate + '</span>%；</div>' +
-				'<div><span style="font-weight: bold;">非公有企业单位</span>建立党组织<span>' + partyData.fgyzz + '</span>个，占基层党组织总数的<span>' + partyData.fgyzzRate + '</span>%；</div>' +
-				'<div><span style="font-weight: bold;">社会组织</span>建立党组织<span>' + partyData.sfzz + '</span>个，占基层党组织总数的<span>' + partyData.sfzzRate + '</span>%；</div>' +
+				'<div><span style="font-weight: bold;">村(社区)</span>（含乡镇社区居委会）建立党组织<span>' + partyData.villageTotal + '</span>个，占基层党组织总数的<span>' + partyData.villageTotalPercentage + '</span>%；</div>' +
+				'<div><span style="font-weight: bold;">机关事业单位  </span>建立党组织<span>' + partyData.officeTotal + '</span>个，占基层党组织总数的<span>' + partyData.officeTotalPercentage + '</span>%；</div>' +
+				'<div><span style="font-weight: bold;">国企企业单位  </span>建立党组织<span>' + partyData.stateOwnedTotal + '</span>个，占基层党组织总数的<span>' + partyData.stateOwnedTotalPercentage + '</span>%；</div>' +
+				'<div><span style="font-weight: bold;">非公有经济各社会单位  </span>建立党组织<span>' + partyData.wrongTotal + '</span>个，占基层党组织总数的<span>' + partyData.wrongTotalPercentage + '</span>%；</div>' +
 				'</div>';
 		}, {
 			async: false
@@ -162,6 +172,7 @@ define(['app',
 				if(!partyCompRateHtml) {
 					app.myApp.alert('该单位暂无考核进度信息');
 				} else {
+					
 					$$('.conInfoContent').html(partyCompRateHtml);
 					handleCompletion(pageDataStorage['CompRate'],pageDataStorage['deptName'],pageDataStorage['deptId1']);
 				}
@@ -289,9 +300,8 @@ define(['app',
 		$$('.highcharts-title').on('click',function(){
 			console.log(deptName);
 			console.log(deptId);
-			if(deptId == 1){
-				
-				app.myApp.getCurrentView().loadPage('partyDynamic.html');
+			if(deptId == 1){	
+				app.myApp.getCurrentView().loadPage('partyDynamic.html?deptId='+deptId+'&deptName='+deptName+'&parentDeptName='+parentDeptName+'&parentDeptId='+parentDeptId);
 			}else{
 				app.myApp.getCurrentView().loadPage('partyDynamic.html?deptId='+deptId+'&deptName='+deptName+'&parentDeptName='+parentDeptName+'&parentDeptId='+parentDeptId);
 			}

@@ -7,7 +7,7 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//查询党费缴纳记录
-	var findPaymentDetailPath = app.basePath + 'payment/findPaymentDetail';
+	var findPaymentDetailPath = app.basePath + '/payment/findPaymentDetail';
 
 	/**
 	 * 页面初始化 

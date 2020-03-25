@@ -1,0 +1,35 @@
+{{#.}}
+	<li>
+		<a href="#" class="item-link item-content assessLeaderContent" data-id="{{userId}}" data-name="{{deptName}}">
+			<div class="item-media">
+				<!--<i class="icon kpi-group"></i>-->
+				<i class="icon kpi-personal"></i>
+			</div>
+			<div class="item-inner">
+				<div class="item-title-row">
+					<div class="item-title kpi-a-list-item-title ">{{userName}}</div>
+					<div class="item-after kpi-a-list-item-after">排名:{{rank}}</div>
+				</div>
+				{{#compare date '==' ''}}
+					<div class="item-subtitle kpi-a-list-item-sb">更新时间: 暂无</div> 
+				{{else}}
+					<div class="item-subtitle kpi-a-list-item-sb">更新时间: {{date}}</div> 
+				{{/compare}}
+				<div class="kpi-a-list-item-subTitle">
+					<div>
+						<i class="icon icon-Done"></i>
+						<span>{{completedTotal}}</span>
+					</div>
+					<div>
+						<i class="icon icon-UDone"></i>
+						<span>{{unCompletedTotal}}</span>
+					</div>
+					<div>
+						<i class="icon kpi-icon-count"></i>
+						<span>{{completedPercent}}%</span>
+					</div>
+				</div>
+			</div>
+		</a>
+	</li>
+{{/.}}

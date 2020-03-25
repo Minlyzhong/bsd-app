@@ -5,10 +5,10 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	//校验打卡状态
-	var checkSignPath = app.basePath + 'extApplicationPage/checkSignStatus';
+	var checkSignPath = app.basePath + '/mobile/sign/register/check';
 	//保存打卡信息
-	var saveSignInfoPath = app.basePath + 'extApplicationPage/signToWork';
-	var type = -1;
+	var saveSignInfoPath = app.basePath + '/mobile/sign/register/save';
+	var types = -1;
 	var lat = 0.0;
 	var lng = 0.0;
 	var userPosition = '';
@@ -30,6 +30,8 @@ define(['app'], function(app) {
 //		}
 		app.back2Home();
 		clickEvent(page);
+		
+		//document.addEventListener("deviceready", onDeviceReady, false);
 	}
 
 	/**
@@ -40,7 +42,7 @@ define(['app'], function(app) {
 		pageDataStorage = {};
 		pageNo = 1;
 		loading = true;
-		type = -1;
+		types = -1;
 		lat = 0.0;
 		lng = 0.0;
 		userPosition = '';
@@ -74,28 +76,32 @@ define(['app'], function(app) {
 
 		$$('#cardUp').on('click', function() {
 			signType = '上午上班';
-			type = 0;
+			types = 1;
 			getPosition();
 		});
 
 		$$('#cardDown').on('click', function() {
 			signType = '下午上班';
-			type = 1;
+			types = 4;
+			// 暂时注释
 			getPosition();
+
+			
 		});
 	}
 
 	//校验打卡状态
 	function checkSign() {
 		app.ajaxLoadPageContent(checkSignPath, {
-			reportTime: app.utils.getCurTime().split(" ")[0],
-			userId: app.userId
+			// reportTime: app.utils.getCurTime().split(" ")[0],
+			// userId: app.userId
 		}, function(data) {
-			console.log(data);
-			if(data.up == 0) {
+			
+			if(data.data.up == false) {
+
 				$$('#cardUp').removeAttr('disabled');
 			}
-			if(data.down == 0) {
+			if(data.data.down == false) {
 				$$('#cardDown').removeAttr('disabled');
 			}
 		});
@@ -104,21 +110,27 @@ define(['app'], function(app) {
 	/**
 	 * 定位 
 	 */
-	function getPosition() {
-		app.myApp.showPreloader('定位中...');
+	function getPosition() {	
 		//开启定位服务
+//		cordova.plugins.diagnostic.isGpsLocationEnabled(function(enabled){
+//		    app.myApp.alert("GPS location is " + (enabled ? "enabled" : "disabled"));
+//		}, function(error){
+//		    app.myApp.alert("The following error occurred: "+error);
+//		});
+		
 		if(navigator.geolocation) {
+			app.myApp.showPreloader('定位中...');
 			signStatus = 1;
+			// 暂时注释
 			navigator.geolocation.getCurrentPosition(onSuccessPosition, onErrorPosition, {
 				maximumAge: 3000,
 				timeout: 5000, 
-				enableHighAccuracy: true
-				//timeout: 2000,
+				enableHighAccuracy: true,
 			});
 		}
 	}
-
 	function onSuccessPosition(position) {
+		console.log('onSuccessPosition')
 		app.myApp.hidePreloader();
 		if(signStatus == 1){
 			var _lng = position.coords.longitude;
@@ -173,23 +185,40 @@ define(['app'], function(app) {
 		$$('.signView').show();
 		$$('.signCover').show();
 		$$('#signType').val(signType);
-		$$('#name').val(app.user.userName);
+		$$('#name').val(app.user.nickName);
 		//$$('#position').val(userPosition);
 		$$('#time').val(app.utils.getCurTime());
 	}
 
-	//上传记录
+	//上传记录 打卡类型:1上午上班;4下午上班
 	function saveSignInfo() {
-		app.ajaxLoadPageContent(saveSignInfoPath, {
+		var params = {
 			userId: app.userId,
+			deptId:app.user.deptId,
+			deptName: app.userDetail.deptName,
 			lng: lng,
 			lat: lat,
 			address: userPosition,
-			types: type,
-			reportTime: app.utils.getCurTime(),
-			memo: ""
-		}, function(data) {
-			if(data.data.success == true) {
+			types: types,
+			// username: app.user.userName,
+			// reportTime: app.utils.getCurTime(),
+			memo: $$('#demo').val()
+		}
+		
+
+	var formDatas= JSON.stringify(params);
+	$$.ajax({
+		url:saveSignInfoPath,
+		method: 'POST',
+		dataType: 'json',
+		contentType: 'application/json;charset:utf-8',
+		data: formDatas,
+		cache: false,
+		success:function (data) {
+			// alert('1')
+			// alert(data.code)
+			// alert(data.msg)
+			if(data.code == 0){
 				$$('.signView').hide();
 				$$('.signCover').hide();
 				app.myApp.toast('打卡成功！', 'success').show(true);
@@ -197,34 +226,70 @@ define(['app'], function(app) {
 //					app.myApp.getCurrentView().back();
 //				});
 				app.myApp.getCurrentView().back();
+			}else{
+				app.myApp.toast('打卡失败！', 'error').show(true);
 			}
-		});
+			
+			
+		},
+		error:function (data) {
+			
+			app.myApp.toast('打卡失败！', 'error').show(true);
+		}
+	});
+
 	}
 	function onErrorPosition(e) {
+		console.log('onErrorPosition')
 		app.myApp.hidePreloader();
 		if(app.myApp.device.ios) {
 			app.myApp.alert('未开启"定位"权限<br />请前往手机"设置"->"隐私"->"定位服务"');
 		} else {
-			app.myApp.showPreloader('定位中...');
-			if(e.code == '3'){
-				signStatus = 2;
-				var map = new BMap.Map();
-				var point = new BMap.Point(116.331398,39.897445);
-				var geolocation = new BMap.Geolocation();
-				geolocation.getCurrentPosition(function(r){
-					if(this.getStatus() == BMAP_STATUS_SUCCESS){
-						app.myApp.alert('您的位置：'+r.point.lng+','+r.point.lat);
-						onSuccessPosition(r);
-					}
-					else {
-						app.myApp.alert('failed'+this.getStatus());
-					}        
-			    },{enableHighAccuracy: true})
-			}else{
-				app.myApp.alert('请打开GPS定位');
-			}
+			switch (e.code) {
+                case e.TIMEOUT:
+	                app.myApp.showPreloader('定位中...');
+					signStatus = 2;
+					var map = new BMap.Map();
+	//				var point = new BMap.Point(116.331398,39.897445);
+					var geolocation = new BMap.Geolocation();
+					geolocation.getCurrentPosition(function(r){
+						if(this.getStatus() == BMAP_STATUS_SUCCESS){
+							//app.myApp.alert('您的位置：'+r.point.lng+','+r.point.lat);
+							onSuccessPosition(r);
+						}
+						else {
+							//app.myApp.alert('failed'+this.getStatus());
+						}        
+				    },{enableHighAccuracy: true});
+				break;
+               case e.PERMISSION_DENIED:
+                   app.myApp.alert('请打开GPS定位');
+                   break;
+               case e.UNKNOWN_ERROR:
+                   app.myApp.alert("发生一个位置错误");
+                   break;
+            }
+//			if(e.code == '3'){
+//				app.myApp.showPreloader('定位中...');
+//				signStatus = 2;
+//				var map = new BMap.Map();
+//				var point = new BMap.Point(116.331398,39.897445);
+//				var geolocation = new BMap.Geolocation();
+//				geolocation.getCurrentPosition(function(r){
+//					if(this.getStatus() == BMAP_STATUS_SUCCESS){
+//						//app.myApp.alert('您的位置：'+r.point.lng+','+r.point.lat);
+//						onSuccessPosition(r);
+//					}
+//					else {
+//						//app.myApp.alert('failed'+this.getStatus());
+//					}        
+//			    },{enableHighAccuracy: true})
+//			}else{
+//				app.myApp.alert('请打开GPS定位');
+//			}
 		}
 	}
+
 
 	/**
 	 * 重置firstIn变量 

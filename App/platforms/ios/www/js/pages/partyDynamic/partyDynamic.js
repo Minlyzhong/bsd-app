@@ -9,14 +9,14 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//查询部门工作简报
-	var loadPartyDynamicPath = app.basePath + 'dynamic/loadDeptPartyDynamicByDate';
+	var loadPartyDynamicPath = app.basePath + '/mobile/partyAm/loadDeptPartyDynamicByDate';
 	//查询子部门工作简报
-	var loadPartyDynamicContentPath = app.basePath + 'dynamic/loadDynamicMessageByDate';
+	var loadPartyDynamicContentPath = app.basePath + '/mobile/partyAm/loadDynamicMessageByDate';
 	//var loadPartyDynamicMonthContentPath = app.basePath + 'dynamic/loadMonthDynamicMessage';
 	//var loadPartyDynamicSeasonContentPath = app.basePath + 'dynamic/loadQuarterDynamicMessage';
 	//var loadPartyDynamicYearContentPath = app.basePath + 'dynamic/loadYearDynamicMessage';
 	//获取年份
-	var getYearsPath = app.basePath + 'knowledgeTopic/getYears';
+	var getYearsPath = app.basePath + '/mobile/partyAm/getYears';
 	var deptId = 0;
 	var deptIdSeason = 0;
 	var deptIdYear = 0;
@@ -49,6 +49,7 @@ define(['app',
 	var userIdYear = 0;
 	var userIdSeason = 0;
 	var userIdSearch = 0;
+	var khpl = 2;
 	//搜索关键字
 	var partyDynamicKey = '';
 	
@@ -98,6 +99,7 @@ define(['app',
 		pushAndPull(page);
 		handlePartyDynamicType();
 		setTimeout(function(){
+			console.log(page.query)
 			if(page.query.deptId != undefined && page.query.deptName != undefined){
 				itemClick1(page.query.deptName,page.query.deptId,page.query.parentDeptName,page.query.parentDeptId);
 			}
@@ -171,7 +173,7 @@ define(['app',
 		pagePDSearch = 1;
 		loadingPDSearch = true;
 		//pDYearCount = 1;
-		
+		khpl = 2;
 		var str = '';
 		str += '<div class="infinite-scroll-preloader">';
 		str += '<div class="preloader" style="left:35%;margin-left:0px;margin-top:0px;position:absolute;"></div>';
@@ -327,11 +329,11 @@ define(['app',
 		scrollSearch(function(direction) {
 			if(direction == 'up') {
 				$$('.dynamicFilterSearch').css('margin-top','0px');
-				$$('.dynamicPageSearch').css('margin-top','50px');
+				$$('.dynamicPageSearch').css('margin-top','0px');
 				$('.dynamicNavSearch').slideDown(200);
 			} else {
 				$$('.dynamicFilterSearch').css('margin-top','0px');
-				$$('.dynamicPageSearch').css('margin-top','56px');
+				$$('.dynamicPageSearch').css('margin-top','6px');
 				$('.dynamicNavSearch').slideUp(200);
 			} 
 		});
@@ -414,9 +416,15 @@ define(['app',
 		app.ajaxLoadPageContent1(getYearsPath,{
 		},function(data){
 			console.log(data);
-			result = data;
-			$$.each(data, function(index, item) {
-					result[index] = item.text.toString()+'年';
+			result = data.data;
+			if(result == null){
+				var nowDate = new Date();
+				var nowYear = nowDate.getFullYear();
+				result =[nowYear+'年']
+				console.log(result);
+			}
+			$$.each(result, function(index, item) {
+					result[index] = item.toString()+'年';
 			});
 			console.log(result);
 			pickerDescribe = app.myApp.picker({
@@ -428,7 +436,7 @@ define(['app',
 			            values:(result)
 			        },
 			        {
-			            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+			            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 			        },
 			    ]
 			});
@@ -459,11 +467,12 @@ define(['app',
 
 		var myDate = new Date();
 		year = myDate.getFullYear();
-		month = myDate.getMonth()+1;
+		month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
 		//月份时间判断
 		$("#picker-describe").val(year+'年 '+ month+'月');
-		pDMonthStartTime = year+'-'+month+'-1';
+		pDMonthStartTime = year+'-'+month+'-01';
 		pDMonthEndTime = year+'-'+month+'-31';
+		console.log(month)
 		$$(".partyDynamicsTime").on('click',function(){
 			pickerDescribe.open();
 			$("#picker-describe").val(year+'年 '+ month+'月');
@@ -488,7 +497,7 @@ define(['app',
 				str += '<div style="position: absolute;left: 45%;;font-size: 17px;">加载中...</div>';
 				str += '</div>';
 				$$('.dynamicList ul').html(str);
-				pDMonthStartTime = year+'-'+month+'-1';
+				pDMonthStartTime = year+'-'+month+'-01';
 				pDMonthEndTime = year+'-'+month+'-31';
 				loadPartyDynamic(0);
 			});
@@ -497,19 +506,19 @@ define(['app',
 		//季度时间判断
 		if(month<=3){
 			$("#picker-describeSeason").val(year+'年 '+ '第一季度');
-			pDSeasonStartTime = year+'-1-1';
-			pDSeasonEndTime = year+'-3-31';
+			pDSeasonStartTime = year+'-01-01';
+			pDSeasonEndTime = year+'-03-31';
 		}else if(month>3 && month<=6){
 			$("#picker-describeSeason").val(year+'年 '+ '第二季度');
-			pDSeasonStartTime = year+'-4-1';
-			pDSeasonEndTime = year+'-6-31';
+			pDSeasonStartTime = year+'-04-01';
+			pDSeasonEndTime = year+'-06-31';
 		}else if(month>6 && month<=9){
 			$("#picker-describeSeason").val(year+'年 '+ '第三季度');
-			pDSeasonStartTime = year+'-7-1';
-			pDSeasonEndTime = year+'-9-31';
+			pDSeasonStartTime = year+'-07-01';
+			pDSeasonEndTime = year+'-09-31';
 		}else if(month>9 && month<=12){
 			$("#picker-describeSeason").val(year+'年 '+ '第四季度');
-			pDSeasonStartTime = year+'-10-1';
+			pDSeasonStartTime = year+'-10-01';
 			pDSeasonEndTime = year+'-12-31';
 		}
 		$$(".partyDynamicsTimeSeason").on('click',function(){
@@ -520,16 +529,16 @@ define(['app',
 				year = pickerDescribeSeason.value[0].substring(0,pickerDescribeSeason.value[0].length-1);
 				season = pickerDescribeSeason.value[1].substring(0,pickerDescribeSeason.value[1].length);
 				if(season == '第一季度'){
-					pDSeasonStartTime = year+'-1-1';
-					pDSeasonEndTime = year+'-3-31';
+					pDSeasonStartTime = year+'-01-01';
+					pDSeasonEndTime = year+'-03-31';
 				}else if(season == '第二季度'){
-					pDSeasonStartTime = year+'-4-1';
-					pDSeasonEndTime = year+'-6-31';
+					pDSeasonStartTime = year+'-04-01';
+					pDSeasonEndTime = year+'-06-31';
 				}else if(season == '第三季度'){
-					pDSeasonStartTime = year+'-7-1';
-					pDSeasonEndTime = year+'-9-31';
+					pDSeasonStartTime = year+'-07-01';
+					pDSeasonEndTime = year+'-09-31';
 				}else if(season == '第四季度'){
-					pDSeasonStartTime = year+'-10-1';
+					pDSeasonStartTime = year+'-10-01';
 					pDSeasonEndTime = year+'-12-31';
 				}
 				$("#picker-describeSeason").val(year+'年 '+ season);
@@ -547,7 +556,7 @@ define(['app',
 		
 		//年份时间判断
 		$("#picker-describeYear").val(year+'年 ');
-		pDYearStartTime= year+'-1-1';
+		pDYearStartTime= year+'-01-01';
 		pDYearEndTime= year+'-12-31';
 		$$(".partyDynamicsTimeYear").on('click',function(){
 			pickerDescribeYear.open();
@@ -555,7 +564,7 @@ define(['app',
 			$$('.toolbar-inner .right').css('margin-right','20px');	
 			$$('.picker-3d .close-picker').on('click',function(){
 				year = pickerDescribeYear.value[0].substring(0,pickerDescribeYear.value[0].length-1);
-				pDYearStartTime= year+'-1-1';
+				pDYearStartTime= year+'-01-01';
 				pDYearEndTime= year+'-12-31';
 				$("#picker-describeYear").val(year+'年 ');
 				pagePDYear = 1;
@@ -573,19 +582,24 @@ define(['app',
 		//点击tab标签
 		//月份
 		$$('.buttonShyk').on('click',function(){
+			khpl = 2;
 			setTimeout(function(){
 				//$$('.').css('display','block');
 				//$$('.').css('display','none');
 				//$$('.').css('display','none');
 			},100);
+			
 			if($$('.partyDynamicsTab').css('display') == 'none'){
 				setTimeout(function(){
+					
 					searchPartyDynamic();
 				},100);
 			}
 		});
 		//季度
 		$$('.buttonShykSeason').on('click',function(){	
+			khpl = 1;
+
 			if($$('.partyDynamicsTab').css('display') == 'none'){
 				setTimeout(function(){
 					searchPartyDynamic();
@@ -606,7 +620,8 @@ define(['app',
 			}
 		});
 		//年份
-		$$('.buttonShykYear').on('click',function(){			
+		$$('.buttonShykYear').on('click',function(){
+			khpl = 0;			
 			if($$('.partyDynamicsTab').css('display') == 'none'){
 				setTimeout(function(){
 					searchPartyDynamic();
@@ -659,6 +674,7 @@ define(['app',
 	 * 在查询input输入文字触发keyup事件
 	 */
 	function keyupContent(){
+		console.log('keyupContent');
 		partyDynamicKey = $('#partyDynamicSearch').val();
 		//$$('.partyDynamicSearch').css('display','none');
 		//partyDynamicKey = $('#partyDynamicContext').val();
@@ -805,20 +821,23 @@ define(['app',
 	function gridClick() {
 		var type = parseInt($$(this).data('type'));
 		var count = parseInt($$($$(this).find('span')[0]).html());
+		console.log(type+'/'+count)
 		if(!count) {
 			app.myApp.alert('暂无数据！');
 			return;
 		}
 		switch(type) {
 			case 0:
-				app.myApp.getCurrentView().loadPage('contactsShowPeople.html?deptName=' + deptName + '&deptId=' + deptId);
+				app.myApp.getCurrentView().loadPage('contactsShowPeople.html?deptName=' + deptName + '&deptId=' + deptId + '&type=partyDynamic');
 				break;
 			case 1:
-				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptId + '&deptName=' + deptName + '&detailType=workLog&startDate='+pDMonthStartTime+'&endDate='+pDMonthEndTime);
+				var perKhpl = parseInt($$(this).data('khpl'));
+				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptId + '&deptName=' + deptName + '&detailType=workLog&startDate='+pDMonthStartTime+'&endDate='+pDMonthEndTime+'&khpl='+perKhpl);
 				break;
 			case 2:
 			case 3:
-				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptId + '&deptName=' + deptName + '&detailType=assessment&startDate='+pDMonthStartTime+'&endDate='+pDMonthEndTime);
+					var perKhpl = parseInt($$(this).data('khpl'));
+				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptId + '&deptName=' + deptName + '&detailType=assessment&startDate='+pDMonthStartTime+'&endDate='+pDMonthEndTime+'&khpl='+perKhpl);
 				break;
 			default:
 				break;
@@ -836,14 +855,16 @@ define(['app',
 		}
 		switch(type) {
 			case 0:
-				app.myApp.getCurrentView().loadPage('contactsShowPeople.html?deptName=' + deptNameSeason + '&deptId=' + deptIdSeason);
+				app.myApp.getCurrentView().loadPage('contactsShowPeople.html?deptName=' + deptNameSeason + '&deptId=' + deptIdSeason+ '&type=partyDynamic');
 				break;
 			case 1:
-				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdSeason + '&deptName=' + deptNameSeason + '&detailType=workLog&startDate='+pDSeasonStartTime+'&endDate='+pDSeasonEndTime);
+					var perKhpl = parseInt($$(this).data('khpl'));
+				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdSeason + '&deptName=' + deptNameSeason + '&detailType=workLog&startDate='+pDSeasonStartTime+'&endDate='+pDSeasonEndTime+'&khpl='+perKhpl);
 				break;
 			case 2:
 			case 3:
-				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdSeason + '&deptName=' + deptNameSeason + '&detailType=assessment&startDate='+pDSeasonStartTime+'&endDate='+pDSeasonEndTime);
+					var perKhpl = parseInt($$(this).data('khpl'));
+				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdSeason + '&deptName=' + deptNameSeason + '&detailType=assessment&startDate='+pDSeasonStartTime+'&endDate='+pDSeasonEndTime+'&khpl='+perKhpl);
 				break;
 			default:
 				break;
@@ -861,14 +882,16 @@ define(['app',
 		}
 		switch(type) {
 			case 0:
-				app.myApp.getCurrentView().loadPage('contactsShowPeople.html?deptName=' + deptNameYear + '&deptId=' + deptIdYear);
+				app.myApp.getCurrentView().loadPage('contactsShowPeople.html?deptName=' + deptNameYear + '&deptId=' + deptIdYear+ '&type=partyDynamic');
 				break;
 			case 1:
-				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdYear + '&deptName=' + deptNameYear + '&detailType=workLog&startDate='+pDYearStartTime+'&endDate='+pDYearEndTime);
+					var perKhpl = parseInt($$(this).data('khpl'));
+				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdYear + '&deptName=' + deptNameYear + '&detailType=workLog&startDate='+pDYearStartTime+'&endDate='+pDYearEndTime+'&khpl='+perKhpl);
 				break;
 			case 2:
 			case 3:
-				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdYear + '&deptName=' + deptNameYear + '&detailType=assessment&startDate='+pDYearStartTime+'&endDate='+pDYearEndTime);
+					var perKhpl = parseInt($$(this).data('khpl'));
+				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdYear + '&deptName=' + deptNameYear + '&detailType=assessment&startDate='+pDYearStartTime+'&endDate='+pDYearEndTime+'&khpl='+perKhpl);
 				break;
 			default:
 				break;
@@ -887,14 +910,16 @@ define(['app',
 		}
 		switch(type) {
 			case 0:
-				app.myApp.getCurrentView().loadPage('contactsShowPeople.html?deptName=' + deptNameSearch + '&deptId=' + deptIdSearch);
+				app.myApp.getCurrentView().loadPage('contactsShowPeople.html?deptName=' + deptNameSearch + '&deptId=' + deptIdSearch+ '&type=partyDynamic');
 				break;
 			case 1:
-				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdSearch + '&deptName=' + deptNameSearch + '&detailType=workLog&startDate='+pDSearchStartTime+'&endDate='+pDSearchEndTime);
+					var perKhpl = parseInt($$(this).data('khpl'));
+				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdSearch + '&deptName=' + deptNameSearch + '&detailType=workLog&startDate='+pDSearchStartTime+'&endDate='+pDSearchEndTime+'&khpl='+perKhpl);
 				break;
 			case 2:
 			case 3:
-				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdSearch + '&deptName=' + deptNameSearch + '&detailType=assessment&startDate='+pDSearchStartTime+'&endDate='+pDSearchEndTime);
+					var perKhpl = parseInt($$(this).data('khpl'));
+				app.myApp.getCurrentView().loadPage('partyDynamicDetail.html?dateType=' + $$('.dynamicTime').data('type') + '&deptId=' + deptIdSearch + '&deptName=' + deptNameSearch + '&detailType=assessment&startDate='+pDSearchStartTime+'&endDate='+pDSearchEndTime+'&khpl='+perKhpl);
 				break;
 			default:
 				break;
@@ -930,6 +955,8 @@ define(['app',
 			$$(this).css('color', '#ed4c3c');
 			reorder = 0;
 		}
+		console.log("$$('.dynamicTime').data('type')");
+		console.log($$('.dynamicTime').data('type'));
 		//loadPartyDynamicContent($$('.dynamicTime').data('type'), false);
 		loadPartyDynamicContent(false);
 	}
@@ -1043,15 +1070,16 @@ define(['app',
 		console.log(pDMonthStartTime);
 		console.log(pDMonthEndTime);
 		app.ajaxLoadPageContent(loadPartyDynamicPath, {
-			dateType: dateType,
+			// dateType: dateType,
 			deptId: deptId,
-			userId: userId,
+			khpl:2,
+			// userId: userId,
 			startDate:pDMonthStartTime,
 			endDate:pDMonthEndTime,
 		}, function(data) {
 			console.log(data);
-			pageDataStorage['partyDynamic'] = data;
-			handlePartyDynamic(data);
+			pageDataStorage['partyDynamic'] = data.data;
+			handlePartyDynamic(data.data);
 			pageNo = 1;
 			//loadPartyDynamicContent($$('.dynamicTime').data('type'), false);
 			loadPartyDynamicContent(false);
@@ -1083,15 +1111,16 @@ define(['app',
 		console.log(pDSeasonStartTime);
 		console.log(pDSeasonEndTime);
 		app.ajaxLoadPageContent(loadPartyDynamicPath, {
-			dateType: dateType,
+			// dateType: dateType,
 			deptId: deptIdSeason,
-			userId: userIdSeson,
+			// userId: userIdSeson,
+			khpl:1,
 			startDate:pDSeasonStartTime,
 			endDate:pDSeasonEndTime,
 		}, function(data) {
 			console.log(data);
-			pageDataStorage['partyDynamicSeason'] = data;
-			handlePartyDynamicBySeason(data);
+			pageDataStorage['partyDynamicSeason'] = data.data;
+			handlePartyDynamicBySeason(data.data);
 			pagePDSeason = 1;
 			loadingPDSeason = true;
 			//loadPartyDynamicContent($$('.dynamicTime').data('type'), false);
@@ -1123,15 +1152,16 @@ define(['app',
 		console.log(pDYearStartTime);
 		console.log(pDYearEndTime);
 		app.ajaxLoadPageContent(loadPartyDynamicPath, {
-			dateType: dateType,
+			// dateType: dateType,
 			deptId: deptIdYear,
-			userId: userIdYear,
+			khpl:0,
+			// userId: userIdYear,
 			startDate:pDYearStartTime,
 			endDate:pDYearEndTime,
 		}, function(data) {
 			console.log(data);
-			pageDataStorage['partyDynamicSeason'] = data;
-			handlePartyDynamicByYear(data);
+			pageDataStorage['partyDynamicSeason'] = data.data;
+			handlePartyDynamicByYear(data.data);
 			pagePDYear = 1;
 			loadingPDYear = true;
 			//loadPartyDynamicContent($$('.dynamicTime').data('type'), false);
@@ -1164,15 +1194,15 @@ define(['app',
 		console.log(pDSearchStartTime);
 		console.log(pDSearchEndTime);
 		app.ajaxLoadPageContent(loadPartyDynamicPath, {
-			dateType: dateType,
+			khpl: khpl,
 			deptId: deptIdSearch,
-			userId: userIdSearch,
+			// userId: userIdSearch,
 			startDate:pDSearchStartTime,
 			endDate:pDSearchEndTime,
 		}, function(data) {
 			console.log(data);
-			pageDataStorage['partyDynamicSearch'] = data;
-			handlePartyDynamicBySearch(data);
+			pageDataStorage['partyDynamicSearch'] = data.data;
+			handlePartyDynamicBySearch(data.data);
 			pagePDSearch = 1;
 			loadingPDSearch = true;
 			//loadPartyDynamicContent($$('.dynamicTime').data('type'), false);
@@ -1192,6 +1222,14 @@ define(['app',
 		$$('.workTotalSearch').html(data.workTotal);
 		deptIdSearch = data.deptId;
 		deptNameSearch = data.deptName;
+		console.log('khpl---'+khpl)
+		if(khpl == 0){
+			$$('.dynamicReportTimeSearch').html('年');
+		}else if(khpl == 1){
+			$$('.dynamicReportTimeSearch').html('季');
+		}else{
+			$$('.dynamicReportTimeSearch').html('月');
+		}
 		$$('.dynamicReportNameSearch').html(deptNameSearch);
 	}
 
@@ -1218,10 +1256,11 @@ define(['app',
 		app.ajaxLoadPageContent(loadPartyDynamicContentPath, {
 			deptId: deptId,
 			sortType: pickType,
-			pageNo: pageNo,
+			current: pageNo,
 			reorder: reorder,
-			userId: userId,
-			queryByDeptName : partyDynamicKey,
+			// userId: userId,
+			khpl: 2,
+			// queryByDeptName : partyDynamicKey,
 			startDate:pDMonthStartTime,
 			endDate:pDMonthEndTime,
 		}, function(data) {
@@ -1229,6 +1268,7 @@ define(['app',
 				item.pickType = pickType;
 			});
 			console.log(data);
+			var data = data.data.records;
 			if(!isLoadMore) {
 				pageDataStorage['partyDynamicContent'] = data;
 			} else {
@@ -1288,13 +1328,15 @@ define(['app',
 		app.ajaxLoadPageContent(loadPartyDynamicContentPath, {
 			deptId: deptIdSeason,
 			sortType: pickTypeSeason,
-			pageNo: pagePDSeason,
+			current: pagePDSeason,
 			reorder: reorderSeason,
-			userId:userIdSeason,
-			queryByDeptName : partyDynamicKey,
+			khpl: 1,
+			// userId:userIdSeason,
+			// queryByDeptName : partyDynamicKey,
 			startDate:pDSeasonStartTime,
 			endDate:pDSeasonEndTime,
 		}, function(data) {
+			var data = data.data.records;
 			$$.each(data, function(_, item) {
 				item.pickTypeSeason = pickTypeSeason;
 			});
@@ -1313,6 +1355,7 @@ define(['app',
 	 * @param {Object} data
 	 */
 	function handlePartyDynamicContentBySeason(data, isLoadMore) {
+
 		$$('.partyDynamicNotFound').hide();
 		if(data.length > 0) {
 			if(data.length == 10) {
@@ -1357,13 +1400,15 @@ define(['app',
 		app.ajaxLoadPageContent(loadPartyDynamicContentPath, {
 			deptId: deptIdYear,
 			sortType: pickTypeYear,
-			pageNo: pagePDYear,
+			current: pagePDYear,
 			reorder: reorderYear,
-			userId: userIdYear,
-			queryByDeptName : partyDynamicKey,
+			// userId: userIdYear,
+			khpl: 0,
+			query : partyDynamicKey,
 			startDate:pDYearStartTime,
 			endDate:pDYearEndTime,
 		}, function(data) {
+			var data = data.data.records;
 			$$.each(data, function(_, item) {
 				item.pickTypeYear = pickTypeYear;
 			});
@@ -1422,23 +1467,30 @@ define(['app',
 	function loadPartyDynamicContentBySearch(isLoadMore) {
 		console.log(pDSearchStartTime);
 		console.log(pDSearchEndTime);
+		console.log(khpl);
+		console.log("$$('.dynamicTime').data('type')");
+		console.log($$('.dynamicTime').data('type'));
 		app.ajaxLoadPageContent(loadPartyDynamicContentPath, {
 			deptId: deptIdSearch,
 			sortType: pickTypeSearch,
-			pageNo: pagePDSearch,
+			current: pagePDSearch,
 			reorder: reorderSearch,
-			userId: userIdSearch,
-			queryByDeptName : partyDynamicKey,
+			// userId: userIdSearch,
+			khpl : khpl,
+			query : partyDynamicKey,
 			startDate:pDSearchStartTime,
 			endDate:pDSearchEndTime,
 		}, function(data) {
+			var data = data.data.records;
 			$$.each(data, function(_, item) {
 				item.pickTypeYear = pickTypeSearch;
 			});
 			console.log(data);
 			if(!isLoadMore) {
+				console.log('1')
 				pageDataStorage['partyDynamicContentSearch'] = data;
 			} else {
+				console.log('2')
 				pageDataStorage['partyDynamicContentSearch'] = pageDataStorage['partyDynamicContentSearch'].concat(data);
 			}
 			handlePartyDynamicContentBySearch(data, isLoadMore);
@@ -1567,9 +1619,14 @@ define(['app',
 		//点击部门清除搜索框的key值
 		partyDynamicKey = '';
 		$$('.dynamicPageSearch').scrollTop(0);
+		
+		
 		console.log($$('.dynamicReportNameSearch').html());
+
 		var html = '<span class="titleContentSearch" data-deptId="' + deptIdSearch + '">' + $$('.dynamicReportNameSearch').html() + '</span>';
+	
 		$$('.titleBlockSearch').append(html);
+
 		titleBlockSearchHtml = $$('.titleBlockSearch').html();
 		var height = (titleBlockSearchHtml.getCurrentHeight() / 30 * 33);
 		$$('.titleBlockSearch').css('height', height == 0 ? height : (height + 5) + 'px');
@@ -1584,7 +1641,9 @@ define(['app',
 		console.log($$('.dynamicReportNameSearch').html());
 		console.log(deptIdSearch);
 		console.log(deptNameSearch);
+		console.log($$('.dynamicTime').data('type'));
 		//loadPartyDynamic($$('.dynamicTime').data('type'));
+
 		loadPartyDynamicBySearch(0);
 	}
 	
@@ -1594,9 +1653,12 @@ define(['app',
 		console.log(parentDeptId);
 		partyDynamicKey = '';
 		$$('.dynamicPage').scrollTop(0);
-		var html = '<span class="titleContent" data-deptId="' + parentDeptId + '">' + parentDeptName + '</span>';
-		$$('.titleBlock').append(html);
-		titleBlockHtml = $$('.titleBlock').html();
+		if(deptId1 != 1){
+			var html = '<span class="titleContent" data-deptId="' + parentDeptId + '">' + parentDeptName + '</span>';
+			$$('.titleBlock').append(html);
+			titleBlockHtml = $$('.titleBlock').html();
+		}
+		
 		var height = (titleBlockHtml.getCurrentHeight() / 30 * 33);
 		$$('.titleBlock').css('height', height == 0 ? height : (height + 5) + 'px');
 		$$('.titleContent').off('click', titleContentClick);

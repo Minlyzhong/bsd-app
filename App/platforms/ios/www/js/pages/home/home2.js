@@ -4,13 +4,13 @@ define(['app',
 ], function(app, template ,template1) {
 	var $$ = Dom7;
 	//滚动图接口
-	var swiperPath = app.basePath + 'extHomePage/loadMobileFacebook';
+	var swiperPath = app.basePath + '/mobile/political/content/loadMobileFacebook';
 	//首页列表接口
-	var partyPath = app.basePath + 'extHomePage/loadMobileHomeList';
+	var partyPath = app.basePath + '/mobile/political/catalog/icon';
 	//检查更新接口
-	var findVersionPath = app.basePath + 'extUserPage/findNewAppVersion';
+	var findVersionPath = app.basePath + '/mobile/apkEdition/check/update';
 	//查询用户自定义皮肤
-	var find = app.basePath + 'userSetting/find';
+	var find = app.basePath + '/mobile/userSetting/';
 	//退出请求接口
 	var exitPath = app.basePath + 'auth/exit';
 	//登陆接口
@@ -18,7 +18,7 @@ define(['app',
 	//点赞接口
 	var goodPath = app.basePath + 'extGood/saveGood';
 	//加载栏目的文章列表
-	var listPath = app.basePath + 'extContent/loadPagerByCatId';
+	var listPath = app.basePath + '/mobile/political/content/columnArticles';
 	var firstIn = 1;
 	var pageDataStorage = {};
 	var pageNo = 1;
@@ -167,7 +167,8 @@ define(['app',
 						$$('.user-header img').attr('src', app.headPic);
 						localStorage.setItem('headPic', 0);
 						localStorage.setItem('userId', -1);
-						localStorage.setItem('user', '-1');
+						localStorage.setItem('lastStudyDay', 0);
+						localStorage.setItem('user', ' ');
 						localStorage.setItem('roleId', -1);
 						localStorage.setItem('password', null);
 						//把主题设置为默认的，移除css
@@ -257,7 +258,7 @@ define(['app',
 		document.addEventListener("backbutton", onBackKeyDown, false);
 		getWiper();
 		getPatryList();
-		checkUpdate();
+		// checkUpdate();
 	}
 
 	/**
@@ -265,7 +266,9 @@ define(['app',
 	 */
 	function getWiper() {
 		app.ajaxLoadPageContent(swiperPath, {
-
+			catalogId:2,
+			size: 5,
+			tenantId: app.tenantId
 		}, function(data) {
 			pageDataStorage['wiper'] = data.data[0].data;
 			console.log(data.data[0].data);
@@ -325,7 +328,7 @@ define(['app',
 					//需要点击两次
 					$$('.photo-browser-close-link').click();
 					$$('.photo-browser-close-link').click();
-					app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + $$(this).next('.homeId').val());
+					app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + $$(this).next('.homeId').val()+'&type=1');
 				})
 
 			});
@@ -336,9 +339,11 @@ define(['app',
 	 * 获取标题栏 
 	 */
 	function getPatryList() {
-		app.ajaxLoadPageContent(partyPath, {
 
+		app.ajaxLoadPageContent(partyPath, {
+			tenantId:app.tenantId
 		}, function(data) {
+			
 			pageDataStorage['partyListLength'] = data.data.length
 			console.log(pageDataStorage['partyListLength']);
 			pageDataStorage['partyList'] = data.data;
@@ -559,8 +564,9 @@ define(['app',
 			updateAjax = $$.ajax({
 				url: findVersionPath,
 				dataType: 'json',
+				method: 'GET',
 				data: {
-					curVersion: app.version,
+					// curVersion: app.version,
 				},
 				success: function(data) {
 					console.log(data);
@@ -568,7 +574,7 @@ define(['app',
 						window.clearTimeout(timeOutID);
 					}
 					timeOutID = null;
-					if(data.data.success) {
+					if(data.msg=='success') {
 						localStorage.setItem('updateTime', today);
 						if(app.version != data.data.appVersion) {
 							if(app.myApp.device.ios) {
@@ -578,7 +584,7 @@ define(['app',
 							} else {
 								setTimeout(function(){
 									app.myApp.alert('<div style="text-align: left;">' + '检查到新版本：V' + data.data.appVersion + '<br /><br />更新内容:<br />' + data.data.memo + '<br /><br />文件大小:' + data.data.appSize + 'M，是否进行下载?</div>', function() {
-									open(app.basePath + data.data.appPath, '_system');
+									open(app.filePath + data.data.appUrl, '_system');
 								});
 								},1500);
 							}
@@ -625,8 +631,8 @@ define(['app',
 		var link = document.createElement( "link" ); 
 		link.type = "text/css"; 
 		link.rel = "stylesheet"; 
-		app.ajaxLoadPageContent(find, {
-			userId:app.userId,
+		app.ajaxLoadPageContent(find+app.userId, {
+			// userId:app.userId,
 		}, function(data) {
 			if(data.appSkin==2){
 				link.href = 'css/skin/blue.css';  
@@ -644,9 +650,10 @@ define(['app',
 		console.log(pageDataStorage['catId0']);
 		console.log(pageNo);
 		app.ajaxLoadPageContent1(listPath, {
-			page: pageNo,
+			current: pageNo,
 			catalogId: pageDataStorage['catId0'],
-			userId: app.userId
+			tenantId: app.tenantId
+			// userId: app.userId
 		}, function(result) {
 			var data = result;
 			console.log(data.data);
@@ -998,11 +1005,12 @@ define(['app',
 	function partyContentHandle() {
 		var catalogId = $$(this).data('id');
 		var isGood = $$(this).data('isgood');
+		var type = $$(this).data('type')
 		if(isGood == undefined){
 			isGood = false;
 		}
 		console.log(catalogId);
-		app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + catalogId +'&isGood='+isGood);
+		app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + catalogId +'&isGood='+isGood+'&type='+type);
 	}
 
 	//文章点赞

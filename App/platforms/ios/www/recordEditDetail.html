@@ -1,0 +1,100 @@
+<div data-page="newRecord/editRecord" class="page navbar-fixed no-tabbar">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left ">
+				<a href="#" class="link icon-only editRecordBack"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center ">修改日志</div>
+			<div class="right">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+				<div class="editRecord" style="margin-top: 5px;">保存</div>
+			</div>
+		</div>
+	</div>
+	<div class="page-content" style="background: white;">
+		<div class="list-block recDetailList"style="margin-bottom: -1px;">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">日志标题:</div>
+							<div class="item-input">
+								<input type="text" id="recDetailTitleEdit" name="recDetailTitleEdit" placeholder=""/>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">日志类型:</div>
+							<div class="item-input">
+								<input type="text" id="recTypeEdit" name="recTypeEdit" placeholder="" readonly />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">创建时间:</div>
+							<div class="item-input">
+								<input type="text" id="recDetailTsEdit" name="recDetailTsEdit" placeholder="" readonly />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class='recdeptNameLi'>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">所属组织:</div>
+							<div class="item-input" >
+								<div id="recdeptNameEdit">
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<a href="#" class="sender" text-decoration="underline">
+				<li class = 'recSendLi'>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">发送人:</div>
+								<div class="item-input">
+									<input type="text" id="recSendEdit" name="recSendEdit" placeholder="" style="color: blue;" readonly/>
+								</div>
+						</div>
+					</div>
+				</li>	
+				</a>
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">日志内容:</div>
+							<div class="item-input" style="margin-left: -2px;">
+								<textarea id="recDetailContentEdit" name="recDetailContentEdit" placeholder="" style="width:100%;height:200px;"></textarea>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<div class="weui_cells weui_cells_form" style="margin-top: 0;">
+				<div class="weui_cell uploadCell">
+					<div class="weui_cell_bd weui_cell_primary">
+						<div class="weui_uploaderEdit">
+							<div class="weui_uploader_hd weui_cell">
+								<div class="weui_cell_bd weui_cell_primary">已上传的图片</div>
+								<div class="weui_cell_ft"></div>
+							</div>
+							<div class="weui_uploader_bd kpiPicture">
+								<div class="weui_uploader_input_wrp">
+									<img src='' class='weui_uploader_input' />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>

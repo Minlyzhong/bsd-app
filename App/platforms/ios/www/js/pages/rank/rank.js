@@ -13,13 +13,13 @@ define(['app',
 	//个人考核完成情况接口
 	var loadPartyMenuPath = app.basePath + 'knowledgeTestpaper/loadPartyMenu';
 	//部门考核情况接口
-	var loadDeptPath = app.basePath + 'knowledgeTestpaper/loadDeptByUserId';
+	var loadDeptPath = app.basePath + '/mobile/partyAm/loadDeptByUserId';
 	//领导接口
-	var loadPartyDeptPath = app.basePath + 'knowledgeTestpaper/loadRankingDepartment';
+	var loadPartyDeptPath = app.basePath + '/mobile/partyAm/loadRankingDepartment';
 	//领导表头接口
-	var loadPartyDeptPathHead = app.basePath + 'knowledgeTestpaper/loadPeopleAndWorkTotal';
+	var loadPartyDeptPathHead = app.basePath + '/mobile/partyAm/loadPeopleAndWorkTotal';
 	//获取年份
-	var getYearsPath = app.basePath + 'knowledgeTopic/getYears';
+	var getYearsPath = app.basePath + '/mobile/partyAm/getYears';
 	var userPoint = 0;
 	var userPointBySeason = 0;
 	var userPointByYear = 0;
@@ -47,6 +47,8 @@ define(['app',
 	//查询
 	var rankSearchStartTime = '';
 	var rankSearchEndTime = '';
+	var type1=0;
+	var khpl1=0;
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -56,6 +58,9 @@ define(['app',
 //			'assessment/assessList',
 //			'rank/rankDetail',
 //		]);
+		app.roleId = parseInt(localStorage.getItem('roleId'));
+		// 测试用
+		app.roleId = 1;
 		if(app.roleId != 1) {
 			$$('.leaderInfo').remove();
 			$$('.leaderDetailPage').remove();
@@ -94,7 +99,8 @@ define(['app',
 		loading = true;
 		pageNo1 = 1;
 		loading1 = true;
-		
+		type1=0;
+		khpl1=0;
 		year = '';
 		month = '';
 		season = '';
@@ -104,24 +110,32 @@ define(['app',
 		//季度
 		rankSeasonStartTime = '';
 		rankSeasonEndTime = '';
+		rankSeasonCount = 1;
 		pageRankSeason = 1;
 		loadingRankSeason = true;
 		//年份
 		rankYearStartTime = '';
 		rankYearEndTime = '';
+		rankYearCount = 1;
 		pageRankYear = 1;
 		loadingRankYear = true;
 		
 		clickEvent(page);
+		console.log(app.roleId);
+		
 		var user = {
 			role: app.roleId
 		}
+	
 		if(user.role > -1 && user.role != 1) {
+
 			$$('.rankDetail').css('display', 'flex');
+			$$('.rankSelect1').css('margin-top', '47px');
 			TownshipTime();
 			//加载数据
 			loadDept();
 			//loadPartyMenu();
+			app.roleId = parseInt(localStorage.getItem('roleId'));
 		} else {
 			//利于党务负责人查看和评比的搜索框
 			$$('.searchRank').css('display','block');
@@ -172,10 +186,16 @@ define(['app',
 		app.ajaxLoadPageContent1(getYearsPath,{
 		},function(data){
 			console.log(data);
-			result = data;
-			$$.each(data, function(index, item) {
-					result[index] = item.text.toString()+'年';
-			});
+			result = data.data;
+			if(result == null){
+				var nowDate = new Date();
+				var nowYear = nowDate.getFullYear();
+				result =[nowYear+'年']
+				
+			}
+			$$.each(data.data, function(index, item) {
+				result[index] = item.toString()+'年';
+		});
 			console.log(result);
 			pickerDescribe = app.myApp.picker({
 	    		input: '#picker-describeOther',
@@ -186,7 +206,7 @@ define(['app',
 			            values:(result)
 			        },
 			        {
-			            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+			            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 			        },
 			    ]
 			});
@@ -217,10 +237,12 @@ define(['app',
 
 		var myDate = new Date();
 		year = myDate.getFullYear();
-		month = myDate.getMonth()+1;
+		month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
+
 		//月份时间判断
 		$("#picker-describeOther").val(year+'年 '+ month+'月');
-		rankMonthStartTime = year+'-'+month+'-1';
+		
+		rankMonthStartTime = year+'-'+month+'-01';
 		rankMonthEndTime = year+'-'+month+'-31';
 		$$(".rankTimeMonthOther").on('click',function(){
 			pickerDescribe.open();
@@ -238,7 +260,8 @@ define(['app',
 				year = pickerDescribe.value[0].substring(0,pickerDescribe.value[0].length-1);
 				month = pickerDescribe.value[1].substring(0,pickerDescribe.value[1].length-1);
 				$("#picker-describeOther").val(year+'年 '+ month+'月');
-				rankMonthStartTime = year+'-'+month+'-1';
+				
+				rankMonthStartTime = year+'-'+month+'-01';
 				rankMonthEndTime = year+'-'+month+'-31';
 				setTimeout(function(){
 					loadDept();
@@ -251,19 +274,19 @@ define(['app',
 		//季度时间判断
 		if(month<=3){
 			$("#picker-describeSeasonOther").val(year+'年 '+ '第一季度');
-			rankSeasonStartTime = year+'-1-1';
-			rankSeasonEndTime = year+'-3-31';
+			rankSeasonStartTime = year+'-01-01';
+			rankSeasonEndTime = year+'-03-31';
 		}else if(month>3 && month<=6){
 			$("#picker-describeSeasonOther").val(year+'年 '+ '第二季度');
-			rankSeasonStartTime = year+'-4-1';
-			rankSeasonEndTime = year+'-6-31';
+			rankSeasonStartTime = year+'-04-01';
+			rankSeasonEndTime = year+'-06-31';
 		}else if(month>6 && month<=9){
 			$("#picker-describeSeasonOther").val(year+'年 '+ '第三季度');
-			rankSeasonStartTime = year+'-7-1';
-			rankSeasonEndTime = year+'-9-31';
+			rankSeasonStartTime = year+'-07-01';
+			rankSeasonEndTime = year+'-09-31';
 		}else if(month>9 && month<=12){
 			$("#picker-describeSeasonOther").val(year+'年 '+ '第四季度');
-			rankSeasonStartTime = year+'-10-1';
+			rankSeasonStartTime = year+'-10-01';
 			rankSeasonEndTime = year+'-12-31';
 		}
 		$$(".rankTimeSeasonOther").on('click',function(){
@@ -274,16 +297,16 @@ define(['app',
 				year = pickerDescribeSeason.value[0].substring(0,pickerDescribeSeason.value[0].length-1);
 				season = pickerDescribeSeason.value[1].substring(0,pickerDescribeSeason.value[1].length);
 				if(season == '第一季度'){
-					rankSeasonStartTime = year+'-1-1';
-					rankSeasonEndTime = year+'-3-31';
+					rankSeasonStartTime = year+'-01-01';
+					rankSeasonEndTime = year+'-03-31';
 				}else if(season == '第二季度'){
-					rankSeasonStartTime = year+'-4-1';
-					rankSeasonEndTime = year+'-6-31';
+					rankSeasonStartTime = year+'-04-01';
+					rankSeasonEndTime = year+'-06-31';
 				}else if(season == '第三季度'){
-					rankSeasonStartTime = year+'-7-1';
-					rankSeasonEndTime = year+'-9-31';
+					rankSeasonStartTime = year+'-07-01';
+					rankSeasonEndTime = year+'-09-31';
 				}else if(season == '第四季度'){
-					rankSeasonStartTime = year+'-10-1';
+					rankSeasonStartTime = year+'-10-01';
 					rankSeasonEndTime = year+'-12-31';
 				}
 				$("#picker-describeSeasonOther").val(year+'年 '+ season);
@@ -296,7 +319,7 @@ define(['app',
 		
 		//年份时间判断
 		$("#picker-describeYearOther").val(year+'年 ');
-		rankYearStartTime= year+'-1-1';
+		rankYearStartTime= year+'-01-01';
 		rankYearEndTime= year+'-12-31';
 		$$(".rankTimeYearOther").on('click',function(){
 			pickerDescribeYear.open();
@@ -304,7 +327,7 @@ define(['app',
 			$$('.toolbar-inner .right').css('margin-right','20px');	
 			$$('.picker-3d .close-picker').on('click',function(){
 				year = pickerDescribeYear.value[0].substring(0,pickerDescribeYear.value[0].length-1);
-				rankYearStartTime= year+'-1-1';
+				rankYearStartTime= year+'-01-01';
 				rankYearEndTime= year+'-12-31';
 				$("#picker-describeYearOther").val(year+'年 ');
 				setTimeout(function(){
@@ -361,9 +384,9 @@ define(['app',
 		app.ajaxLoadPageContent1(getYearsPath,{
 		},function(data){
 			console.log(data);
-			result = data;
-			$$.each(data, function(index, item) {
-					result[index] = item.text.toString()+'年';
+			result = data.data;
+			$$.each(data.data, function(index, item) {
+				result[index] = item.toString()+'年';
 			});
 			console.log(result);
 			pickerDescribe = app.myApp.picker({
@@ -375,7 +398,7 @@ define(['app',
 			            values:(result)
 			        },
 			        {
-			            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+			            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 			        },
 			    ]
 			});
@@ -406,10 +429,11 @@ define(['app',
 
 		var myDate = new Date();
 		year = myDate.getFullYear();
-		month = myDate.getMonth()+1;
+		month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
 		//月份时间判断
 		$("#picker-describe").val(year+'年 '+ month+'月');
-		rankMonthStartTime = year+'-'+month+'-1';
+		
+		rankMonthStartTime = year+'-'+month+'-01';
 		rankMonthEndTime = year+'-'+month+'-31';
 		$$(".rankTimeMonth").on('click',function(){
 			pickerDescribe.open();
@@ -435,7 +459,7 @@ define(['app',
 				str += '<div style="position: absolute;left: 45%;;font-size: 17px;">加载中...</div>';
 				str += '</div>';
 				$$('.leaderDetailPage .kpi-a-list ul').html(str);
-				rankMonthStartTime = year+'-'+month+'-1';
+				rankMonthStartTime = year+'-'+month+'-01';
 				rankMonthEndTime = year+'-'+month+'-31';
 				loadPartyDeptHead();
 				loadPartyDept(false);
@@ -445,19 +469,19 @@ define(['app',
 		//季度时间判断
 		if(month<=3){
 			$("#picker-describeSeason").val(year+'年 '+ '第一季度');
-			rankSeasonStartTime = year+'-1-1';
-			rankSeasonEndTime = year+'-3-31';
+			rankSeasonStartTime = year+'-01-01';
+			rankSeasonEndTime = year+'-03-31';
 		}else if(month>3 && month<=6){
 			$("#picker-describeSeason").val(year+'年 '+ '第二季度');
-			rankSeasonStartTime = year+'-4-1';
-			rankSeasonEndTime = year+'-6-31';
+			rankSeasonStartTime = year+'-04-01';
+			rankSeasonEndTime = year+'-06-31';
 		}else if(month>6 && month<=9){
 			$("#picker-describeSeason").val(year+'年 '+ '第三季度');
-			rankSeasonStartTime = year+'-7-1';
-			rankSeasonEndTime = year+'-9-31';
+			rankSeasonStartTime = year+'-07-01';
+			rankSeasonEndTime = year+'-09-31';
 		}else if(month>9 && month<=12){
 			$("#picker-describeSeason").val(year+'年 '+ '第四季度');
-			rankSeasonStartTime = year+'-10-1';
+			rankSeasonStartTime = year+'-10-01';
 			rankSeasonEndTime = year+'-12-31';
 		}
 		$$(".rankTimeSeason").on('click',function(){
@@ -468,16 +492,16 @@ define(['app',
 				year = pickerDescribeSeason.value[0].substring(0,pickerDescribeSeason.value[0].length-1);
 				season = pickerDescribeSeason.value[1].substring(0,pickerDescribeSeason.value[1].length);
 				if(season == '第一季度'){
-					rankSeasonStartTime = year+'-1-1';
-					rankSeasonEndTime = year+'-3-31';
+					rankSeasonStartTime = year+'-01-01';
+					rankSeasonEndTime = year+'-03-31';
 				}else if(season == '第二季度'){
-					rankSeasonStartTime = year+'-4-1';
-					rankSeasonEndTime = year+'-6-31';
+					rankSeasonStartTime = year+'-04-01';
+					rankSeasonEndTime = year+'-06-31';
 				}else if(season == '第三季度'){
-					rankSeasonStartTime = year+'-7-1';
-					rankSeasonEndTime = year+'-9-31';
+					rankSeasonStartTime = year+'-07-01';
+					rankSeasonEndTime = year+'-09-31';
 				}else if(season == '第四季度'){
-					rankSeasonStartTime = year+'-10-1';
+					rankSeasonStartTime = year+'-10-01';
 					rankSeasonEndTime = year+'-12-31';
 				}
 				$("#picker-describeSeason").val(year+'年 '+ season);
@@ -496,7 +520,7 @@ define(['app',
 		
 		//年份时间判断
 		$("#picker-describeYear").val(year+'年 ');
-		rankYearStartTime= year+'-1-1';
+		rankYearStartTime= year+'-01-01';
 		rankYearEndTime= year+'-12-31';
 		$$(".rankTimeYear").on('click',function(){
 			pickerDescribeYear.open();
@@ -504,7 +528,7 @@ define(['app',
 			$$('.toolbar-inner .right').css('margin-right','20px');	
 			$$('.picker-3d .close-picker').on('click',function(){
 				year = pickerDescribeYear.value[0].substring(0,pickerDescribeYear.value[0].length-1);
-				rankYearStartTime= year+'-1-1';
+				rankYearStartTime= year+'-01-01';
 				rankYearEndTime= year+'-12-31';
 				$("#picker-describeYear").val(year+'年 ');
 				pageRankYear = 1;
@@ -602,12 +626,19 @@ define(['app',
 		if(monthClassName){
 			rankSearchStartTime = rankMonthStartTime;
 			rankSearchEndTime = rankMonthEndTime;
+			type1=1;
+			khpl1=2;
 		}else if(seasonClassName){
-			rankSearchStartTime = rankSearchStartTime;
-			rankSearchEndTime = rankSearchEndTime;
+			rankSearchStartTime = rankSeasonStartTime;
+			rankSearchEndTime = rankSeasonEndTime;
+			type1=1;
+			khpl1=1;
 		}else if(yearClassName){
 			rankSearchStartTime = rankYearStartTime;
 			rankSearchEndTime = rankYearEndTime;
+			//rankSearchStartTime = year;
+			type1=0;
+			khpl1=0;
 		}
 		keyupContent();
 	}
@@ -1151,12 +1182,14 @@ define(['app',
 		console.log(rankMonthEndTime);
 		app.ajaxLoadPageContent(loadDeptPath, {
 			deptId: app.user.deptId,
-			userId: app.userId,
+			// userId: app.userId,
 			startDate:rankMonthStartTime,
 			endDate:rankMonthEndTime,
+//			type:1,
+			khpl:2,
 		}, function(data) {
 			console.log(data.data);
-			pageDataStorage['dept'] = data;
+			pageDataStorage['dept'] = data.data;
 			//userPoint = data.data.userPoint;
 			console.log(data.data.point);
 			userPoint = data.data.point;
@@ -1175,12 +1208,14 @@ define(['app',
 		console.log(rankSeasonEndTime);
 		app.ajaxLoadPageContent(loadDeptPath, {
 			deptId: app.user.deptId,
-			userId: app.userId,
+			// userId: app.userId,
 			startDate:rankSeasonStartTime,
 			endDate:rankSeasonEndTime,
+//			type:1,
+			khpl:1,
 		}, function(data) {
 			console.log(data.data);
-			pageDataStorage['deptSeason'] = data;
+			pageDataStorage['deptSeason'] = data.data;
 			//userPointBySeason = data.data.userPoint;
 			userPointBySeason = data.data.point;
 			setTimeout(function(){
@@ -1196,14 +1231,18 @@ define(['app',
 	function loadDeptByYear() {
 		console.log(rankYearStartTime);
 		console.log(rankYearEndTime);
+//		console.log(year);
 		app.ajaxLoadPageContent(loadDeptPath, {
 			deptId: app.user.deptId,
-			userId: app.userId,
+			// userId: app.userId,
 			startDate:rankYearStartTime,
 			endDate:rankYearEndTime,
+//			yearly:year,
+//			type:0,
+			khpl:0,
 		}, function(data) {
 			console.log(data.data);
-			pageDataStorage['deptYear'] = data;
+			pageDataStorage['deptYear'] = data.data;
 			//userPointByYear = data.data.userPoint;
 			userPointByYear = data.data.point;
 			setTimeout(function(){
@@ -1255,7 +1294,7 @@ define(['app',
 				app.myApp.alert('该部门还没有考核记录');
 				return;
 			}
-			app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessid + '&name=' + name + '&point=' + point + '&count=' + count+'&startDate='+rankMonthStartTime+'&endDate='+rankMonthEndTime);
+			app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessid + '&name=' + name + '&point=' + point + '&count=' + count+'&startDate='+rankMonthStartTime+'&endDate='+rankMonthEndTime+'&type=1&khpl=2');
 		});	
 	}
 	
@@ -1294,7 +1333,7 @@ define(['app',
 			console.log(nameSeason);
 			console.log(countSeason);
 			console.log(pointSeason);
-			app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessidSeason + '&name=' + nameSeason + '&point=' + pointSeason + '&count=' + countSeason+'&startDate='+rankSeasonStartTime+'&endDate='+rankSeasonEndTime);
+			app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessidSeason + '&name=' + nameSeason + '&point=' + pointSeason + '&count=' + countSeason+'&startDate='+rankSeasonStartTime+'&endDate='+rankSeasonEndTime+'&type=1&khpl=1');
 		});
 	}
 	/**
@@ -1332,7 +1371,8 @@ define(['app',
 			console.log(nameYear);
 			console.log(countYear);
 			console.log(pointYear);
-			app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessidYear + '&name=' + nameYear + '&point=' + pointYear + '&count=' + countYear+'&startDate='+rankYearStartTime+'&endDate='+rankYearEndTime);
+			//app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessidYear + '&name=' + nameYear + '&point=' + pointYear + '&count=' + countYear+'&startDate='+rankYearStartTime+'&endDate='+rankYearEndTime+'&type=1&khpl=2');
+			app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessidYear + '&name=' + nameYear + '&point=' + pointYear + '&count=' + countYear+'&startDate='+year+'&endDate='+rankYearEndTime+'&type=0&khpl=0');
 		});
 	}
 	
@@ -1341,11 +1381,16 @@ define(['app',
 		app.ajaxLoadPageContent1(loadPartyDeptPathHead, {
 			startDate:rankMonthStartTime,
 			endDate:rankMonthEndTime,
+			khpl:2,
 		}, function(result) {
 			console.log(result);
-			var data = result;
-			//pageDataStorage['partyDeptHead'] = data;
+
+			var data = result.data;
+			
+				//pageDataStorage['partyDeptHead'] = data;
 			handlePartyDeptHead(data);
+			
+			
 		});
 	}
 	//获取领导考核统计表头(季度)
@@ -1353,9 +1398,10 @@ define(['app',
 		app.ajaxLoadPageContent1(loadPartyDeptPathHead, {
 			startDate:rankSeasonStartTime,
 			endDate:rankSeasonEndTime,
+			khpl:1,
 		}, function(result) {
 			console.log(result);
-			var data = result;
+			var data = result.data;
 			handlePartyDeptHeadBySeason(data);
 		});
 	}
@@ -1364,9 +1410,10 @@ define(['app',
 		app.ajaxLoadPageContent1(loadPartyDeptPathHead, {
 			startDate:rankYearStartTime,
 			endDate:rankYearEndTime,
+			khpl:0,
 		}, function(result) {
 			console.log(result);
-			var data = result;
+			var data = result.data;
 			handlePartyDeptHeadByYear(data);
 		});
 	}
@@ -1400,21 +1447,33 @@ define(['app',
 		console.log(rankMonthStartTime);
 		console.log(rankMonthEndTime);
 		app.ajaxLoadPageContent1(loadPartyDeptPath, {
-			pageNo: pageNo,
+			current: pageNo,
 			startDate:rankMonthStartTime,
 			endDate:rankMonthEndTime,
+//			type:1,
+			khpl:2,
 		}, function(result) {
 			console.log(result);
 			var data = result.data;
-			$$.each(data, function(index, item) {
-				item.rank = (pageNo - 1) * 10 + index + 1;	
-			});
-			if(isLoadMore) {
-				pageDataStorage['partyDept'] = pageDataStorage['partyDept'].concat(data);
-			} else {
-				pageDataStorage['partyDept'] = data;
+			if((data == null && pageNo == 1)|| (data.length == 0 && pageNo == 1)){
+				var str = '';
+				
+				str += '<div style="position: absolute;left: 45%;;font-size: 17px;">没有数据</div>';
+				
+				$$('.leaderDetailPage .kpi-a-list ul').html(str);
+					
+				}else{
+				$$.each(data, function(index, item) {
+					item.rank = (pageNo - 1) * 10 + index + 1;	
+				});
+				if(isLoadMore) {
+					pageDataStorage['partyDept'] = pageDataStorage['partyDept'].concat(data);
+				} else {
+					pageDataStorage['partyDept'] = data;
+				}
+				handlePartyDept(data, isLoadMore);
 			}
-			handlePartyDept(data, isLoadMore);
+			
 		});
 	}
 	//获取领导考核统计(季度)
@@ -1422,43 +1481,74 @@ define(['app',
 		console.log(rankSeasonStartTime);
 		console.log(rankSeasonEndTime);
 		app.ajaxLoadPageContent1(loadPartyDeptPath, {
-			pageNo: pageRankSeason,
+			current: pageRankSeason,
 			startDate:rankSeasonStartTime,
 			endDate:rankSeasonEndTime,
+//			type:1,
+			khpl:1,
 		}, function(result) {
-			console.log(result);
+			
 			var data = result.data;
-			$$.each(data, function(index, item) {
-				item.rank = (pageNo - 1) * 10 + index + 1;	
-			});
-			if(isLoadMore) {
-				pageDataStorage['partyDeptSeason'] = pageDataStorage['partyDeptSeason'].concat(data);
-			} else {
-				pageDataStorage['partyDeptSeason'] = data;
-			}
-			handlePartyDeptBySeason(data, isLoadMore);
+			console.log(data);
+			console.log(pageRankSeason);
+			if((data == null && pageRankSeason == 1)|| (data.length == 0 && pageRankSeason == 1)){
+				var str = '';
+				
+				str += '<div style="position: absolute;left: 45%;;font-size: 17px;">没有数据</div>';
+				
+				$$('.leaderDetailPageSeason .kpi-a-list ul').html(str);
+					
+				}else{
+					$$.each(data, function(index, item) {
+						item.rank = (pageNo - 1) * 10 + index + 1;	
+					});
+					if(isLoadMore) {
+						pageDataStorage['partyDeptSeason'] = pageDataStorage['partyDeptSeason'].concat(data);
+					} else {
+						pageDataStorage['partyDeptSeason'] = data;
+					}
+					handlePartyDeptBySeason(data, isLoadMore);
+				}
+			
 		});
 	}
 	//获取领导考核统计(年度)
 	function loadPartyDeptByYear(isLoadMore) {
 		console.log(rankYearStartTime);
 		console.log(rankYearEndTime);
+//		console.log(year);
 		app.ajaxLoadPageContent1(loadPartyDeptPath, {
-			pageNo: pageRankYear,
+			current: pageRankYear,
 			startDate:rankYearStartTime,
 			endDate:rankYearEndTime,
+//			yearly:year,
+//			type:0,
+			khpl:0,
 		}, function(result) {
 			console.log(result);
 			var data = result.data;
-			$$.each(data, function(index, item) {
-				item.rank = (pageNo - 1) * 10 + index + 1;	
-			});
-			if(isLoadMore) {
-				pageDataStorage['partyDeptYear'] = pageDataStorage['partyDeptYear'].concat(data);
-			} else {
-				pageDataStorage['partyDeptYear'] = data;
-			}
-			handlePartyDeptByYear(data, isLoadMore);
+			console.log(data);
+			
+			if((data == null && pageRankYear == 1) || (data.length == 0 && pageRankYear == 1)){
+				var str = '';
+				
+				str += '<div style="position: absolute;left: 45%;;font-size: 17px;">没有数据</div>';
+				
+				$$('.leaderDetailPageYear .kpi-a-list ul').html(str);
+					
+				}else{
+					$$.each(data, function(index, item) {
+						item.rank = (pageNo - 1) * 10 + index + 1;	
+					});
+					if(isLoadMore) {
+						pageDataStorage['partyDeptYear'] = pageDataStorage['partyDeptYear'].concat(data);
+					} else {
+						pageDataStorage['partyDeptYear'] = data;
+					}
+					handlePartyDeptByYear(data, isLoadMore);
+
+				}
+			
 		});
 	}
 	//查询领导考核统计
@@ -1466,10 +1556,13 @@ define(['app',
 		console.log(rankSearchStartTime);
 		console.log(rankSearchEndTime);
 		app.ajaxLoadPageContent(loadPartyDeptPath, {
-			pageNo: pageNo1,
-			queryByDeptName:queryByDeptName,
+			current: pageNo1,
+			query:queryByDeptName,
 			startDate:rankSearchStartTime,
 			endDate:rankSearchEndTime,
+	//		yearly:rankSearchStartTime,
+	//		type:type1,
+			khpl:khpl1,
 		}, function(result) {
 			console.log(result);
 			var data = result.data;
@@ -1512,7 +1605,7 @@ define(['app',
 					app.myApp.alert('该部门还没有考核记录');
 					return;
 				}
-				app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessid + '&name=' + name + '&point=' + point + '&count=' + count+'&startDate='+rankMonthStartTime+'&endDate='+rankMonthEndTime);
+				app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessid + '&name=' + name + '&point=' + point + '&count=' + count+'&startDate='+rankMonthStartTime+'&endDate='+rankMonthEndTime+'&type=1&khpl=2');
 			});
 			if(data.length == 10) {
 				loading = false;
@@ -1540,7 +1633,7 @@ define(['app',
 					app.myApp.alert('该部门还没有考核记录');
 					return;
 				}
-				app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessid + '&name=' + name + '&point=' + point + '&count=' + count+'&startDate='+rankSeasonStartTime+'&endDate='+rankSeasonEndTime);
+				app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessid + '&name=' + name + '&point=' + point + '&count=' + count+'&startDate='+rankSeasonStartTime+'&endDate='+rankSeasonEndTime+'&type=1&khpl=1');
 			});
 			if(data.length == 10) {
 				loadingRankSeason = false;
@@ -1568,7 +1661,7 @@ define(['app',
 					app.myApp.alert('该部门还没有考核记录');
 					return;
 				}
-				app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessid + '&name=' + name + '&point=' + point + '&count=' + count+'&startDate='+rankYearStartTime+'&endDate='+rankYearEndTime);
+				app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessid + '&name=' + name + '&point=' + point + '&count=' + count+'&startDate='+rankYearStartTime+'&endDate='+rankYearEndTime+'&type=0&khpl=0');
 			});
 			if(data.length == 10) {
 				loadingRankYear = false;
@@ -1597,7 +1690,7 @@ define(['app',
 					app.myApp.alert('该部门还没有考核记录');
 					return;
 				}
-				app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessid + '&name=' + name + '&point=' + point + '&count=' + count);
+				app.myApp.getCurrentView().loadPage('assessList.html?assessid=' + assessid + '&name=' + name + '&point=' + point + '&count=' + count+'&type='+type1+'&khpl='+khpl1+'&startDate='+rankSearchStartTime+'&endDate='+rankSearchEndTime);
 			});
 			if(data.length == 10) {
 				loading1 = false;

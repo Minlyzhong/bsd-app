@@ -7,7 +7,7 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//部门考核人员
-	var loadDepartmentEmployeePath = app.basePath + 'knowledgeTestpaper/loadDepartmentEmployee';
+	var loadDepartmentEmployeePath = app.basePath + '/mobile/partyAm/loadDepartmentEmployee';
 	var deptId = 0;
 	var startDate = '';
 	var endDate = '';
@@ -101,11 +101,11 @@ define(['app',
 		var _pageNo = arguments[1] >= 0 ? arguments[1] : pageNo;
 		app.ajaxLoadPageContent(loadDepartmentEmployeePath, {
 			deptId: deptId,
-			pageNo: _pageNo,
+			current: _pageNo,
 			startDate:startDate,
 			endDate:endDate
 		}, function(result) {
-			var data = result.data;
+			var data = result.data.records;
 			console.log(data);
 			if(!_pageNo) {
 				pageDataStorage['chart'] = data;

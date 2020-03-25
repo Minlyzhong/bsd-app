@@ -5,12 +5,15 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	//部门考核项
-	var loadDepartmentAssessPath = app.basePath + 'knowledgeTestpaper/loadDepartmentAssess';
+	var loadDepartmentAssessPath = app.basePath + '/mobile/partyAm/loadDepartmentAssess';
 	var deptId = -1;
 	var deptName = '';
 	var idNameMap = {};
 	var startDate = '';
 	var endDate = '';
+	var type=0;
+	var khpl=0;
+	var yearly='';
 
 	/**
 	 * 页面初始化 
@@ -42,15 +45,16 @@ define(['app'], function(app) {
 		loading = true;
 		deptId = pageData.assessid;
 		deptName = pageData.name;
+		type=pageData.type;
+		khpl=pageData.khpl;
 		if(pageData.startDate != undefined){
 			startDate = pageData.startDate;
+			yearly = startDate.split('-')[0];
 		}
 		if(pageData.endDate != undefined){
 			endDate = pageData.endDate;
 		}
 		loadDepartmentEmployee();
-		console.log(pageData);
-
 	}
 
 	/**
@@ -84,20 +88,26 @@ define(['app'], function(app) {
 	 * 读取部门考核项 
 	 */
 	function loadDepartmentEmployee() {
-		console.log(startDate);
-		console.log(endDate);
 		if(startDate == '' && endDate == ''){
 			var myDate = new Date();
 			year = myDate.getFullYear();
 			month = myDate.getMonth()+1;
-			startDate = year+'-'+month+'-1';
+			
+			startDate = year+'-'+month+'-01';
 			endDate = year+'-'+month+'-31';
 		}
+
+		console.log(startDate)
+		console.log(endDate)
 		app.ajaxLoadPageContent(loadDepartmentAssessPath, {
 			deptId: deptId,
 			startDate:startDate,
-			endDate:endDate
+			endDate:endDate,
+			// yearly:yearly,
+			// type:type,
+			khpl:khpl,
 		}, function(data) {
+			var data = data.data;
 			console.log(data);
 			pageDataStorage['departmentEmployee'] = data;
 			handleDepartmentEmployee(data);
@@ -109,12 +119,12 @@ define(['app'], function(app) {
 	 * @param {Object} data
 	 */
 	function handleDepartmentEmployee(data) {
-		if(data.data && data.data.length > 0) {
-			$$('.assessListChart').css('height', (data.data.length * 40 + 130) + 'px');
+		if(data && data.length > 0) {
+			$$('.assessListChart').css('height', (data.length * 40 + 130) + 'px');
 			var nameArr = [];
 			var countArr = [];
 			var pointArr = [];
-			$$.each(data.data, function(index, item) {
+			$$.each(data, function(index, item) {
 				idNameMap[item.name] = item.id;
 				nameArr.push(item.name);
 				countArr.push(item.count);
@@ -122,7 +132,7 @@ define(['app'], function(app) {
 			});
 			loadChart(nameArr, countArr, pointArr);
 			$$('.assessListCheck').on('click', function() {
-				app.myApp.getCurrentView().loadPage('assessTopicList.html?item=' + JSON.stringify(data.data) + '&name=' + deptName + '&deptId=' + deptId+'&startDate='+startDate+'&endDate='+endDate);
+				app.myApp.getCurrentView().loadPage('assessTopicList.html?item=' + JSON.stringify(data) + '&name=' + deptName + '&deptId=' + deptId+'&startDate='+startDate+'&endDate='+endDate);
 			});
 		} else {
 			app.myApp.alert(app.utils.callbackAjaxError());

@@ -79,6 +79,7 @@ define(['app'
 					map.centerAndZoom(data.sysCity, 11); // 显示地图中心城市和地图等级
 					// map.centerAndZoom('合浦县', 11); // 显示地图中心城市和地图等级
 				}else{
+					// map.centerAndZoom('合浦县', 11);
 					map.centerAndZoom('合浦县', 11);
 				}
 			},

@@ -1,0 +1,22 @@
+{{#.}}
+<li class="item-content" data-userId = "{{userId}}" data-userName = "{{name}}" data-id = "{{id}}" style="padding-right: 15px;" >
+	{{!-- <div class="item-media"><i class="icon icon-assessment"></i></div> --}}
+	<div class="item-inner" style="padding: 10px 0px 10px 0px;">
+		<div class="item-title twoLine" style="color:#000;white-space: normal; font-size: 16px;">
+			
+			<span>{{contentTitle}}</span>
+			{{#compare isSign '==' 0}}
+				<span class="processUnStatus isSign">未签字</span>
+			{{else}}
+				<span class="processStatus isSign">已签字</span>
+			{{/compare}}
+			
+			
+		</div>
+		
+		<div class="item-after"style="font-size: 13px;color: #333;margin-top: 20px;">--{{name}}</div>
+		<div class="item-after" style="font-size: 13px;color:gray">{{createTime}}</div>
+	</div>
+	
+</li>
+{{/.}}

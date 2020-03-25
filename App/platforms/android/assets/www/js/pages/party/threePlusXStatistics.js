@@ -136,15 +136,18 @@ define(['app',
 		app.ajaxLoadPageContent1(getYearsPath,{
 		},function(data){
 			console.log(data);
+			result = data.data;
 			if(result == null){
 				var nowDate = new Date();
 				var nowYear = nowDate.getFullYear();
 				result =[nowYear+'年']
 				
+			}else{
+				$$.each(data.data, function(index, item) {
+					result[index] = item.toString()+'年';
+			});
 			}
-			$$.each(data.data, function(index, item) {
-				result[index] = item.toString()+'年';
-		});
+			
 			console.log(result);
 			pickerDescribe = app.myApp.picker({
 	    		input: '#picker-describe',

@@ -183,8 +183,17 @@ define(['app',
 	 * 查询3+x未读的日志数量
 	 */
 	function findShykReadRows(data) {
+		var myDate = new Date();
+		
+		var month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
+		startDate = myDate.getFullYear()+'-'+ month +'-01';
+		endDate =myDate.getFullYear()+'-'+ month+'-31';
+
 		app.ajaxLoadPageContent(findShykUnReadPath, {
-			khpl:data
+			khpl:data,
+			startDate:startDate,
+			endDate:endDate,
+			
 		}, function(result) {
 			if(result.data == null){
 				
@@ -384,12 +393,13 @@ define(['app',
 //				$$('#assessmentContext').val('');
 //			});
 
-//			$$('.searchbar-clear').on('click', function() {
-//				oldContent = '';
-//				$$(this).css('opacity', '0');
-//				$$('.assesserSearchList ul').html("");
-//				$$('#assessSearch').val("");
-//			});
+			// $$('.assessFirstSearchClear').on('click', function() {
+			// 	console.log('search')
+			// 	oldContent = '';
+			// 	$$(this).css('opacity', '0');
+			// 	$$('.assesserSearchList ul').html("");
+			// 	$$('#assessSearch').val("");
+			// });
 			//点击tab标签
 			//月份
 			$$('.buttonShyk').on('click',function(){
@@ -461,10 +471,10 @@ define(['app',
 			//var searchContent = $$('#assessmentContext').val();
 			if(!searchContent) {
 				oldContent = '';
-				$$('.searchbar-clear').css('opacity', '0');
+				$$('.assessFirstSearchClear').css('opacity', '0');
 				$$('.assesserSearchList ul').html("");
 			} else {
-				$$('.searchbar-clear').css('opacity', '1');
+				$$('.assessFirstSearchClear').css('opacity', '1');
 			}
 			
 			searchPaper(searchContent);
@@ -475,10 +485,10 @@ define(['app',
 			//var searchContent = $$('#assessmentContext').val();
 			if(!searchContent) {
 				oldContent = '';
-				$$('.searchbar-clear').css('opacity', '0');
+				$$('.assessFirstSearchClear').css('opacity', '0');
 				$$('.assesserSearchList ul').html("");
 			} else {
-				$$('.searchbar-clear').css('opacity', '1');
+				$$('.assessFirstSearchClear').css('opacity', '1');
 			}
 			
 			searchPaperByYear(searchContent);
@@ -489,13 +499,14 @@ define(['app',
 			oldContent = '';
 			$$('#assessSearch').val("");
 			$$('.assessmentSearch').css('display','none');
+			
 			$$('#assessmentContext').val("");
 			$$('.assessSearchBar #assessSearch').css('text-align', 'center');
 			//$$(this).css('display', 'none');
 			$$('.assessSearchBar .searchCancelBtn').css('display','none');
 			$$('.assesserSearchList ul').html("");
 			$$('.assesserSearchList').css('display', 'none');
-			//$$('.searchbar-clear').css('opacity', '0');
+			$$('.assessFirstSearchClear').css('opacity', '0');
 			$$('.assessNotFound').css('display', 'none');
 		}
 
@@ -513,7 +524,7 @@ define(['app',
 				khpl:2,
 			}, function(result) {
 				if(result.data == null){
-					$$('.assesserRightList').html('<div class="noresult">没有需要考核的内容</div>')
+					$$('.assesserRightList ul').html('<div class="noresult">没有需要考核的内容</div>');
 				}else{
 					var data = result.data;
 					console.log('loadPartyMenuPath');
@@ -553,7 +564,7 @@ define(['app',
 				khpl:1,
 			}, function(result) {
 				if(result.data == null){
-					$$('.assesserRightListSeason').html('<div class="noresult">没有需要考核的内容</div>')
+					$$('.assesserRightListSeason ul').html('<div class="noresult">没有需要考核的内容</div>');
 				}else{
 					var data = result.data;
 					console.log(data);
@@ -592,8 +603,9 @@ define(['app',
 				khpl:0,
 			}, function(result) {
 				if(result.data == null){
-					$$('.assesserRightListYear').html('<div class="noresult">没有需要考核的内容</div>')
+					$$('.assesserRightListYear ul').html('<div class="noresult">没有需要考核的内容</div>');
 				}else{
+					$$('.assesserRightListYear ul').html('');
 					var data = result.data;
 					console.log(data);
 					pageDataStorage['leftYear'] = data;
@@ -755,7 +767,6 @@ define(['app',
 				// deptId:app.user.deptId,
 				tpId: tpIdYear,
 				// userId: app.userId,
-				
 				startDate:asessmentYearStartDate,
 				endDate:asessmentYearEndDate,
 				khpl:0,
@@ -763,6 +774,8 @@ define(['app',
 				var data = result.data;
 				console.log(data);
 				tpArrYear[tpIdYear] = data;
+				console.log(tpArrYear[tpIdYear]);
+				console.log(tpArrYear);
 				handleTopicByYear(tpIdYear);
 				findShykReadRows(0)
 			});
@@ -858,7 +871,12 @@ define(['app',
 		 * @param {Object} tpId 考核项ID
 		 */
 		function handleTopicByYear(tpIdYear) {
+			console.log('1111');
+			console.log(tpIdYear);
+			console.log(tpArrYear);
 			var topicContentYear = tpArrYear[tpIdYear];
+			console.log(topicContentYear);
+			console.log($$('.assesserRightListYear ul'));
 			$$('.assesserRightListYear ul').html(paperTemplate(topicContentYear));
 			
 			//点击事件
@@ -945,7 +963,7 @@ define(['app',
 			app.ajaxLoadPageContent(searchPaperPath, {
 				deptId: app.user.deptId,
 				query: content,
-				type:0,
+				// type:0,
 				startDate:asessmentYearStartDate,
 				endDate:asessmentYearEndDate
 			}, function(data) {

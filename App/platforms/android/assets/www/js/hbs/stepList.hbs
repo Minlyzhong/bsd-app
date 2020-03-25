@@ -1,14 +1,26 @@
 {{#.}}
-  <li data-type="{{index}}" data-isWriter="{{isWriter}}" data-name="党支部会议提议">
-				<span>{{index}}</span>
-				<p class="listTitle">{{meetingName}}</p>
+  <li data-type="{{index}}" data-isWriter="{{isWriter}}" data-id="{{id}}" data-name="{{meetingName}}">
+
+				
 			
       {{#compare isWriter '==' 1}}
-				<div class="notWrite">已填写</div>
+      <span>{{index}}</span>
+				<p class="listTitle" >{{meetingName}}</p>
+				{{!-- <div class="notWrite">已填写</div> --}}
         <p>填写时间 : {{time}}</p>
 				<p>填写人 : {{modifer}}</p>
       {{else}}
-        <div class="write">未填写</div>
+        
+			
+        {{!-- <div class="write">未填写</div> --}}
+      {{#compare step '==' index}}
+      <span>{{index}}</span>
+	    <p class="listTitle" >{{meetingName}}</p>
+      <div class="write">开始填写</div>
+      {{else}}
+      <span style="background: #ccc;">{{index}}</span>
+       <p class="listTitle" style="color: #8e8e93;">{{meetingName}}</p>
+      {{/compare}}  
       {{/compare}}
 			</li>
 {{/.}}

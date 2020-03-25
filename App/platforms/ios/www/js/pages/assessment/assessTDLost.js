@@ -6,8 +6,8 @@ define(['app',
 	var pageDataStorage = {};
 	var pageNo = 1;
 	var loading = true;
-	//获取已参与的党支部名单
-	var findCompletionOfPartyPath = app.basePath + 'statHelper/findCompletionOfParty';
+	//获取未参与的党支部名单
+	var findCompletionOfPartyPath = app.basePath + '/mobile/partyAm/findCompletionOfParty';
 	var topicId = 0;
 	var deptId = 0;
 
@@ -66,10 +66,10 @@ define(['app',
 			deptId: deptId,
 			knowledgePaperId: topicId,
 			type: 0,
-			page: pageNo,
-			limit: 10,
+			current: pageNo,
+			size: 20,
 		}, function(data) {
-			var result = data.data;
+			var result = data.data.records;
 			console.log(result);
 			pageDataStorage['party'] = result;
 			handleParty(result, isLoadMore);
@@ -81,14 +81,15 @@ define(['app',
 	 */
 	function handleParty(result, isLoadMore) {
 		if(result) {
+			// if(result.length == 10) {
+				loading = false;
+			// }
 			if(isLoadMore) {
 				$$('.atdlList ul').append(tdjTemplate(result));
 			} else {
 				$$('.atdlList ul').html(tdjTemplate(result));
 			}
-			if(result.length == 10) {
-				loading = false;
-			}
+			
 		}
 	}
 

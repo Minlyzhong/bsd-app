@@ -198,10 +198,12 @@ define(['app',
 					var nowYear = nowDate.getFullYear();
 					result =[nowYear+'年']
 					console.log(result);
-				}
-				$$.each(result, function(index, item) {
+				}else{
+					$$.each(result, function(index, item) {
 						result[index] = item.toString()+'年';
 				});
+				}
+				
 				console.log(result);
 				pickerDescribe = app.myApp.picker({
 		    		input: '#picker-describe',
@@ -374,7 +376,7 @@ define(['app',
 //				$$('#assessmentContext').val('');
 //			});
 
-//			$$('.searchbar-clear').on('click', function() {
+//			$$('.assessSearchClear').on('click', function() {
 //				oldContent = '';
 //				$$(this).css('opacity', '0');
 //				$$('.assesserSearchList ul').html("");
@@ -507,10 +509,10 @@ define(['app',
 			//var searchContent = $$('#assessmentContext').val();
 			if(!searchContent) {
 				oldContent = '';
-				$$('.searchbar-clear').css('opacity', '0');
+				$$('.assessSearchClear').css('opacity', '0');
 				$$('.assesserSearchList ul').html("");
 			} else {
-				$$('.searchbar-clear').css('opacity', '1');
+				$$('.assessSearchClear').css('opacity', '1');
 			}
 			
 			searchPaper(searchContent);
@@ -521,10 +523,10 @@ define(['app',
 			//var searchContent = $$('#assessmentContext').val();
 			if(!searchContent) {
 				oldContent = '';
-				$$('.searchbar-clear').css('opacity', '0');
+				$$('.assessSearchClear').css('opacity', '0');
 				$$('.assesserSearchList ul').html("");
 			} else {
-				$$('.searchbar-clear').css('opacity', '1');
+				$$('.assessSearchClear').css('opacity', '1');
 			}
 			
 			searchPaperByYear(searchContent);
@@ -541,11 +543,17 @@ define(['app',
 			$$('.assessSearchBar .searchCancelBtn').css('display','none');
 			$$('.assesserSearchList ul').html("");
 			$$('.assesserSearchList').css('display', 'none');
-			$$('.searchbar-clear').css('opacity', '0');
+			$$('.assessSearchClear').css('opacity', '0');
 			$$('.assessNotFound').css('display', 'none');
 			// $$('.assessSearchClear').css('display', 'none');
 		}
-
+		$$('.assessSearchClear').on('click', function() {
+			console.log('searchbar')
+			oldContent = '';
+			$$(this).css('opacity', '0');
+			$$('.assesserSearchList ul').html("");
+			$$('#assessSearch').val("");
+		});
 		/**
 		 * 异步请求页面数据 (月份)
 		 * khpl考核频率类型 年 0 ， 季 1，月 2
@@ -562,7 +570,7 @@ define(['app',
 				khpl:2,
 			}, function(result) {
 				if(result.data == null){
-					$$('.assesserRightList').html('<div class="noresult">没有需要考核的内容</div>')
+					$$('.assesserRightList ul').html('<div class="noresult">没有需要考核的内容</div>')
 				}else{
 					var data = result.data;
 					console.log('loadPartyMenuPath');
@@ -605,7 +613,7 @@ define(['app',
 			}, function(result) {
 
 				if(result.data == null){
-					$$('.assesserRightListSeason').html('<div class="noresult">没有需要考核的内容</div>')
+					$$('.assesserRightListSeason ul').html('<div class="noresult">没有需要考核的内容</div>')
 				}else{
 					var data = result.data;
 					console.log(data);
@@ -645,7 +653,7 @@ define(['app',
 				khpl:0,
 			}, function(result) {
 				if(result.data == null){
-					$$('.assesserListYear').html('<div class="noresult">没有需要考核的内容</div>')
+					$$('.assesserListYear ul').html('<div class="noresult">没有需要考核的内容</div>')
 				}else{
 					var data = result.data;
 					console.log(data);

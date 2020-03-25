@@ -3504,6 +3504,7 @@
                         }
                     });
                 }
+                //以前没有注释
                 if ((e.timeStamp - lastClickTime) < 200) {
                     e.preventDefault();
                 }
@@ -3527,7 +3528,7 @@
                 if (!activeSelection) {
                     e.preventDefault();
                 }
-        
+        		 //以前没有注释
                 if ((e.timeStamp - lastClickTime) < 200) {
                     return true;
                 }

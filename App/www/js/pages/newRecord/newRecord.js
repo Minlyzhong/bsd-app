@@ -15,8 +15,11 @@ define(['app',
 	//日志内容输入最小字数 url:
 	var findLogMinLenPath = app.basePath + '/mobile/worklog/';
 	var photoBrowserPhotos = [];
-	var photoDatas = [];
 	var photoBrowserPopup = '';
+	var photoBrowserPhotoslist = {};
+	// var photoBrowserPopup = '';
+	var readonlyPicCount = 0;
+	var photoDatas = [];
 	var signStatus = 0;
 	var count = 0;
 	var pageDataStorage = {}; 
@@ -49,6 +52,11 @@ define(['app',
 		pageNo1 = 1;
 		loading1 = true;
 		imageList = [];
+		photoBrowserPhotos = [];
+		photoBrowserPopup = '';
+		photoBrowserPhotoslist = {};
+		readonlyPicCount = 0;
+		photoDatas = [];
 		if(pageData.reloadOk != 1){
 			loadRecord(false,pageNo);
 		}
@@ -126,116 +134,7 @@ define(['app',
 		app.myApp.getCurrentView().loadPage('publicRecord.html?reloadOk=1');
 	}
 	
-	/**
-	 *动态发布 
-	 */
-	function publicR(){
-		var publicTitle = $$('#publicTitle').val();
-//		var publicType = $$('#publicType').val();
-		var publicContent = $$('#publicContent').val();
-		var publicGPS = $$('#publicGPS').val();
-//		app.myApp,alert(publicGPS);
-		
-		if(!publicTitle || !publicContent) {
-			app.myApp.alert('请补全日志信息！');
-			return;
-		}
-		if(publicContent.length < pageDataStorage['minLen']){
-			app.myApp.alert('内容不少于'+pageDataStorage['minLen']+'字！');
-			return;
-		}
-		//防止数据传输过慢多次上传
-		count = count + 1;
-		if(count > 0){
-			$$('.saveRecord').attr('disabled',false);
-		}
-		app.myApp.showPreloader('信息保存中...');
 
-		console.log(app.user.nickName);
-
-		var params={
-			// userId: app.userId,
-			// logTitle: recordTitle,
-			// logTypeId: recordType,
-			// // recordSend: recordSend,
-			// userIds: recordSend,
-			// // recordDeptSend: recordDeptSend,
-			// deptIds: recordDeptSend,
-			// logContent: recordContent,
-			// tenantId: app.user.tenantId,
-			// images : imageList,
-			// name : app.user.nickName
-
-			userId : app.user.id,
-			logTitle : publicTitle,
-			//3表示是微动态
-			logTypeId	: 3,
-			logContent : publicContent,
-			logTime : app.utils.getCurTime(),
-			address : publicGPS,
-			images : imageList,
-			tenantId: app.user.tenantId,
-			name: app.user.nickName
-		}
-		
-		console.log(params)
-		var formDatas= JSON.stringify(params)
-		$$.ajax({
-            url:addRecord+'3'+'/'+'save',
-            method: 'POST',
-            dataType: 'json',
-			contentType: 'application/json;charset:utf-8',
-			data: formDatas,
-			catch: true,
-            success:function (data) {
-				// app.myApp.hidePreloader();
-				// var data = data.data;
-				// console.log(data)
-			
-						console.log('保存成功');
-						app.myApp.toast('保存成功', 'success').show(true);
-						setTimeout(function() {
-							require(['js/pages/record/record'], function(record) {
-								record.loadRecord(false);
-							});
-						}, 1000);
-						app.myApp.getCurrentView().back();
-            	
-            },
-            error:function () {
-               
-            }
-        });
-
-
-		// app.ajaxLoadPageContent(addRecord+'3'+'/'+'save', {
-		// 	userId : app.user.id,
-		// 	recordTitle : publicTitle,
-		// 	//3表示是微动态
-		// 	recordType	: 3,
-		// 	recordContent : publicContent,
-		// 	logTime : app.utils.getCurTime(),
-		// 	address : publicGPS,
-		// 	images : imageList,
-		// 	name: app.user.nickName
-		// }, function(result) {
-		// 	app.myApp.hidePreloader();
-
-		// 	if(result.msg == 'success'){
-
-			
-		// 	app.myApp.toast('保存成功', 'success').show(true);
-		// 	app.myApp.getCurrentView().back();
-		// 	refresh();
-		// 	}else{
-		// 		app.myApp.hidePreloader();
-		// 	}
-			
-		// },{
-		// 	type:'POST'
-		// });
-		
-	}
 	
 	/**
 	 *	刷新 
@@ -244,290 +143,17 @@ define(['app',
 		setTimeout(function() {
 			pageNo = 1;
 			loading = true;
+			photoBrowserPhotos = [];
+			photoBrowserPopup = '';
+			photoBrowserPhotoslist = {};
+			readonlyPicCount = 0;
 			//这里写请求
 			loadRecord(false,pageNo);
 			app.myApp.pullToRefreshDone();
 		}, 1000);
 	}
-	/**
-	 * 选择附件方式
-	 */
-	function showImgPicker() {
-		var buttons1 = [{
-			text: '选择附件方式',
-			label: true
-		}, {
-			text: '从相册获取',
-			bold: true,
-			onClick: function() {
-				//打开系统相机
-				if(!window.imagePicker) {
-					app.myApp.alert("该功能只能在移动app中使用！");
-					return;
-				}
-				var permissions = cordova.plugins.permissions;
-				permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, function(){
-					window.imagePicker.getPictures(
-						function(picURLList) {
-							if(picURLList) {
-								showPhotos(picURLList);
 
-							}
-						},
-						function(error) {
-							console.log('从相册获取失败' + message);
-						}, {
-							maximumImagesCount: 9,
-							width: 800,
-							height: 800,
-							quality: 60,
-						}
-					);
-				}, function(error){
-					
-				});
-				
-			}
-		}, {
-			text: '拍照',
-			onClick: function() {
-				//打开系统相机
-				if(!navigator.camera) {
-					app.myApp.alert("该功能只能在移动app中使用！");
-					return;
-				}
-				navigator.camera.getPicture(function(picURL) {
-						if(picURL) {
-							var picURLList = [picURL];
-							showPhotos(picURLList);
-						}
-					},
-					function(message) {
-						console.log('拍照失败' + message);
-					}, {
-						destinationType: Camera.DestinationType.FILE_URL,
-						sourceType: Camera.PictureSourceType.CAMERA,
-						encodingType: Camera.EncodingType.JPEG,
-						extParams: '{"title":"","userName":"","address":"","time":"' + app.utils.getCurTime() + '"}',
-					});
-			}
-		}];
-		var buttons2 = [{
-			text: '取消',
-			color: 'red'
-		}];
-		var groups = [buttons1, buttons2];
-		app.myApp.actions(groups);
-	}
-	/**
-	 * 显示待上传的相片 
-	 * @param {Object} picUrlList  相片数组
-	 */
-	function showPhotos(picUrlList) {
-		$$.each(picUrlList, function(index, item) {
-			photoBrowserPhotos.push(item);
-			//压缩图片
-			lrz(item, {
-					width: 800
-				})
-				.then(function(results) {
-					var base64Data = results.base64;
-					photoDatas.push(base64Data);
-					uploadRecordPhoto(base64Data);
-				})
-				.catch(function(err) {
-					// 捕捉错误信息
-					// 以上的then都不会执行
-				});
-			var random = app.utils.generateGUID();
-			$$('.weui_uploader').append(
-				'<div class="weui_uploader_bd kpiPicture">' +
-				'<div class="picContainer" id="img_' + random + '">' +
-				'<img src="' + item + '" class="picSize" />' +
-				'<div class="file-panel" id="delete_file_' + random + '">' +
-				'<i class="icon icon-delete"></i>' +
-				'</div>' +
-				'</div>' +
-				'</div>');
-			//添加删除图片的监听事件
-			$$('#delete_file_' + random).on('click', function(e) {
-				e.stopPropagation();
-				var photoContainer = $$(this).parent().parent();
-				var piciIndex = photoContainer.index();
-				app.myApp.confirm('确认删除该图片?', function() {
-					photoContainer.remove();
-					photoBrowserPhotos.splice(piciIndex - 2, 1);
-					photoDatas.splice(piciIndex - 2, 1);
-					imageList.splice(piciIndex - 2, 1);
-					app.myApp.toast('删除成功', 'success').show(true);
-				});
-			});
 
-			$$('#img_' + random).on('click', function(e) {
-				var picIndex = $$(this).parent().index();
-				photoBrowserPopup = app.myApp.photoBrowser({
-					photos: photoBrowserPhotos,
-					theme: 'dark',
-					backLinkText: '关闭',
-					ofText: '/',
-					type: 'popup'
-				});
-				photoBrowserPopup.open(picIndex - 2);
-			});
-		});
-
-		//
-		
-	}
-	/**
-	 *  上传图片
-	 * @param {Object} photoDatas 相片数组
-	 * @param {Object} detailID  工作日志ID
-	 */
-	function uploadRecordPhoto(photo) { 
-		app.myApp.showPreloader('图片保存中...');
-		var sum = 0;
-		var ft = new FileTransfer();
-		
-		var uri = encodeURI(uploadRecordPhotoPath);
-		var options = new FileUploadOptions();
-		options.fileKey = "file";
-		options.fileName = app.utils.generateGUID() + ".png";
-		options.mimeType = "image/jpeg";
-		options.chunkedMode = false;
-		options.headers = {
-			'Authorization': "bearer " + app.access_token
-		}
-		var params = {
-			"attName": "",
-			"attPath": "",
-			"attSize": 0,
-			"attState": 0,
-			"attType": 0,
-		};
-		// params.fkId = detailID;
-		// params.userId = app.userId;
-		// options.params = params;
-		ft.upload(photo, uri, function(r) {
-			var data = JSON.parse(r.response);
-			app.myApp.hidePreloader();
-			if(data.code === 0) {
-				var result = data.data;
-				params.attName = result.name;
-				params.attPath = result.filePath;
-				params.attSize = result.length;
-				imageList.push(params);
-			} else {
-				ft.abort();
-				app.myApp.alert(app.utils.callbackAjaxError());
-				return;
-			}
-		}, function(error) {
-			ft.abort();
-			app.myApp.alert(app.utils.callbackAjaxError());
-			return;
-		}, options);
-		
-		app.myApp.hidePreloader();
-		// app.myApp.toast("保存成功！", 'success').show(true);
-		// app.myApp.getCurrentView().back();
-//		setTimeout(function() {
-//			loadRecord(false,pageNo);
-//		}, 1000);
-		// refresh();
-	}
-	/**
-	 * 定位 
-	 */
-	function getPosition() {
-		app.myApp.showPreloader('定位中...');
-		//开启定位服务
-		if(navigator.geolocation) {
-			signStatus = 1;
-			navigator.geolocation.getCurrentPosition(onSuccessPosition, onErrorPosition, {
-//				timeout: 2000
-				maximumAge: 3000,
-				timeout: 5000, 
-				enableHighAccuracy: true
-			});
-		}
-	}
-	function onErrorPosition(e) {
-		app.myApp.hidePreloader();
-		if(app.myApp.device.ios) {
-			app.myApp.alert('未开启"定位"权限<br />请前往手机"设置"->"隐私"->"定位服务"');
-		} else {
-			if(e.code == '3'){
-				app.myApp.showPreloader('定位中...');
-				signStatus = 2;
-				var map = new BMap.Map();
-				var point = new BMap.Point(116.331398,39.897445);
-				var geolocation = new BMap.Geolocation();
-				geolocation.getCurrentPosition(function(r){
-					if(this.getStatus() == BMAP_STATUS_SUCCESS){
-						app.myApp.alert('您的位置：'+r.point.lng+','+r.point.lat);
-						onSuccessPosition(r);
-					}
-					else {
-						app.myApp.alert('failed'+this.getStatus());
-					}        
-			    },{enableHighAccuracy: true})
-			}else{
-				app.myApp.alert('请打开GPS定位');
-			}
-		}
-	}
-	function onSuccessPosition(position) {
-		app.myApp.hidePreloader();
-		if(signStatus == 1){
-			var _lng = position.coords.longitude;
-			var _lat = position.coords.latitude;
-		}else if(signStatus == 2){
-			var _lng = position.point.lng;
-			var _lat = position.point.lat ;
-		}
-		//拿到GPS坐标转换成百度坐标
-		app.ajaxLoadPageContent('https://api.map.baidu.com/ag/coord/convert', {
-			from: 0,
-			to: 4,
-			x: _lng,
-			y: _lat
-		}, function(data) {
-			lng = app.utils.base64decode(data.x);
-			lat = app.utils.base64decode(data.y);
-			GetAddress();
-		}, {
-			type: 'GET',
-		});
-	}
-	/*
-	 * 根据坐标获取中心点地址
-	 */
-	function GetAddress() {
-		var _SAMPLE_ADDRESS_POST = app.utils.getAddressPost();
-		_SAMPLE_ADDRESS_POST += "&location=" + lat + "," + lng;
-		app.ajaxLoadPageContent(_SAMPLE_ADDRESS_POST, {
-			
-		}, function(data) {
-			renderReverse(data);
-		}, {
-			type: 'GET',
-		});
-//		app.myApp.hidePreloader();
-	}
-
-	function renderReverse(response) {
-		if(response.status) {
-			
-		} else {
-			var userPosition = response.result.addressComponent.street + response.result.addressComponent.street_number;
-			$$('#publicGPS').val(userPosition);
-		}
-	}	
-	
-	
-	
-	
 	
 	/**
 	 * 异步请求页面数据 
@@ -539,6 +165,7 @@ define(['app',
 		photoDatas = [];
 		console.log(pageNo);
 		console.log(NewRecordKey);
+		app.myApp.showPreloader('加载中...');
 		app.ajaxLoadPageContent(findLatestWorkLogPath+3, {
 			// userId: app.user.userId,
 			pageNo: pageNo,
@@ -546,18 +173,12 @@ define(['app',
 			
 //			query: NewRecordKey,
 		}, function(result) {
+			app.myApp.hidePreloader();
 			var data = result.data.records;
 			$$.each(data, function(index, item) {
-				if(!item.images) {
-					item.logPic = 'img/assessmentResultImg/assessmentResultLogo.png';
-				} else {
-					item.logPic = app.filePath + item.images[0].attPath;
-				}
-				// if(item.logPic) {
-				// 	item.logPic = app.filePath + item.logPic;
-				// } else {
-				// 	item.logPic = "img/icon/icon-imgBg.png";
-				// }
+				item.isSearch = 'false';
+				// $$('.recordLike>i').removeClass('icon-collect').addClass('icon-noCollect');
+				// $$('.likeStatus').html('赞');
 			});
 			console.log(data);
 			handleRecord(data, isLoadMore);			
@@ -575,13 +196,10 @@ define(['app',
 			pageNo: pageNo1,
 			query: NewRecordKey,
 		}, function(result) {
+			
 			var data = result.data.records;
 			$$.each(data, function(index, item) {
-				if(!item.images) {
-					item.logPic = 'img/logo.png';
-				} else {
-					item.logPic = app.filePath + item.images[0].attPath;
-				}
+				item.isSearch = 'true';
 			});
 			console.log(data);
 			if(data == ''){
@@ -597,23 +215,33 @@ define(['app',
 	 * @param {Object} data
 	 */
 	function handleRecord(data, isLoadMore) {
+		
 		if(data.length) {
 
-			$$.each(data, function(index, item){
-				if(item.images){
-					item.logPic = app.filePath + item.images[0].attPath;
-				}else{
-					item.logPic = item.logPic;
-				}
-			})
+			
 
 
 			if(isLoadMore) {
 				$$('.fsdList').append(vilDailyTemplate(data));
+				
 			} else {
 				$$('.fsdList').html(vilDailyTemplate(data));
+				
 			}
-			$$('.fsdList .item-content').on('click', loadRecordDetail);
+			$$.each(data, function(index, item){
+				if(item.images){
+					var imageList = item.images;
+					var imageId = item.id;
+					
+					showReadonlyPhotos(imageList, imageId,false);
+					
+
+				}else{
+					// item.logPic = item.logPic;
+				}
+			})
+
+			$$('.fsdList .align-top').on('click', loadRecordDetail);
 
 			if(data.length == 10) {
 				loading = false;
@@ -623,6 +251,45 @@ define(['app',
 				$$('.recordList').html('');
 			}
 		}
+	}
+	/**
+	 * 显示已读相片
+	 * @param {Object} picUrlList 需要显示的图片数组
+	 */
+	function showReadonlyPhotos(picUrlList,imageId, isSearch) {
+		console.log(picUrlList,imageId)
+			photoBrowserPhotos=[];
+		$$.each(picUrlList, function(index, item) {
+			var item = item.attPath;
+			
+			photoBrowserPhotos.push(app.filePath + item);
+			photoBrowserPhotoslist[imageId] = photoBrowserPhotos;
+			console.log(photoBrowserPhotos)
+			var random = app.utils.generateGUID();
+			
+			$$('#picList_'+imageId+'_'+isSearch).append(
+				'<div class="weui_uploader_bd kpiPicture">' +
+				'<div class="picContainer" id="img_' + random + '">' +
+				'<img src="' + app.filePath + item + '" class="picSize" />' +
+				'</div>' +
+				'</div>');
+				
+			$$('#img_' + random).on('click', function(e) {
+				e.stopPropagation();
+				var picIndex = $$(this).parent().index();
+				console.log(picIndex);
+				console.log(photoBrowserPhotoslist);
+				console.log(photoBrowserPhotoslist[imageId]);
+				photoBrowserPopup = app.myApp.photoBrowser({
+					photos: photoBrowserPhotoslist[imageId],
+					theme: 'dark',
+					backLinkText: '关闭',
+					ofText: '/',
+					type: 'popup',
+				});
+				photoBrowserPopup.open(picIndex);
+			});
+		});
 	}
 	
 	/**
@@ -636,7 +303,19 @@ define(['app',
 			} else {
 				$$('.firstShowPeopleList ul').html(vilDailyTemplate(data));
 			}
-			$$('.firstShowPeopleList ul .item-content').on('click', loadRecordDetail);
+			$$.each(data, function(index, item){
+				if(item.images){
+					var imageList = item.images;
+					var imageId = item.id;
+					
+					showReadonlyPhotos(imageList, imageId, true);
+					
+
+				}else{
+					// item.logPic = item.logPic;
+				}
+			})
+			$$('.firstShowPeopleList ul .align-top').on('click', loadRecordDetail);
 
 			if(data.length == 10) {
 				loading1 = false;

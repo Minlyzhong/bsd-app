@@ -167,6 +167,7 @@ define(['app',
 						$$('.user-header img').attr('src', app.headPic);
 						localStorage.setItem('headPic', 0);
 						localStorage.setItem('userId', -1);
+						localStorage.setItem('lastStudyDay', 0);
 						localStorage.setItem('user', ' ');
 						localStorage.setItem('roleId', -1);
 						localStorage.setItem('password', null);
@@ -265,6 +266,7 @@ define(['app',
 	 */
 	function getWiper() {
 		app.ajaxLoadPageContent(swiperPath, {
+			catalogId:2,
 			size: 5,
 			tenantId: app.tenantId
 		}, function(data) {

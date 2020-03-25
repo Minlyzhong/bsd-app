@@ -7,10 +7,11 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//加载排名
-	var findSubjectRankPath = app.basePath + 'exam/findSubjectRank';
+	var findSubjectRankPath = app.basePath + '/mobile/education/exam/rank/';
 	var id = 0;
 	var name = '';
 	var count = 0;
+	var ownData = [];
 
 	/**
 	 * 页面初始化 
@@ -38,9 +39,11 @@ define(['app',
 		pageDataStorage = {};
 		pageNo = 1;
 		loading = true;
+		ownData = [];
 		id = parseInt(pageData.id);
 		name = pageData.name;
 		count = parseInt(pageData.count);
+		console.log(pageData)
 		ajaxLoadContent();
 	}
 
@@ -55,32 +58,50 @@ define(['app',
 	 * 异步请求页面数据 
 	 */
 	function ajaxLoadContent() {
-		app.ajaxLoadPageContent(findSubjectRankPath, {
-			subjectId: id,
-			userId: app.userId,
+		app.ajaxLoadPageContent(findSubjectRankPath+id+'/'+app.userId, {
+			// subjectId: id,
+			// userId: app.userId,
 		}, function(data) {
-			pageDataStorage['examRank'] = data;
-			//console.log(data.length - 1);
-			console.log(data);
-			$$.each(data, function(index, item) {
-				item.basePath = app.basePath;
-				item.own = 0;
-				if(index == data.length - 1) {
-					item.own = 1;
-				}
-//				console.log(index);
-//				console.log(item);
-			});
-			if(data.length < 2) {
-				app.myApp.alert('暂无排名', function() {
-					app.myApp.getCurrentView().back();
+			if(data.data == null){
+				app.myApp.toast('暂无排名', 'none').show(true);
+				app.myApp.getCurrentView().back();
+				$$('.examRankPerson').html('');
+			
+			}else{
+				pageDataStorage['examRank'] = data.data;
+				console.log(data);
+				var result = data.data;
+				$$.each(result, function(index, item) {
+					item.basePath = app.filePath;
+					item.own = 0;
+					console.log(item.headPic)
+					if(item.headPic == ''){
+						item.headPic == null;
+					}
+					// if(index == result.length - 1) {
+					// 	item.own = 1;
+					// }
+					if(item.userId == app.userId) {
+						item.own = 1;
+						ownData.push(item);
+					}
+					
 				});
-			} else {
-				ownData = data.splice(data.length - 1, 1);
-				console.log(ownData);
-				handleExamRank(data);
-				handleExamOwnRank(ownData);
+				// if(result.length < 2) {
+				// 	console.log(result.length);
+				// 	app.myApp.alert('暂无排名', function() {
+				// 		app.myApp.getCurrentView().back();
+				// 	});
+					
+				// } else {
+					console.log(result.length);
+					// ownData = result.splice(result.length - 1, 1);
+					console.log(ownData);
+					handleExamRank(result);
+					handleExamOwnRank(ownData);
+				// }
 			}
+			
 		});
 	}
 
@@ -89,6 +110,8 @@ define(['app',
 	 * @param {Object} data 得分数据
 	 */
 	function handleExamRank(data) {
+		console.log(data);
+
 		if(data.length > 0) {
 			$$('.examRankList ul').html(examTemplate(data));
 			$$('.examRankList .item-content').on('click', examRankClick);
@@ -100,11 +123,21 @@ define(['app',
 	 * @param {Object} data 得分数据
 	 */
 	function handleExamOwnRank(data) {
+		console.log(data);
 		if(data.length > 0) {
+			
+			// $$.each(data, function(index, item) {
+			// 	if(item.headPic == ''){
+			// 		item.headPic == null;
+			// 	}
+			// });
+			console.log(data);
 			$$('.examRankPerson ul').html(examTemplate(data));
 			if(data[0].rank) {
 				$$('.examRankPerson .item-content').on('click', examRankClick);
 			}
+		}else{
+			$$('.examRankPerson ul').html('<div style="line-height: 2.5;font-size: 16px;background: #DDDDDD;text-align: center;">您还没参与考试</div>');
 		}
 	}
 
@@ -113,10 +146,10 @@ define(['app',
 	 */
 	function examRankClick() {
 		var time = $$(this).data('useTime'),
-			userName = $$(this).data('userName'),
+			userName = $$(this).data('userName') ||'',
 			yes = parseInt($$(this).data('yes')),
 			no = count - yes;
-		app.myApp.alert('<div style="text-align:left; margin-left: 10%;">试卷标题: ' + name + '<br/ >答题者: ' + userName + '<br />考试用时: ' + time + '<br />试题数量: ' + count + '道<br />答对: ' + yes + '道<br />答错: ' + no + '道</div>');
+		app.myApp.alert('<div style="text-align:left; margin-left: 10%;">试卷标题: ' + name + '<br/ >答题者: ' + userName + '<br />考试用时: ' + time + '秒<br />试题数量: ' + count + '道<br />答对: ' + yes + '道<br />答错: ' + no + '道</div>');
 	}
 
 	/**

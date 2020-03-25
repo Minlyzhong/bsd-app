@@ -22,6 +22,7 @@ define(['app',
 	var searchList = [];
 	var selectType;
 	var formType = 0;
+	var meetingType = 0;
 
 	/**
 	 * 页面初始化 
@@ -47,6 +48,7 @@ define(['app',
 		leaderList = JSON.parse(pageData.listedList);
 		selectType = pageData.selectType;
 		formType = pageData.formType;
+		meetingType = pageData.meetingType;
 		if(selectType == 1){
 			$$('#textCenterSelectType').html('添加出席人');
 			$$('#textSelectType').html('出席人：');
@@ -339,6 +341,14 @@ define(['app',
 						threeMeetingAndOneClassEdit.addLeaderBack(leaderList);
 					}else{
 						threeMeetingAndOneClassEdit.addAbsenteesBack(leaderList);
+					}
+				});
+			}else if(meetingType == 1){
+				require(['js/pages/process/processDetailEdit'],function(processDetailEdit){
+					if(selectType == 1){
+						processDetailEdit.addLeaderBack(leaderList);
+					}else{
+						processDetailEdit.addAbsenteesBack(leaderList);
 					}
 				});
 			}else{

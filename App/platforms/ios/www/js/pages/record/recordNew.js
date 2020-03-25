@@ -8,11 +8,13 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//保存工作日志
-	var saveRecordPath = app.basePath + 'extWorkLog/saveLog';
+	var saveRecordPath = app.basePath + '/mobile/worklog/';
 	//上传附件
-	var uploadRecordPhotoPath = app.basePath + 'upload/uploadWorkLogPhoto';
+	var uploadRecordPhotoPath = app.basePath + '/file/upload';
+	//删除工作日志或微动态附件
+	// var removeRecordPhotoPath = app.basePath + '/mobile/worklog/image/';
 	//读取日志类型
-	var loadDictPath = app.basePath + 'extWorkLog/loadDict';
+	var loadDictPath = app.basePath + '/mobile/worklog/types';
 	var photoBrowserPhotos = [];
 	var photoDatas = [];
 	var photoBrowserPopup = '';
@@ -23,12 +25,19 @@ define(['app',
 	var lng = 0.0;
 	var chooseLogType = 0;
 	var count = 0;
-
+	var imageList = [];
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
 	 */
 	function init(page) {
+		//阻止滑动返回
+		//设置页面不能滑动返回
+		page.view.params.swipeBackPage = false;
+		app.myApp.onPageBack("record/recordNew", function(page){
+			page.view.params.swipeBackPage = true;
+		});
+		
 //		app.pageStorageClear('record/recordNew', [
 //			'record/recordAddDept',
 //			'record/recordAddLeader',
@@ -39,7 +48,7 @@ define(['app',
 //			loadStorage();
 //		}
 		count = 0;
-		app.back2Home();
+		//app.back2Home();
 		addContentBack();
 		clickEvent(page);
 	}
@@ -62,6 +71,7 @@ define(['app',
 		lng = 0.0;
 		chooseLogType = 1;
 		loadDict();
+		imageList = [];
 		//		getPosition();
 	}
 
@@ -84,6 +94,17 @@ define(['app',
 		$$('.saveRecord').on('click', saveRecord);
 		$$('.addLeader').on('click', leaderPicker);
 		$$('.removeLeader').on('click', removePicker);
+		
+		$$('.recordNewBack').on('click',function(){
+			app.myApp.confirm('您的工作日志尚未上传，是否退出？', function() {
+				app.myApp.getCurrentView().back();
+			});
+		});
+		$$('.recordNewHome').on('click',function(){
+			app.myApp.confirm('您的日志尚未上传，是否返回首页？', function() {
+				app.back3Home();
+			});
+		});
 	}
 
 	/**
@@ -102,21 +123,27 @@ define(['app',
 					app.myApp.alert("该功能只能在移动app中使用！");
 					return;
 				}
-				window.imagePicker.getPictures(
-					function(picURLList) {
-						if(picURLList) {
-							showPhotos(picURLList);
+				var permissions = cordova.plugins.permissions;
+				permissions.requestPermission(permissions.WRITE_EXTERNAL_STORAGE, function(){
+					window.imagePicker.getPictures(
+						function(picURLList) {
+							if(picURLList) {
+								// alert(picURLList);
+								showPhotos(picURLList);
+							}
+						},
+						function(error) {
+							console.log('从相册获取失败' + message);
+						}, {
+							maximumImagesCount: 9,
+							width: 800,
+							height: 800,
+							quality: 60,
 						}
-					},
-					function(error) {
-						console.log('从相册获取失败' + message);
-					}, {
-						maximumImagesCount: 9,
-						width: 800,
-						height: 800,
-						quality: 60,
-					}
-				);
+					);
+				}, function(error){
+					
+				});
 			}
 		}, {
 			text: '拍照',
@@ -165,51 +192,82 @@ define(['app',
 			//push()数组中添加新元素
 			recordDeptSend.push(item.deptId);
 		});
+		// 数组变成字符串
 		recordSend = recordSend.join();
 		recordDeptSend = recordDeptSend.join();
 		var recordContent = $$('#recordContent').val();
+		recordContent = recordContent.replace(/\r\n/g,"<br/>");
+		recordContent = recordContent.replace(/\n/g,"<br/>");
+		recordContent = recordContent.replace(/\s/g, ' ');
 		if(!recordTitle || !recordType || !recordContent) {
 			app.myApp.alert('请补全日志信息！');
 			return;
 		}
-		//防止数据传输过慢多次上传
-//		if(photoDatas== '' && photoDatas.length == 0) {
-//			app.myApp.alert('请上传照片');
-//			return;
-//		}
+		// 防止数据传输过慢多次上传
+		// if(photoDatas== '' && photoDatas.length == 0) {
+		// 	app.myApp.alert('请上传照片');
+		// 	return;
+		// }
 		count = count + 1;
 		if(count > 0){
 			$$('.saveRecord').attr('disabled',false);
 		}
+		
 		//新增过程中提示用户上传图片
-		app.myApp.showPreloader('信息保存中...');
-		app.ajaxLoadPageContent(saveRecordPath, {
+		// app.myApp.showPreloader('信息保存中...');
+		// userIds, 用逗号隔开
+		// if(imageList){
+		// 	alert(imageList[0].attName);
+		// }
+		
+		// Alert(imageList[0].fileName);
+		var params={
 			userId: app.userId,
-			recordTitle: recordTitle,
-			recordType: recordType,
-			recordSend: recordSend,
-			recordDeptSend: recordDeptSend,
-			recordContent: recordContent,
-		}, function(result) {
-			var data = result[0];
-			console.log(result);
-			console.log(data);
-			var detailID = data.id;
-			//app.myApp.hidePreloader();
-			if(detailID) {
-				if(photoDatas && photoDatas.length > 0) {
-					uploadRecordPhoto(photoDatas, detailID);
-				} else {
-					app.myApp.toast('保存成功', 'success').show(true);
-					setTimeout(function() {
-						require(['js/pages/record/record'], function(record) {
-							record.loadRecord(false);
-						});
-					}, 1000);
-					app.myApp.getCurrentView().back();
-				}
-			}
-		});
+			logTitle: recordTitle,
+			logTypeId: recordType,
+			// recordSend: recordSend,
+			userIds: recordSend,
+			// recordDeptSend: recordDeptSend,
+			deptIds: recordDeptSend,
+			logContent: recordContent,
+			tenantId: app.user.tenantId,
+			images : imageList,
+			name : app.user.nickName
+		}
+		
+		console.log(params)
+		var formDatas= JSON.stringify(params)
+		$$.ajax({
+            url:saveRecordPath + recordType + '/'+'save',
+            method: 'POST',
+            dataType: 'json',
+			contentType: 'application/json;charset:utf-8',
+			data: formDatas,
+			catch: true,
+            success:function (data) {
+				// app.myApp.hidePreloader();
+				// var data = data.data;
+				// console.log(data)
+					if(data.code == 0){
+
+						console.log('保存成功');
+						app.myApp.toast('保存成功', 'success').show(true);
+						setTimeout(function() {
+							require(['js/pages/record/record'], function(record) {
+								record.loadRecord(false);
+							});
+						}, 1000);
+						app.myApp.getCurrentView().back();
+					}else{
+						app.myApp.toast('保存失败', 'error').show(true);
+					}
+            	
+            },
+            error:function () {
+               
+            }
+        });
+        
 	}
 
 	/**
@@ -217,31 +275,47 @@ define(['app',
 	 * @param {Object} photoDatas 相片数组
 	 * @param {Object} detailID  工作日志ID
 	 */
-	function uploadRecordPhoto(photoDatas, detailID) {
-		app.myApp.showPreloader('图片保存中...');
-		var sum = 0;
+	function uploadRecordPhoto(photo) {
+		// app.myApp.showPreloader('图片保存中...');
+		// var sum = 0;
 		var ft = new FileTransfer();
-		$$.each(photoDatas, function(index, item) {
 			var uri = encodeURI(uploadRecordPhotoPath);
+			// alert(uri);
 			var options = new FileUploadOptions();
 			options.fileKey = "file";
 			options.fileName = app.utils.generateGUID() + ".png";
 			options.mimeType = "image/jpeg";
 			options.chunkedMode = false;
-			var params = {};
-			params.fkId = detailID;
-			params.userId = app.userId;
-			options.params = params;
-
-			ft.upload(item, uri, function(r) {
+			options.headers = {
+				'Authorization': "bearer " + app.access_token
+			}
+			var params = {
+				"attName": "",
+				"attPath": "",
+				"attSize": 0,
+				"attState": 0,
+				"attType": 1,
+				"tenantId": app.userDetail.tenantId,
+				"userId": app.user.userId
+			}
+			// app.myApp.hidePreloader();
+			// alert('photo'+ photo );
+			// options.params = params;
+			ft.upload(photo, uri, function(r) {
 				var data = JSON.parse(r.response);
-				sum++;
-				if(data.success === true) {
-					if(sum == photoDatas.length) {
-						
-					}
+ 
+				
+				if(data.code == 0) {
+
+					var result = data.data;
+					params.attName = result.name;
+					params.attPath = result.filePath;
+					params.attSize = result.length;
+					imageList.push(params);
+
+					
 				} else {
-					app.myApp.hidePreloader();
+					
 					ft.abort();
 					app.myApp.alert(app.utils.callbackAjaxError());
 					return;
@@ -252,15 +326,16 @@ define(['app',
 				app.myApp.alert(app.utils.callbackAjaxError());
 				return;
 			}, options);
-		});
-		app.myApp.toast("保存成功！", 'success').show(true);
-		setTimeout(function() {
-			require(['js/pages/record/record'], function(record) {
-				record.loadRecord(false);
-			});
-		}, 1000);
-		app.myApp.hidePreloader();
-		app.myApp.getCurrentView().back();
+	}
+
+
+	/**
+	 * 删除图片
+	 * @param {Object} photoDatas 相片数组
+	 * @param {Object} detailID  工作日志ID
+	 */
+	function removeRecordPhoto(photo) {
+		
 	}
 
 	/**
@@ -296,6 +371,8 @@ define(['app',
 			recordContent: $$('#recordContent').val()
 		};
 		var deptType = $$('#recordType').val();
+		console.log(JSON.stringify(leaderList));
+		console.log(deptType);
 		app.myApp.getCurrentView().loadPage('recordAddLeader.html?leaderList=' + JSON.stringify(leaderList) + '&deptType=' + deptType);
 	}
 
@@ -309,6 +386,8 @@ define(['app',
 			recordContent: $$('#recordContent').val()
 		};
 		var deptType = $$('#recordType').val();
+		console.log(JSON.stringify(deptList));
+		console.log(deptType);
 		app.myApp.getCurrentView().loadPage('recordAddDept.html?deptList=' + JSON.stringify(deptList) + '&deptType=' + deptType);
 	}
 
@@ -366,8 +445,10 @@ define(['app',
 			'</div>'
 		);
 		if(chooseType == 'dept') {
+			console.log(deptList)
 			$$('.removeLeaderList ul').append(addDeptTemplate(deptList));
 		} else {
+			console.log(leaderList)
 			$$('.removeLeaderList ul').append(recordRmLeaderTemplate(leaderList));
 		}
 		//全选反选
@@ -416,9 +497,10 @@ define(['app',
 	 */
 	function loadDict() {
 		app.ajaxLoadPageContent(loadDictPath, {
-			dictCode: 'RZLX',
+			// dictCode: 'RZLX',
 		}, function(result) {
-			var data = result;
+			var data = result.data;
+			console.log('查看日志类型');
 			console.log(data);
 			pageDataStorage['dict'] = data;
 			handleDict(data);
@@ -431,11 +513,12 @@ define(['app',
 	function handleDict(data) {
 		$$.each(data, function(index, item) {
 			var selected = '';
-			if(chooseLogType == item.key) {
+			var indexnum=parseInt(index)
+			if(chooseLogType == indexnum) {
 				selected = 'selected';
 			}
-			
-			$("#recordType").append("<option value='" + item.key + "'" + selected + ">" + item.value + "</option>");
+			console.log(item);
+			$$("#recordType").append("<option value='" + indexnum + "'" + selected + ">" + item + "</option>");
 		});
 		$$('#recordType').change(function() {
 			var typeVal = $$('#recordType').val();
@@ -462,7 +545,9 @@ define(['app',
 				})
 				.then(function(results) {
 					var base64Data = results.base64;
+					// alert('base64'+ base64Data);
 					photoDatas.push(base64Data);
+					uploadRecordPhoto(base64Data);
 				})
 				.catch(function(err) {
 					// 捕捉错误信息
@@ -487,6 +572,7 @@ define(['app',
 					photoContainer.remove();
 					photoBrowserPhotos.splice(piciIndex - 2, 1);
 					photoDatas.splice(piciIndex - 2, 1);
+					imageList.splice(piciIndex - 2, 1);
 					app.myApp.toast('删除成功', 'success').show(true);
 				});
 			});
@@ -503,6 +589,7 @@ define(['app',
 				photoBrowserPopup.open(picIndex - 2);
 			});
 		});
+		
 	}
 
 	/**
@@ -520,6 +607,7 @@ define(['app',
 	 */
 	function addDeptBack(content) {
 		deptList = content;
+		console.log(deptList);
 		addContentBack();
 	}
 

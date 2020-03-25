@@ -1,17 +1,44 @@
 {{#.}}
-	<div data-id="{{id}}" class="card qs-card meetingCard" style="">
-        {{!-- <div class="card-header">
-	            <div class="qs-title">{{serviceTitle}}</div>
-	            {{#services_state auditStatus}}{{/services_state}}
-        </div> --}}
+
+	<div data-id="{{id}}" data-title="{{projectName}}" data-step="{{step}}" class="card qs-card meetingCard" style="">
+       
+        <div class="card-header" style="border-bottom:1px solid #f2f1f1;width:100%;color: #393939;">
+          <span class="" style="font-size: 16px;  white-space: normal;">{{projectName}}</span>
+          {{!-- {{#compare status '=='1}}
+          <span class="processStatus">已填写</span>
+          {{else}}
+          <span class="processUnStatus">未填写</span>
+          {{/compare}} --}}
+          </div>
         <div class="card-content"> 
           <div class="card-content-inner">
-          	<div class="item-text">项目名称 : {{meetingName}}</div>
-          	<div class="item-text">进行阶段 : {{part}}</div>
-          	<div class="item-text">更新时间 : {{time}}</div>
-          	<div class="item-text">备注</div>
+            {{#compare step '==' 1}}
+          	<div class="item-text"><span class="meetingTitle">进行阶段 :  </span><span>第 {{step}} 阶段 ( 党支部会议提议 )</span></span></div>
+            {{/compare}}
+            {{#compare step '==' 2}}
+          	<div class="item-text"><span class="meetingTitle">进行阶段 :  </span><span>第 {{step}} 阶段 ( “两委”会商议 )</span></div>
+            {{/compare}}
+            {{#compare step '==' 3}}
+          	<div class="item-text"><span class="meetingTitle">进行阶段 :  </span><span>第 {{step}} 阶段 ( 党员大会审议 )</span></div>
+            {{/compare}}
+            {{#compare step '==' 4}}
+          	<div class="item-text"><span class="meetingTitle">进行阶段 :  </span><span>第 {{step}} 阶段 ( 村民代表大会决议 )</span></div>
+            {{/compare}}
+            {{#compare step '==' 5}}
+          	<div class="item-text"><span class="meetingTitle">进行阶段 :  </span><span>第 {{step}} 阶段 ( 会议决议公示 )</span></div>
+            {{/compare}}
+            {{#compare step '==' 6}}
+          	<div class="item-text"><span class="meetingTitle">进行阶段 :  </span><span>第 {{step}} 阶段 ( 实施结果公示 )</span></div>
+            {{/compare}}
+          	<div class="item-text"><span class="meetingTitle">项目预计时间 :  </span><span>{{projectStartDate}} -- {{projectEndDate}}</span></div>
+          	
           </div>
         </div>
+         <span class="card-footer" style="background: rgba(253, 248, 254, 0.5);">
+          <span>申报人 : {{creatorName}}</span>
+          <span>申报时间 : {{createdTime}}</span>
+          
+           </div>
       
       </div>
 {{/.}}

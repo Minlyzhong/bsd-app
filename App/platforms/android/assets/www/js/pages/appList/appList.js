@@ -34,6 +34,9 @@ define(['app',
 	var scanInfo = '';
 	var alreadyGetStudyData = false;
 	var alreadyGetOtherData = false;
+	var startDate;
+	var endDate
+
 
 	/**
 	 * 页面初始化 
@@ -70,6 +73,11 @@ define(['app',
 		lat = 0.0;
 		lng = 0.0;
 		scanInfo = '';
+		var myDate = new Date();
+		
+		var month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
+		startDate = myDate.getFullYear()+'-'+ month +'-01';
+		endDate =myDate.getFullYear()+'-'+ month+'-31';
 		var user = new Object();
 		user.role = app.roleId;
 //		app.myApp.alert(app.roleId);
@@ -161,12 +169,11 @@ define(['app',
 	 */
 	function findShykReadRows() {
 		var myDate = new Date();
-		var startDate = myDate.getFullYear()+'-'+(myDate.getMonth()+1)+'-01';
-		var endDate =myDate.getFullYear()+'-'+(myDate.getMonth()+1)+'-31';
+		
 		app.ajaxLoadPageContent(findShykUnReadPath, {
 			// deptId:app.user.deptId,
-			// startDate:startDate,
-			// endDate:endDate,
+			startDate:startDate,
+			endDate:endDate,
 			khpl:2
 		}, function(result) {
 			pageDataStorage['shykReadRows'] = result.data;
@@ -229,9 +236,10 @@ define(['app',
 			url: findLeaderPath,
 			method: 'GET',
 			dataType: 'json',
-			// data: {
-			// 	deptId: app.user.deptId,
-			// },
+			data: {
+				startDate:startDate,
+				endDate:endDate,
+			},
 			success: function(data) {
 				if(data.data == null){
 					data.data = 0;
@@ -274,6 +282,7 @@ define(['app',
 					// console.log(app.roleId)
 					$$.each(menuItem.children, function(_, appItem) {
 						appItem.menuIcon=app.filePath+appItem.menuIcon;
+						
 						if(app.roleId < 1 && appItem.menuUrl == "assessTopicList.html") {
 							appItem.menuUrl = -1;
 							
@@ -396,12 +405,18 @@ define(['app',
 			}
 		});
 		$$('.app-content .grid').on('click', function() {
+			
 			if(app.userId <= 0) {
 				toLogin();
 				return;
 			}
 			var appId = $$(this).data('id');
 			var menuName = $$(this).data('name');
+			console.log(appId);
+			if(appId == undefined){
+				app.myApp.toast('该功能正在开发中','none').show(true);
+				return;
+			}
 			if(appId == 'villageCheck') {
 				userScan();
 			} else if(appId == 'assessment.html') {
@@ -621,7 +636,7 @@ define(['app',
 				// userId:app.userId
 		}, function(data) {
 			alreadyGetStudyData = true;
-			showStudyEveryDayDialog(data.data);
+			// showStudyEveryDayDialog(data.data);
 		});
 		}
 		
@@ -631,21 +646,22 @@ define(['app',
 	 * 展示每日一学弹出框
 	 */
 	function showStudyEveryDayDialog(studyData){
-		// var curDay = app.utils.getCurTime().split(" ")[0];
-		// if(curDay == localStorage.getItem('lastStudyDay')){
-		// 	return;
-		// }else if(alreadyGetStudyData && alreadyGetOtherData){
-		// 	setTimeout(function(){
-		// 		if(studyData != null && studyData != undefined && JSON.stringify(studyData) != "{}"){
-		// 			localStorage.setItem('lastStudyDay',curDay);
-		// 			app.myApp.alert(studyData.contentTitle, '每日一学',function () {
-		// 		       		app.myApp.getCurrentView().loadPage('dailyLearning.html');
-		// 			});
-		// 		}
-		// 	},1000);
-		// }else {
-		// 	setTimeout(showStudyEveryDayDialog(studyData),1000);
-		// }
+		console.log('弹出框');
+		var curDay = app.utils.getCurTime().split(" ")[0];
+		if(curDay == localStorage.getItem('lastStudyDay')){
+			return;
+		}else if(app.isLog && alreadyLoginFlag &&alreadyGetStudyData && alreadyGetOtherData){
+			setTimeout(function(){
+				if(studyData != null && studyData != undefined && JSON.stringify(studyData) != "{}"){
+					localStorage.setItem('lastStudyDay',curDay);
+					app.myApp.alert(studyData.contentTitle, '每日一学',function () {
+				       		app.myApp.getCurrentView().loadPage('dailyLearning.html');
+					});
+				}
+			},1000);
+		}else {
+			setTimeout(showStudyEveryDayDialog(studyData),1000);
+		}
 	}
 	/**
 	 * 重置firstIn变量 

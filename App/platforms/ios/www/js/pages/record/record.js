@@ -6,12 +6,12 @@ define(['app',
 	var pageDataStorage = {};
 	var pageNo = 1;
 	var loading = true;
-	//加载工作日志
-	var loadLogPath = app.basePath + 'extWorkLog/checkOwnWorkLog';
+	//加载工作日志 查询工作日志或微动态
+	var loadLogPath = app.basePath + '/mobile/worklog/page/list/';
 	//查询日志信箱未审阅条数
-	var findLogNotReviewSumPath = app.basePath + 'extWorkLog/findLogNotReviewSum';
+	var findLogNotReviewSumPath = app.basePath + '/mobile/worklog/box/';
 	//读取日志类型
-	var loadDictPath = app.basePath + 'extWorkLog/loadDict';
+	var loadDictPath = app.basePath + '/mobile/worklog/types';
 	var loadType = 0;
 	var pickChoose = 'myRecordPick';
 	var query = '';
@@ -23,6 +23,7 @@ define(['app',
 	var logTypeId = 0;
 	var userName = ''
 	var chooseLogType = 0;
+	var box = false;
 
 	/**
 	 * 页面初始化 
@@ -39,11 +40,12 @@ define(['app',
 		//		});
 		var recordDetailCB = app.myApp.onPageBack('record/recordDetail', function(backPage) {
 			var backContainer = $$(backPage.container);
+			console.log($$('.recordCard'));
 			$$.each($$('.recordCard'), function(index, item) {
 				if($$(item).data('id') == recordId) {
-					var likeLength = backContainer.find('.recLikeTotal').html();
+					var likeLength = backContainer.find('.recLikeTotal').html() || 0;
 					$$(item).find('.likeTotal').html(likeLength);
-					var commentLength = backContainer.find('.recCommentTotal').html();
+					var commentLength = backContainer.find('.recCommentTotal').html() || 0;
 					$$(item).find('.commentTotal').html(commentLength);
 				}
 			});
@@ -77,8 +79,10 @@ define(['app',
 		calendarStart = '';
 		findLogNotReviewSum();
 		loadRecord(false);
-	//loadDict(); 
-		handleDict();
+		loadDict(); 
+		chooseLogType = 1;
+		box = false;
+		//handleDict();
 	}
 	
 	/**
@@ -92,19 +96,21 @@ define(['app',
 	/**
 	 *  查看日志类型
 	 */
-//	function loadDict() {
-//		app.ajaxLoadPageContent(loadDictPath, {
-//			dictCode: 'RZLX',
-//		}, function(result) {
+	function loadDict() {
+		app.ajaxLoadPageContent(loadDictPath, {
+			// dictCode: 'RZLX',
+		}, function(result) {
+//			console.log(result);
 //			var data = result;
-//			console.log(data);
-//			handleDict(data)
-//		});
-//	}
+			handleDict(result.data)
+		});
+	}
 	/**
 	 *  加载日志类型
 	 */
-	function handleDict() {
+	function handleDict(data) {
+		console.log('加载日志类型');
+		console.log(data);
 //		$$.each(data, function(index, item) {
 //			var selected = '';
 //			if(chooseLogType == item.key) {
@@ -115,10 +121,11 @@ define(['app',
 			 */
 			//console.log("<option value='" + 0 + "'" + selected + ">" + 党员活动 + "</option>");
 //			$("#logTypeId").append("<option value='" + item.key + "'" + selected + ">" + item.value + "</option>");
-			$("#logTypeId").append("<option value='0' selected>党员活动 </option>");
-			$("#logTypeId").append("<option value='1'>工作日志 </option>");
+//			$("#logTypeId").append("<option value='0' selected>党员活动 </option>");
+//			$("#logTypeId").append("<option value='1'>工作日志 </option>");
 //		});
-		$$('#logTypeId').change(function() {
+//		$$('#logTypeId').change(function() {
+//			logTypeId = $$('#logTypeId').val();
 			//var typeVal = $$('#recordType').val();
 //			if(chooseLogType != typeVal) {
 //				chooseLogType = typeVal;
@@ -127,6 +134,19 @@ define(['app',
 //				leaderList = [];
 //				//app.myApp.alert('温馨提示<br />更换"日志类型"，会清空"接收方"内容');
 //			}
+//		});
+		$$.each(data, function(index, item) {
+			var selected = '';
+			var indexnum=parseInt(index)
+			// console.log(indexnum+'indexnum')
+			if(chooseLogType == indexnum) {
+				selected = 'selected';
+			}
+
+			$("#logTypeId").append("<option value='" + indexnum + "'" + selected + ">" + item + "</option>");
+		});
+		$$('#logTypeId').change(function() {
+			logTypeId = $$('#logTypeId').val();
 		});
 	}
 	
@@ -140,12 +160,14 @@ define(['app',
 			if(pickChoose != $$(this).data('type')) {
 				if($$(this).data('type') == 'otherRecordPick'){
 					$$('.logTypeId').css('display','block');
-					$$('.userName').css('display','block');
+					$$('.userName1').css('display','block');
 					$$('.recordSearch').css('height','330px');
+					box = true;
 				}else{
 					$$('.logTypeId').css('display','none');
-					$$('.userName').css('display','none');
+					$$('.userName1').css('display','none');
 					$$('.recordSearch').css('height','255px');
+					box = false;
 				}
 				pickChoose = $$(this).data('type');
 				loadType = $$(this).data('load');
@@ -168,6 +190,8 @@ define(['app',
 			calendarStart.destroy();
 			calendarEnd.destroy();
 			pageNo = 1;
+			//重新获取sum
+			searchLogNotReviewSum();
 			loading = true;
 			loadRecord(false);
 		});
@@ -198,17 +222,68 @@ define(['app',
 			$$('.recordReport').on('click', recordReport);
 		});
 		$$('.newRecord').on('click', newRecord);
+		
+		$$('.payPeopleSearchBar .searchCancelBtn').on('click',function(){
+			startTime='';
+			endTime='';
+			userName='';
+			logTypeId=0;
+			query='';
+			findLogNotReviewSum();
+			$$("#recordSearchOpen").css('text-align', 'center');
+			$$('.payPeopleSearchBar .searchCancelBtn').css('display', 'none');
+			pageNo = 1;
+			loading = true;
+			if($(".myRecordPick").hasClass('active')){
+				loadType = 0;
+				loadRecord(false);
+			}else{
+				loadType = 1;
+				loadRecord(false);
+			}
+		})
+		
 	}
 
 	/**
 	 *  查询日志信箱未审阅条数
 	 */
 	function findLogNotReviewSum() {
-		app.ajaxLoadPageContent(findLogNotReviewSumPath, {
-			userId: app.userId,
+		app.ajaxLoadPageContent(findLogNotReviewSumPath+ app.userId+'/unread', {
+			// userId: app.userId,
+			// tenantId:
+		}, function(result) {
+			var data = result.data;
+			console.log(data);
+			if(data == 0){
+				$$('.recordBadge').css('display','none');
+			}else{
+				$$('.recordBadge').css('display','block');
+			}
+			$$('.recordBadge').html(data);
+			pageDataStorage['recordBadge'] = data;
+		});
+	}
+	
+	/**
+	 *  查询日志信箱未审阅条数
+	 */
+	function searchLogNotReviewSum() {
+		app.ajaxLoadPageContent(findLogNotReviewSumPath+ app.userId+'/unread', {
+			// userId: app.userId,
+			// startDate:startTime,
+			// endDate:endTime,
+			// userName:userName,
+			// logTypeId:logTypeId,
+			// logTitle:query,
 		}, function(result) {
 			var data = result;
 			console.log(data);
+			if(data.sum == 0){
+				$$('.recordBadge').css('display','none');
+			}else{
+				$$('.recordBadge').css('display','block');
+			}
 			$$('.recordBadge').html(data.sum);
 			pageDataStorage['recordBadge'] = data.sum;
 		});
@@ -217,28 +292,53 @@ define(['app',
 	/**
 	 *  读取工作日志 
 	 * @param {Object} isLoadMore 是否加载更多
+	 * @param {Object} loadType 0:我的日志 1:日志信箱
+	 * @param {Object} logTypeId 0:党员活动  1:我的工作
 	 */
 	function loadRecord(isLoadMore) {
+
 		console.log(loadType);
-		console.log(logTypeId);
-		app.ajaxLoadPageContent(loadLogPath, {
-			userId: app.userId,
-			pageNo: pageNo,
-			loadType: loadType,
-			logTitle: query,
-			userName : userName,
-			logTypeId :logTypeId,
-			startDate: startTime,
-			endDate: endTime,
-		}, function(result) {
-			var data = result;
-			console.log(data);
-			if(isLoadMore) {
-				pageDataStorage['record'] = pageDataStorage['record'].concat(data);
-			} else {
-				pageDataStorage['record'] = data;
+//		console.log(logTypeId);
+//		console.log(startTime);
+//		console.log(endTime);
+		if(box == true){
+			var params = {
+				// userId: app.userId,
+				pageNo: pageNo,
+				// loadType: loadType,
+				query: query,
+				box: box
 			}
-			handleRecord(data, isLoadMore);
+		}else{
+			var params = {
+				userId: app.userId,
+				pageNo: pageNo,
+				// loadType: loadType,
+				query: query,
+				box: box
+			}
+		}
+		app.ajaxLoadPageContent(loadLogPath+2, params , function(result) {
+			console.log(result.data)
+			if(result.data == null){
+				$$('.recordList').html('');
+				$$('.recordNotFound').show();
+			}else{
+				var data = result.data.records;
+				$$.each(data, function(index, item){
+					item.loadType = loadType;
+					item.loadTypeId = loadType;
+	
+				})
+				console.log(data);
+				if(isLoadMore) {
+					pageDataStorage['record'] = pageDataStorage['record'].concat(data);
+				} else {
+					pageDataStorage['record'] = data;
+				}
+				handleRecord(data, isLoadMore);
+			}
+			
 		});
 	}
 
@@ -273,15 +373,18 @@ define(['app',
 	function loadRecordDetail() {
 		recordId = $$(this).data('id');
 		var loadTypeId = parseInt($$(this).data('loadTypeId'));
+		var logTypeId = parseInt($$(this).data('logTypeId'));
 		var userId = 0;
 		var state = -1;
 		var reviewName = app.user.userName;
 		var workType = $$(this).find('.workType').html().split('：')[1].trim();
+		console.log(workType);
 		if(loadTypeId) {
 			userId = $$(this).data('userId');
 			state = $$(this).data('state');
-			if(state == 0) {
-				$$(this).find('.reviewState').html('<div class="reviewed">已审阅</div>');
+			if(state == false || state == null) {
+				state = false;
+				$$(this).find('.reviewState').html('<div class="reviewed">已阅</div>');
 				$$('.recordBadge').html(parseInt($$('.recordBadge').html()) - 1);
 				require(['js/pages/appList/appList'], function(app) {
 					app.setRecordBadge();
@@ -290,7 +393,7 @@ define(['app',
 			reviewName = $$(this).find('.sendName').html().trim();
 			console.log(userId + '-' + state + '-' + reviewName);
 		}
-		app.myApp.getCurrentView().loadPage('recordDetail.html?id=' + recordId + '&userId=' + userId + '&workType=' + workType + '&state=' + state + '&reviewName=' + reviewName);
+		app.myApp.getCurrentView().loadPage('recordDetail.html?id=' + recordId + '&userId=' + userId + '&workType=' + workType + '&state=' + state + '&reviewName=' + reviewName+'&logTypeId=' + logTypeId);
 	}
 
 	/**
@@ -335,8 +438,24 @@ define(['app',
 			dayNamesShort: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
 			closeOnSelect: true
 		});
+		$$(this).css('text-align', 'left');
+		$$('.payPeopleSearchBar .searchCancelBtn').css('display', 'block');
 		$$('.recordSearch').css('display', 'block');
 	}
+
+	/*
+	 * 刷新
+	 */
+	function refresh(){
+		setTimeout(function() {
+			pageNo = 1;
+			loading = true;
+			//这里写请求
+			loadRecord(false);
+			app.myApp.pullToRefreshDone();
+		}, 500);
+	}
+
 
 	/**
 	 * 关闭搜索框 
@@ -349,6 +468,7 @@ define(['app',
 			calendarEnd.destroy();
 		}
 		$$('.recordSearch').css('display', 'none');
+		$$('#recordSearchOpen').css('text-align', 'center');
 	}
 
 	/**
@@ -363,6 +483,11 @@ define(['app',
 				pageNo = 1;
 				loading = true;
 				//这里写请求
+				if($(".myRecordPick").hasClass('active')){
+					loadType = 0;
+				}else{
+					loadType = 1;
+				}
 				loadRecord(false);
 				app.myApp.pullToRefreshDone();
 			}, 500);
@@ -376,6 +501,11 @@ define(['app',
 			loading = true;
 			pageNo += 1;
 			//这里写请求
+			if($(".myRecordPick").hasClass('active')){
+				loadType = 0;
+			}else{
+				loadType = 1;
+			}
 			loadRecord(true);
 		});
 	}
@@ -390,6 +520,7 @@ define(['app',
 	return {
 		init: init,
 		loadRecord: loadRecord,
+		refresh: refresh,
 		resetFirstIn: resetFirstIn,
 	}
 });

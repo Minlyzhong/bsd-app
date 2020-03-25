@@ -5,9 +5,9 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	//增加志愿服务接口
-	var servicesAddPath = app.basePath + 'extVoluntaryService/saveOrUpdate';
+	var servicesAddPath = app.basePath + '/mobile/volunteer/save';
 	var calID = null;
-
+	var count = 0;
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -26,6 +26,7 @@ define(['app'], function(app) {
 		pageDataStorage = {};
 		pageNo = 1;
 		loading = true;
+		count = 0;
 		addCalendar('servicesLimit');
 		addCalendar('servicesTime');
 	}
@@ -87,29 +88,58 @@ define(['app'], function(app) {
 		sLimit = sLimit+' 00:00:00';
 		sTime = sTime+' 00:00:00';
 		console.log(app.user);
-		app.ajaxLoadPageContent(servicesAddPath, {
+
+		// 防止卡重复点击
+		count = count + 1;
+		if(count > 0){
+			$$('.saveServices').attr('disabled',false);
+		}
+
+		var params={
 			creatorId:app.userId,
 			creatorName:app.user.userName,
-			creatorPhone:app.user.mobilePhone,
+			creatorPhone:app.userDetail.phone,
 			serviceTitle:sName,
 			serviceContent:sContent,
-			serviceTime:sTime,
-			regiestEndtime:sLimit,
+			serviceStartTime:sTime,
+			signEndTime:sLimit,
 			totalUser:sPeopleNum,
 			servicePlace:sPlace,
-			serviceArticle:sCarry
-		}, function(data) {
-			console.log(data);
-			app.myApp.toast('保存成功', 'success').show(true);
-			app.myApp.hidePreloader();
-			app.myApp.getCurrentView().back();
-			setTimeout(function(){
-				require(['js/pages/service/service'], function(service) {	
-					service.servicesRefresh();
-				});
-			},100)
-			
-		});
+			serviceArticle:sCarry,
+			gradeRuleId:sRule 
+		}
+		var formDatas= JSON.stringify(params)
+		$$.ajax({
+            url:servicesAddPath,
+            method: 'POST',
+            dataType: 'json',
+			contentType: 'application/json;charset:utf-8',
+            data: formDatas,
+            cache: false,
+            success:function (data) {
+				if(data.msg == 'success' && data.code == 0){
+					app.myApp.toast('保存成功', 'success').show(true);
+					app.myApp.hidePreloader();
+					app.myApp.getCurrentView().back();
+					setTimeout(function(){
+					require(['js/pages/service/service'], function(service) {	
+						service.servicesRefresh();
+					});
+				},100)
+
+				
+				}else{
+					app.myApp.toast('保存失败', 'error').show(true);
+				}
+            	
+            	
+            },
+            error:function () {
+				app.myApp.toast('保存失败', 'error').show(true);
+            }
+        });
+
+		
 	}
 
 	/**

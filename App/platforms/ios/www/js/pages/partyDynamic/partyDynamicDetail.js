@@ -8,10 +8,10 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//工作简报查询日志详情  按照周月季度查询
-	var loadDymicMessageLogPath = app.basePath + 'dynamic/loadDymicMessageLogByDate';
+	var loadDymicMessageLogPath = app.basePath + '/mobile/partyAm/loadDymicMessageLogByDate';
 	//var loadDymicMessageLogPath = app.basePath + 'dynamic/loadDymicMessageLog';
 	//工作简报查询考核详情  按照周月季度查询
-	var loadDymicMessageAssessPath = app.basePath + 'dynamic/loadDymicMessageAssessmentByDate';
+	var loadDymicMessageAssessPath = app.basePath + '/mobile/partyAm/loadDymicMessageAssessmentByDate';
 	//var loadDymicMessageAssessPath = app.basePath + 'dynamic/loadDymicMessageAssessment';
 	var deptId = 0;
 	var dateType = 0;
@@ -20,6 +20,7 @@ define(['app',
 	
 	var startDate = '';
 	var endDate = '';
+	var params = {};
 
 	/**
 	 * 页面初始化 
@@ -50,16 +51,35 @@ define(['app',
 		loading = true;
 		deptId = pageData.deptId;
 		dateType = pageData.dateType;
+		datekhpl = pageData.khpl;
 		startDate = pageData.startDate;
 		endDate = pageData.endDate;
+
+		params = {};
+		console.log(pageData);
 		if(pageData.detailType == 'workLog') {
 			console.log(loadDymicMessageLogPath);
 			loadPath = loadDymicMessageLogPath;
 			loadType = 0;
+			params = {
+				// dateType: dateType,
+				deptId: deptId,
+				current: pageNo,
+				startDate:startDate,
+				endDate:endDate,
+			}
+
 		} else if(pageData.detailType == 'assessment') {
 			console.log(loadDymicMessageLogPath);
 			loadPath = loadDymicMessageAssessPath;
 			loadType = 1;
+			params = {
+				khpl: datekhpl,
+				deptId: deptId,
+				current: pageNo,
+				startDate:startDate,
+				endDate:endDate,
+			}
 		}
 		ajaxLoadContent(false);
 	}
@@ -84,13 +104,8 @@ define(['app',
 	function ajaxLoadContent(isloadMore) {
 		console.log(startDate);
 		console.log(endDate);
-		app.ajaxLoadPageContent(loadPath, {
-			dateType: dateType,
-			deptId: deptId,
-			pageNo: pageNo,
-			startDate:startDate,
-			endDate:endDate,
-		}, function(data) {
+		app.ajaxLoadPageContent(loadPath,params , function(data) {
+			var data = data.data.records;
 			console.log(data);
 			if(isloadMore) {
 				pageDataStorage['data'] = pageDataStorage['data'].concat(data);
@@ -115,8 +130,10 @@ define(['app',
 				}
 			} else {
 				if(loadType) {
+					console.log(assessmentTemplate)
 					$$('.dynamicDetailList ul').html(assessmentTemplate(data));
 				} else {
+					console.log(workLogTemplate)
 					$$('.dynamicDetailList ul').html(workLogTemplate(data));
 				}
 			}

@@ -40,15 +40,16 @@
 
 .kpi-a-header .row-header span {
 	display: block;
-	color: #458fd2;
+	/* color: #458fd2; */
+	color: #333;
 }
 
 .kpi-a-header .row-header .span1 {
-	font-size: 24px;
+	font-size: 18px;
 }
 
 .kpi-a-header .row-header .span2 {
-	font-size: 16px;
+	font-size: 15px;
 }
 
 .b-r {
@@ -62,34 +63,43 @@
 .kpi-a-list {
 	margin: 15px auto;
 }
-
+.kpi-personal {
+	background-image: url(../img/assessmentResultImg/personal.png);
+	height: 48px;
+	width: 48px;
+}
 .kpi-group {
 	background-image: url(../img/icon/icon-group.png);
 	height: 48px;
 	width: 48px;
 }
+.kpi-chart {
+	background-image: url(../img/icon/icon-chart3.png);
+	height: 40px;
+	width: 40px;
+}
 
 .kpi-icon-people {
-	background-image: url(../img/icon/icon-people.png);
-	height: 22px;
-	width: 22px;
+	background-image: url(../img/icon/icon-people3.png);
+	height: 20px;
+	width: 20px;
 }
 
 .kpi-icon-count {
 	background-image: url(../img/icon/icon-count.png);
-	height: 22px;
-	width: 22px;
+	height: 20px;
+	width: 20px;
 }
 
 .icon-Done {
-	background-image: url(../img/icon/Done.png);
-	height: 22px;
-	width: 22px;
+	background-image: url(../img/icon/Done3.png);
+	height: 20px;
+	width: 20px;
 }
 .icon-UDone {
 	background-image: url(../img/icon/UnDone.png);
-	height: 22px;
-	width: 22px;
+	height: 20px;
+	width: 20px;
 }
 
 .kpi-icon-forward {
@@ -99,15 +109,15 @@
 }
 
 .kpi-icon-score {
-	background-image: url(../img/icon/icon-score.png);
-	height: 22px;
-	width: 22px;
+	background-image: url(../img/icon/icon-score2.png);
+	height: 20px;
+	width: 20px;
 }
 
 .kpi-a-list-item-title {
 	font-size: 16px;
 	text-decoration: none;
-	color: #333333;
+	color: #36689a!important;
 	overflow: hidden;
 	-ms-text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
@@ -120,7 +130,7 @@
 }
 
 .kpi-a-list-item-sb {
-	font-size: 13px;
+	font-size: 13px!important;
 	color: #929292;
 	padding-top: 10px;
 }
@@ -128,7 +138,7 @@
 .kpi-a-list-item-subTitle {
 	width: 100%;
 	position: relative;
-	padding: 10px 15px;
+	padding: 20px 15px 10px 15px;
 	box-sizing: border-box;
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -197,7 +207,7 @@
 }
 
 .assessListCheck {
-	background-color: #36689a;
+	background-color: #1296db;
 	border: none;
 	margin-right: 10px;
 	margin-left: 10px;
@@ -321,7 +331,7 @@
 }
 
 .kpi-content-list .kpi-title {
-	font-size: 16px;
+	font-size: 15px;
 	color: #404040;
 	font-weight: normal !important;
 	padding-bottom: 20px;
@@ -433,43 +443,65 @@
 	cursor: pointer;
 }
 
+.partyEvaLeftList,
 .assesserLeftList,
+.assesserPCLeftList,
 .assesserLeftListSeason,
-.assesserLeftListYear
+.assesserLeftListYear,
+.evaLeftList,
+.evaLeftListSeason,
+.evaLeftListYear
 {
 	width: 99%;
 	/*border-right: solid 1px #c8c7cc;*/
 	margin-top: 35px;
 	margin-bottom: 5px;
 }
-
+.partyEvaLeftList .item-content,
 .assesserLeftList .item-content,
+.assesserPCLeftList .item-content,
 .assesserLeftListSeason .item-content,
-.assesserLeftListYear .item-content
+.evaLeftListYear .item-content,
+.evaLeftList .item-content,
+.evaLeftListSeason .item-content,
+.evaLeftListYear .item-content
 {
 	padding: 0px;
 }
 
+.partyEvaLeftList .item-inner,
 .assesserLeftList .item-inner,
+.assesserPCLeftList .item-inner,
 .assesserLeftListSeason .item-inner,
-.assesserLeftListYear .item-inner
+.assesserLeftListYear .item-inner,
+.evaLeftList .item-inner,
+.evaLeftListSeason .item-inner,
+.evaLeftListYear .item-inner
 {
 	padding-left: 15px;
 }
-
+.partyEvaLeftList .item-title,
 .assesserLeftList .item-title,
+.assesserPCLeftList .item-title,
 .assesserLeftListSeason .item-title,
-.assesserLeftListYear .item-title
+.assesserLeftListYear .item-title,
+.evaLeftList .item-title,
+.evaLeftListSeason .item-title,
+.evaLeftListYear .item-title
 {
 	width: 100%;
 	text-align: center;
 	font-size: 15px;
 	color: gray;
 }
-
+.partyEvaRightList,
 .assesserRightList,
+.assesserPCRightList,
 .assesserRightListSeason,
-.assesserRightListYear
+.assesserRightListYear,
+.evaRightList,
+.evaRightListSeason,
+.evaRightListYear
 {
 	width: 100%;
 	margin-top: 35px;
@@ -482,6 +514,7 @@
 	width: 100%;
 	margin-top: 90px;
 	margin-bottom: 5px;
+	font-family: PingFang-SC-Medium;
 }
 
 .threeMeetingsAndOneClassPaperDetailSearchBarD,
@@ -489,19 +522,46 @@
 .rankDeptSearchBar,
 .threePlusXStatisticsSearchBar,
 .threeMeetingsAndOneClassPaperDetailSearchBar,
+.assessmentResultPaperDetailSearchBar,
 .threeMeetingsAndOneClassSearchBar,
 .assessSearchBar,
+.assessPCSearchBar,
+.evaSearchBar,
+.evaLSearchBar,
 .userRankSearchBar,
 .payPeopleSearchBar,
 .payShowPeopleSearchBar,
 .contactsShowPeopleSearchBar,
 .contactsPeopleSearchBar {
 	padding: 0px;
-	background: #ed4c3c;
+	background: #E32519;
 	border-bottom: none;
 	width: 100%;
 	height: 36px;
 	z-index: 1;
+}
+#assessSearch{
+	background-color:rgba(255,255,255,0.6)!important;
+	background-image: url(../img/newIcon/search.png)!important;
+    background-repeat: no-repeat!important;
+    background-size: 15px!important;
+    background-position-x: 10px!important;
+    background-position-y: 5px!important;
+}
+#contacts .navbar:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: auto;
+    top: auto;
+    height: 0!important;
+    width: 100%;
+    background-color: #c4c4c4;
+    display: block;
+    z-index: 15;
+    -webkit-transform-origin: 50% 100%;
+    transform-origin: 50% 100%;
 }
 
 .threeMeetingsAndOneClassPaperDetailSearchBarD .searchbar-input,
@@ -509,9 +569,13 @@
 .rankDeptSearchBar .searchbar-input,
 .threePlusXStatisticsSearchBar .searchbar-input,
 .threeMeetingsAndOneClassPaperDetailSearchBar .searchbar-input,
+.assessmentResultPaperDetailSearchBar .searchbar-input,
 .threeMeetingsAndOneClassSearchBar .searchbar-input,
 .userRankSearchBar .searchbar-input,
 .assessSearchBar .searchbar-input,
+.assessPCSearchBar .searchbar-input,
+.evaSearchBar .searchbar-input,
+.evaLSearchBar .searchbar-input,
 .payPeopleSearchBar .searchbar-input,
 .payShowPeopleSearchBar .searchbar-input,
 .contactsShowPeopleSearchBar .searchbar-input,
@@ -526,9 +590,13 @@
 .rankDeptSearchBar input[type="search"],
 .threePlusXStatisticsSearchBar input[type="search"],
 .threeMeetingsAndOneClassPaperDetailSearchBar input[type="search"],
+.assessmentResultPaperDetailSearchBar input[type="search"],
 .threeMeetingsAndOneClassSearchBar input[type="search"],
 .userRankSearchBar input[type="search"],
 .assessSearchBar input[type="search"],
+.assessPCSearchBar input[type="search"],
+.evaSearchBar input[type="search"],
+.evaLSearchBar input[type="search"],
 .payPeopleSearchBar input[type="search"],
 .payShowPeopleSearchBar input[type="search"],
 .contactsShowPeopleSearchBar input[type="search"],
@@ -539,6 +607,7 @@
 
 .shykDDetailPageSearch,
 .threeMeetingsAndOneClassPaperDetailSearch,
+.assessmentResultDetailSearch,
 .threeMeetingsAndOneClassSearchList,
 .assesserSearchList,
 .payPeopleerSearchList,
@@ -564,6 +633,7 @@
 .threeMeetingsAndOneClassNotFound,
 .userRankNotFound,
 .assessNotFound,
+.assessPCNotFound,
 .payPeopleNotFound,
 .contactsPeopleNotFound,
 .contactsNotFound,
@@ -579,13 +649,23 @@
 .shykDetailNotFound{
 	margin-top: 45px;	
 }
+.deptRankNotFound{
+	width: 100%;
+	font-size: 14px;
+	margin-top: 10px;
+	color: #808080;
+	text-align: center;
+}
 
 
 .threePlusXStatisticsCancelBtn,
 .threeMeetingsAndOneClassPaperDetailCancelBtn,
+.assessmentResultPaperDetailCancelBtn,
 .threeMeetingsAndOneClassPaperDetailCancelBtnD,
 .threeMeetingsAndOneClassCancelBtn,
-.searchCancelBtn {
+.evaSearchCancelBtn,
+.evaLSearchCancelBtn,
+.searchCancelBtn, .searchNewsBtn {
 	color: white;
 	width: 50px;
 	margin-right: 5%;
@@ -597,6 +677,8 @@
 .searchbar .threeMeetingsAndOneClassPaperDetailSearchClear,
 .searchbar .threeMeetingsAndOneClassSearchClear,
 .searchbar .assessSearchClear,
+.searchbar .evaSearchClear,
+.searchbar .evaLSearchClear,
 .searchbar .payPeopleSearchClear {
 	opacity: 0;
 	width: 30px;
@@ -627,4 +709,18 @@
 }
 
 .atdBody {
+}
+
+.rankDetailcontent{
+	margin-top: 10px;
+	margin-right:10px;
+	font-size: 15px;
+}
+
+ .noresult{
+	font-size: 17px;
+	font-family: PingFang-SC-Medium;
+	margin-top: 10px;
+	padding-bottom: 10px;
+	color: #404040;
 }

@@ -2,7 +2,7 @@
 	<a href="#" class="item-link item-content">
 		<div class="item-inner">
 			<div class="item-title">姓名</div>
-			<div class="item-after item-label" style="text-overflow: ellipsis;overflow: hidden;display: block;">{{userName}}</div>
+			<div class="item-after item-label" style="text-overflow: ellipsis;overflow: hidden;display: block;">{{name}}</div>
 		</div>
 	</a>
 </li>
@@ -18,7 +18,7 @@
 	<a href="#" class="item-link item-content">
 		<div class="item-inner">
 			<div class="item-title">手机号码</div>
-			<div class="item-after item-label">{{mobilePhone}}</div>
+			<div class="item-after item-label">{{phone}}</div>
 		</div>
 	</a>
 </li>
@@ -30,11 +30,18 @@
 		</div>
 	</a>
 </li>
+{{#compare partyTypeArr '!=' undefined}}
 <li>
 	<a href="#" class="item-link item-content">
 		<div class="item-inner">
 			<div class="item-title">党组织类型</div>
-			<div class="item-after item-label" style="text-overflow: ellipsis;overflow: hidden;display: block;">{{partyTypeVal}}</div>
+			{{#each partyTypeArr}}
+					{{#compare subKey 'equalNumber' ../partyType}}
+					<div class="item-after item-label" style="text-overflow: ellipsis;overflow: hidden;display: block;">{{subVal}}</div>
+					
+					{{/compare}}
+				{{/each}}
 		</div>
 	</a>
 </li>
+{{/compare}}

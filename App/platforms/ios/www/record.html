@@ -1,4 +1,4 @@
-<div data-page="record/record" class="page navbar-fixed no-tabbar with-subnavbar ">
+<div data-page="record/record" class="page navbar-fixed no-tabbar with-subnavbar recorddaily">
 	<div class="navbar">
 		<div class="navbar-inner">
 			<div class="left ">
@@ -12,24 +12,27 @@
 				<a href="#" class="link icon-only newRecord" style="margin-left: 0px;"><i class="icon icon-add" style="margin-top: 0px;"></i></a>
 				</p>
 			</div>
-			<div class="subnavbar recordSub" style="top: 36px;">
-				<div class="buttons-row recordBtnRow">
+			<div class="subnavbar recordSub" style="top: 42px;">
+				<div class="searchbar payPeopleSearchBar" style="top: 0px;">
+					<div class="searchbar-input">
+						<input type="search" placeholder="搜索工作日志" id="recordSearchOpen" readonly/>
+						<a href="#" class="searchbar-clear payPeopleSearchClear"></a>
+					</div>
+					<!-- <div class="searchCancelBtn">取消</div> -->
+				</div>
+				
+
+			</div>
+		</div>
+	</div>
+	<div class="buttons-row recordBtnRow">
 					<a href="#tab1" class="button tab-link myRecordPick active" data-type="myRecordPick" data-load="0">我的日志</a>
 					<a href="#tab2" class="button tab-link otherRecordPick" data-type="otherRecordPick" data-load="1">
 						<span class="recordBadge bg-white"></span>日志信箱</a>
 				</div>
-			</div>
-		</div>
-	</div>
-	<div class="searchbar payPeopleSearchBar" style="top: 76px;">
-		<div class="searchbar-input">
-			<input type="search" placeholder="搜索工作日志" id="recordSearchOpen" readonly/>
-			<a href="#" class="searchbar-clear payPeopleSearchClear"></a>
-		</div>
-		<div class="searchCancelBtn">取消</div>
-	</div>
-	<div class="page-content pull-to-refresh-content infinite-scroll">
-		<div class="pull-to-refresh-layer" style="margin-top: -20px;">
+	
+	<div class="page-content pull-to-refresh-content infinite-scroll" style="padding-top:0px;">
+		<div class="pull-to-refresh-layer" style="margin-top: -44px;">
 			<div class="preloader"></div>
 			<div class="pull-to-refresh-arrow"></div>
 		</div>
@@ -37,7 +40,7 @@
 		<div class="content-block searchbar-not-found recordNotFound">
 			没有相关的工作日志
 		</div>
-		<div class="list-block recordList" style="margin: 0;">
+		<div class="list-block recordList" style="margin: 0;padding-bottom: 122px;">
 
 		</div>
 	</div>
@@ -55,7 +58,7 @@
 						</div>
 					</div>
 				</li>
-				<li class="userName" style="display: none;">
+				<li class="userName1" style="display: none;">
 					<div class="item-content">
 						<div class="item-inner">
 							<div class="item-title label">人员名称</div>

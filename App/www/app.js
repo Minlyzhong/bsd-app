@@ -392,7 +392,7 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 				xhr.setRequestHeader("Authorization", "bearer "+ access_token);
 			 }
 		}else{
-			if(params.url.indexOf('/oauth/token')  == -1  ){
+			if(params.url.indexOf('/oauth/token')  == -1 && params.url.indexOf('/content/loadMobileFacebook') == -1 && params.url.indexOf('/political/catalog/icon') == -1){
 			
 				var access_token = this.access_token;
 				if(access_token == null || access_token == ''){
@@ -445,6 +445,7 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 			localStorage.setItem('verify', '1');
 			localStorage.setItem('roleId', -1);
 			localStorage.setItem('access_token', null);
+			localStorage.setItem('lastStudyDay', 0);
 			//把主题设置为默认的，移除css
 			removejscssfile('blue.css','css');
 			removejscssfile('green.css','css');
@@ -489,10 +490,15 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	// var basePath = 'http://180.142.130.246:9010/admin';
 	// var filePath = 'http://180.142.130.246:8020/group1/';
 
-	// 测试库
+	// 合浦(测试库)
 	var loginPath = 'http://120.24.51.37:9010';
 	var basePath = 'http://120.24.51.37:9010/admin';
 	var filePath = 'http://120.24.51.37/group1/';
+
+	// 正式库(1)北海党建
+	// var loginPath = 'http://180.142.130.246:9020';
+	// var basePath = 'http://180.142.130.246:9020/admin';
+	// var filePath = 'http://180.142.130.246:8020/group1/';
 
 	// 测试库(2)北海党建
 	// var loginPath = 'http://120.24.51.37:9011';
@@ -568,7 +574,7 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	
 	
 	return {
-		version: '4.4',
+		version: '5.5',
 		myApp: myApp,
 		basePath: basePath,
 		mainView: mainView,

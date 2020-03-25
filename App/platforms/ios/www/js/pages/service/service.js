@@ -7,25 +7,20 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//获取志愿服务接口
-	var servicesPath = app.basePath + 'extVoluntaryService/findExtVoluntrayByPage';
+	var servicesPath = app.basePath + '/mobile/volunteer/list';
 
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
 	 */
 	function init(page) {
-//		app.pageStorageClear('service/service', [
-//			'service/servicesDetail',
-//			'service/servicesAdd',
-//		]);
-//		if(firstIn) {
-			initData(page.query);
-//		} else {
-//			loadStorage();
-//		}
+		initData(page.query);
 		app.back2Home();
 		clickEvent(page);
 		pushAndPull(page);
+		// if(app.roleId == 5 || app.roleId == 6){
+			$$('.service-add').css('display','block');
+		// }
 	}
 
 	/**
@@ -69,11 +64,15 @@ define(['app',
 	 */
 	function loadServices(isLoadMore) {
 		app.ajaxLoadPageContent(servicesPath, {
-			page: pageNo
+			pageNo: pageNo
 		}, function(data) {
 			$$('.services-not-found').hide();
 			console.log(data);
-			pageDataStorage['services'] = data;
+			var data = data.data.records;
+			$$.each(data, function(index, item){
+				item.registEndtime = app.getnowdata(item.registEndtime);
+			})
+			pageDataStorage['services'] = data ;
 			handleServices(data, isLoadMore);
 		});
 	}

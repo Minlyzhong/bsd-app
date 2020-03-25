@@ -10,12 +10,16 @@ define(['app',
 		var loading = false;
 		var searchLoading = true;
 		//选择部门人员
-		var findDeptPeoplePath = app.basePath + 'orgUser/findDeptPeople';
+		var findDeptPeoplePath = app.basePath + '/mobile/user/findDeptPeople/';
 		//模糊搜索部门人员
-		var searchDeptPeoplePath = app.basePath + 'extContact/searchDeptPeople';
+		var searchDeptPeoplePath = app.basePath + '/mobile/user/searchDeptPeople';
 		var deptName = '';
 		var oldContent = '';
 		var deptId = 0;
+		var type='';
+		var url='';
+		var params={};
+		var searchParams={};
 
 		/**
 		 * 页面初始化 
@@ -49,6 +53,16 @@ define(['app',
 			deptName = pageData.deptName;
 			deptId = pageData.deptId;
 			oldContent = '';
+			
+			type='';
+			url='';
+			params={};
+			searchParams={};
+			if(pageData.type){
+				type= pageData.type
+			}
+			console.log(pageData)
+			console.log(type)
 			ajaxLoadContent();
 		}
 
@@ -143,12 +157,27 @@ define(['app',
 			if(!content) {
 				return;
 			}
-			app.ajaxLoadPageContent(searchDeptPeoplePath, {
-				userName: content,
-				deptId: deptId,
-				pageNo: searchNo,
-				type: 1,
-			}, function(data) {
+			if(type && type == 'partyDynamic'){
+				searchDeptPeoplePath = app.basePath +'/mobile/partyAm/findDeptPeople'
+				searchParams = {
+					current: pageNo,
+					deptId: deptId,
+					query: content
+				} 
+			}else{
+				searchDeptPeoplePath = app.basePath +'/mobile/user/searchDeptPeople'
+				searchParams = {
+					// userName: content,
+					// deptId: deptId,
+					// pageNo: searchNo,
+					// type: 1,
+					name:content
+
+				}
+			}
+			app.ajaxLoadPageContent(searchDeptPeoplePath, searchParams, function(data) {
+				var data = data.data.records;
+				
 				console.log(data);
 				if(data.length > 0) {
 					if(data.length == 10) {
@@ -177,11 +206,23 @@ define(['app',
 		 * 异步请求页面数据 
 		 */
 		function ajaxLoadContent() {
-			app.ajaxLoadPageContent(findDeptPeoplePath, {
-				deptId: deptId,
-				pageNo: pageNo,
-			}, function(result) {
-				var data = result;
+			console.log(type)
+			if(type && type == 'partyDynamic'){
+				url = app.basePath +'/mobile/partyAm/findDeptPeople'
+				params = {
+					current: pageNo,
+					deptId: deptId
+				} 
+			}else{
+				url = findDeptPeoplePath+deptId
+				params = {
+					// deptId: deptId,
+					current: pageNo,
+					size: 20
+				}
+			}
+			app.ajaxLoadPageContent(url, params, function(result) {
+				var data = result.data.records;
 				console.log(data);
 				pageDataStorage['content'] = data;
 				handleContent(data);
@@ -193,11 +234,13 @@ define(['app',
 		 */
 		function handleContent(data) {
 			if(data.length) {
-				if(data.length == 10) {
+				if(data.length == 20) {
 					loading = false;
 				}
 				var deptList = data;
 				var leaderList = [];
+				console.log('加载数据data')
+				console.log(data)
 				$$('.list-pay-search ul').append(contactsPeopleTemplate(data));
 				$$('.list-pay-search ul .item-content').on('click', function() {
 					app.myApp.getCurrentView().loadPage('contactsUserInfo.html?userId=' + $$(this).data('id') +'&userName='+$$(this).data('userName'));

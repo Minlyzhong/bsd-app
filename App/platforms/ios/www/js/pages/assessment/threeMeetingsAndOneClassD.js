@@ -9,9 +9,10 @@ define(['app',
 	var pageNo1 = 1;
 	var loading1 = true;
 	//获取党支部未完成的三会一课
-	var getTopicCompletedOrNotPath = app.basePath + 'statHelper/getTopicCompletedOrNot';
+	var getTopicCompletedOrNotPath = app.basePath + '/mobile/partyAm/getTopicCompletedOrNot';
+	
 	//获取年份
-	var getYearsPath = app.basePath + 'knowledgeTopic/getYears';
+	var getYearsPath = app.basePath + '/mobile/partyAm/getYears';
 	var title = '';
 	
 	
@@ -29,6 +30,7 @@ define(['app',
 	var deptId = 0;
 	var topicId = 0;
 	var branchName = '';
+	var khpl;
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -62,6 +64,13 @@ define(['app',
 		year1 = '';
 		month1 = '';
 		branchName = pageData.branchName;
+		if(type == 0){
+			// 查未完成的三会一课
+			 getTopicCompletedOrNotPath = app.basePath + '/mobile/partyAm/getTopicCompletedOrNot';
+		}else{
+			// 已完成的三会一课
+			getTopicCompletedOrNotPath = app.basePath + '/mobile/partyAm/getTopicCompleted';
+		}
 		if(pageData.deptId != undefined){
 			deptId = pageData.deptId;
 		}
@@ -71,8 +80,12 @@ define(['app',
 		if(pageData.startTime != undefined){
 			endDate = pageData.endTime;
 		}
+		if(pageData.khpl != undefined){
+			khpl = pageData.khpl;
+		}
 		console.log(startDate);
 		console.log(endDate);
+		console.log(khpl);
 		ajaxLoadContent(false);
 	}	
 	/**
@@ -165,10 +178,16 @@ define(['app',
 		app.ajaxLoadPageContent1(getYearsPath,{
 		},function(data){
 			console.log(data);
-			result = data;
-			$$.each(data, function(index, item) {
-					result[index] = item.text.toString()+'年';
-			});
+			result = data.data;
+			if(result == null){
+				var nowDate = new Date();
+				var nowYear = nowDate.getFullYear();
+				result =[nowYear+'年']
+				
+			}
+			$$.each(data.data, function(index, item) {
+				result[index] = item.toString()+'年';
+		});
 			console.log(result);
 			pickerDescribe = app.myApp.picker({
 	    		input: '#threeMeetingsAndOneClassPaperDetailStartTime',
@@ -179,7 +198,7 @@ define(['app',
 			            values:(result)
 			        },
 			        {
-			            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+			            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 			        },
 			    ]
 			});
@@ -192,7 +211,7 @@ define(['app',
 			            values:(result)
 			        },
 			        {
-			            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+			            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 			        },
 			    ]
 			});
@@ -246,17 +265,26 @@ define(['app',
 		year1 = result1[0];
 		month1 = result1[1];
 		app.ajaxLoadPageContent(getTopicCompletedOrNotPath, {
-			userId:app.userId,
-			topicId:topicId,
+			// userId:app.userId,
+			// topicId:topicId,
 			deptId:deptId,
-			pageNo:pageNo,
-			type:type,
+			current:pageNo,
+			// type:type,
 			startDate:startDate,
 			endDate:endDate,
-		}, function(data) {
-			console.log(data);
-			//var data = data.data;
-			handleData(data, isLoadMore,data.total);
+			khpl:khpl
+		}, function(result) {
+
+			
+			var data = result.data.records;
+				console.log(data);
+
+				$$.each(data, function(index, item) {
+					console.log(item);
+					item.month = item.createdDate.split('-')[1];
+				});
+				
+			handleData(data, isLoadMore,result.data.total);
 		});
 	}
 	
@@ -287,17 +315,25 @@ define(['app',
 		console.log(year1);
 		console.log(month1);
 		app.ajaxLoadPageContent(getTopicCompletedOrNotPath, {
-			userId:app.userId,
-			topicId:topicId,
+			// userId:app.userId,
+			// topicId:topicId,
 			deptId:deptId,
-			pageNo:pageNo1,
-			type:type,
+			current:pageNo1,
+			// type:type,
 			startDate:searchStartDate,
 			endDate:searchEndDate,
 			query:query,
-		}, function(data) {
-			console.log(data);
-			handleData1(data, isLoadMore,data.total);
+			khpl:khpl
+		}, function(result) {
+			var data = result.data.records;
+				console.log(data);
+
+				$$.each(data, function(index, item) {
+					console.log(item);
+					item.month = item.createdDate.split('-')[1];
+				});
+				
+			handleData1(data, isLoadMore,result.data.total);
 		});
 	}
 
@@ -329,7 +365,7 @@ define(['app',
 			}
 			
 		}
-		var data = data.data;
+		
 		if(data) {
 			if(year == year1 && month == month1){
 				$$('.shykDBranchNum').html(year+'年'+month+'月已参与'+total+'项');
@@ -404,7 +440,7 @@ define(['app',
 				}
 			//$$('.shykDBranchNum1').html(year+'年'+month+'月至'+year1+'年'+month1+'月完成数0个');
 		}
-		var data = data.data;
+		
 		if(data) {
 			if(year == year1 && month == month1){
 				$$('.shykDBranchNum1').html(year+'年'+month+'月已参与'+total+'项');

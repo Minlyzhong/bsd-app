@@ -5,7 +5,7 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	//查询党费缴纳情况
-	var loadPaymentStatusPath = app.basePath + 'payment/loadPaymentStatus';
+	var loadPaymentStatusPath = app.basePath + '/payment/loadPaymentStatus';
 	//本月缴费状态
 	var payInThisMonth = -1;
 
@@ -36,7 +36,8 @@ define(['app'], function(app) {
 		pageNo = 1;
 		loading = true;
 		payInThisMonth = -1;
-		loadPaymentStatus();
+		// 暂时注释
+		// loadPaymentStatus();
 	}
 
 	/**

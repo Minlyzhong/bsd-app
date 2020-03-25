@@ -7,7 +7,7 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//查找子部门
-	var findChlidPath = app.basePath + 'orgDept/findChlid';
+	var findChlidPath = app.basePath + '/mobile/partyAm/findDept';
 	var oldContent = '';
 	var deptList = [];
 	var deptType = '';
@@ -26,7 +26,7 @@ define(['app',
 		clickEvent();
 		attrDefine();
 		pushAndPull(page);
-		ajaxLoadContent(0, '', '');
+		ajaxLoadContent(1, '', '',1);
 	}
 	/**
 	 * 初始化模块变量
@@ -75,9 +75,10 @@ define(['app',
 	/**
 	 * 异步请求页面数据 
 	 */
-	function ajaxLoadContent(parentId, elements, currentEle) {
+	function ajaxLoadContent(parentId, elements, currentEle, type) {
 		app.ajaxLoadPageContent(findChlidPath, {
-			
+			parentId:parentId,
+			type:type
 		}, function(result) {
 			var data = result;
 			console.log(data);
@@ -110,20 +111,20 @@ define(['app',
 		$$.each(deptData, function(index, item) {
 			appendEle.find('ul').append(
 				'<li>' +
-				'<a href="#" data-deptId="' + item.deptId + '">' + item.deptName + '</a>' +
+				'<a href="#" data-deptId="' + item.did + '">' + item.deptName + '</a>' +
 				'<div class="chooseParent" style="position: relative;float: right;bottom: 40px;right: 10px;">' +
-				'<img src="img/notChooseDept.png" class="chooseDeptName" width="28" height= "28" data-deptId="' + item.deptId + '" data-deptName="' + item.deptName + '" />' +
+				'<img src="img/notChooseDept.png" class="chooseDeptName" width="28" height= "28" data-deptId="' + item.did + '" data-deptName="' + item.deptName + '" />' +
 				'</div>' +
 				'</li>'
 			);
 		});
 		$(".u-vmenu").vmenuModule();
-//		appendEle.find('a').on('click', function() {
-//			var deptId = $$(this).data('deptId');
-//			if(deptId && !deptIdList[deptId]) {
-//				ajaxLoadContent(deptId, $$($$(this).parent()[0]), $(this));
-//			}
-//		});
+		appendEle.find('a').on('click', function() {
+			var deptId = $$(this).data('deptId');
+			if(deptId && !deptIdList[deptId]) {
+				ajaxLoadContent(deptId, $$($$(this).parent()[0]), $(this),0);
+			}
+		});
 		for(var i=0;i<=$(".chooseParent").children().length-1;i++){
 			if($($(".chooseParent").children()[i]).attr('data-deptName') == getDeptName){
 				$($(".chooseParent").children()[i]).attr('src', 'img/chooseDept.png');

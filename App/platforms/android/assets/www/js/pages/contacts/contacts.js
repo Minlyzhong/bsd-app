@@ -308,21 +308,21 @@ define(['app',
 			if(type) {
 				deptIdList[parentId] = 1;
 			}
-			handleDept(data, elements, currentEle);
+			handleDept(data, elements, currentEle,parentId);
 		});
 	}
 
 	/**
 	 * 加载部门 
 	 */
-	function handleDept(data, elements, currentEle) {
+	function handleDept(data, elements, currentEle,parentId) {
 		if(data.length) {
 			handleData(data, elements);
 			if(elements) {
 				currentEle.click();
 			}
-		} else {
-			// console.log('该单位已经是最后一级');
+		} else if(data.length<=0 && parentId != -1){
+			console.log('该单位已经是最后一级');
 			// app.myApp.alert('该单位已经是最后一级');
 			app.myApp.toast('该单位已经是最后一级', 'none').show(true);
 		}

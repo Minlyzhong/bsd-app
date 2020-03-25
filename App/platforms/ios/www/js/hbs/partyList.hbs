@@ -1,27 +1,38 @@
 {{#.}}
-	<div data-id="{{id}}" class="card qs-party-card" style="border-radius: 5px;">
-        <div class="card-header item-content">
-        <div style="white-space: normal;">{{title}}</div>
-        </div>
+	<div data-id="{{id}}" data-logTypeId="{{logTypeId}}" data-cid="{{catalogId}}" data-isPush="{{isPush}}" data-userName="{{creatorName}}" data-creatorId="{{creatorId}}" data-type="1" class="partyListCard card qs-party-card" style="border-radius: 5px;">
+        
         <div class="card-content"> 
-          <div class="card-content-inner"style="padding-bottom: 0px;">
-          	{{#compare titlePic '!=' ''}}
+			{{#compare titlePic '!=' ''}}
+          <div class="card-content-inner"style="padding-bottom: 0px;background-image: url({{filePath}}{{titlePic}});background-size: 100% 100.2%;background-repeat: no-repeat;">
+          
           		{{#compare picType '==' 0}}
-          			<img class="lazy lazy-fadeIn" src="{{basePath}}{{titlePic}}"/>
+          			{{!-- <img class="" src="../../img/newIcon/partypic.png"/> --}}
+          			{{!-- <img class="lazy lazy-fadeIn" src="{{filePath}}{{titlePic}}"/> --}}
+					  <div class="pagetitle" style="">
+						<div class="titlecontent" style="">{{title}}</div>
+					</div>
           		{{else}}
-  					<video width="100%"  controls>
-          				<source src="{{basePath}}{{titlePic}}" type="video/{{videoType}}">
-					<video>
+  					<img class="lazy lazy-fadeIn" src= "img/video_bg.jpg"/>
+					  <div class="card-footer no-border" data-id="{{id}}"><span>{{creatTs}}</span>
+						<a href=# class="link partyLike"><i class="icon {{#compare isGood '==' false}}icon-noCollect{{else}}icon-collect{{/compare}}"></i><span class="likeTotal">{{goodTotal}}</span></a>
+						<a href=# class="link partyComment"style="margin-right: 20px;"><i class="icon icon-comment"></i><span class="commentTotal">{{commentTotal}}</span></a>
+				</div>
 				{{/compare}}
           	{{else}}
-          		
+			   <div class="card-content-inner"style="padding-bottom: 0px; height:0px"></div>
+          			{{#compare title '!=' ''}}
+					<div class="titlecontent" style="padding-bottom:15px;padding-left: 10px;padding-right: 5px;">{{title}}</div>
+					{{else}}
+					<div class="titlecontent" style="padding-bottom:15px;padding-left: 5px;">{{subTitle}}</div>
+					{{/compare}}
           	{{/compare}}
-          	{{subTitle}}
+          
           </div>
         </div>
-        <div class="card-footer no-border" data-id="{{id}}"><span>{{creatTs}}</span>
+		
+        {{!-- <div class="card-footer no-border" data-id="{{id}}"><span>{{creatTs}}</span>
         		<a href=# class="link partyLike"><i class="icon {{#compare isGood '==' false}}icon-noCollect{{else}}icon-collect{{/compare}}"></i><span class="likeTotal">{{goodTotal}}</span></a>
         		<a href=# class="link partyComment"style="margin-right: 20px;"><i class="icon icon-comment"></i><span class="commentTotal">{{commentTotal}}</span></a>
-        </div>
+        </div> --}}
   	</div>
 {{/.}}

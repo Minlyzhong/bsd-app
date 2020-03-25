@@ -9,11 +9,12 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//查找子部门
-	var findDeptPath = app.basePath + 'extWorkLog/findDept';
+//	var findDeptPath = app.basePath + 'extWorkLog/findDept';
+	var findDeptPath = app.basePath + '/mobile/political/department/list';
 	//选择部门人员
-	var findDeptPeoplePath = app.basePath + 'orgUser/findDeptPeople';
+	var findDeptPeoplePath = app.basePath + '/mobile/user/findDeptPeople/';
 	//模糊搜索部门人员
-	var searchDeptPeoplePath = app.basePath + 'orgUser/searchDeptPeople';
+	var searchDeptPeoplePath = app.basePath + '/mobile/user/searchDeptPeople';
 	//用于判断该部门是否请求过数据
 	var deptIdList = {};
 	var oldContent = '';
@@ -53,7 +54,8 @@ define(['app',
 		deptType = pageData.deptType;
 		showSendLeader();
 		searchList = [];
-		findDept(0, '', '');
+		// findDept(app.user.deptId, '', '',0);
+		findDept(-1, '', '',0);
 	}
 
 	/**
@@ -65,7 +67,7 @@ define(['app',
 		appendEle.find('a').on('click', function() {
 			var deptId = $$(this).data('deptId');
 			if(deptId && !deptIdList[deptId]) {
-				findDept(deptId, $$($$(this).parent()[0]), $(this));
+				findDept(deptId, $$($$(this).parent()[0]), $(this),1);
 			}
 		});
 		appendEle.find('ul').find('img').on('click', function(e) {
@@ -96,18 +98,35 @@ define(['app',
 	 * 选择发送到的用户 
 	 */
 	function chooseLeader() {
+//		var search = $$('.payPeopleerSearchList').find('input[name="payBox"]:checked');
+//		if(search.length == 0) {
+//			app.myApp.alert('请选择用户');
+//		} else {
+//			$$.each(search, function(index, item) {
+//				//判断是否是选中的状态
+//				var id = $$(item).val();
+//				for(var i = 0; i < searchList.length; i++) {
+//					console.log(searchList[i].userId)
+//					if(id == searchList[i].userId) {
+//						leaderList.push(searchList[i]);
+//						console.log(leaderList);
+//					}
+//				}
+//			});
+//			hideSearchList();
+//			showSendLeader();
+//		}
 		var search = $$('.payPeopleerSearchList').find('input[name="payBox"]:checked');
 		if(search.length == 0) {
 			app.myApp.alert('请选择用户');
 		} else {
 			$$.each(search, function(index, item) {
-				//判断是否是选中的状态
-				var id = $$(item).val();
-				for(var i = 0; i < searchList.length; i++) {
-					if(id == searchList[i].userId) {
-						leaderList.push(searchList[i]);
-					}
+				var userObj = {
+					userId: parseInt($$(item).val()),
+					userName: $$(item).parent().find('.item-title span').html(),
+					deptName: $$(item).parent().find('.item-title p').html()
 				}
+				leaderList.push(userObj);
 			});
 			hideSearchList();
 			showSendLeader();
@@ -274,6 +293,8 @@ define(['app',
 			content = content.trim();
 			if(content != oldContent) {
 				oldContent = content;
+				$$('.payPeopleerSearchList ul').html("");
+				pageNo = 1;
 			} else {
 				return;
 			}
@@ -283,11 +304,14 @@ define(['app',
 			return;
 		}
 		app.ajaxLoadPageContent(searchDeptPeoplePath, {
-			userName: content,
-			pageNo: pageNo,
-			type: deptType,
-			deptId: 0,
+			// userId: app.userId,
+			// userName: content,
+			// pageNo: pageNo,
+			// type: 0,
+			// deptId: app.user.deptId
+			name:content
 		}, function(data) {
+			var data = data.data;
 			console.log(data);
 			if(data.length > 0) {
 				if(data.length == 10) {
@@ -337,12 +361,16 @@ define(['app',
 	/**
 	 * 加载部门 
 	 */
-	function findDept(parentId, elements, currentEle) {
+	function findDept(parentId, elements, currentEle,type) {
 		app.ajaxLoadPageContent(findDeptPath, {
 			parentId: parentId,
-			deptType: deptType,
+//			deptType: deptType,
+			// type:type,
+			userId: app.userId
 		}, function(result) {
 			var data = result;
+
+			console.log('加载部门');
 			console.log(data);
 			deptIdList[parentId] = 1;
 			if(data.length) {
@@ -370,12 +398,14 @@ define(['app',
 		} else {
 			appendEle.append('<ul style="padding: 0px;margin: 5px;">');
 		}
+		console.log('处理返回的数据')
+		console.log(data)
 		$$.each(deptData, function(index, item) {
 			appendEle.find('ul').append(
 				'<li>' +
-				'<a href="#" data-deptId="' + item.deptId + '">' + item.deptName + '</a>' +
+				'<a href="#" data-deptId="' + item.id + '">' + item.label + '</a>' +
 				'<div style="position: relative;float: right;bottom: 40px;right: 10px;">' +
-				'<img src="img/icon/icon-user.png" data-deptId="' + item.deptId + '" data-deptName="' + item.deptName + '" />' +
+				'<img src="img/icon/icon-user.png" data-deptId="' + item.id + '" data-deptName="' + item.label + '" />' +
 				'</div>' +
 				'</li>'
 			);
@@ -386,7 +416,7 @@ define(['app',
 		appendEle.find('a').on('click', function() {
 			var deptId = $$(this).data('deptId');
 			if(deptId && !deptIdList[deptId]) {
-				findDept(deptId, $$($$(this).parent()[0]), $(this));
+				findDept(deptId, $$($$(this).parent()[0]), $(this),1);
 			}
 		});
 		appendEle.find('ul').find('img').on('click', function(e) {

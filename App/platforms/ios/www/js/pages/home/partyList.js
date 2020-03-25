@@ -7,10 +7,12 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//加载栏目的文章列表
-	var listPath = app.basePath + 'extContent/loadPagerByCatId';
+	var listPath = app.basePath + '/mobile/political/content/columnArticles';
+	//获取所有推荐日志或微动态
+	var recommendlistPath = app.basePath + '/mobile/worklog/page/recommend/list';
 	//点赞接口
 	var goodPath = app.basePath + 'extGood/saveGood';
-
+	var listTitle = '';
 	var catId = 0;
 
 	/**
@@ -26,8 +28,12 @@ define(['app',
 //		} else {
 //			loadStorage();
 //		}
+		if(app.tenantId == null || app.tenantId == undefined ||app.tenantId == '' ){
+			app.tenantId = 'cddkjfdkdeeeiruei8888'
+		}
 		app.back2Home();
 		clickEvent();
+		
 		attrDefine(page.query.title);
 		pushAndPull(page);
 	}
@@ -36,14 +42,33 @@ define(['app',
 	 * 初始化模块变量
 	 */
 	function initData(pageData) {
+
+		console.log('pageData');
+		console.log(pageData);
 		firstIn = 0;
 		pageDataStorage = {};
 		pageNo = 1;
 		loading = true;
 		catId = pageData.id;
+		listTitle = pageData.title;
+		console.log('catId');
+		console.log(catId);
+		
+		//console.log(pageData.List);
 		ajaxLoadContent();
 	}
 
+
+	//点赞刷新
+	function refreshHome(cId){
+		console.log(cId);
+		catId = cId;
+		console.log(catId);
+		pageNo = 1;
+		loading = true;
+		partyGetList(false);
+		app.myApp.pullToRefreshDone();
+	}
 	/**
 	 * 读取缓存数据 
 	 */
@@ -72,6 +97,7 @@ define(['app',
 	 */
 	function attrDefine(title) {
 		$$('.party-title').html(title);
+
 	}
 
 	/**
@@ -83,16 +109,87 @@ define(['app',
 
 	//获取文章列表
 	function partyGetList(isLoadMore) {
-		app.ajaxLoadPageContent(listPath, {
-			page: pageNo,
-			catalogId: catId,
-			userId: app.userId
-		}, function(result) {
-			var data = result;
-			console.log(data.data);
-			pageDataStorage['partyGetList'] = data.data;
-			handlePartyGetList(data.data, isLoadMore);
-		});
+		console.log(listTitle)
+		if(listTitle == '日志推送'){
+			
+			app.ajaxLoadPageContent1(recommendlistPath, {
+				pageNo: pageNo,
+				pageSize: 10,
+				tenantId: app.tenantId,
+				// catalogId: 17,
+				// catalogId: catId,
+				// userId: app.userId
+			}, function(result) {
+				var data = result;
+				console.log(data.data.records);
+				pageDataStorage['partyGetList'] = data.data.records;
+				handlerecommendList(data.data.records, isLoadMore);
+			});
+		}else{
+			app.ajaxLoadPageContent1(listPath, {
+				current: pageNo,
+				tenantId: app.tenantId,
+				// catalogId: 17,
+				catalogId: catId,
+				userId: app.userId
+			}, function(result) {
+				var data = result;
+				console.log(data.data);
+				pageDataStorage['partyGetList'] = data.data;
+				handlePartyGetList(data.data, isLoadMore);
+			});
+		}
+		
+	}/**
+	 * 加载推荐工作日志列表
+	 * @param {Object} data 数据
+	 * @param {Object} isLoadMore 是否加载更多
+	 */
+	function handlerecommendList(data, isLoadMore) {
+		if(data && data.length > 0) {
+			var partyData = data;
+			$$.each(partyData, function(index, item) {
+				// item.basePath = app.basePath;
+				
+				item.title = item.logTitle;
+				item.creatorId = item.userId;
+				item.creatorId = item.userId;
+				
+				if(item.images !=null && item.images.length > 0 ){
+					item.titlePic = app.filePath + item.images[0].attPath;
+					var picArr = item.titlePic.split('.');
+					var picType = picArr[picArr.length - 1];
+					
+					if(picType == 'mp4' || picType == 'avi' || picType == 'ogg' || picType == 'webm') {
+						item.picType = 1;
+						item.videoType = picType;
+					} else {
+	
+						item.picType = 0;
+					}
+				}else{
+					item.picType = 0;
+					item.titlePic = '';
+				}
+				
+			});
+			if(isLoadMore == true) {
+				console.log(partyData)
+				$$('.party-list-type').append(template(partyData));
+			} else {
+				console.log(partyData)
+				$$('.party-list-type').html(template(partyData));
+				$$('.partyPage').scrollTop(5, 0, null);
+			}
+			//点击日志事件
+			$$('.qs-party-card').on('click', partyContentHandle2);
+
+		
+
+			loading = false;
+		} else {
+
+		}
 	}
 
 	/**
@@ -103,23 +200,34 @@ define(['app',
 	function handlePartyGetList(data, isLoadMore) {
 		if(data && data.length > 0) {
 			var partyData = data;
+			console.log(partyData);
 			$$.each(partyData, function(index, item) {
-				item.basePath = app.basePath;
-				item.forwardTotal = item.forwardTotal || 0;
-				item.commentTotal = item.commentTotal || 0;
-				item.goodTotal = item.goodTotal || 0;
-				var picArr = item.titlePic.split('.');
-				var picType = picArr[picArr.length - 1];
-				if(picType == 'mp4' || picType == 'avi' || picType == 'ogg' || picType == 'webm') {
-					item.picType = 1;
-					item.videoType = picType;
+				// item.basePath = app.basePath;
+				// item.forwardTotal = item.forwardTotal || 0;
+				item.commentTotal = item.commentVolume || 0;
+				// item.goodTotal = item.goodTotal || 0;
+				if(item.titlePic){
+					item.titlePic = app.filePath + item.titlePic;
+					var picArr = item.titlePic.split('.');
+					var picType = picArr[picArr.length - 1];
+					if(picType == 'mp4' || picType == 'avi' || picType == 'ogg' || picType == 'webm') {
+						item.picType = 1;
+						item.videoType = picType;
+					} else {
+						item.picType = 0;
+					}
 				} else {
 					item.picType = 0;
+					item.titlePic = '';
 				}
+				
+				
 			});
 			if(isLoadMore == true) {
+				console.log(partyData);
 				$$('.party-list-type').append(template(partyData));
 			} else {
+				console.log(partyData);
 				$$('.party-list-type').html(template(partyData));
 				$$('.partyPage').scrollTop(5, 0, null);
 			}
@@ -140,11 +248,33 @@ define(['app',
 
 		}
 	}
+	//日志列表的点击事件
+	function partyContentHandle2() {
+		
+			var recordId = $$(this).data('id');
+			var logTypeId = $$(this).data('logTypeId');
+			var userId = $$(this).data('creatorId');
+			var reviewName = $$(this).data('userName');
+			console.log(logTypeId);
+			
+			app.myApp.getCurrentView().loadPage('recordDetail.html?id=' + recordId+ '&userId=' + userId + '&logTypeId=' + logTypeId  + '&state=-1&reviewName=' + reviewName+'&push=true'+'&catId='+catId);
+		
+	}
+
 
 	//文章列表的点击事件
 	function partyContentHandle() {
-		var catalogId = $$(this).data('id');
-		app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + catalogId);
+		if($$(this).data('isPush') == 'true'){
+			var recordId = $$(this).data('id');
+			var userId = $$(this).data('creatorId');
+			var reviewName = $$(this).data('userName');
+			app.myApp.getCurrentView().loadPage('recordDetail.html?id=' + recordId + '&userId=' + userId + '&workType=工作日志&state=-1&reviewName=' + reviewName);
+		}else{
+			var Id = $$(this).data('id');
+			var catalogId = $$(this).data('cid');
+			var type = $$(this).data('type');
+			app.myApp.getCurrentView().loadPage('newsDetail.html?id=' + Id+'&cid='+catalogId+'&type='+type);
+		}	
 	}
 
 	//文章点赞
@@ -210,6 +340,7 @@ define(['app',
 
 	return {
 		init: init,
+		refreshHome:refreshHome,
 		resetFirstIn: resetFirstIn,
 	}
 });

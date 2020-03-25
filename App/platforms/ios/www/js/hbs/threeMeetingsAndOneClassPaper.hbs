@@ -12,7 +12,7 @@
 				</div>
 			</div>
 		</a>
-		{{#compare state '==' 1}}
+		{{#compare totalScore '>' '0'}}
 			<div class="item-subtitle sub-title getDetail" data-id="{{id}}" style="position: absolute;color: #3EAB46;font-size: 14px;"><i class='icon icon-point'></i>已得{{totalScore}}分</div>
 		{{/compare}}
 	</li>

@@ -1,20 +1,38 @@
 {{#.}}
-	<div data-id="{{id}}" class="qs-party-card1"  data-isgood="{{isGood}}" data-catalogId="{{catalogId}}" stlye="background:#FFFFFF;">
+	<div data-id="{{id}}" class="qs-party-card1"  data-isgood="{{isGood}}" data-type="1" data-catalogId="{{catalogId}}" stlye="background:#FFFFFF;">
         <!--<div class="card-header item-content">
         	<div style="white-space: normal;"></div>
         </div>-->
+	
         {{#compare titlePic '!=' ''}}
           	{{#compare picType '==' 0}}
 	        <div class="card-content" style="overflow:hidden;padding:10px"> 
-	          <div class="card-content-inner1" style="padding-bottom: 0px;display:block;float:left;padding-right:10px;">
-	          	<img class="lazy lazy-fadeIn" src="{{basePath}}{{titlePic}}"/>
+	          <div class="card-content-inner1 inner1" >
+	          	<img class="lazy lazy-fadeIn" src="{{titlePic}}"/>
 	          	{{subTitle}}
 	          </div>
-	          <div style="display:block;color: #333333;font-size: 17px;">
+	          <div style="display:block;color: #333333;font-size: 14px;">
 	          	
 	          	<div style="display:block;" data-id="{{id}}">
-	          		{{title}}<br/>
-	          		<a href=# class="link partyLike">
+	          		<span class="innerTitle" style="">{{title}}</span><br/>
+					  <div style="color: #999999;font-size: 12px; ">
+						  
+						<span>
+							  {{#compare newsfrom '!=' null}}
+							   {{newsfrom}}
+								{{else}}
+								人民网
+							  {{/compare}}	 
+					  </span>&nbsp;&nbsp;
+					  <span >
+						  {{commentTotal}}评
+					  </span>
+					  <span >&nbsp;&nbsp;
+						  {{creatTs}}
+					  </span>
+					  </div>
+					  
+	          		{{!-- <a href=# class="link partyLike">
 	        			<!--<i class="icon {{#compare isGood '==' false}}icon-noCollect{{else}}icon-collect{{/compare}}"></i>-->
 	        			<i class="icon icon-noCollect1"></i>
 	        			<span class="likeTotal">{{goodTotal}}</span>
@@ -22,7 +40,7 @@
 	        		<a href=# class="link partyComment"style="margin-right: 20px;">
 	        			<i class="icon icon-comment1"></i>
 	        			<span class="commentTotal">{{commentTotal}}</span>
-	        		</a>
+	        		</a> --}}
 	        	</div>
 	          </div>
 	        </div>
@@ -40,11 +58,11 @@
 	          	</div>
 		     </div>
 	        <div class="card-footer no-border" data-id="{{id}}"><span>{{creatTs}}</span>
-	        		<a href=# class="link partyLike">
+	        		{{!-- <a href=# class="link partyLike"> --}}
 	        			<!--<i class="icon {{#compare isGood '==' false}}icon-noCollect{{else}}icon-collect{{/compare}}"></i>-->
-	        			<i class="icon icon-noCollect1"></i>
+	        			{{!-- <i class="icon icon-noCollect1"></i>
 	        			<span class="likeTotal">{{goodTotal}}</span>
-	        		</a>&nbsp;&nbsp;
+	        		</a>&nbsp;&nbsp; --}}
 	        		<a href=# class="link partyComment"style="margin-right: 20px;">
 	        			<i class="icon icon-comment1"></i>
 	        			<span class="commentTotal">{{commentTotal}}</span>
@@ -52,22 +70,39 @@
 	        </div>
 	    	{{/compare}}
       	{{else}}
+		  
       		<div class="card-content" style="overflow:hidden;padding:10px"> 
-	          <div class="card-content-inner1" style="padding-bottom: 0px;display:block;float:left;padding-right:10px;">
+	          <div class="card-content-inner1" style="padding-bottom: 0px;display:block;float:right;padding-right:10px;">
 	          	{{subTitle}}
 	          </div>
-	          <div style="display:block;color: #333333;font-size: 17px;" >
+	          <div style="display:block;color: #333333;font-size: 17px;min-height: 55px;margin-top: 5px;" >
 
 	          	<div style="display:block;" data-id="{{id}}">
-	          		{{title}}<br/>
-	          		<a href=# class="link partyLike">
+					<div class="limitLine">
+						{{title}}
+					</div>
+	          		{{!-- <br/> --}}
+	          		{{!-- <a href=# class="link partyLike">
 	        			<!--<i class="icon {{#compare isGood '==' false}}icon-noCollect{{else}}icon-collect{{/compare}}"></i>-->
 	        			<i class="icon icon-noCollect1"></i>
-	        			<span class="likeTotal">{{goodTotal}}</span>
-	        		</a>&nbsp;&nbsp;
+	        			<span class="likeTotal">{{goodTotal}}</span> --}}
+	        		{{!-- </a>&nbsp;&nbsp; --}}
+					 
 	        		<a href=# class="link partyComment"style="margin-right: 20px;">
+						<span style="color: #999999;
+    font-size: 13px;">
+							  {{#compare newsfrom '!=' null}}
+							   {{newsfrom}}
+								{{else}}
+								人民网
+							  {{/compare}}	 
+					  </span>&nbsp;&nbsp;
 	        			<i class="icon icon-comment1"></i>
 	        			<span class="commentTotal">{{commentTotal}}</span>
+						<span style="color: #999999;
+    font-size: 13px;">&nbsp;&nbsp;
+						  {{creatTs}}
+					  </span>
 	        		</a>
 	        	</div>
 	          </div>
@@ -76,6 +111,6 @@
   	</div>
 {{/.}}
 <div class="infinite-scroll-preloader">
-    <div class="preloader" style="left:35%;margin-left:0px;margin-top:0px;position:absolute;"></div>
-    <div style="position: absolute;left: 50%;padding-top: 10px;font-size: 17px;">加载中...</div>
+    <div class="preloader" style="left:40%;margin-left:0px;margin-top:0px;position:absolute;"></div>
+    <div style="position: absolute;left: 50%;font-size: 17px;">加载中...</div>
  </div>

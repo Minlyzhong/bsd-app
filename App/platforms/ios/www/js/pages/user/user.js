@@ -7,11 +7,11 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//用户积分排名接口
-	var userPath = app.basePath + 'orgUser/findScoreBoardByUserId';
+	var userPath = app.basePath + '/mobile/political/score/board/';
 	//保存扫描记录
-	var userRecordPath = app.basePath + 'extUserPage/sendUserScanRecord';
+	var userRecordPath = app.basePath + '/mobile/scan/record/save';
 	//用户工具接口
-	var userToolPath = app.basePath + 'extUserPage/getUserTool';
+	var userToolPath = app.basePath + '/mobile/menu/tools';
 	var userInfo = '';
 	var allInfo = '';
 	var lat = 0.0;
@@ -24,31 +24,29 @@ define(['app',
 	 */
 	function init(page) {
 		var loginCB = app.myApp.onPageBack('login', function(backPage) {
-			console.log('用户更改');
+			//console.log('用户更改');
 			//获取用户信息
 			loadUserInfo();
 		});
 		var userInfoCB = app.myApp.onPageBack('user/userInfo', function(backPage) {
-			console.log('检查头像');
+			//console.log('检查头像');
 			//获取用户信息
 			var oldHeadPic = $$('.user-header img').attr('src');
 			if(oldHeadPic != localStorage.getItem('headPic')  && oldHeadPic != null && oldHeadPic != '') {
 				$$('.user-header img').attr('src', localStorage.getItem('headPic'));
 			}
 		});
-//		if(firstIn) {
-			initData(page.query);
-//		} else {
-//			loadStorage();
-//		}
-		//app.back2Home();
+		initData(page.query);
 		attrDefine(page);
 		clickEvent(page);
 		
-		$$('.branchStyle').on('click',function(){
-			//app.myApp.getCurrentView().loadPage('myMap.html');
-			app.myApp.alert('该功能尚未开放');
-		})
+		// $$('.branchStyle').on('click',function(){
+		// 	app.myApp.getCurrentView().loadPage('myBranch.html');
+		// });
+		
+		$$('.carousel-top-title2').on('click',function(){
+			app.myApp.getCurrentView().loadPage('myBranch.html');
+		});
 	}
 
 	/**
@@ -73,8 +71,9 @@ define(['app',
 	function loadStorage() {
 		setPageStorageClear(pageDataStorage['pageStorageClear']);
 		if(app.userId > 0) {
-			$$('.userName').html(app.user.userName);
-			console.log(app.user.userName)	
+			$$('.userName').css('display','block');
+			$$('.userName').html(app.user.nickName);
+			//console.log(app.user.userName)	
 			$$('.user-header img').attr('src', app.headPic);
 	
 			$$('.login-out').show();
@@ -110,7 +109,10 @@ define(['app',
 	 * 点击事件
 	 */
 	function clickEvent(page) {
-		$$('.setting').on('click', function() {
+		// $$('.setting').on('click', function() {
+		// 	app.myApp.getCurrentView().loadPage('setting.html');
+		// });
+		$$('.carousel-top-title1').on('click', function() {
 			app.myApp.getCurrentView().loadPage('setting.html');
 		});
 		$$('.user-header img').on('click', userInformation);
@@ -121,10 +123,14 @@ define(['app',
 				app.roleId = -1;
 				app.headPic = 'img/icon/icon-user_d.png';
 				$$('.user-header img').attr('src', app.headPic);
-				$$('.user-header1 img').attr('src', app.headPic);
+				// $$('.user-header1 img').attr('src', '../../../img/newIcon/home_title.png');
+				// $$('.user-header1 img').attr('alt', 'user.js');
 				localStorage.setItem('headPic', 0);
 				localStorage.setItem('userId', -1);
 				localStorage.setItem('user', '-1');
+				localStorage.setItem('userDetail', '-1');
+				localStorage.setItem('access_token', null);
+				localStorage.setItem('lastStudyDay', 0);
 				//localStorage.setItem('loginName', null);
 				localStorage.setItem('password', null);
 				localStorage.setItem('verify', '1');
@@ -133,6 +139,14 @@ define(['app',
 				app.removejscssfile('blue.css','css');
 				app.removejscssfile('green.css','css');
 				app.myApp.getCurrentView().loadPage('login.html');
+				//新闻速递只给管理员，党组织管理员和乡镇管理员（3，4，5）
+				// if(app.roleId == 4 || app.roleId == 5 || app.roleId ==6){
+				// 	$$('.homeCamera').css('display','block');
+				// }else{
+				// 	$$('.homeCamera').css('display','none');
+				// }
+				// $$('.homeCamera').css('display','block');
+				$$('.homeCamera').css('display','none');
 			})
 		});
 		$$('.login-in').on('click', function() {
@@ -181,12 +195,16 @@ define(['app',
 	}
 
 	function loadUserInfo() {
-		if(app.userId > 0) {
+		// console.log(app.user.userId+'app.userId')
+		if(app.userId > 0 ) {
 			$$('.branchStyle').css('display','block');
-			$$('.userName').html(app.user.userName);
-			$$('.deptName').html(app.user.deptName);
+			$$('.userName').css('display','block');
+			$$('.userName').html(app.user.nickName);
+			$$('.userDeptName').html(app.userDetail.deptName);
 			$$('.user-header img').attr('src', app.headPic);
-			$$('.user-header1 img').attr('src', app.headPic);
+			// $$('.user-header1 img').attr('src', app.headPic);
+			// $$('.user-header1 img').attr('alt', 'user-load.js');
+			// $$('.user-header1 img').attr('src', '../../../img/newIcon/home_title.png');
 			$$('.login-out').show();
 			$$('.login-in').hide();
 			//用户信息
@@ -196,7 +214,7 @@ define(['app',
 		} else {
 			$$('.branchStyle').css('display','none');
 			$$('.userName').html('---');
-			$$('.deptName').html('---');
+			$$('.userDeptName').html('---');
 			$$('.login-out').hide();
 			$$('.score').html('--');
 			$$('.rank').html('--');
@@ -216,12 +234,15 @@ define(['app',
 
 	//用户信息
 	function getUserInfo() {
-		app.ajaxLoadPageContent(userPath, {
-			userId: app.userId
+		app.ajaxLoadPageContent(userPath+app.userId, {
+			
 		}, function(data) {
-			console.log(data);
+			//console.log(data);
 			pageDataStorage['userInfo'] = data;
 			handleUserInfo(data);
+		},
+		{
+			type:'GET'
 		});
 	}
 
@@ -230,7 +251,7 @@ define(['app',
 	 * @param {Object} data
 	 */
 	function handleUserInfo(data) {
-		userInfo = data;
+		userInfo = data.data;
 //		if(infoData && infoData.length > 0) {
 //			/*
 //			 * 修改为用userId判断
@@ -242,6 +263,8 @@ define(['app',
 //				}
 //			});
 //		}
+		console.log('userInfo')
+		console.log(userInfo)
 		if(userInfo.totalScore > 0) {
 			$$('.score').html(userInfo.totalScore);
 		} else {
@@ -254,15 +277,15 @@ define(['app',
 			$$('.rank').html('--');
 		}
 		allInfo = infoData;
-		console.log(userInfo);
+		//console.log(userInfo);
 	}
 
 	//用户工具
 	function getUserTool() {
 		app.ajaxLoadPageContent(userToolPath, {
-			userId: app.userId
+			// userId: app.userId
 		}, function(data) {
-			console.log(data);
+			//console.log(data);
 			var pageArr = [
 				'login',
 				'userScoreInfo',
@@ -276,9 +299,11 @@ define(['app',
 				if(item.toolUrl.indexOf('.') != -1) {
 					pageArr.push(item.toolUrl.split('.')[0]);
 				}
+
+				
 			});
 			setPageStorageClear(pageArr);
-			pageDataStorage['userTool'] = data;
+			pageDataStorage['userTool'] = data.data;
 			handleUserTool(data);
 		});
 	}
@@ -295,14 +320,23 @@ define(['app',
 	function handleUserTool(data) {
 		if(data.data && data.data.length > 0) {
 			$$.each(data.data, function(_, item) {
-				item.toolBasePath = app.basePath;
+				item.toolBasePath = app.filePath;
 			});
 			$$('.row.toolList').html(toolTemplate(data.data));
 			$$('.row.toolList .grid').on('click', function() {
 				var appId = $$(this).data('id');
 				if(appId == 'villageCheck') {
+					// 暂时注释
 					userScan();
-				} else {
+					// app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+'众志成城'+'&id=41'+'&type=' + 'ZYFW');
+					// app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+'志愿服务'+'&id=41'+'&type=' + 'ZYFW');
+					// app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+'会议'+'&id=13'+'&type=' + 'MEETING');
+				}else if(appId == '/app/KeDaXunFei.apk'){
+					//下载科大讯飞
+					app.myApp.confirm('确定要下载吗？', function(e) {
+						open(app.filePath+appId, '_system');
+					});
+				}else {
 					app.myApp.getCurrentView().loadPage(appId);
 				}
 			});
@@ -312,16 +346,33 @@ define(['app',
 	function userScan() {
 		cordova.plugins.barcodeScanner.scan(
 			function(result) {
-				result.text = JSON.parse(result.text);
-				if(result.text.type && result.text.id) {
-					scanInfo = result.text;
-					app.myApp.showPreloader("登记中...");
-					sendUserRecord();
-				} else if(result.cancelled == "1") {
-					app.myApp.toast('取消扫描', 'none').show(true);
-				} else {
-					app.myApp.alert("扫描出错，请检查二维码是否正确");
+				// alert(1);
+				result = JSON.parse(result.text);
+				// alert(result);
+				// alert(result.type);
+				// alert(result.desc);
+				// alert(result.id);
+				if(result){
+					var meetingTitle = result.desc;
+					var meetingId = result.id;
+					app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+meetingTitle+'&id='+meetingId+'&type=' + result.type);
 				}
+				// if(result.type=='MEETING'){
+					
+				// }else{
+				// 	var VolunteerService = result.desc;
+				// 	var VolunteerServiceId = result.id;
+				// 	app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+VolunteerService+'&id='+VolunteerServiceId);
+				// }
+				// if(result.text.type && result.text.id) {
+				// 	scanInfo = result.text;
+				// 	app.myApp.showPreloader("登记中...");
+				// 	sendUserRecord();
+				// } else if(result.cancelled == "1") {
+				// 	app.myApp.toast('取消扫描', 'none').show(true);
+				// } else {
+				// 	app.myApp.alert("扫描出错，请检查二维码是否正确");
+				// }
 			},
 			function(error) {
 
@@ -409,6 +460,8 @@ define(['app',
 				} else {
 					app.myApp.alert('登记出错<br />请检查网络状态！');
 				}
+			},{
+				type:'POST'
 			});
 		}
 	}
@@ -422,6 +475,7 @@ define(['app',
 
 	return {
 		init: init,
+		getUserInfo:getUserInfo,
 		resetFirstIn: resetFirstIn,
 	}
 });

@@ -7,7 +7,7 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//搜索所有试卷
-	var loadAllSubjectPath = app.basePath + 'exam/loadAllSubject';
+	var loadAllSubjectPath = app.basePath + '/mobile/education/exam/list';
 	var content = '';
 
 	/**
@@ -115,14 +115,15 @@ define(['app',
 			title: content,
 		}, function(data) {
 			console.log(data);
+			var examdata=data.data
 			if(!content) {
 				if(isLoadMore) {
-					pageDataStorage['exam'] = pageDataStorage['exam'].concat(data);
+					pageDataStorage['exam'] = pageDataStorage['exam'].concat(examdata);
 				} else {
-					pageDataStorage['exam'] = data;
+					pageDataStorage['exam'] = examdata;
 				}
 			}
-			handleExam(data, isLoadMore);
+			handleExam(examdata, isLoadMore);
 		});
 	}
 
@@ -172,6 +173,7 @@ define(['app',
 	 * 试题点击事件 
 	 */
 	function examListClick() {
+		console.log($$(this).parents('li'))
 		var id = $$(this).parents('li').data('id'),
 			name = $$(this).parents('li').data('name'),
 			count = $$(this).parents('li').data('count'),

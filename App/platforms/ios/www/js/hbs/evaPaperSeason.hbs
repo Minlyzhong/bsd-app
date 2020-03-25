@@ -1,0 +1,31 @@
+{{#.}}
+	<li>
+		<a class="item-link item-content" data-id="{{id}}" data-score="{{score}}" data-target="{{target}}" data-minus="{{minus}}" data-memo="{{memo}}" style="padding-left: 0px;">
+			<!--<div class="item-media"><i class="icon icon-plan"></i></div>-->
+			<div class="item-inner" style="padding-left: 15px;">
+				<div class="item-title-row" style="height: 32px;">
+					<div class="item-title kpi-title">{{title}}</div>
+				</div>
+				<div class="item-subtitle sub-title">{{target}}</div>
+				<div class="item-title-row" style="height: 20px; background: 0px; padding-top: 5px;">
+					<div class="item-subtitle sub-title" style="color: #ed4c3c;">最高分{{score}}分</div>
+					{{#compare state '==' 0}}
+						<input type="text" name="scoreEcaluation" id="scoreEcaluation" class="abcSeason" placeholder="请填写分数"/>
+						<input type="hidden" class='hiddenHS' value="{{score}}"/>
+						<input type="hidden" class='hiddenID' value="{{id}}"/>
+					{{/compare}}
+					{{#compare state '==' 1}}
+						<div class="item-subtitle sub-title" style="color: #3EAB46;">自评分:{{userScore}}分</div>
+					{{/compare}}
+				</div>
+				{{#compare hasScore '==' true}}
+				<div class="item-title-row" style="height: 20px; background: 0px; padding-top: 5px;">	
+						<div class="item-subtitle sub-title" style="color: #3EAB46;"></div>
+						<div class="item-subtitle sub-title" style="color: #3EAB46;">领导评分:{{totalScore}}分</div>
+				</div>
+				{{/compare}}
+			</div>
+		</a>
+	</li>
+{{/.}}
+<p><a href="#" class="button button-round active scoreSubmitSeason">提交分数</a></p> 

@@ -39,6 +39,7 @@ define(['app',
 	var alreadyGetNewList = false;
 	var studyTimeCount = 0;
 	var studyData;
+	// var homeSwiper = null;
 	// var tenantId = 'cddkjfdkdeeeiruei8888';
 	/**
 	 * 页面初始化 
@@ -104,8 +105,17 @@ define(['app',
 	
 	// 登录后刷新
 	function refreshLogin(){
-		getWiper();
+
+		// console.log($$('#homeTopSwiper'));
+		// 	console.log($$('#homeTopSwiper')[0].children);
+		// 	console.log($$('#homeTopSwiper')[0].children.length);
+
+		// if($$('#homeTopSwiper')[0].children.length < 5){
+		// 	getWiper();
+		// }
+
 		
+		console.log('登录后刷新');
 		partyGetList(false);
 		getPatryList();
 	}
@@ -160,6 +170,7 @@ define(['app',
 			localStorage.setItem('access_token', null);
 			localStorage.setItem('roleId', -1);
 			localStorage.setItem('password', null);
+			localStorage.setItem('lastStudyDay', 0);
 			//把主题设置为默认的，移除css
 			app.removejscssfile('blue.css','css');
 			app.removejscssfile('green.css','css');
@@ -202,7 +213,7 @@ define(['app',
 		if(app.user == -1 || app.user ==''|| app.user == null|| app.user == undefined){
 			return;
 		}else{
-			console.log('弹出框')
+			
 		app.ajaxLoadPageContent(studyEveryDayPath+app.userId, {
 				// userId:app.userId
 				}, function(data) {
@@ -211,18 +222,18 @@ define(['app',
 						console.log(data);
 						studyData = data.data;
 						alreadyGetStudyData = true;
-						console.log('弹出框');
-
-						console.log(app.isLog);
-						console.log(alreadyLoginFlag);
-						console.log(alreadyGetNewList);
-						console.log(alreadyCheckVersionFlag);
 						var curDay = app.utils.getCurTime().split(" ")[0];
-						console.log(curDay);
-						console.log(localStorage.getItem('lastStudyDay'));
-						console.log(curDay == localStorage.getItem('lastStudyDay'));
-
+						if(app.isLog == true){
+							alreadyLoginFlag = true;
+						}	
+						var today = app.utils.getCurTime().split(" ")[0];
+						if(today == localStorage.getItem('updateTime')) {
+							console.log('今天已经检查完毕');
+							alreadyCheckVersionFlag = true;
+						}
+									
 						showStudyEveryDayDialog();
+						// setTimeout(showStudyEveryDayDialog(),1000);
 					}
 					
 				});
@@ -234,21 +245,26 @@ define(['app',
 	 * 展示每日一学弹出框
 	 */
 	function showStudyEveryDayDialog(){
+
+		
+		// console.log(alreadyGetNewList)
 		var curDay = app.utils.getCurTime().split(" ")[0];
 		if(curDay == localStorage.getItem('lastStudyDay')){
 			return;
 		}else if(app.isLog && alreadyLoginFlag && alreadyGetStudyData && alreadyGetNewList && alreadyCheckVersionFlag ){
+			console.log('弹出框')
 			setTimeout(function(){
 				if(studyData != null && studyData != undefined && JSON.stringify(studyData) != "{}"){
 					localStorage.setItem('lastStudyDay',curDay);
 					app.myApp.alert(studyData.contentTitle, '每日一学',function () {
-				       		app.myApp.getCurrentView().loadPage('dailyLearning.html');
+				    	app.myApp.getCurrentView().loadPage('dailyLearning.html');
 					});
 				}
 			},1000);
-		}else {
-			setTimeout(showStudyEveryDayDialog(),1000);
 		}
+		// else {
+		// 	setTimeout(showStudyEveryDayDialog(),1000);
+		// }
 	}
 	
 	/**
@@ -279,7 +295,7 @@ define(['app',
 		//先检查更新
 		// 暂时注释
 		
-			checkUpdate();
+		checkUpdate();
 		
 		
 
@@ -295,15 +311,20 @@ define(['app',
 	 * 获取滚动页
 	 */
 	function getWiper() {
-	console.log(app.tenantId)
-	
+	console.log(pageDataStorage['wiper'])
+
+	if(pageDataStorage['wiper']){
+		// $$('.homeSwiper .swiper-wrapper').html('');
+		// $$('.homeSwiper .swiper-pagination').html('');
+		
+	}
 	app.ajaxLoadPageContent(swiperPath, {
-			
+			catalogId:2,
 			size:5,
 			// tenantId: app.tenantId
 			tenantId: app.tenantId
 		}, function(data) {
-			// console.log(data)
+			console.log(data);
 			pageDataStorage['wiper'] = data.data;
 			pageDataStorage['partyFirstId'] = data.id;
 			handleWiper(data.data);
@@ -311,9 +332,7 @@ define(['app',
 			type:'GET',
 			dataType:'json'
 	});
-		
-		
-
+	
 	}
 
 	/**
@@ -324,7 +343,7 @@ define(['app',
 		if(data) {
 			photoBrowserPhotos = [];
 			var datas = data;
-			patryList = [];
+			// patryList = [];
 			// for(var i= 0;i< datas.length;i++){
 			// 	if(datas[i].titlePic==null||datas[i].titlePic=='after-title'){
 			// 		datas.splice(i,1);
@@ -343,6 +362,9 @@ define(['app',
 					html:'<span class="photo-browser-zoom-container"><img src="'+app.filePath + item.titlePic+'"></span><input type="hidden" class="homeId" value="'+item.id+'"/>'
 				};
 				photoBrowserPhotos.push(images);
+
+				
+
 				$$('.homeSwiper .swiper-wrapper').append(
 					'<div class="swiper-slide homeSlider" data-id="'+item.id+'"data-isgood="'+item.isGood+' data-type= 1">' +
 					'<img data-src="' + app.filePath + item.titlePic + '" src="' + app.filePath + item.titlePic + '" class="swiper-lazy">'
@@ -351,6 +373,12 @@ define(['app',
 					'</div>'
 					);
 			});
+
+			console.log($$('#homeTopSwiper'));
+			console.log($$('#homeTopSwiper')[0].children);
+			console.log($$('#homeTopSwiper')[0].children.length);
+			
+
 			homeSwiper = app.myApp.swiper('.homeSwiper', {
 				pagination: '.homePager1',
 				speed: 800,
@@ -358,6 +386,7 @@ define(['app',
 				autoplayDisableOnInteraction: false,
 				loop: true,
 			});
+			
 			//photoBrowser图片浏览器
 			var photoBrowserPopup = app.myApp.photoBrowser({
 				photos: photoBrowserPhotos,
@@ -368,9 +397,9 @@ define(['app',
 
 			$$('.homeSlider').on('click', function() {
 				var index = $$(this).index() - 1;
-				if(index>4){
+				if(index > 4){
 					//跳回第一张index设置为0
-					index=0;
+					index = 0;
 				}else if(index == -1){
 					//从第一张跳回最后一张index设置为4
 					index = 4;
@@ -529,6 +558,23 @@ define(['app',
 					});
 					console.log('list===')
 					console.log(list)
+					
+					var result = [];
+				 	var obj = {};
+				   for(var i =0; i<list.length; i++){
+				      if(!obj[list[i].id]){
+				         result.push(list[i]);
+				         obj[list[i].id] = true;
+				      }
+					}
+					list = result;
+					console.log('list2===')
+					console.log(result)
+					// $$.each(list, function(index, item){
+					// 	if(item.indexOf(arr[i])==-1){
+					// 		hash.push(arr[i]);
+					// 	   }
+					// })
 				}
 			});
 			app.myApp.getCurrentView().loadPage('partyList2.html?id='+id+'&title='+title+'&List='+JSON.stringify(list));
@@ -619,13 +665,13 @@ define(['app',
 									});
 									},1200);
 								}
+							}else{
+								alreadyCheckVersionFlag = true;
+									getStudyEveryDayData();
 							}
-						} else {
-							console.log('已经是最新版本');
+							
+							
 
-							alreadyCheckVersionFlag = true;
-	//						console.log("alreadyCheckVersionFlag4:" + alreadyCheckVersionFlag);
-							// getStudyEveryDayData();
 						}
 					},
 					error: function() {
@@ -717,6 +763,7 @@ define(['app',
 				handlePartyGetList(data.data, isLoadMore);
 			}
 			alreadyGetNewList = true;
+			console.log('获取文章列表-每日一学');
 			getStudyEveryDayData();
 		},
 		);

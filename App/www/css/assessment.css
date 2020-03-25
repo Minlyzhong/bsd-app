@@ -665,7 +665,7 @@
 .threeMeetingsAndOneClassCancelBtn,
 .evaSearchCancelBtn,
 .evaLSearchCancelBtn,
-.searchCancelBtn {
+.searchCancelBtn, .searchNewsBtn {
 	color: white;
 	width: 50px;
 	margin-right: 5%;
@@ -721,5 +721,6 @@
 	font-size: 17px;
 	font-family: PingFang-SC-Medium;
 	margin-top: 10px;
+	padding-bottom: 10px;
 	color: #404040;
 }

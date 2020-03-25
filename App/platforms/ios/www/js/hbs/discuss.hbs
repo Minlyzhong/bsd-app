@@ -1,16 +1,16 @@
 {{#.}}
     <li>
-		<div data-id={{roomId}} data-title={{roomTitle}} class="link item-content discuss-content">
+		<div data-id={{id}} data-title={{title}} class="link item-content discuss-content">
 		    <div class="item-inner">
 			    <div class="item-title-row">
-				    <div class="item-title" style="font-size: 15px;">{{roomTitle}}</div>
-				    <div class="item-after" style="font-size: 13px;">{{roomTs}}</div>
+				    <div class="item-title" style="font-size: 15px;">{{title}}</div>
+				    <div class="item-after" style="font-size: 13px;">{{createdDate}}</div>
 			    </div>
 			    <div class="discuss-row item-subtitle" style="font-size: 14px;">
-			    		<span class="discussName color-orange"style="width: 80%;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{{roomCreater}}</span>
+			    		<span class="discussName color-orange"style="width: 80%;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{{creatorName}}</span>
 			    		<div class="color-gray" style="font-size: 13px;">
 			    			<span style="padding-left: 10px;">回复:</span>
-			    			<span class="color-orange">{{chatTotal}}</span>
+			    			<span class="color-orange">{{replyNum}}</span>
 			    		</div>
 			    </div>
 		    	</div>

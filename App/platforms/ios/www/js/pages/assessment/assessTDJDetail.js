@@ -10,11 +10,13 @@ define(['app',
 	var pageNotNo = 1;
 	var NotLoading = true;
 	//获取支部已完成的考核清单
-	var findCompletionOfTopicPath = app.basePath + 'statHelper/findCompletionOfTopic';
+	var findCompletionOfTopicPath = app.basePath + '/mobile/partyAm/findCompletionOfTopic';
 	var deptId = 0;
 	var topicId = 0;
 	var id = 0;
-
+	var startDate = '';
+	var endDate = '';
+	
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -38,12 +40,15 @@ define(['app',
 	 * 初始化模块变量
 	 */
 	function initData(pageData) {
+		console.log(pageData);
 		firstIn = 0;
 		pageDataStorage = {};
 		pageNo = 1;
 		loading = true;
 		pageNotNo = 1;
 		NotLoading = true;
+		startDate = pageData.startDate;
+		endDate = pageData.endDate;
 		deptId = pageData.deptId;
 		topicId = pageData.topicId;
 		id = pageData.id;
@@ -105,18 +110,24 @@ define(['app',
 		app.ajaxLoadPageContent(findCompletionOfTopicPath, {
 			deptId: id,
 			knowledgePaperId: topicId,
-			page: pageNo,
-			limit: 10,
+			current: pageNo,
+			size: 10,
 			type: 1,
+			
 		}, function(result) {
-			var data = result.data;
-			console.log(data);
-			if(isLoadMore) {
-				pageDataStorage['paper'] = pageDataStorage['paper'].concat(data);
-			} else {
-				pageDataStorage['paper'] = data;
+			if(result.code == 0){
+				var data = result.data.records;
+				console.log(data);
+				if(isLoadMore) {
+					pageDataStorage['paper'] = pageDataStorage['paper'].concat(data);
+				} else {
+					pageDataStorage['paper'] = data;
+				}
+				handlePaper(data, isLoadMore);
+			}else{
+				myApp.toast('网络异常', 'error').show(true);
 			}
-			handlePaper(data, isLoadMore);
+			
 		});
 	}
 
@@ -134,7 +145,7 @@ define(['app',
 			$$('.atdjdList .item-content').on('click', function() {
 				var _topicId = $$(this).data("id");
 				var title = $$(this).data('title');
-				app.myApp.getCurrentView().loadPage('assessJDDetail.html?topicId=' + _topicId + '&title=' + title);
+				app.myApp.getCurrentView().loadPage('assessJDDetail.html?topicId=' + _topicId + '&title=' + title+'&startDate='+startDate+'&endDate='+endDate+'&deptId='+id);
 			});
 			if(data.length == 10) {
 				loading = false;
@@ -149,18 +160,23 @@ define(['app',
 		app.ajaxLoadPageContent(findCompletionOfTopicPath, {
 			deptId: id,
 			knowledgePaperId: topicId,
-			page: pageNo,
-			limit: 10,
+			current: pageNo,
+			size: 10,
 			type: 0,
 		}, function(result) {
-			var data = result.data;
-			console.log(data);
-			if(isLoadMore) {
-				pageDataStorage['not'] = pageDataStorage['not'].concat(data);
-			} else {
-				pageDataStorage['not'] = data;
+			if(result.code == 0){
+				var data = result.data.records;
+				console.log(data);
+				if(isLoadMore) {
+					pageDataStorage['not'] = pageDataStorage['not'].concat(data);
+				} else {
+					pageDataStorage['not'] = data;
+				}
+				handleNot(data, isLoadMore);
+			}else{
+				myApp.toast('网络异常', 'error').show(true);
 			}
-			handleNot(data, isLoadMore);
+			
 		});
 	}
 	

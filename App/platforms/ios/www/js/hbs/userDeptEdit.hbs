@@ -4,10 +4,10 @@
 		<div class="item-input">
 			<select id="partyType" name="partyType">
 				{{#each partyTypeArr}}
-					{{#compare key 'equalNumber' ../partyType}}
-					<option value="{{key}}" selected>{{val}}</option>
+					{{#compare subKey 'equalNumber' ../partyType}}
+					<option value="{{subKey}}" selected>{{subVal}}</option>
 					{{else}}
-					<option value="{{key}}">{{val}}</option>
+					<option value="{{subKey}}">{{subVal}}</option>
 					{{/compare}}
 				{{/each}}
 			</select>

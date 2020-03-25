@@ -63,13 +63,22 @@ define(["handlebars"], function(Handlebars) {
 			case -2:
 				ret = '<div class="qs-state state_end"><span>审核未通过</span></div>';
 				break;
-			case 1:
+			case 0:
 				ret = '<div class="qs-state state_bein"><span>审核中</span></div>';
 				break;
-			case 2:
+			case 1:
 				ret = '<div class="qs-state state_enter"><span>报名中</span></div>';
 				break;
+			case 2:
+				ret = '<div class="qs-state state_end"><span>审核未通过</span></div>';
+				break;
+			case 3:
+				ret = '<div class="qs-state state_end"><span>报名截至</span></div>';
+				break;
 			case 4:
+				ret = '<div class="qs-state state_end"><span>报名截至</span></div>';
+				break;
+			case 5:
 				ret = '<div class="qs-state state_end"><span>报名截至</span></div>';
 				break;
 		}

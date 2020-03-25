@@ -146,7 +146,7 @@ define(['app','hbs!js/hbs/stepList'], function(app, stepTemp) {
 						list1[index].id = item.id;
 						list1[index].isWriter = 1;
 						list1[index].time = item.meetingTime;
-						list1[index].modifer = item.record;
+						list1[index].modifer = item.creatorName;
 
 					}
 				})
@@ -222,7 +222,12 @@ define(['app','hbs!js/hbs/stepList'], function(app, stepTemp) {
 					}else if(type > 4 && isWriter == 0){
 						app.myApp.getCurrentView().loadPage('processAddResult.html?type='+type+'&name='+name+'&pId='+pId+'&pTitle='+pTitle+'&eventId='+eventId);
 					}else if(type > 4 && isWriter == 1){
-						app.myApp.getCurrentView().loadPage('processShowResult.html?type='+type+'&name='+name+'&eventId='+eventId+'&pId='+pId);
+						if(type == 5){
+							app.myApp.getCurrentView().loadPage('processShowResult.html?type='+type+'&name='+name+'&eventId='+eventId+'&pId='+pId+'&pTitle='+pTitle);
+						}else{
+							app.myApp.getCurrentView().loadPage('processShowResult2.html?type='+type+'&name='+name+'&eventId='+eventId+'&pId='+pId+'&pTitle='+pTitle);
+						}
+						
 					}
 					
 		

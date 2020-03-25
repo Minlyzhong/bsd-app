@@ -9,9 +9,9 @@ define(['app',
 	var searchNo = 1;
 	var searchLoading = true;
 	//选择部门人员
-	var findDeptPeoplePath = app.basePath + 'orgUser/findDeptPeople';
+	var findDeptPeoplePath = app.basePath + '/mobile/user/findDeptPeople/';
 	//模糊搜索部门人员
-	var searchDeptPeoplePath = app.basePath + 'orgUser/searchDeptPeople';
+	var searchDeptPeoplePath = app.basePath + '/mobile/user/searchDeptPeople';
 	var deptName = '';
 	var oldContent = '';
 	var backPage = '';
@@ -106,14 +106,15 @@ define(['app',
 	 * 异步请求页面数据 
 	 */
 	function ajaxLoadContent(isLoadMore) {
-		app.ajaxLoadPageContent(findDeptPeoplePath, {
-			deptId: deptId,
-			pageNo: pageNo,
+		app.ajaxLoadPageContent(findDeptPeoplePath+deptId, {
+			// deptId: deptId,
+			current: pageNo,
+			size: 20
 		}, function(result) {
-			var data = result;
+			var data = result.data.records;
 			console.log(data);
 			if(data.length) {
-				if(data.length == 10) {
+				if(data.length == 20) {
 					loading = false;
 				}
 				$$('.list-pay-search ul').append(payPeopleTemplate(data));
@@ -179,6 +180,8 @@ define(['app',
 			content = content.trim();
 			if(content != oldContent) {
 				oldContent = content;
+				$$('.payShowPeopleList ul').html("");
+				searchNo = 1;
 			} else {
 				return;
 			}
@@ -188,11 +191,13 @@ define(['app',
 			return;
 		}
 		app.ajaxLoadPageContent(searchDeptPeoplePath, {
-			userName: content,
-			deptId: deptId,
-			pageNo: searchNo
-		}, function(data) {
-			console.log(data);
+			name: content,
+			// deptId: deptId,
+			// pageNo: searchNo
+			
+		}, function(result) {
+			console.log(result);
+			var data = result.data;
 			if(data.length > 0) {
 				if(data.length == 10) {
 					searchLoading = false;

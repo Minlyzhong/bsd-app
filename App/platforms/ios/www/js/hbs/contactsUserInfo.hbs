@@ -26,14 +26,19 @@
 	<a href="#" class="item-link item-content">
 		<div class="item-inner">
 			<div class="item-title">性别</div>
-			<div class="item-after item-label">{{sex}}</div>
+			{{#compare sex '==' 0}}
+			<div class="item-after item-label">男</div>
+			{{/compare}}
+			{{#compare sex '==' 1}}
+			<div class="item-after item-label">女</div>
+			{{/compare}}
 		</div>
 	</a>
 </li>
 <li>
 	<a href="#" class="item-link item-content">
 		<div class="item-inner">
-			<div class="item-title">职称</div>
+			<div class="item-title">职务</div>
 			<div class="item-label" style="text-align: right;width: 65%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;color: #8e8e93;">{{officerName}}</div>
 		</div>
 	</a>

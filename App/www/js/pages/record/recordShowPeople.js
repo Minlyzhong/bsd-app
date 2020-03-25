@@ -109,11 +109,12 @@ define(['app',
 		app.ajaxLoadPageContent(findDeptPeoplePath+deptId, {
 			// deptId: deptId,
 			current: pageNo,
+			size: 20
 		}, function(result) {
 			var data = result.data.records;
 			console.log(data);
 			if(data.length) {
-				if(data.length == 10) {
+				if(data.length == 20) {
 					loading = false;
 				}
 				$$('.list-pay-search ul').append(payPeopleTemplate(data));
@@ -193,6 +194,7 @@ define(['app',
 			name: content,
 			// deptId: deptId,
 			// pageNo: searchNo
+			
 		}, function(result) {
 			console.log(result);
 			var data = result.data;

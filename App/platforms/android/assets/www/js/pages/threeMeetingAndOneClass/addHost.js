@@ -20,6 +20,7 @@ define(['app',
 	var deptType = '';
 	var searchList = [];
 	var formType = 0;
+	var meetingType = 0;
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -44,6 +45,7 @@ define(['app',
 		leaderList = JSON.parse(pageData.hostMan);
 		deptType = pageData.deptType;
 		formType = pageData.formType;
+		meetingType = pageData.meetingType;
 		showSendLeader();
 		searchList = [];
 		findDept(-1, '', '',0);
@@ -294,6 +296,11 @@ define(['app',
 				require(['js/pages/threeMeetingAndOneClass/threeMeetingAndOneClassEdit'],function(threeMeetingAndOneClassEdit){
 					threeMeetingAndOneClassEdit.addHostBack(leaderList);
 				});
+			}else if(meetingType == 1){
+				require(['js/pages/process/processDetailEdit'],function(processDetailEdit){
+						processDetailEdit.addHostBack(leaderList);
+				});
+
 			}else{
 				require(['js/pages/threeMeetingAndOneClass/threeMeetingAndOneClassAdd'],function(threeMeetingAndOneClassAdd){
 					threeMeetingAndOneClassAdd.addHostBack(leaderList);

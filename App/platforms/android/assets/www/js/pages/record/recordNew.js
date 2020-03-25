@@ -518,7 +518,7 @@ define(['app',
 				selected = 'selected';
 			}
 			console.log(item);
-			$("#recordType").append("<option value='" + indexnum + "'" + selected + ">" + item + "</option>");
+			$$("#recordType").append("<option value='" + indexnum + "'" + selected + ">" + item + "</option>");
 		});
 		$$('#recordType').change(function() {
 			var typeVal = $$('#recordType').val();

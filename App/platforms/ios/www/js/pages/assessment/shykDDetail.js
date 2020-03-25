@@ -9,9 +9,9 @@ define(['app',
 	var pageNo1 = 1;
 	var loading1 = true;
 	//获取三会一课个人得分明细
-	var findDetailByTopicIdPath = app.basePath + 'statHelper/findDetailByTopicId';
+	var findDetailByTopicIdPath = app.basePath + '/mobile/partyAm/findByTopicIdAndDeptId';
 	//获取年份
-	var getYearsPath = app.basePath + 'knowledgeTopic/getYears';
+	var getYearsPath = app.basePath + '/mobile/partyAm/getYears';
 	var queryData = '';
 	var title = '';
 	var topicId = 0;
@@ -75,10 +75,16 @@ define(['app',
 		app.ajaxLoadPageContent1(getYearsPath,{
 		},function(data){
 			console.log(data);
-			result = data;
-			$$.each(data, function(index, item) {
-					result[index] = item.text.toString()+'年';
-			});
+			result = data.data;
+			if(result == null){
+				var nowDate = new Date();
+				var nowYear = nowDate.getFullYear();
+				result =[nowYear+'年']
+				console.log(result);
+			}
+			$$.each(data.data, function(index, item) {
+				result[index] = item.toString()+'年';
+		});
 			console.log(result);
 			pickerDescribe = app.myApp.picker({
 	    		input: '#threeMeetingsAndOneClassPaperDetailTime',
@@ -89,7 +95,7 @@ define(['app',
 			            values:(result)
 			        },
 			        {
-			            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+			            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 			        },
 			    ]
 			});
@@ -125,9 +131,9 @@ define(['app',
 		
 		//点击查询框
 		$$('#threeMeetingsAndOneClassPaperDetailSearchD').on('focus', function() {
-			$$(this).css('text-align', 'left');
+			$$(this).css('text-align', 'center');
 			$$('.threeMeetingsAndOneClassPaperDetailSearchBox').css('display','block');
-			$$('.threeMeetingsAndOneClassPaperDetailCancelBtnD').css('display','block');
+			$$('.threeMeetingsAndOneClassPaperDetailCancelBtnD').css('display','none');
 			$$('.shykDDetailPage').css('display','none');
 			$$('.shykDDetailPageSearchD').css('display','block');
 			$$('.shykDDetailPageSearchD ul').html('');
@@ -186,14 +192,14 @@ define(['app',
 		app.ajaxLoadPageContent(findDetailByTopicIdPath, {
 			deptId:deptId,
 			topicId:topicId, 
-			page:pageNo,
+			current:pageNo,
 			startDate:DDetailStartTime,
 			endDate:DDetailEndTime,
 		}, function(data) {
 			console.log(data);
-			var data = data.data;
-			queryData = data;
-			handleData(data, isLoadMore);
+			var result = data.data.records;
+			queryData = result;
+			handleData(result, isLoadMore);
 		});
 	}
 	
@@ -212,9 +218,9 @@ define(['app',
 			query:query,
 		}, function(data) {
 			console.log(data);
-			var data = data.data;
-			queryData = data;
-			handleData1(data, isLoadMore);
+			var result = data.data.records;
+			queryData = result;
+			handleData1(result, isLoadMore);
 		});
 	}
 
@@ -244,28 +250,34 @@ define(['app',
 					TsMonth: "",
 				};
 				shyk.id = item.id;
-				shyk.memo = item.memo
-				shyk.reduceScore = item.reduceScore;
+				// shyk.memo = item.memo
+				// shyk.reduceScore = item.reduceScore;
 				shyk.reportContext = item.reportContext;
-				shyk.reportState = item.reportState;
+				// shyk.reportState = item.reportState;
 				shyk.reportTime = item.reportTime;
 				shyk.reportTs = item.reportTs;
 				shyk.reportUserId = item.reportUserId;
-				shyk.score = item.score;
+				// shyk.score = item.score;
 				shyk.topicId = item.topicId;
 				shyk.topicTitle = item.topicTitle;
 				shyk.totalScore = item.totalScore;
-				shyk.userName = item.userName;
-				shyk.userScore = item.userScore;
-				shyk.reportTitle = item.reportTitle;
+				shyk.userName = item.name;
+				// shyk.userScore = item.userScore;
+				shyk.reportTitle = item.object;
 				shyk.TsMonth = item.reportTime.substring(5,7);
 				List.push(shyk);
 			});
+			console.log('1111111111');
+			console.log(List);
 			if(isLoadMore) {
 				$$('.shykDDetailDetailList ul').append(tMAOCDetailTemplate(List));
-			} else if(pageNo==1 && data.length<10){
+				// if(pageNo == 1 && data.length < 10)
+			}else if(pageNo == 1 && data.length < 10){
 				$$('.shykDDetailDetailList ul').html(tMAOCDetailTemplate(List));
 				$$('.infinite-scroll-preloader').remove();
+			} else {
+				console.log('2222');
+				$$('.shykDDetailDetailList ul').html(tMAOCDetailTemplate(List));
 			}
 			$$('.shykDDetailDetailList .item-content').on('click', function() {
 				var id = $$(this).data('id');
@@ -275,7 +287,8 @@ define(['app',
 				var name = $$(this).find('.rankDetailName').html().split("：")[1];
 				var memo = $$(this).data('memo') || "";
 				var reportState = $$(this).data('reportState') || 1;
-				app.myApp.getCurrentView().loadPage('threeMeetingAndOneClassAssessDetail.html?assessId=' + id + '&title=' + title + '&score=' + score + '&name=' + name + '&memo=' + memo + '&reportState=' + reportState + '&userName=' + userName);
+				//app.myApp.getCurrentView().loadPage('threeMeetingAndOneClassAssessDetail.html?assessId=' + id + '&title=' + title + '&score=' + score + '&name=' + name + '&memo=' + memo + '&reportState=' + reportState + '&userName=' + userName);
+				app.myApp.getCurrentView().loadPage('threeMeetingAndOneClassDetail.html?assessId=' + id + '&userName=' + userName);
 			});
 			if(data.length == 10) {
 				loading = false;
@@ -340,7 +353,8 @@ define(['app',
 				var name = $$(this).find('.rankDetailName').html().split("：")[1];
 				var memo = $$(this).data('memo') || "";
 				var reportState = $$(this).data('reportState') || 1;
-				app.myApp.getCurrentView().loadPage('threeMeetingAndOneClassAssessDetail.html?assessId=' + id + '&title=' + title + '&score=' + score + '&name=' + name + '&memo=' + memo + '&reportState=' + reportState + '&userName=' + userName);
+				//app.myApp.getCurrentView().loadPage('threeMeetingAndOneClassAssessDetail.html?assessId=' + id + '&title=' + title + '&score=' + score + '&name=' + name + '&memo=' + memo + '&reportState=' + reportState + '&userName=' + userName);
+				app.myApp.getCurrentView().loadPage('threeMeetingAndOneClassDetail.html?assessId=' + id);
 			});
 			if(data.length == 10) {
 				loading1 = false;

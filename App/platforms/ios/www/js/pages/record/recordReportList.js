@@ -7,7 +7,7 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//加载统计详情
-	var findLogReportListPath = app.basePath + 'extWorkLog/findLogReportList';
+	var findLogReportListPath = app.basePath + '/mobile/worklog/statistics/';
 	var query = '';
 	var reportType = '';
 
@@ -42,6 +42,7 @@ define(['app',
 		loading = false;
 		query = '';
 		reportType = pageData.type;
+		console.log(reportType);
 		findLogReportList(false);
 	}
 
@@ -63,7 +64,8 @@ define(['app',
 	 * 点击事件
 	 */
 	function clickEvent(page) {
-		$$('#recordSearchOpen').on('click', recordSearchOpen);
+		
+		$$('.recordSearchOpen2').on('click', recordSearchOpenPage);
 		$$('.recordSearchClose').on('click', recordSearchClose);
 		$$('.searchBtn').on('click', function() {
 			query = $$('#logName').val();
@@ -75,12 +77,14 @@ define(['app',
 		$$('.resetBtn').on('click', function() {
 			$$('#logName').val('');
 		});
+		
 	}
 
 	/**
 	 * 打开搜索框
 	 */
-	function recordSearchOpen() {
+	function recordSearchOpenPage() {
+		console.log('recordSearchOpen');
 		$$('.recordSearch').css('display', 'block');
 	}
 
@@ -97,19 +101,19 @@ define(['app',
 	 */
 	function findLogReportList(isLoadMore) {
 		var typeDic = {
-			'日': 'day',
+			'天': 'day',
 			'周': 'week',
 			'月': 'month',
 			'年': 'year',
 		};
 		var type = typeDic[reportType];
-		app.ajaxLoadPageContent(findLogReportListPath, {
-			userId: app.userId,
-			reportType: type,
+		app.ajaxLoadPageContent(findLogReportListPath+app.userId+'/'+type, {
+			// userId: app.userId,
+			// reportType: type,
 			pageNo: pageNo,
-			query: query,
+			// query: query,
 		}, function(result) {
-			var data = result;
+			var data = result.data;
 			console.log(data);
 			if(isLoadMore) {
 				pageDataStorage['logReportList'] = pageDataStorage['logReportList'].concat(data);
@@ -142,7 +146,7 @@ define(['app',
 	 * 跳转详细页面 
 	 */
 	function loadRecordDetail() {
-		app.myApp.getCurrentView().loadPage('recordReportDetail.html?id=' + $$(this).data('id'));
+		app.myApp.getCurrentView().loadPage('recordReportDetail.html?id=' + $$(this).data('id')+'&logTypeId='+ $$(this).data('logTypeId'));
 	}
 
 	/**

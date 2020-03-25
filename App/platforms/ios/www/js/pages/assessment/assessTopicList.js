@@ -7,11 +7,13 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//部门考核项
-	var loadDepartmentAssessPath = app.basePath + 'knowledgeTestpaper/loadDepartmentAssess';
+	var loadDepartmentAssessPath = app.basePath + '/mobile/partyAm/loadDepartmentAssess';
 	var deptId = 0;
 	var deptName = '';
 	var startDate = '';
 	var endDate = '';
+	var type=0;
+	var khpl=0;	
 
 	/**
 	 * 页面初始化 
@@ -22,7 +24,8 @@ define(['app',
 //			'assessment/assessTopicDetail',
 //		]);
 //		if(firstIn) {
-			initData(page.query);
+	console.log(page)
+		initData(page.query);
 //		} else {
 //			loadStorage();
 //		}
@@ -40,6 +43,9 @@ define(['app',
 		loading = true;
 		startDate = pageData.startDate;
 		endDate = pageData.endDate;
+		
+		type=pageData.type;
+		khpl=pageData.khpl;
 		if($$('body').find('.assessListPage')[0]) {
 			deptName = pageData.name;
 			deptId = pageData.deptId;
@@ -67,10 +73,18 @@ define(['app',
 	 * 属性定义（不传参，使用模块变量）
 	 */
 	function attrDefine(page) {
+		console.log(page.query)
+		console.log($$('body').find('.assessListPage')[0])
 		if($$('body').find('.assessListPage')[0]) {
+
 			$$('.topicTitle').html(page.query.name + '详情');
 		} else {
-			$$('.topicTitle').html(app.user.deptName + '详情');
+			if(page.query.appName){
+				$$('.topicTitle').html(page.query.appName);
+			}else{
+				$$('.topicTitle').html(app.user.deptName + '详情');
+			}
+			
 		}
 	}
 	
@@ -78,15 +92,34 @@ define(['app',
 	 * 读取部门考核项 
 	 */
 	function loadDepartmentEmployee() {
+		console.log(startDate)
+		console.log(endDate)
 		app.ajaxLoadPageContent(loadDepartmentAssessPath, {
 			deptId: app.user.deptId,
 			startDate:startDate,
 			endDate:endDate,
+			// yearly:startDate,
+			type:type,
+			khpl:khpl,
 		}, function(result) {
-			var data = result.data;
-			console.log(data);
-			pageDataStorage['departmentEmployee'] = data;
-			handleDepartmentEmployee(data, true);
+			if(result.data == null){
+				$$('.assessTopicList').html('<div class="noresult" style="text-align: center;">考核详情内容为空</div>')
+			}else{
+				var data = result.data;
+				console.log(data);
+				$$.each(data, function(index,item){
+					if(item.point == null){
+						item.point = 0; 
+					}
+					if(item.count == null){
+						item.count = 0; 
+					}
+				})
+				pageDataStorage['departmentEmployee'] = data;
+				
+				handleDepartmentEmployee(data, true);
+			}
+			
 		});
 	}
 	
@@ -100,12 +133,12 @@ define(['app',
 		$$('.assessListContent').on('click', function() {
 			var point = parseInt($$(this).data('point'));
 			if(!point) {
-				app.myApp.alert('此考核项无考核记录');
+				app.myApp.alert('此考核项还未填写或已被退回,请到专项考核或者历史记录填写提交');
 				return;
 			}
 			var topicId = $$(this).data('id');
 			var name = $$(this).data('name');
-			app.myApp.getCurrentView().loadPage('assessTopicDetail.html?deptName='+ deptName + '&topicId=' + topicId + '&name=' + name + '&deptId=' + deptId);
+			app.myApp.getCurrentView().loadPage('assessTopicDetail.html?deptName='+ deptName + '&topicId=' + topicId + '&name=' + name + '&deptId=' + deptId+'&startDate='+startDate+'&endDate='+endDate);
 		});
 	}
 

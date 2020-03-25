@@ -1,0 +1,126 @@
+<div data-page="record/recordDetail3" class="page navbar-fixed no-tabbar recordDetailsize">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="left ">
+				<a href="#" class="back link icon-only"><i class="icon icon-eback"></i></a>
+			</div>
+			<div class="center ">日志详情</div>
+			<div class="right">
+				<a href="#" class="link icon-only"><i class="icon icon-home"></i></a>
+				<!--<a href="#" class="link icon-only" style="margin-left: 0px;">推荐</a>-->
+				<a href="#" class="link icon-only recordDetailDelete" style="margin-left: 0px;"><i class="icon icon-dian"></i></a>
+			</div>
+		</div>
+	</div>
+	<div class="page-content" style="background: white;">
+		<div class="list-block recDetailList"style="margin-bottom: -1px;">
+			<ul>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">日志标题:</div>
+							<div class="item-input">
+								<input type="text" id="recDetailTitle" name="recDetailTitle" placeholder="" readonly/>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">日志类型:</div>
+							<div class="item-input">
+								<input type="text" id="recType" name="recType" placeholder="" readonly />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">创建时间:</div>
+							<div class="item-input">
+								<input type="text" id="recDetailTs" name="recDetailTs" placeholder="" readonly />
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class='recdeptNameLi'>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">所属组织:</div>
+							<div class="item-input" >
+								<div id="recdeptName">
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<a href="#" class="sender" text-decoration="underline">
+				<li class = 'recSendLi'>
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label">发送人:</div>
+								<div class="item-input">
+									<input type="hidden" id="recSendId" name="recSendId"/>
+									<input type="text" id="recSend" name="recSend" placeholder="" style="color: blue;" readonly/>
+								</div>
+						</div>
+					</div>
+				</li>	
+				</a>
+				<li class="align-top">
+					<div class="item-content">
+						<div class="item-inner">
+							<div class="item-title kp-label" style="margin-top: 3px;">日志内容:</div>
+							<div class="item-input" style="margin-left: -2px;">
+								<textarea id="recDetailContent" name="recDetailContent" placeholder="" style="width:100%;height:200px;" readonly></textarea>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<div class="weui_cells weui_cells_form" style="margin-top: 0;">
+				<div class="weui_cell uploadCell">
+					<div class="weui_cell_bd weui_cell_primary">
+						<div class="weui_uploader">
+							<div class="weui_uploader_hd weui_cell">
+								<div class="weui_cell_bd weui_cell_primary">已上传的图片</div>
+								<div class="weui_cell_ft"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="display: none;" class="recLikeTotal"></div>
+		<div style="display: none;" class="recCommentTotal"></div>
+		<!--<div class="checkList"><span style="color: green;">已审阅: </span>
+		</div>
+		<div class="uncheckList"><span style="color: red;">未审阅: </span>
+		</div>-->
+		<div style="text-align: right;border: solid #d3d3d3;border-width: 1px 0;padding: 7px 0;">
+			<a href="#" class="recordLike" style="margin-right: 20px; color: #888;">
+	      		<i class="icon"></i>
+	      		<span class="likeStatus"></span>
+	      	</a>
+	      	<a href="#" class="recordComment" style="margin-right: 20px; color: #888;">
+	    			<i class="icon icon-comment"></i>
+	    			<span class="comment">评论</span>
+	    		</a>
+		</div>
+		<div class="likeList">
+		</div>
+		<a class="openLike" style="text-decoration:none;color:red;padding-left:10px;display: none;">[展开]</a>
+		<div class="list-block media-list commentList">
+		</div>
+	</div>
+	<div class="recCommentWindow" style="background: white;position: fixed;bottom: 0px;width: 100%;z-index: 15000; border-top: 1px solid #d9d9d9; display: none;">
+		<!--<div class="webim-chatwindow-options"></div>-->
+		<div style="padding: 10px;padding-bottom: 0px;padding-right: 18px;padding-top: 5px;">
+			<textarea id="chatArea" name="chatArea"></textarea>
+		</div>
+		<button class="sendBtn">发送</button>
+	</div>
+</div>

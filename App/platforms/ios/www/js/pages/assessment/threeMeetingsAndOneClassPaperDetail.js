@@ -9,11 +9,12 @@ define(['app',
 	var pageNo1 = 1;
 	var loading1 = true;
 	//获取三会一课个人得分明细
-	var searchDetailByMonthAndUserIdPath = app.basePath + 'knowledgeTopic/searchDetailByMonthAndUserId';
+	var searchDetailByMonthAndUserIdPath = app.basePath + '/mobile/partyAm/searchDetailByMonthAndUserId';
 	//获取三会一课分类
-	var getAllThreeAndOnePath = app.basePath + 'sysDict/getAllThreeAndOne';
+//	var getAllThreeAndOnePath = app.basePath + 'sysDict/getAllThreeAndOne';
+	// var getAllThreeAndOnePath = app.basePath + 'knowledgeTopic/findThreeMeetingTopic';
 	//获取年份
-	var getYearsPath = app.basePath + 'knowledgeTopic/getYears';
+	var getYearsPath = app.basePath + '/mobile/partyAm/getYears';
 	var queryData = '';
 	var title = '';
 	var topicId = 0;
@@ -52,7 +53,7 @@ define(['app',
 		sortType = '全部';
 		popoverHTML = '';
 		ajaxLoadContent(false);
-		ajaxfenlei();
+		// ajaxfenlei();
 	}
 
 	/**
@@ -71,10 +72,16 @@ define(['app',
 		app.ajaxLoadPageContent1(getYearsPath,{
 		},function(data){
 			console.log(data);
-			result = data;
-			$$.each(data, function(index, item) {
-					result[index] = item.text.toString()+'年';
-			});
+			result = data.data;
+			if(result == null){
+				var nowDate = new Date();
+				var nowYear = nowDate.getFullYear();
+				result =[nowYear+'年']
+				
+			}
+			$$.each(data.data, function(index, item) {
+				result[index] = item.toString()+'年';
+		});
 			console.log(result);
 			pickerDescribe = app.myApp.picker({
 	    		input: '#picker-describe1',
@@ -85,7 +92,7 @@ define(['app',
 			            values:(result)
 			        },
 			        {
-			            values: ('1月 2月 3月 4月 5月 6月 7月 8月 9月 10月 11月 12月').split(' ')
+			            values: ('01月 02月 03月 04月 05月 06月 07月 08月 09月 10月 11月 12月').split(' ')
 			        },
 			    ]
 			});
@@ -93,7 +100,7 @@ define(['app',
 		//获取日期
 		var myDate = new Date();
 		year = myDate.getFullYear();
-		month = myDate.getMonth()+1;
+		month = myDate.getMonth()+1<10? "0"+(myDate.getMonth()+1):myDate.getMonth()+1;
 		$("#picker-describe1").val(year+'年 '+ month+'月');
 		$$(".threeMeetingsAndOneClassPaperDetailTime").on('click',function(){
 			pickerDescribe.open();
@@ -179,28 +186,28 @@ define(['app',
 		});
 	}
 
-	function ajaxfenlei(){
-		app.ajaxLoadPageContent(getAllThreeAndOnePath, {
-			
-		}, function(data) {
-			console.log(data);
-			var data = data;
-			var str = '';
-			for(var i=0;i<data.length;i++){
-				str += '<li><a href="#">'+data[i].memo+'</a></li>';
-			}
-			popoverHTML = '<div class="popover" style="width: 45%;">' +
-				'<div class="popover-inner">' +
-				'<div class="list-block shykPopover">' +
-				'<ul>' +
-				'<li><a href="#">全部</a></li>'+
-				str+
-				'</ul>' +
-				'</div>' +
-				'</div>' +
-				'</div>';
-		});
-	}
+	// function ajaxfenlei(){
+	// 	app.ajaxLoadPageContent(getAllThreeAndOnePath, {
+	// 		deptId: app.user.deptId,
+	// 	}, function(data) {
+	// 		console.log(data);
+	// 		var data = data;
+	// 		var str = '';
+	// 		for(var i=0;i<data.length;i++){
+	// 			str += '<li><a href="#">'+data[i].text+'</a></li>';
+	// 		}
+	// 		popoverHTML = '<div class="popover" style="width: 45%;">' +
+	// 			'<div class="popover-inner">' +
+	// 			'<div class="list-block shykPopover">' +
+	// 			'<ul>' +
+	// 			'<li><a href="#">全部</a></li>'+
+	// 			str+
+	// 			'</ul>' +
+	// 			'</div>' +
+	// 			'</div>' +
+	// 			'</div>';
+	// 	});
+	// }
 
 	/**
 	 * 异步请求页面数据 
@@ -210,15 +217,21 @@ define(['app',
 		console.log(year);
 		console.log(month);
 		app.ajaxLoadPageContent(searchDetailByMonthAndUserIdPath, {
-			userId: app.userId,
-			pageNo: pageNo,
-			deptId: app.user.deptId,
-			sortType:sortType,
+			// userId: app.userId,
+			current: pageNo,
+			// deptId: app.user.deptId,
+			// sortType:sortType,
+
 		}, function(data) {
-			console.log(data);
-			var data = data;
-			queryData = data;
-			handleData(data, isLoadMore);
+			if(data.data == null){
+				app.myApp.toast('没有更多的内容','none').show(true);
+			}else{
+				console.log(data);
+				var data = data.data.records;
+				queryData = data;
+				handleData(data, isLoadMore);
+			}
+			
 		});
 	}
 	
@@ -230,15 +243,16 @@ define(['app',
 		console.log(month);
 		console.log(query);
 		app.ajaxLoadPageContent(searchDetailByMonthAndUserIdPath, {
-			year:year,
-			month:month,
-			userId: app.userId,
-			pageNo: pageNo1,
-			deptId: app.user.deptId,
+			// year:year,
+			// month:month,
+			// userId: app.userId,
+			current: pageNo1,
+			// deptId: app.user.deptId,
 			query:query,
-			sortType:sortType,
+			// sortType:sortType,
 		}, function(data) {
 			console.log(data);
+			var data = data.data.records;
 			queryData = data;
 			handleData1(data, isLoadMore);
 		});
@@ -251,6 +265,8 @@ define(['app',
 		var List = [];
 		if(data == ''){
 			$$('.shykDetailNotFound').css('display','block');
+		}else{
+			$$('.shykDetailNotFound').css('display','none');
 		}
 		if(data) {
 			$$.each(data, function(index, item) {
@@ -273,26 +289,27 @@ define(['app',
 					TsMonth: "",
 				};
 				shyk.id = item.id;
-				shyk.memo = item.memo
-				shyk.reduceScore = item.reduceScore;
+				// shyk.memo = item.memo
+				// shyk.reduceScore = item.reduceScore;
 				shyk.reportContext = item.reportContext;
-				shyk.reportState = item.reportState;
+				// shyk.reportState = item.reportState;
 				shyk.reportTime = item.reportTime;
-				shyk.reportTs = item.reportTs;
+				shyk.meetingTime = item.meetingTime;
 				shyk.reportUserId = item.reportUserId;
-				shyk.score = item.score;
+				// shyk.score = item.score;
 				shyk.topicId = item.topicId;
 				shyk.topicTitle = item.topicTitle;
 				shyk.totalScore = item.totalScore;
-				shyk.userName = item.userName;
-				shyk.userScore = item.userScore;
-				shyk.reportTitle = item.reportTitle;
+				shyk.userName = item.name;
+				// shyk.userScore = item.userScore;
+				shyk.reportTitle = item.object;
 				shyk.TsMonth = item.reportTime.substring(5,7);
 				List.push(shyk);
 			});
 			if(isLoadMore) {
 				$$('.threeMeetingsAndOneClassPaperDetailList ul').append(tMAOCDetailTemplate(List));
 			} else {
+				console.log(List)
 				$$('.threeMeetingsAndOneClassPaperDetailList ul').html(tMAOCDetailTemplate(List));
 			}
 			$$('.threeMeetingsAndOneClassPaperDetailList .item-content').on('click', function() {

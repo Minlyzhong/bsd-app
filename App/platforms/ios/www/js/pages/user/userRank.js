@@ -7,11 +7,11 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//用户信息接口
-	var userPath = app.basePath + 'extUserPage/loadUserInfoByUserId';
+	var userPath = app.basePath + '/mobile/political/score/board/list';
 	var searchNo = 1;
 	var searchLoading = true;
 	var oldContent = '';
-	var loading1 = true
+	var loading1 = true;
 
 	/**
 	 * 页面初始化 
@@ -38,11 +38,12 @@ define(['app',
 	//用户信息
 	function getUserInfo(isLoadMore) {
 		app.ajaxLoadPageContent(userPath, {
-			page : pageNo,
-			limit : 10,
+			current : pageNo,
+			size : 10,
+			// userName:,
 		}, function(data) {
 			console.log(data);
-			allInfo = data.data;
+			allInfo = data.data.records;
 			if(allInfo.length && allInfo.length > 0) {
 				//$$('.userRank-List ul').append(rankTemplate(allInfo));
 				handleParty(allInfo, isLoadMore);
@@ -167,11 +168,12 @@ define(['app',
 		}
 		app.ajaxLoadPageContent(userPath, {
 			userName : content,
-			page : searchNo,
-			limit : 10,
+			current : searchNo,
+			size : 10,
 		}, function(data) {
-			console.log(data.data);
-			if(data.data.length > 0) {
+			// console.log(data.data);
+			var data = data.data.records;
+			if(data.length > 0) {
 				if(data.length == 10) {
 					searchLoading = false;
 				}
@@ -180,7 +182,7 @@ define(['app',
 					var str = '<li>';
 					str +=	'<div class="link item-content -content1">'
 					str +=		'<div class="item-inner">'
-					str +=			'<div class="discuss-row item-subtitle" style="padding: 3px 0px 0px 0px; text-align: center;">'
+					str +=			'<div class="discuss-row item-subtitle" style="padding: 3px 0px 0px 0px; text-align: center; color:#36689a">'
 					str +=				'<div style="min-width: 15%;">排名</div>'
 					str +=				'<div style="min-width: 20%;">总积分</div>'
 					str +=				'<div style="min-width: 35%;">用户名</div>'
@@ -192,7 +194,7 @@ define(['app',
 					$$('.userRankPeopleList ul').append(str);
 				}
 				//$$('.userRankPeopleList ul').append(rankTemplate(data.data));
-				handleParty1(data.data, isLoadMore)
+				handleParty1(data, isLoadMore)
 			} else if(isLoadMore) {
 				
 			} else {

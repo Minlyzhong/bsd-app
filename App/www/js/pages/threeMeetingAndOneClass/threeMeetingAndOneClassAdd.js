@@ -159,6 +159,17 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 				changeStateForText($$(this));
 				$('.tcaomContent').slideToggle(200);
 			});
+
+			//点击支书发言及内容
+			$$('.tcaomContentIcon2').on('click',function(){
+				changeStateForText($$(this));
+				$('.tcaomContent2').slideToggle(200);
+			});
+			//点击班子成员发言及内容
+			$$('.tcaomContentIcon3').on('click',function(){
+				changeStateForText($$(this));
+				$('.tcaomContent3').slideToggle(200);
+			});
 			//点击会议决议
 			$$('.tcaomMeetingDecisionIcon').on('click',function(){
 				changeStateForText($$(this));
@@ -382,6 +393,16 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 				app.myApp.alert('请输入会议记录');
 				return false;
 			};
+
+			if($$('#branchSpeak').val() == ''){
+				app.myApp.alert('请输入支书发言内容');
+				return false;
+			};
+
+			if($$('#memberSpeak').val() == ''){
+				app.myApp.alert('请输入班子成员发言内容');
+				return false;
+			};
 //			//获取要点摘录及内容
 //			$$('#content').val();
 //			//获取会议决议
@@ -422,25 +443,34 @@ define(['app','hbs!js/hbs/recordRmLeader'], function(app,recordRmLeaderTemplate)
 			absenteesListPush = absenteesListPush.join();
 			console.log(absenteesListPush);
 			var formDatas={
-				topicId:topicId,
-				object:$$('#assessTitle').val(),
-				meetingTime:$$('#assessTs').val() + " " + $$('#assessTsTime').val() + ":00",
-				reportContext:$$('#meetingRecord').val(),
-				reportUserId:app.userId,
-				lat:lat,
-				lng:lng,
-				meetingAddress:$$('#location').val(),
-				summary:$$('#content').val(),
-				resolution:$$('#meetingDecision').val(),
-				different:$$('#differentViews').val(),
-				host:hostManPush,
-				participantIds:$$('#attendees').val(),
-				absents:absenteesListPush,
-				attends:listedListPush,
-				images : imageList,
+
+				topicId: topicId,
+				object: $$('#assessTitle').val(),
+				meetingTime: $$('#assessTs').val() + " " + $$('#assessTsTime').val() + ":00",
+				reportContext: $$('#meetingRecord').val(),
+				reportUserId: app.userId,
+				lat: lat,
+				lng: lng,
+				meetingAddress: $$('#location').val(),
+				summary: $$('#content').val(),
+				resolution: $$('#meetingDecision').val(),
+				different: $$('#differentViews').val(),
+				host: hostManPush,
+				participantIds: $$('#attendees').val(),
+				absents: absenteesListPush,
+				attends: listedListPush,
+				images: imageList,
 				file: fileList,
+				branchSpeak: $$('#branchSpeak').val(), 
+				memberSpeak: $$('#memberSpeak').val(), 
+				name: app.user.nickName,
+				
 				
 			}
+
+			console.log(formDatas);
+			
+			
 			var parems = JSON.stringify(formDatas)
 			$$.ajax({
 				url:threeMeetingAndOneClassAddPath,

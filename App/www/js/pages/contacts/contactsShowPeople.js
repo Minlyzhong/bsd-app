@@ -172,6 +172,7 @@ define(['app',
 					// pageNo: searchNo,
 					// type: 1,
 					name:content
+
 				}
 			}
 			app.ajaxLoadPageContent(searchDeptPeoplePath, searchParams, function(data) {
@@ -217,7 +218,7 @@ define(['app',
 				params = {
 					// deptId: deptId,
 					current: pageNo,
-					size: 10
+					size: 20
 				}
 			}
 			app.ajaxLoadPageContent(url, params, function(result) {
@@ -233,7 +234,7 @@ define(['app',
 		 */
 		function handleContent(data) {
 			if(data.length) {
-				if(data.length == 10) {
+				if(data.length == 20) {
 					loading = false;
 				}
 				var deptList = data;

@@ -7,11 +7,12 @@ define(['app',
 	var pageNo = 1;
 	var loading = true;
 	//获取考核清单得分明细
-	var findCompOfReportDetialPath = app.basePath + 'statHelper/findCompOfReportDetial';
+	var findCompOfReportDetialPath = app.basePath + '/mobile/partyAm/findDetailByTopicId';
 	var queryData = '';
 	var title = '';
 	var topicId = 0;
-
+	var startDate = '';
+	var endDate = '';
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
@@ -59,6 +60,9 @@ define(['app',
 		queryData = '';
 		title = pageData.title;
 		topicId = pageData.topicId;
+		startDate = pageData.startDate;
+		endDate = pageData.endDate;
+		deptId =  pageData.deptId;
 		ajaxLoadContent(false);
 	}
 
@@ -74,15 +78,20 @@ define(['app',
 	 */
 	function ajaxLoadContent(isLoadMore) {
 		app.ajaxLoadPageContent(findCompOfReportDetialPath, {
+			deptId:deptId,
 			topicId: topicId,
-			page: pageNo,
-			limit: 10,
+			current: pageNo,
+			size: 10,
+			// startDate:startDate,
+			// endDate:endDate,
 		}, function(result) {
-			var data = result.data;
+			var data = result.data.records;
 			console.log(data);
 			$$.each(data, function(index, item) {
 				item.topicTitle = title;
 				item.isUserName = 1;
+				item.userName = item.name;
+				item.reportTime = item.reportTime.split(' ')[0];
 			});
 			queryData = data;
 			handleData(data, isLoadMore);

@@ -103,8 +103,8 @@ define(['app'], function(app) {
 			deptId: deptId,
 			startDate:startDate,
 			endDate:endDate,
-			yearly:yearly,
-			type:type,
+			// yearly:yearly,
+			// type:type,
 			khpl:khpl,
 		}, function(data) {
 			var data = data.data;

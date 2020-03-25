@@ -4,8 +4,9 @@ define(['app'], function(app) {
 	var pageDataStorage = {};
 	var pageNo = 1;
 	var loading = true;
+	var newArr = [];
 	//统计日志数量，个人 年周月日
-	var findLogReportPath = app.basePath + 'extWorkLog/findLogReport';
+	var findLogReportPath = app.basePath + '/mobile/worklog/statistics/';
 
 	/**
 	 * 页面初始化 
@@ -32,6 +33,7 @@ define(['app'], function(app) {
 		pageNo = 1;
 		loading = true;
 		loadLogWorkReport();
+		newArr=[];
 	}
 
 	/**
@@ -45,10 +47,10 @@ define(['app'], function(app) {
 	 *  统计日志数量
 	 */
 	function loadLogWorkReport() {
-		app.ajaxLoadPageContent(findLogReportPath, {
-			userId: app.userId,
+		app.ajaxLoadPageContent(findLogReportPath+app.userId, {
+			// userId: app.userId,
 		}, function(result) {
-			var data = result;
+			var data = result.data;
 			console.log(data);
 			pageDataStorage['logWorkReport'] = data;
 			handleLogWorkReport(data);
@@ -73,6 +75,19 @@ define(['app'], function(app) {
 	 * 加载图表
 	 */
 	function loadChart(nameArr, countArr) {
+		$$.each(nameArr, function(index, item){
+			if(item == 'day'){		
+				newArr[index]='天';
+			}else if(item == 'week'){
+				newArr[index] = '周';
+			}else if(item == 'month'){
+				newArr[index] = '月';
+			}else if(item == 'year'){
+				newArr[index] = '年';
+			}
+		})
+		console.log(newArr)
+		console.log(countArr)
 		$('#recordReportChart').highcharts({
 			chart: {
 				type: 'bar'
@@ -87,7 +102,7 @@ define(['app'], function(app) {
 				}
 			},
 			xAxis: {
-				categories: nameArr,
+				categories: newArr,
 				title: {
 					text: null
 				},

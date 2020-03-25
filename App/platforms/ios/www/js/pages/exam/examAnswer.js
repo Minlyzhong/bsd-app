@@ -5,13 +5,14 @@ define(['app'], function(app) {
 	var pageNo = 1;
 	var loading = true;
 	//加载试题
-	var loadQuestionPath = app.basePath + 'exam/loadQuestion';
+	var loadQuestionPath = app.basePath + '/mobile/education/exam/subject/';
 	//提交试卷
-	var finishSubjectPath = app.basePath + 'exam/finishSubject';
+	var finishSubjectPath = app.basePath + '/mobile/education/exam/submit/';
 	//查询用户答错的所有题目
-	var findWrongPath = app.basePath + 'question/findWrongQuestionIds';
+	//var findWrongPath = app.basePath + 'question/findWrongQuestionIds';
+	var findWrongPath = app.basePath + '/mobile/education/exam/err/';
 	//查询用户答错的某一道题题干及答案选项
-	var findWrongQuestionsPath = app.basePath + 'question/findWrongQuestions';
+	var findWrongQuestionsPath = app.basePath + '/mobile/education/exam/err/question/';
 	var autoJump = 0;
 	var examNumber = 0;
 	var examShipWidth = 0.0;
@@ -27,13 +28,19 @@ define(['app'], function(app) {
 	var count = 0;
 //	var subId = 0;;
 	var str = '';
-	
+	var flag = true;
 
 	/**
 	 * 页面初始化 
 	 * @param {Object} page 页面内容
 	 */
 	function init(page) {
+		//设置页面不能滑动返回
+		page.view.params.swipeBackPage = false;
+		app.myApp.onPageBack("exam/examAnswer", function(page){
+			page.view.params.swipeBackPage = true;
+		});
+		
 		//重置falseExam变量
 		falseExam = 0;
 		//重置时间
@@ -41,6 +48,7 @@ define(['app'], function(app) {
 		//重置点击次数  防止用户过多点击
 		count = 0;
 		str = '';
+		flag = true;
 		//arguments[1]是获取init方法的第二个参数
 		var isFalse;
 		var isFalse = arguments[1] ? 1 : 0;
@@ -62,6 +70,8 @@ define(['app'], function(app) {
 	 * 初始化模块变量
 	 */
 	function initData(pageData) {
+		console.log('初始化模块变量')
+		console.log(pageData)
 		firstIn = 0;
 		pageDataStorage = {};
 		pageNo = 1;
@@ -80,6 +90,8 @@ define(['app'], function(app) {
 				falseExam = 0;
 			}
 		}
+		console.log('falseExam');
+		console.log(falseExam);
 		examData = [];
 		examLength = 0;
 		chooseData = [];
@@ -87,8 +99,10 @@ define(['app'], function(app) {
 		timer = null;
 		times = 0;
 		if(!falseExam) {
+			
 			ajaxLoadContent(pageData.time);
 		} else {
+			
 			ajaxLoadFalse();
 		}
 	}
@@ -248,12 +262,12 @@ define(['app'], function(app) {
 	 * 异步请求试题数据 
 	 */
 	function ajaxLoadContent(time) {
-		app.ajaxLoadPageContent(loadQuestionPath, {
-			id: id,
+		app.ajaxLoadPageContent(loadQuestionPath+id, {
+			// id: id,
 		}, function(data) {
 			console.log(data);
-			examData = data;
-			examLength = data.length;
+			examData = data.data;
+			examLength = data.data.length;
 			if(examLength == 1) {
 				$$('.examAnswerBottomHead .next').html('提交');
 			}
@@ -271,22 +285,42 @@ define(['app'], function(app) {
 //		require(['js/pages/exam/examDetail'], function(examDetail) {
 //			examDetail.ajaxLoadContent(subId);
 //		});
-		app.ajaxLoadPageContent(findWrongPath, {
-			subjectId: id,
-			userId: app.userId,
+		app.ajaxLoadPageContent(findWrongPath+id+'/'+app.userId, {
+			// subjectId: id,
+			// userId: app.userId,
 		}, function(result) {
 			console.log(result.data);
 			examData = result.data;
 			examLength = examData.length;
+			
+			// for(var i=0; i<examData.length; i++){
+			// 	if(examData[i].isRight == false){
+			// 		flag = false;
+			// 		break;
+			// 	}
+			// }
+
 			if(examLength == 0) {
+				console.log('examLength1')//能打印
 				app.myApp.alert('您本次试卷已得满分，没有错题', function() {
+					//为啥这里打印不出来....
+					console.log('examLength2')
+					
 					app.myApp.getCurrentView().back();
+
 				});
+				console.log('examLength3')//能打印
 			} else {
+				
 				if(examLength == 1) {
+					
 					$$('.examAnswerBottomHead .next').html('没有了');
+				}else{
+					$$('.examAnswerBottomHead .next').html('下一题');
 				}
-				initExamPick();
+				//initExamPick();
+				
+				initExamWrongPick();
 			}
 		});
 	}
@@ -295,17 +329,20 @@ define(['app'], function(app) {
 	 *  异步请求试题数据
 	 * @param {Object} qid 试题ID
 	 */
+	// {id}/{subjectId}/{userId}
 	function ajaxLoadFalseContent(qid) {
-		app.ajaxLoadPageContent(findWrongQuestionsPath, {
-			subjectId: id,
-			userId: app.userId,
-			questionId: qid
+		app.ajaxLoadPageContent(findWrongQuestionsPath+qid+'/'+id+'/'+app.userId, {
+			// subjectId: id,
+			// userId: app.userId,
+			// questionId: qid
 		}, function(result) {
 			console.log(result.data);
 			falseData[examNumber] = result.data;
 			if(examNumber) {
+			
 				changeExam('right');
 			} else {
+				
 				handleFalse(1);
 			}
 		}, {
@@ -319,8 +356,42 @@ define(['app'], function(app) {
 	function initExamPick() {
 		$$('.examAnswerBottomPick').html('');
 		for(var i = 0; i < examLength; i++) {
-			var questionId = examData[i].questionId || 0;
+			console.log(examData);
+			// var questionId = examData[i].questionId || 0;
+			var questionId = examData[i].id || 0;
 			$$('.examAnswerBottomPick').append('<span class="examPickNumber" data-id="' + questionId + '" style="width: ' + examShipWidth + 'px; height: ' + examShipWidth + 'px; line-height: ' + examShipWidth + 'px;">' + (i + 1) + '</span>');
+			if(!falseExam) {
+				chooseData[i] = {
+					'pick': 0,
+					'id': 0,
+					'topicId': examData[i].id,
+				};
+			}
+		}
+		if(falseExam) {
+			var qid = examData[0].questionId;
+			ajaxLoadFalseContent(qid);
+		}
+		$$($$('.examPickNumber')[0]).addClass('active');
+		$('.examPickNumber').click(pickNumber);
+		//		$$('.examPickNumber').on('click', pickNumber);
+	}
+	
+	/**
+	 *  初始化错题选择器 
+	 */
+	function initExamWrongPick() {
+		$$('.examAnswerBottomPick').html('');
+		for(var i = 0; i < examLength; i++) {
+			var questionId = examData[i].questionId || 0;
+			var isRight = examData[i].isRight;
+			//console.log(isRight == true);
+			if(isRight){
+				$$('.examAnswerBottomPick').append('<span class="examPickNumber" data-id="' + questionId + '" style="color:green;width: ' + examShipWidth + 'px; height: ' + examShipWidth + 'px; line-height: ' + examShipWidth + 'px;">' + (i + 1) + '</span>');
+			}else{
+				$$('.examAnswerBottomPick').append('<span class="examPickNumber" data-id="' + questionId + '" style="color:red;width: ' + examShipWidth + 'px; height: ' + examShipWidth + 'px; line-height: ' + examShipWidth + 'px;">' + (i + 1) + '</span>');
+			}
+			
 			if(!falseExam) {
 				chooseData[i] = {
 					'pick': 0,
@@ -342,25 +413,34 @@ define(['app'], function(app) {
 	 * 处理考试题目 
 	 */
 	function handleExamAnswer() {
+		
 		var display = arguments[0] == 1 ? 'block' : 'none';
 		$$('.examAnswerBottom .pick').html((examNumber + 1) + '/' + examLength);
 		var width = $(document.body).width() + 'px';
 		var data = examData[examNumber];
+		console.log('处理考试题目')
+		console.log(data)
 		var html = '<div data-id="' + data.id + '" class="examAnswerTopic" style="margin-bottom: 50px; position: absolute; display: ' +
 			display + '; width: ' + width + ';">' + '<div class="examAnswerTitle">' +
 			(examNumber + 1) + '、' + data.question + '（' + data.score + '分）</div>';
-		if(data.A || data.A != undefined) {
-			html += '<div data-id="' + data.AID + '" class="examAnswerContent"><div></div><span>A. ' + data.A + '</span></div>';
+		var dataDetail = examData[examNumber].allAnswers;
+		$$.each(dataDetail, function(index, item){
+			if(item.memo || item.memo != undefined) {
+			html += '<div data-id="' + item.id + '" class="examAnswerContent"><div></div><span> '+item.answer +'. '+ item.memo + '</span></div>';
 		}
-		if(data.B || data.B != undefined) {
-			html += '<div data-id="' + data.BID + '" class="examAnswerContent"><div></div><span>B. ' + data.B + '</span></div>';
-		}
-		if(data.C || data.C != undefined) {
-			html += '<div data-id="' + data.CID + '" class="examAnswerContent"><div></div><span>C. ' + data.C + '</span></div>';
-		}
-		if(data.D || data.D != undefined) {
-			html += '<div data-id="' + data.DID + '" class="examAnswerContent"><div></div><span>D. ' + data.D + '</span></div>';
-		}
+		})
+		// if(data.A || data.A != undefined) {
+		// 	html += '<div data-id="' + data.AID + '" class="examAnswerContent"><div></div><span>A. ' + data.A + '</span></div>';
+		// }
+		// if(data.B || data.B != undefined) {
+		// 	html += '<div data-id="' + data.BID + '" class="examAnswerContent"><div></div><span>B. ' + data.B + '</span></div>';
+		// }
+		// if(data.C || data.C != undefined) {
+		// 	html += '<div data-id="' + data.CID + '" class="examAnswerContent"><div></div><span>C. ' + data.C + '</span></div>';
+		// }
+		// if(data.D || data.D != undefined) {
+		// 	html += '<div data-id="' + data.DID + '" class="examAnswerContent"><div></div><span>D. ' + data.D + '</span></div>';
+		// }
 		html += '</div>';
 		$$('.examAnswerBox').append(html);
 	}
@@ -373,23 +453,28 @@ define(['app'], function(app) {
 		$$('.examAnswerBottom .pick').html((examNumber + 1) + '/' + examLength);
 		var width = $(document.body).width() + 'px';
 		var data = falseData[examNumber];
-		
-		var html = '<div data-id="' + data.id + '" class="examAnswerTopic" style="margin-bottom: 50px; position: absolute; display: ' +
+		console.log(data);
+		var html = '<div data-id="' + data.answerOptions[0].questionId + '" class="examAnswerTopic" style="margin-bottom: 50px; position: absolute; display: ' +
 			display + '; width: ' + width + ';">' + '<div class="examAnswerTitle">' +
 			(examNumber + 1) + '、' + data.question + '（' + data.score + '分）</div>';
 			
-		if(data.wrongAnswerIds){
-			if(data.wrongAnswerIds[0] == 0){
+		if(data.myAnswerIds){
+			if(data.myAnswerIds[0] == 0){
 				var uDoneStr = '<span style="color:red;position:absolute;right:20px;top:0px;">（您此题未作答）</span>';
 				html += uDoneStr;
 			}
 		}
 		$$.each(data.answerOptions, function(index, item) {
 			var isFalse = '';
-			if($.inArray(item.id, data.wrongAnswerIds) != -1) {
+			console.log(data.myAnswerIds[0] == data.rightAnswerIds[0]);
+			console.log(data.myAnswerIds[0]);
+			console.log(data.rightAnswerIds[0]);
+			if($.inArray(item.id, data.myAnswerIds) != -1 && data.myAnswerIds[0] !== data.rightAnswerIds[0]) {
+				console.log('1')
 				isFalse = 'false';
 			}
-			else if(($.inArray(item.id, data.rightAnswerIds) != -1)){
+			else if(($.inArray(item.id, data.rightAnswerIds) != -1) || (data.myAnswerIds[0] == data.rightAnswerIds[0] && ($.inArray(item.id, data.rightAnswerIds) != -1))){
+				console.log('2')
 				isFalse = 'true';
 			}
 			html += '<div data-id="' + item.id + '" class="examAnswerContent ' + isFalse + '"><span>' + item.answer + '. ' + item.memo + '</span></div>';
@@ -486,21 +571,25 @@ define(['app'], function(app) {
 			obj[tid] = parseInt(cid);
 			ans.push(obj);
 		}
-		app.ajaxLoadPageContent(finishSubjectPath, {
-			userId: app.userId,
-			subjectId: id,
+
+		app.ajaxLoadPageContent(finishSubjectPath+id+'/'+app.userId, {
+			// userId: app.userId,
+			// subjectId: id,
 			questionId: JSON.stringify(ans),
-			useTime: app.utils.formatTimeStrBySecond(times),
+			// useTime: app.utils.formatTimeStrBySecond(times),
+			useTime: times,
 		}, function(data) {
 			console.log(data);
 			
 //			if(!data.success) {
 //				html = '您已经考过本试卷，本次作答无效';
 //			} else {
-				str = '您的作答已批改完毕！<br />用时：' + app.utils.formatTimeStrBySecond(times) + '<br />答对了' + data.rightTotal +
-					'题<br />答错了' + (examLength - data.rightTotal) + '题<br />试卷得分: ' + data.rightScore + '分';
+				str = '您的作答已批改完毕！<br />用时：' + app.utils.formatTimeStrBySecond(times) + '<br />答对了' + data.data.rightTotal +
+					'题<br />答错了' + (examLength - data.data.rightTotal) + '题<br />试卷得分: ' + data.data.rightScore + '分';
 //			}
 			completeTheExam(str);
+		},{
+			type:'POST'
 		});
 	}
 	/*

@@ -257,7 +257,7 @@ define(['app',
 			var reviewName = $$(this).data('userName');
 			console.log(logTypeId);
 			
-			app.myApp.getCurrentView().loadPage('recordDetail.html?id=' + recordId+ '&userId=' + userId + '&logTypeId=' + logTypeId  + '&state=-1&reviewName=' + reviewName+'&push=true');
+			app.myApp.getCurrentView().loadPage('recordDetail.html?id=' + recordId+ '&userId=' + userId + '&logTypeId=' + logTypeId  + '&state=-1&reviewName=' + reviewName+'&push=true'+'&catId='+catId);
 		
 	}
 

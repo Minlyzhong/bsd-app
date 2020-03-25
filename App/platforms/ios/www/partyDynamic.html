@@ -1,4 +1,4 @@
-<div data-page="partyDynamic/partyDynamic" class="page navbar-fixed no-tabbar">
+<div data-page="partyDynamic/partyDynamic" class="page navbar-fixed no-tabbar partyDynamic">
 	<div class="navbar">
 		<div class="navbar-inner">
 			<div class="left sliding">
@@ -13,7 +13,7 @@
 	<div class="" style="margin-top: 44px;">
 		<div class="searchbar contactsShowPeopleSearchBar partyDynamicSearchBar">
 			<div class="searchbar-input">
-				<input type="search" placeholder="搜索" id="partyDynamicSearch" />
+				<input type="search" placeholder="搜索关键字" id="partyDynamicSearch" />
 				<a href="#" class="searchbar-clear partyDynamicSearchClear"></a>
 			</div>
 			<div class="searchCancelBtn">取消</div>
@@ -53,10 +53,10 @@
 						<div class="dynamicReport">
 							<div class="dynamicReportTitle"><span class="dynamicReportName"></span> <span class="dynamicReportTime">月</span>概况</div>
 							<div class="row no-gutter dynamicReportList dynamicMonth">
-								<div class="col-50 grid" data-type="0" style="background: url(img/icon/icon-xingcheng.png) no-repeat 5px; background-size: 22px;">总人数：<span class="people"></span></div>
-								<div class="col-50 grid" data-type="1" style="background: url(img/icon/record.png) no-repeat 5px; background-size: 22px;">日志数量(条)：<span class="workTotal"></span></div>
-								<div class="col-50 grid" data-type="2" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotal"></span></div>
-								<div class="col-50 grid" data-type="3" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPoint"></span></div>
+								<div class="col-50 grid" data-type="0" style="background: url(img/icon/icon-xingcheng.png) no-repeat 8px; background-size: 22px;">总人数：<span class="people"></span></div>
+								<div class="col-50 grid" data-type="1" style="background: url(img/icon/record.png) no-repeat 10px; background-size: 22px;">日志数量(条)：<span class="workTotal"></span></div>
+								<div class="col-50 grid" data-type="2" data-khpl="2" style="background: url(img/icon/assessment.png) no-repeat 8px; background-size: 22px;">考核次数(次)：<span class="detialTotal"></span></div>
+								<div class="col-50 grid" data-type="3"  data-khpl="2" style="background: url(img/icon/userScoreInfo.png) no-repeat 10px; background-size: 22px;">考核得分(分)：<span class="detialPoint"></span></div>
 							</div>
 						</div>
 					</div>
@@ -98,12 +98,12 @@
 							<div class="dynamicTime" data-type="0">本周</div>
 						</div>-->
 						<div class="dynamicReportSeason">
-							<div class="dynamicReportTitleSeason"><span class="dynamicReportNameSeason"></span> <span class="dynamicReportTime"季度</span>概况</div>
+							<div class="dynamicReportTitleSeason"><span class="dynamicReportNameSeason"></span> <span class="dynamicReportTime"></span>季度</span>概况</div>
 							<div class="row no-gutter dynamicReportList dynamicSeason">
 								<div class="col-50 grid" data-type="0" style="background: url(img/icon/icon-xingcheng.png) no-repeat 5px; background-size: 22px;">总人数：<span class="peopleSeason"></span></div>
 								<div class="col-50 grid" data-type="1" style="background: url(img/icon/record.png) no-repeat 5px; background-size: 22px;">日志数量(条)：<span class="workTotalSeason"></span></div>
-								<div class="col-50 grid" data-type="2" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotalSeason"></span></div>
-								<div class="col-50 grid" data-type="3" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPointSeason"></span></div>
+								<div class="col-50 grid"  data-khpl="1" data-type="2" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotalSeason"></span></div>
+								<div class="col-50 grid" data-type="3"  data-khpl="1" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPointSeason"></span></div>
 							</div>
 						</div>
 					</div>
@@ -149,8 +149,8 @@
 							<div class="row no-gutter dynamicReportList dynamicYear">
 								<div class="col-50 grid" data-type="0" style="background: url(img/icon/icon-xingcheng.png) no-repeat 5px; background-size: 22px;">总人数：<span class="peopleYear"></span></div>
 								<div class="col-50 grid" data-type="1" style="background: url(img/icon/record.png) no-repeat 5px; background-size: 22px;">日志数量(条)：<span class="workTotalYear"></span></div>
-								<div class="col-50 grid" data-type="2" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotalYear"></span></div>
-								<div class="col-50 grid" data-type="3" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPointYear"></span></div>
+								<div class="col-50 grid" data-type="2"  data-khpl="0" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotalYear"></span></div>
+								<div class="col-50 grid" data-type="3"  data-khpl="0" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPointYear"></span></div>
 							</div>
 						</div>
 					</div>
@@ -182,10 +182,10 @@
 		<div class="dynamicReportSearch">
 			<div class="dynamicReportTitleSearch"><span class="dynamicReportNameSearch"></span> <span class="dynamicReportTimeSearch">年</span>概况</div>
 			<div class="row no-gutter dynamicReportList dynamicSearch">
-				<div class="col-50 grid" data-type="0" style="background: url(img/icon/icon-xingcheng.png) no-repeat 5px; background-size: 22px;">总人数：<span class="peopleSearch"></span></div>
+				<div class="col-50 grid" data-type="0"  style="background: url(img/icon/icon-xingcheng.png) no-repeat 5px; background-size: 22px;">总人数：<span class="peopleSearch"></span></div>
 				<div class="col-50 grid" data-type="1" style="background: url(img/icon/record.png) no-repeat 5px; background-size: 22px;">日志数量(条)：<span class="workTotalSearch"></span></div>
-				<div class="col-50 grid" data-type="2" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotalSearch"></span></div>
-				<div class="col-50 grid" data-type="3" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPointSearch"></span></div>
+				<div class="col-50 grid" data-type="2" data-khpl="0" style="background: url(img/icon/assessment.png) no-repeat 5px; background-size: 22px;">考核次数(次)：<span class="detialTotalSearch"></span></div>
+				<div class="col-50 grid" data-type="3" data-khpl="0" style="background: url(img/icon/userScoreInfo.png) no-repeat 5px; background-size: 22px;">考核得分(分)：<span class="detialPointSearch"></span></div>
 			</div>
 		</div>
 	</div>
@@ -195,7 +195,7 @@
 		<div class="col-28 dynamicFilterContentSearch" data-pickerSearch='0' data-pickTypeSearch='3'>考核次数</div>
 		<div class="col-28 dynamicFilterContentSearch" data-pickerSearch='0' data-pickTypeSearch='2'>考核得分</div>
 	</div>
-	<div class="page-content infinite-scroll dynamicPageSearch" style="margin-top: 5px;">
+	<div class="page-content infinite-scroll dynamicPageSearch" style="margin-top: 10px;">
 		<div class="list-block media-list dynamicListSearch">
 			<ul>
 			</ul>
