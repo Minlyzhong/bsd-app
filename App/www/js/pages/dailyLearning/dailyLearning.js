@@ -39,7 +39,7 @@ define(['app','hbs!js/hbs/dailyLearning'], function(app,dLTemplate) {
 			pageNo:pageNo,
 		}, function(data) {
 			console.log(data);
-			var result = data.data.reverse();
+			var result = data.data;
 			$.each(result, function(index,item) {
 				var dLResult = {
 					contentId:0,

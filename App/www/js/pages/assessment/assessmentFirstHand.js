@@ -524,6 +524,7 @@ define(['app',
 				khpl:2,
 			}, function(result) {
 				if(result.data == null){
+					$$('.assesserLeftList ul').html(itemTemplate());
 					$$('.assesserRightList ul').html('<div class="noresult">没有需要考核的内容</div>');
 				}else{
 					var data = result.data;
@@ -564,6 +565,7 @@ define(['app',
 				khpl:1,
 			}, function(result) {
 				if(result.data == null){
+					$$('.assesserLeftListSeason ul').html(itemTemplate());
 					$$('.assesserRightListSeason ul').html('<div class="noresult">没有需要考核的内容</div>');
 				}else{
 					var data = result.data;
@@ -603,6 +605,7 @@ define(['app',
 				khpl:0,
 			}, function(result) {
 				if(result.data == null){
+					$$('.assesserLeftListYear ul').html(itemTemplate());
 					$$('.assesserRightListYear ul').html('<div class="noresult">没有需要考核的内容</div>');
 				}else{
 					$$('.assesserRightListYear ul').html('');

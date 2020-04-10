@@ -50,8 +50,8 @@ define(['app',
 		if(app.tenantId == null || app.tenantId == undefined ||app.tenantId == '' ){
 			app.tenantId = 'cddkjfdkdeeeiruei8888'
 		}
-		console.log('page')
-		console.log(page)
+		// console.log('page')
+		// console.log(page)
 		initData(page.query);
 		ajaxLoadContent(page);		
 		app.back2Home();
@@ -117,7 +117,7 @@ define(['app',
 		
 		console.log('登录后刷新');
 		partyGetList(false);
-		getPatryList();
+		// getPatryList();
 	}
 	
 	//点赞刷新
@@ -155,7 +155,7 @@ define(['app',
 			$$('.homeCamera').css('display','none');
 		if(user == -1 || user ==''|| user == null){
 			app.isLog = false;
-			console.log('1--')
+			// console.log('1--')
 			alreadyLoginFlag = false;
 			app.userId = -1;
 			app.user = '';
@@ -189,7 +189,7 @@ define(['app',
 			// app.myApp.toast('请登录', 'error').show(true);
 
 		}else{
-			console.log('2--')
+			// console.log('2--')
 			
 			app.user = user;
 			app.userDetail = userDetail;
@@ -209,7 +209,7 @@ define(['app',
 	}
 	
 	function getStudyEveryDayData(){
-		console.log(app.user)
+		// console.log(app.user)
 		if(app.user == -1 || app.user ==''|| app.user == null|| app.user == undefined){
 			return;
 		}else{
@@ -219,7 +219,7 @@ define(['app',
 				}, function(data) {
 					
 					if(data.code == 0){
-						console.log(data);
+						// console.log(data);
 						studyData = data.data;
 						alreadyGetStudyData = true;
 						var curDay = app.utils.getCurTime().split(" ")[0];
@@ -228,7 +228,7 @@ define(['app',
 						}	
 						var today = app.utils.getCurTime().split(" ")[0];
 						if(today == localStorage.getItem('updateTime')) {
-							console.log('今天已经检查完毕');
+							// console.log('今天已经检查完毕');
 							alreadyCheckVersionFlag = true;
 						}
 									
@@ -247,12 +247,12 @@ define(['app',
 	function showStudyEveryDayDialog(){
 
 		
-		// console.log(alreadyGetNewList)
+		// // console.log(alreadyGetNewList)
 		var curDay = app.utils.getCurTime().split(" ")[0];
 		if(curDay == localStorage.getItem('lastStudyDay')){
 			return;
 		}else if(app.isLog && alreadyLoginFlag && alreadyGetStudyData && alreadyGetNewList && alreadyCheckVersionFlag ){
-			console.log('弹出框')
+			// console.log('弹出框')
 			setTimeout(function(){
 				if(studyData != null && studyData != undefined && JSON.stringify(studyData) != "{}"){
 					localStorage.setItem('lastStudyDay',curDay);
@@ -290,7 +290,7 @@ define(['app',
 		
 		getWiper();
 		// 待定partyGetList
-		// console.log('待定partyGetList')
+		// // console.log('待定partyGetList')
 		// partyGetList(false)
 		//先检查更新
 		// 暂时注释
@@ -311,7 +311,7 @@ define(['app',
 	 * 获取滚动页
 	 */
 	function getWiper() {
-	console.log(pageDataStorage['wiper'])
+	// console.log(pageDataStorage['wiper'])
 
 	if(pageDataStorage['wiper']){
 		// $$('.homeSwiper .swiper-wrapper').html('');
@@ -324,7 +324,7 @@ define(['app',
 			// tenantId: app.tenantId
 			tenantId: app.tenantId
 		}, function(data) {
-			console.log(data);
+			// console.log(data);
 			pageDataStorage['wiper'] = data.data;
 			pageDataStorage['partyFirstId'] = data.id;
 			handleWiper(data.data);
@@ -351,10 +351,10 @@ define(['app',
 				
 			// }
 
-			// console.log(datas);
+			// // console.log(datas);
 			$$.each(datas, function(index, item) {
-				// console.log('item')
-				// console.log(item)
+				// // console.log('item')
+				// // console.log(item)
 				
 				var images = {
 					url: app.filePath + item.titlePic,
@@ -374,9 +374,9 @@ define(['app',
 					);
 			});
 
-			console.log($$('#homeTopSwiper'));
-			console.log($$('#homeTopSwiper')[0].children);
-			console.log($$('#homeTopSwiper')[0].children.length);
+			// console.log($$('#homeTopSwiper'));
+			// console.log($$('#homeTopSwiper')[0].children);
+			// console.log($$('#homeTopSwiper')[0].children.length);
 			
 
 			homeSwiper = app.myApp.swiper('.homeSwiper', {
@@ -422,13 +422,13 @@ define(['app',
 	 * 获取标题栏 
 	 */
 	function getPatryList(page) {
-		console.log(app.tenantId);
+		// console.log(app.tenantId);
 		app.ajaxLoadPageContent(partyPath, {
 			tenantId:app.tenantId
 			// tenantId: 'cddkjfdkdeeeiruei8888'
 		}, function(data) {
-			console.log('获取标题栏')
-			console.log(data)
+			// console.log('获取标题栏')
+			// console.log(data)
 			pageDataStorage['partyList'] = data.data;
 			handlePartyList(data.data);
 			
@@ -477,8 +477,8 @@ define(['app',
 				patryList.push(party);
 			});
 		}
-		console.log('patryList-----')
-		console.log(patryList)
+		// console.log('patryList-----')
+		// console.log(patryList)
 		if(patryList.length>8){
 			
 			// var n=Math.ceil(patryList.length/8)
@@ -499,16 +499,16 @@ define(['app',
 		// $$('.homeList').html(appList(patryList))
 //		showStudyEveryDayDialog();
 		$$('.homeListApp').on('click',showDetail);
-		console.log('加载标题栏')
+		// console.log('加载标题栏')
 		partyGetList(false);
 
 	}
 
 	function showDetail(){
-		console.log('$$(this)')
-		console.log($$(this))
-		console.log($$(this).data('title'))
-		console.log($$(this).data('cChild'))
+		// console.log('$$(this)')
+		// console.log($$(this))
+		// console.log($$(this).data('title'))
+		// console.log($$(this).data('cChild'))
 		var id = $$(this).data('id');
 		var title = $$(this).data('title');
 		var curl = $$(this).data('cUrl');
@@ -516,14 +516,14 @@ define(['app',
 
 		// 跳转方式不同看cChild,就是hasChilds
 		if(cChild){
-			console.log('2')
+			// console.log('2')
 			var list=[];
-			console.log('patryList')
-			console.log(patryList)
+			// console.log('patryList')
+			// console.log(patryList)
 			$.each(patryList,function(index,item){
 
 				if(item.id == id){
-					console.log(item.id == id)
+					// console.log(item.id == id)
 					$.each(item.childs,function(index,item1){
 						
 						var party1 = {
@@ -545,9 +545,9 @@ define(['app',
 						
 						// 标题
 						if(item1.data){
-							console.log(item1.data)
+							// console.log(item1.data)
 							if(JSON.parse(JSON.stringify(item1.data))[0]){
-								console.log('3')
+								// console.log('3')
 								party1.dataFirst = JSON.parse(JSON.stringify(item1.data))[0].title;
 							}
 						}
@@ -556,8 +556,8 @@ define(['app',
 						
 						list.push(party1);
 					});
-					console.log('list===')
-					console.log(list)
+					// console.log('list===')
+					// console.log(list)
 					
 					var result = [];
 				 	var obj = {};
@@ -568,8 +568,8 @@ define(['app',
 				      }
 					}
 					list = result;
-					console.log('list2===')
-					console.log(result)
+					// console.log('list2===')
+					// console.log(result)
 					// $$.each(list, function(index, item){
 					// 	if(item.indexOf(arr[i])==-1){
 					// 		hash.push(arr[i]);
@@ -583,7 +583,7 @@ define(['app',
 			app.myApp.getCurrentView().loadPage(curl+'?appName='+title);
 		}
 		if(curl == undefined && curl != ''){
-			console.log("curl == undefined && curl != ''--远程教育，通知公告，组工动态，不忘初心牢记使命")
+			// console.log("curl == undefined && curl != ''--远程教育，通知公告，组工动态，不忘初心牢记使命")
 			app.myApp.getCurrentView().loadPage('partyList.html?id='+id+'&title='+title);
 		}
 		
@@ -622,10 +622,10 @@ define(['app',
 	 * 检查更新(一天一次)
 	 */
 	function checkUpdate() {
-		console.log('checkUpdate')
+		// console.log('checkUpdate')
 		var today = app.utils.getCurTime().split(" ")[0];
 		if(today == localStorage.getItem('updateTime')) {
-			console.log('今天已经检查完毕');
+			// console.log('今天已经检查完毕');
 			alreadyCheckVersionFlag = true;
 			return;
 		}
@@ -641,8 +641,8 @@ define(['app',
 						tenantId: app.tenantId,
 					},
 					success: function(data) {
-						console.log('checkUpdate')
-						console.log(data)
+						// console.log('checkUpdate')
+						// console.log(data)
 						if(timeOutID) {
 							window.clearTimeout(timeOutID);
 						}
@@ -650,8 +650,8 @@ define(['app',
 						
 						if(data.msg == 'success') {
 							localStorage.setItem('updateTime', today);
-							console.log(app.version);
-							console.log(data.data.appVersion);
+							// console.log(app.version);
+							// console.log(data.data.appVersion);
 							var size = data.data.appSize/1024/1024;
 							if(app.version != data.data.appVersion) {
 								if(app.myApp.device.ios) {
@@ -676,7 +676,7 @@ define(['app',
 					},
 					error: function() {
 						alreadyCheckVersionFlag = true;
-						console.log('更新失败');
+						// console.log('更新失败');
 						if(timeOutID) {
 							window.clearTimeout(timeOutID);
 						}
@@ -722,8 +722,8 @@ define(['app',
 			
 		}, function(data) {
 			if(data.data){
-				console.log('更换肤色')
-				console.log(data)
+				// console.log('更换肤色')
+				// console.log(data)
 				if(data.data.appSkin == 2){
 					link.href = 'css/skin/blue.css';  
 				}else if(data.data.appSkin == 3){
@@ -748,8 +748,8 @@ define(['app',
 			// tenantId: 'cddkjfdkdeeeiruei8888',
 			current:pageNo
 		}, function(result) {
-			console.log('获取文章列表')
-			console.log(result)
+			// console.log('获取文章列表')
+			// console.log(result)
 			var data = result;
 			//确定没有信息并且是第一页的时候
 			if(data.data.length == 0 && pageNo == 1){
@@ -763,7 +763,7 @@ define(['app',
 				handlePartyGetList(data.data, isLoadMore);
 			}
 			alreadyGetNewList = true;
-			console.log('获取文章列表-每日一学');
+			// console.log('获取文章列表-每日一学');
 			getStudyEveryDayData();
 		},
 		);
@@ -776,8 +776,8 @@ define(['app',
 	function handlePartyGetList(data, isLoadMore) {
 		if(data && data.length > 0) {
 			var partyData = data;
-			console.log('partyData')
-			console.log(partyData)
+			// console.log('partyData')
+			// console.log(partyData)
 			
 			$$.each(partyData, function(index, item) {
 				item.basePath = app.filePath;
@@ -845,7 +845,7 @@ define(['app',
 				pageNo = 1;
 				loading = true;
 				//这里写请求
-				console.log('上下拉操作')
+				// console.log('上下拉操作')
 				partyGetList(false);
 				app.myApp.pullToRefreshDone();
 			}, 500);
@@ -857,7 +857,7 @@ define(['app',
 			if(loading) return;
 			loading = true;
 			pageNo += 1;
-			console.log('滚动加载')
+			// console.log('滚动加载')
 			partyGetList(true);
 		});
 	}

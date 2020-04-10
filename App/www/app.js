@@ -486,14 +486,14 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 		myApp.hidePreloader();
 	});
 	// 合浦(正式库)
-	// var loginPath = 'http://180.142.130.246:9010';
-	// var basePath = 'http://180.142.130.246:9010/admin';
-	// var filePath = 'http://180.142.130.246:8020/group1/';
+	var loginPath = 'http://180.142.130.246:9010';
+	var basePath = 'http://180.142.130.246:9010/admin';
+	var filePath = 'http://180.142.130.246:8020/group1/';
 
 	// 合浦(测试库)
-	var loginPath = 'http://120.24.51.37:9010';
-	var basePath = 'http://120.24.51.37:9010/admin';
-	var filePath = 'http://120.24.51.37/group1/';
+	// var loginPath = 'http://120.24.51.37:9010';
+	// var basePath = 'http://120.24.51.37:9010/admin';
+	// var filePath = 'http://120.24.51.37/group1/';
 
 	// 正式库(1)北海党建
 	// var loginPath = 'http://180.142.130.246:9020';
@@ -574,7 +574,7 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	
 	
 	return {
-		version: '5.5',
+		version: '5.6',
 		myApp: myApp,
 		basePath: basePath,
 		mainView: mainView,

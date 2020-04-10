@@ -14,6 +14,8 @@ define(['app',
 	var markerArr3=[];
 	var markerArr4=[];
 	var markerArr5=[];
+	var nowYear;
+	var nowYearList = '';
 	var _color = "#D15FEE";
 	 // 创建Map实例
 	var map = new BMap.Map("allmap");
@@ -22,6 +24,7 @@ define(['app',
 	 * @param {Object} page 页面内容
 	 */
 	function init(page) {
+		nowYear = new Date().getFullYear();
 		map = new BMap.Map("allmap"); // 创建Map实例
 		initData(page.query);
 		
@@ -48,9 +51,12 @@ define(['app',
 		
 		console.log($$(this).is(":checked"))
 		console.log($$(this).checked)
+		
 		var value = $$(this).data('value');
 		var isChecked = $$(this).is(":checked");
 		_layerType = value;
+		console.log('_layerType')
+		console.log(_layerType)
 		if ($$(this) && isChecked) {
 			// 显示图层中的标记点
 			loadMapData(_layerType);
@@ -110,15 +116,30 @@ define(['app',
 			
 			
 
-			var li = $$(`<input type='checkbox' id='cbx1' data-value='5' value='5'  style='cursor:pointer;' checked=true /><b>10万元以上</b><div style='width:30px;height:10px;float:right;margin-top:5px;background:#FF0000;'></div><br/>`).appendTo(div); 
+			var li = $$(`<input type='checkbox' name="top" id='cbx1' data-value='5' value='5'  style='cursor:pointer;' checked=true /><b>10万元以上</b><div style='width:30px;height:10px;float:right;margin-top:5px;background:#FF0000;'></div><br/>`).appendTo(div); 
 
-			var li = $$(`<input type='checkbox' id='cbx2' value='4' data-value='4'  style='cursor:pointer;'/><b>5~10万元</b><div style='width: 30px; height:10px;float:right;margin-top:5px;background:#FFFF00;'></div><br/>`).appendTo(div); 
+			var li = $$(`<input name="box"   type='checkbox' id='cbx2' value='4' data-value='4'  style='cursor:pointer;'/><b>5~10万元</b><div style='width: 30px; height:10px;float:right;margin-top:5px;background:#FFFF00;'></div><br/>`).appendTo(div); 
 
-			var li = $$(`<input type='checkbox' id='cbx3' value='3' data-value='3' stlyle='cursor:pointer;'/><b>4~5万元</b><div style='width: 30px; height:10px;float:right;margin-top:5px;background:#1E90FF;'></div><br/>`).appendTo(div); 
+			var li = $$(`<input class='box' name="box" type='checkbox' id='cbx3' value='3' data-value='3' stlyle='cursor:pointer;'/><b>4~5万元</b><div style='width: 30px; height:10px;float:right;margin-top:5px;background:#1E90FF;'></div><br/>`).appendTo(div); 
 
-			var li = $$(`<input type='checkbox' id='cbx4' value='2' data-value='2' style='cursor:pointer;'/><b>3~4万元</b><div style='width: 30px; height:10px;float:right;margin-top:5px;background:#7CFC00;'></div><br/>`).appendTo(div); 
+			var li = $$(`<input class='box' name="box" type='checkbox' id='cbx4' value='2' data-value='2' style='cursor:pointer;'/><b>3~4万元</b><div style='width: 30px; height:10px;float:right;margin-top:5px;background:#7CFC00;'></div><br/>`).appendTo(div); 
 
-			var li = $$(`<input type='checkbox' id='cbx5' value='1' data-value='1'  style='cursor:pointer;'/><b>3万元以下</b><div style='width: 30px; height:10px;float:right;margin-top:5px;background:#D15FEE;'></div><br/>`).appendTo(div); 
+			var li = $$(`<input class='box' name="box" type='checkbox' id='cbx5' value='1' data-value='1'  style='cursor:pointer;'/><b>3万元以下</b><div style='width: 30px; height:10px;float:right;margin-top:5px;background:#D15FEE;'></div><br/>`).appendTo(div); 
+
+			var li = $$(`<div id="tab3"  style="position: relative; font-weight: 600;">
+			<div class="assessmentTimeYear list-block" style="margin: 0px;">
+			  
+				  <div class="item-content" style="min-height:30px;">
+					
+					  
+					  
+						<input style="margin: 0px; width: 77px;
+						font-size: 14px;background-image: url(img/more.png);background-repeat: no-repeat;background-size: 17px;background-position: 60px 11px;text-align:left;padding-left: 7px;height: 28px;" type="text" placeholder="选择年份" id="picker-describeYear" readonly>
+					  </div>
+					
+				  
+			
+			</div>`).appendTo(div);
 			// 添加DOM元素到地图中
 			// 点击事件
 			
@@ -126,6 +147,8 @@ define(['app',
 			// 将DOM元素返回
 			return div;
 		}
+
+		
 		
 		// 创建控件
 		var showLegendCtrl = new ShowLegendControl();
@@ -151,7 +174,39 @@ define(['app',
 		 * 点击事件
 		 */
 		function clickEvent() {
-			$$('input').on('click',loadLayerData)
+			$$('input').on('click',loadLayerData);
+
+			console.log(nowYear)
+			pickerDescribeYear = app.myApp.picker({
+				input: '#picker-describeYear',
+				rotateEffect: true,
+				cols: [
+					{
+						textAlign: 'left',
+						values: (parseInt(nowYear)+'年 '+parseInt(nowYear-1)+'年').split(' ')
+					},
+				]
+				
+			});
+			$("#picker-describeYear").val(nowYear+'年 ');
+
+			$$(".assessmentTimeYear").on('click',function(){
+				pickerDescribeYear.open();
+				$$('.picker-3d .close-picker').text('选择');
+				$$('.toolbar-inner .right').css('margin-right','20px');	
+				$$('.picker-3d .close-picker').on('click',function(){
+					year = pickerDescribeYear.value[0].substring(0,pickerDescribeYear.value[0].length-1);
+					$("#picker-describeYear").val(year+'年 ');
+					nowYear = year;
+					removeAll();
+
+					// loadLayerData()
+					_layerType = 5;
+					loadMapData(_layerType);
+					// loadMapData(5);
+
+				});
+			});
 		}
 		
 	
@@ -181,6 +236,9 @@ define(['app',
 
 	// 加载地图数据
 	function loadMapData(queryStr) {
+
+		console.log('nowYearList');
+		console.log(nowYearList);
 		var token = localStorage.getItem('access_token');
 		app.myApp.showPreloader('加载中...');
 		$.ajax({
@@ -192,7 +250,7 @@ define(['app',
 			// },
 			data : {
 				// level : 2,
-				// level : queryStr,
+				year : nowYear,
 				tenantId : app.tenantId
 			},
 			error : function() {
@@ -201,6 +259,7 @@ define(['app',
 			},
 			success : function(json) {
 				var data = json.data;
+				console.log('data');
 				console.log(data);
 				app.myApp.hidePreloader();
 				if (json.code == 0 && data != null
@@ -294,8 +353,33 @@ define(['app',
 		});
 	}
 
+	// 移除所有图标
+	function removeAll(){
+		console.log('markerArr5前')
+		console.log(markerArr5)
+		$(':checkbox[name="top"]').checked = true;
+		$(':checkbox[name="box"]').removeAttr('checked');
+		removeMarker(markerArr1);
+		markerArr1=[];
+		removeMarker(markerArr2);
+		markerArr2=[];
+		removeMarker(markerArr3);
+		markerArr3=[];
+		removeMarker(markerArr4);
+		markerArr4=[];
+		removeMarker(markerArr5);
+		markerArr5=[];
+		removeMarker();
+
+
+		console.log('markerArr5后')
+		console.log(markerArr5)
+	}
+
 	// 移除地图标记点
 	function removeMarker(markerArr) {
+		console.log('markerArr')
+		console.log(markerArr)
 		if (markerArr && markerArr.length > 0) {
 			for (x = 0; x < markerArr.length; x++)
 				markerArr[x].remove();
