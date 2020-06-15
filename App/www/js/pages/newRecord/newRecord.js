@@ -64,7 +64,7 @@ define(['app',
 		app.ajaxLoadPageContent(findLogMinLenPath+'2'+'/content/min/len', {
 			
 		}, function(result) {
-			console.log(result)
+			// console.log(result)
 			pageDataStorage['minLen'] = result.data
 			$$('#publicContent').attr('placeholder','这一刻你想说什么（不少于'+pageDataStorage['minLen']+'字!）');
 		});
@@ -121,7 +121,7 @@ define(['app',
 	function keyupContent(){
 		$$('.firstShowPeopleList ul').html('');
 		NewRecordKey = $$('#ShowNewRecordSearch').val();
-		console.log(NewRecordKey);
+		// console.log(NewRecordKey);
 		if(!NewRecordKey) {
 			return;
 		}
@@ -163,8 +163,8 @@ define(['app',
 //		console.log(app.userId);
 		//清空photoDatas
 		photoDatas = [];
-		console.log(pageNo);
-		console.log(NewRecordKey);
+		// console.log(pageNo);
+		// console.log(NewRecordKey);
 		app.myApp.showPreloader('加载中...');
 		app.ajaxLoadPageContent(findLatestWorkLogPath+3, {
 			// userId: app.user.userId,
@@ -180,7 +180,7 @@ define(['app',
 				// $$('.recordLike>i').removeClass('icon-collect').addClass('icon-noCollect');
 				// $$('.likeStatus').html('赞');
 			});
-			console.log(data);
+			// console.log(data);
 			handleRecord(data, isLoadMore);			
 		});
 	}
@@ -189,8 +189,8 @@ define(['app',
 //		console.log(app.userId);
 		//清空photoDatas
 		photoDatas = [];
-		console.log(pageNo);
-		console.log(NewRecordKey);
+		// console.log(pageNo);
+		// console.log(NewRecordKey);
 		app.ajaxLoadPageContent(findLatestWorkLogPath+3, {
 			// userId: app.user.userId,
 			pageNo: pageNo1,
@@ -201,7 +201,7 @@ define(['app',
 			$$.each(data, function(index, item) {
 				item.isSearch = 'true';
 			});
-			console.log(data);
+			// console.log(data);
 			if(data == ''){
 				$$('.firstPeopleNotFound').css('display','none');
 			}
@@ -216,7 +216,7 @@ define(['app',
 	 */
 	function handleRecord(data, isLoadMore) {
 		
-		if(data.length) {
+		if(data.length ) {
 
 			
 
@@ -257,14 +257,14 @@ define(['app',
 	 * @param {Object} picUrlList 需要显示的图片数组
 	 */
 	function showReadonlyPhotos(picUrlList,imageId, isSearch) {
-		console.log(picUrlList,imageId)
+		// console.log(picUrlList,imageId)
 			photoBrowserPhotos=[];
 		$$.each(picUrlList, function(index, item) {
 			var item = item.attPath;
 			
 			photoBrowserPhotos.push(app.filePath + item);
 			photoBrowserPhotoslist[imageId] = photoBrowserPhotos;
-			console.log(photoBrowserPhotos)
+			// console.log(photoBrowserPhotos)
 			var random = app.utils.generateGUID();
 			
 			$$('#picList_'+imageId+'_'+isSearch).append(
@@ -277,9 +277,9 @@ define(['app',
 			$$('#img_' + random).on('click', function(e) {
 				e.stopPropagation();
 				var picIndex = $$(this).parent().index();
-				console.log(picIndex);
-				console.log(photoBrowserPhotoslist);
-				console.log(photoBrowserPhotoslist[imageId]);
+				// console.log(picIndex);
+				// console.log(photoBrowserPhotoslist);
+				// console.log(photoBrowserPhotoslist[imageId]);
 				photoBrowserPopup = app.myApp.photoBrowser({
 					photos: photoBrowserPhotoslist[imageId],
 					theme: 'dark',

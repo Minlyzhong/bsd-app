@@ -139,6 +139,7 @@ define(['app'], function(app) {
 		$$('.examSlide input').val(size);
 		$$('.examSwitch input')[0].checked = auto;
 		$$('.examAnswerBox').css('font-size', (size + 15) + 'px');
+		$$('.newMemo').css('font-size', (size + 14) + 'px');
 		autoJump = auto;
 	}
 
@@ -240,8 +241,11 @@ define(['app'], function(app) {
 	 */
 	function changeFontSize() {
 		var size = parseInt($$(this).val()) + 15;
+		var size2 = parseInt($$(this).val()) + 14;
+		console.log(parseInt($$(this).val()))
 		localStorage.setItem('examSettingFontSize', parseInt($$(this).val()));
 		$$('.examAnswerBox').css('font-size', size + 'px');
+		$$('.newMemo').css('font-size', size2 + 'px');
 	}
 
 	/**
@@ -265,7 +269,7 @@ define(['app'], function(app) {
 		app.ajaxLoadPageContent(loadQuestionPath+id, {
 			// id: id,
 		}, function(data) {
-			console.log(data);
+			// console.log(data);
 			examData = data.data;
 			examLength = data.data.length;
 			if(examLength == 1) {
@@ -289,6 +293,7 @@ define(['app'], function(app) {
 			// subjectId: id,
 			// userId: app.userId,
 		}, function(result) {
+			console.log('错题');
 			console.log(result.data);
 			examData = result.data;
 			examLength = examData.length;
@@ -356,6 +361,7 @@ define(['app'], function(app) {
 	function initExamPick() {
 		$$('.examAnswerBottomPick').html('');
 		for(var i = 0; i < examLength; i++) {
+			console.log('初始化选择器');
 			console.log(examData);
 			// var questionId = examData[i].questionId || 0;
 			var questionId = examData[i].id || 0;
@@ -420,11 +426,21 @@ define(['app'], function(app) {
 		var data = examData[examNumber];
 		console.log('处理考试题目')
 		console.log(data)
-		var html = '<div data-id="' + data.id + '" class="examAnswerTopic" style="margin-bottom: 50px; position: absolute; display: ' +
+		if(data.memo && data.memo != undefined) {
+			var html = '<div data-id="' + data.id + '" class="examAnswerTopic" style="margin-bottom: 50px; position: absolute; display: ' +
+			display + '; width: ' + width + ';">' + '<div class="examAnswerTitle" style="padding: 20px 20px 2px;">' +
+			(examNumber + 1) + '、' + data.question + '（' + data.score + '分）</div>'+
+			'<div class="newMemo">备注 : '+data.memo+'</div>';
+		}else{
+			var html = '<div data-id="' + data.id + '" class="examAnswerTopic" style="margin-bottom: 50px; position: absolute; display: ' +
 			display + '; width: ' + width + ';">' + '<div class="examAnswerTitle">' +
 			(examNumber + 1) + '、' + data.question + '（' + data.score + '分）</div>';
+		}
+		
 		var dataDetail = examData[examNumber].allAnswers;
 		$$.each(dataDetail, function(index, item){
+			console.log('dataDetail')
+			console.log(dataDetail)
 			if(item.memo || item.memo != undefined) {
 			html += '<div data-id="' + item.id + '" class="examAnswerContent"><div></div><span> '+item.answer +'. '+ item.memo + '</span></div>';
 		}
@@ -454,6 +470,7 @@ define(['app'], function(app) {
 		var width = $(document.body).width() + 'px';
 		var data = falseData[examNumber];
 		console.log(data);
+		
 		var html = '<div data-id="' + data.answerOptions[0].questionId + '" class="examAnswerTopic" style="margin-bottom: 50px; position: absolute; display: ' +
 			display + '; width: ' + width + ';">' + '<div class="examAnswerTitle">' +
 			(examNumber + 1) + '、' + data.question + '（' + data.score + '分）</div>';
@@ -571,7 +588,8 @@ define(['app'], function(app) {
 			obj[tid] = parseInt(cid);
 			ans.push(obj);
 		}
-
+		console.log('答案')
+		console.log(ans)
 		app.ajaxLoadPageContent(finishSubjectPath+id+'/'+app.userId, {
 			// userId: app.userId,
 			// subjectId: id,
@@ -579,6 +597,7 @@ define(['app'], function(app) {
 			// useTime: app.utils.formatTimeStrBySecond(times),
 			useTime: times,
 		}, function(data) {
+			console.log('data');
 			console.log(data);
 			
 //			if(!data.success) {

@@ -137,7 +137,7 @@ define(['app',
 				$$('.examRankPerson .item-content').on('click', examRankClick);
 			}
 		}else{
-			$$('.examRankPerson ul').html('<div style="line-height: 2.5;font-size: 16px;background: #DDDDDD;text-align: center;">您还没参与考试</div>');
+			$$('.examRankPerson ul').html('<div style="line-height: 4.5;font-size: 16px;background: #DDDDDD;text-align: center;">您还没参与考试</div>');
 		}
 	}
 

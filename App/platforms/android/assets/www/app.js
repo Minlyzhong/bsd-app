@@ -490,7 +490,7 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	var basePath = 'http://180.142.130.246:9010/admin';
 	var filePath = 'http://180.142.130.246:8020/group1/';
 
-	// 合浦(测试库)
+	// // 合浦(测试库)
 	// var loginPath = 'http://120.24.51.37:9010';
 	// var basePath = 'http://120.24.51.37:9010/admin';
 	// var filePath = 'http://120.24.51.37/group1/';
@@ -500,10 +500,10 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	// var basePath = 'http://180.142.130.246:9020/admin';
 	// var filePath = 'http://180.142.130.246:8020/group1/';
 
-	// 测试库(2)北海党建
-	// var loginPath = 'http://120.24.51.37:9011';
-	// var basePath = 'http://120.24.51.37:9011/admin';
-	// var filePath = 'http://120.24.51.37/group1/';
+	// 正式库(2)北海党建
+	// var loginPath = 'http://36.133.32.21:8020';
+	// var basePath = 'http://36.133.32.21:8020/admin';
+	// var filePath = 'http://36.133.32.21:8020/group1/';
 
 	//  测试库(一期)
 	// 	var basePath = 'http://192.168.11.80:8080/';
@@ -530,6 +530,17 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	var isLog = false;
 	var userArr={};
 	var departDetail={};
+
+	var qId = 0;
+	var memo = '请选择事项';
+	var selectMemo = false;
+	var selectOperating = false;
+	var marterId = 0;
+	var eventId = 0;
+	var applyCompany = '';
+	var eventName = '';
+    var matter = '';
+    var operatingUser = 0;
 
 	if(isNaN(roleId)) {
 		roleId = -1;
@@ -574,7 +585,7 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 	
 	
 	return {
-		version: '5.6',
+		version: '6.0',
 		myApp: myApp,
 		basePath: basePath,
 		mainView: mainView,
@@ -602,8 +613,17 @@ define('app', ['lib/router', 'lib/utils'], function(Router, Utils) {
 		isLog: isLog,
 		userArr:userArr,
 		departDetail:departDetail,
-		tenantId: tenantId
-
+		tenantId: tenantId,
+		qId: qId,
+		marterId: marterId,
+		eventId: eventId,
+		applyCompany: applyCompany,
+		eventName: eventName,
+		matter: matter,
+		operatingUser: operatingUser,
+		selectOperating: selectOperating,
+		selectMemo: selectMemo,
+		memo: memo
 		// currentdate:currentdate
 		//		appKey: '1138161114178609#qsdj1114kwan',
 		//		org_name: '1138161114178609',

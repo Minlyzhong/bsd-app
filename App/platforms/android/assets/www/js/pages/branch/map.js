@@ -46,7 +46,8 @@ define(['app'
 		map.addControl(bot_left_control);
 		map.addControl(top_left_navigation);
 	
-		flagIcon = new BMap.Icon('http://219.159.197.209:8099//images/redflag.png', new BMap.Size(32, 32));
+		// flagIcon = new BMap.Icon('http://219.159.197.209:8099//images/redflag.png', new BMap.Size(32, 32));
+		flagIcon = new BMap.Icon("img/flag.png", new BMap.Size(30, 30));
 		// flagIcon = new BMap.Icon(app.filePath+"/images/redflag.png", new BMap.Size(32, 32));
 	
 		$(document).ready(function() {

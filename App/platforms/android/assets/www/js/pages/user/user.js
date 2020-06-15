@@ -44,6 +44,9 @@ define(['app',
 		// 	app.myApp.getCurrentView().loadPage('myBranch.html');
 		// });
 		
+		$$('.myBrandIcon').on('click',function(){
+			app.myApp.getCurrentView().loadPage('myBranch.html');
+		});
 		$$('.carousel-top-title2').on('click',function(){
 			app.myApp.getCurrentView().loadPage('myBranch.html');
 		});
@@ -328,7 +331,9 @@ define(['app',
 				if(appId == 'villageCheck') {
 					// 暂时注释
 					userScan();
-					// app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+'众志成城'+'&id=41'+'&type=' + 'ZYFW');
+						// 营商环境
+					// app.myApp.getCurrentView().loadPage('scanQuestPage.html'+'?id=21');
+					// 加入志愿和服务
 					// app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+'志愿服务'+'&id=41'+'&type=' + 'ZYFW');
 					// app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+'会议'+'&id=13'+'&type=' + 'MEETING');
 				}else if(appId == '/app/KeDaXunFei.apk'){
@@ -345,17 +350,45 @@ define(['app',
 
 	function userScan() {
 		cordova.plugins.barcodeScanner.scan(
-			function(result) {
+			function(data) {
 				// alert(1);
-				result = JSON.parse(result.text);
-				// alert(result);
 				// alert(result.type);
 				// alert(result.desc);
 				// alert(result.id);
-				if(result){
-					var meetingTitle = result.desc;
-					var meetingId = result.id;
-					app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+meetingTitle+'&id='+meetingId+'&type=' + result.type);
+				// alert('data');
+				// alert(data);
+				var result1 = JSON.stringify(data.text);
+				// alert(result1);
+				if(data){
+					var isUrl = result1.indexOf("http") != -1;
+					// alert(isUrl);
+					if(isUrl){
+						function getvar(url,par){
+							var urlsearch = url.split('?');
+							pstr = urlsearch[1].split('&');
+							for (var i = pstr.length - 1; i >= 0; i--) {
+								var tep = pstr[i].split("=");
+								if(tep[0] == par){
+									return tep[1];
+								}
+							}
+							return(false);
+						}	
+						var winId = parseInt(getvar(result1, "id"));
+						// alert(winId);
+						if(winId){
+							app.myApp.getCurrentView().loadPage('scanQuestPage.html'+'?id='+winId);
+						}else{
+							app.myApp.toast('没有找到对应的办事窗口', 'error').show(true);
+						}
+					}else{
+						result = JSON.parse(data.text);
+						var meetingTitle = result.desc;
+						var meetingId = result.id;
+						app.myApp.getCurrentView().loadPage('scanPage.html'+'?title='+meetingTitle+'&id='+meetingId+'&type=' + result.type);
+					}
+
+					
 				}
 				// if(result.type=='MEETING'){
 					

@@ -33,6 +33,7 @@ define(['app','hbs!js/hbs/userMessageList'], function(app,personalMessageListTem
 		pageDataStorage = {}; 
 		var NewRecordKey ='';
 		$$('.personalHonorTitle').html(pageData.appName);
+		$$('.subordBranch').html("所属组织 : "+app.userDetail.deptName);
 	}
 	/**
 	 * 属性定义（不传参，使用模块变量）
@@ -79,7 +80,7 @@ define(['app','hbs!js/hbs/userMessageList'], function(app,personalMessageListTem
 				
 			}else if(result.length <=0 && pageNo == 1){
 					loading = true;
-				$$('.MessageList ul').html("<div style='text-align: center'>暂无历史留言</div>");
+				$$('.MessageList ul').html("<div style='text-align: center;margin-top:10px;'>暂无历史留言</div>");
 			}
 			// else{
 			// 	loading = true;

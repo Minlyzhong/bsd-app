@@ -1,0 +1,33 @@
+{{#.}}
+<li class="item-content"  data-userName = "{{name}}" data-id = "{{id}}" style="padding-right: 15px;" >
+	{{!-- <div class="item-media"><i class="icon icon-assessment"></i></div> --}}
+	<div class="item-inner jobList" style="padding: 10px 0px 10px 0px;">
+		<div class="item-title twoLine " >
+			
+			<span class="jobListTitle">{{label}}</span>
+			<span class="jobSalary fr" >{{treatment}}/月</span>
+			{{!-- {{#compare isSign '==' 0}}
+				<span class="processUnStatus isSign">未签字</span>
+			{{else}}
+				<span class="processStatus isSign">已签字</span>
+			{{/compare}}
+			 --}}
+			
+		</div>
+		
+		<div >{{companyName}}</div>
+		<div style="font-size: 14px;">
+			<div class="fl">
+				<span class="jobNeed">{{positionQualification}}</span>
+				{{!-- <span class="jobNeed">本科</span> | 
+				<span class="jobNeed" style="padding-left: 8px;">3年</span> --}}
+			</div>
+			<div class="fr" style="font-size: 13px;color:gray">{{releaseTime}}</div>
+		</div>
+
+
+		
+	</div>
+	
+</li>
+{{/.}}

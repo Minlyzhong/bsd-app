@@ -1,0 +1,27 @@
+{{#.}}
+
+
+<li class="swipeout item-content"  style="padding-right: 15px;">
+  <div class="swipeout-content  hL" data-userId="{{userId}}" data-userName="{{name}}" data-matterName="{{eventName}}" data-id="{{id}}" style="width: 100%;">
+    <div class="item-inner" style="padding: 10px 0px 10px 0px;width: 99%;">
+		<div class="item-title " style="color:#0061b2;white-space: normal; font-size: 16px;">
+			
+			<span>{{eventName}}</span>
+			{{#compare state '==' 0}}
+				<span class="processUnStatus isSign">进行中</span>
+			{{else}}
+				<span class="processStatus isSign">已完结</span>
+			{{/compare}}
+			
+		</div>
+		
+		<div style="font-size: 14px;margin-top: 10px;color:gray;">事项内容 : {{eventContent}}</div>
+		<div class="item-after" style="font-size: 13px;color:gray;margin-left:0px;">{{createTime}}</div>
+	</div>
+
+  </div>
+  <div class="swipeout-actions-right">
+    <a href="#" class="swipeout-delete" data-confirm="是否删除该事项?" data-matterName="{{eventName}}"  data-id="{{id}}"">删除</a>
+  </div>
+</li>
+{{/.}}

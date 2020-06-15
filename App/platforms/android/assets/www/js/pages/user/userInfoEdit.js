@@ -82,6 +82,7 @@ define(['app',
 				userData.workTime = time;	
 			}
 			console.log(userData);
+			// userData.userName = app.userDetail.username;
 			$$('.editList ul').html(editTemplate(userData));
 			addCalendar('partyTime');
 			addCalendar('birthday');
@@ -115,7 +116,7 @@ define(['app',
 		
 		
 		if(app.userType != 2) {
-
+			console.log('111')
 			var params = app.departDetail;
 			params.partyType = newData.partyType;
 			
@@ -160,7 +161,7 @@ define(['app',
 			})
 				
 		} else {
-
+			console.log('22')
 			var params = app.userDetail;
 
 			var _partyUser = params.partyUser;
@@ -169,13 +170,15 @@ define(['app',
 					_partyUser[item] = newData[item];
 				}
 			});
-			params.username = newData.userName;
+			// params.partyUser.userName = params.name;
+			// params.username = newData.userName;
 			_partyUser.partyTime=newData.partyTime.split(' ')[0]+' 00:00:00';
 			_partyUser.birthday=newData.birthday.split(' ')[0]+' 00:00:00';
 			_partyUser.workTime=newData.workTime.split(' ')[0]+' 00:00:00';	
 
 			var formDatas= JSON.stringify(params)
 			console.log(params);
+
 			$$.ajax({
 				url:saveEditPath,
 				method: 'PUT',
@@ -193,7 +196,7 @@ define(['app',
 						var time2 = app.userDetail.partyUser.birthday.split(' ')[0];
 						app.userDetail.partyUser.birthday = time2;
 
-						console.log(app.userDetail);
+						// console.log(app.userDetail);
 						app.userDetail.partyUser = _partyUser;
 						localStorage.setItem('userDetail', JSON.stringify(app.userDetail));
 						var html = $$($$('.userInfoList ul li')[0]).html();
@@ -215,6 +218,7 @@ define(['app',
 						comeData['zzztArr'] = app.userArr.zzztArr;
 						comeData['xzzwArr'] = app.userArr.xzzwArr;
 						comeData['zwjbArr'] = app.userArr.zwjbArr;
+						comeData['name'] = app.user.nickName;
 						$$('.userInfoList ul').append(userInfoTemplate(comeData));
 						require(['js/pages/user/userInfo'], function(userInfo) {
 							userInfo.clickEvent();

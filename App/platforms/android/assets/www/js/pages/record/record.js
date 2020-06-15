@@ -320,7 +320,7 @@ define(['app',
 		}
 		app.ajaxLoadPageContent(loadLogPath+2, params , function(result) {
 			console.log(result.data)
-			if(result.data == null){
+			if(result.data == null && pageNo ==1){
 				$$('.recordList').html('');
 				$$('.recordNotFound').show();
 			}else{

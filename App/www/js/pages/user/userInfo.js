@@ -203,7 +203,9 @@ define(['app',
 			userData.workTime = time;
 			
 		}
-
+		userData.name = app.user.nickName;
+		console.log('userData')
+		console.log(userData)
 		$$('.userInfoList ul').append(userInfoTemplate(userData));
 		app.myApp.hidePreloader();
 	}

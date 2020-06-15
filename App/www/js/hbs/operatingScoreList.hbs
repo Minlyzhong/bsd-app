@@ -1,0 +1,55 @@
+{{#.}}
+ {{#compare isScore '==' 0}}
+<li class="item-content" data-index = "{{index}}" data-userName = "{{name}}" data-matterName = "{{eventName}}" data-id = "{{id}}" style="padding-right: 15px;" >
+	{{!-- <div class="item-media"><i class="icon icon-assessment"></i></div> --}}
+	<div  style="padding: 10px 0px 5px 0px;">
+		<div style="color:#0061b2;white-space: normal; font-size: 16px;">
+			<span>{{index}}.</span>
+			<span>办事窗口:{{winName}}</span>
+		</div>
+		<div class="scoreDetail" >办事员 : {{operatingUserName}}</div>
+		<div class="scoreDetail" >服务事项 : {{matterName}}</div>
+		<div class="scoreDetail">上报时间 : {{createDate}}</div>
+		<div class="scoreDetail">代办员评分 : {{scoreName}}</div>
+		<div class="scoreDetail" style="margin-bottom: 5px;">窗口评分 : </div>
+		<div class="scoreDetail raterScore">
+		<span class="scoreF" data-score="0" data-num="5" data-val="非常满意">非常满意
+		</span>
+
+		<span class="scoreF" data-score="1" data-num="4" data-val="满意">满意
+		</span>
+
+		<span class="scoreF" data-score="2" data-num="3" data-val="一般">一般
+		</span>
+
+		<span class="scoreF" data-score="3" data-num="2" data-val="不满意">不满意
+		</span>
+
+		<span class="scoreF" data-score="4" data-num="1" data-val="差">差
+		</span>
+
+		</div>
+		<div class="scoreDetail"><a href="#" class="button active button-fill  scoreSubmit" style="width: 86px;line-height: 32px;" data-ListIndex = "{{ListIndex}}">确定</a></div>
+	</div>
+	
+</li>
+	
+{{else}}
+	<li class="item-content" data-index = "{{index}}" data-userName = "{{name}}" data-matterName = "{{eventName}}" data-id = "{{id}}" style="padding-right: 15px;" >
+		{{!-- <div class="item-media"><i class="icon icon-assessment"></i></div> --}}
+		<div  style="padding: 10px 0px 10px 0px;">
+			<div style="color:#0061b2;white-space: normal; font-size: 16px;">
+				<span>{{index}}.</span>
+				<span>办事窗口:{{winName}}</span>
+			</div>
+			<div class="scoreDetail" >办事员 : {{operatingUserName}}</div>
+			<div class="scoreDetail" >服务事项 : {{matterName}}</div>
+			<div class="scoreDetail">上报时间 : {{createDate}}</div>
+			<div class="scoreDetail">代办员评分 : {{scoreName}}</div>
+			{{!-- <div class="scoreDetail">窗口评分 : {{scoreName}}</div> --}}
+		</div>
+		
+	</li>
+{{/compare}}
+
+{{/.}}

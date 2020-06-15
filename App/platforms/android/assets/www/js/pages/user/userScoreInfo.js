@@ -53,7 +53,7 @@ define(['app',
 	}
 
 	function transTo(){
-		console.log('transTo')
+		// console.log('transTo')
 		app.myApp.getCurrentView().loadPage('pointDes.html');
 	}
 
@@ -91,7 +91,8 @@ define(['app',
 			app.ajaxLoadPageContent(userDailyPath+app.userId, {
 				
 			}, function(data) {
-				if(data.data == 0){
+				
+				if(data.code == 0){
 					$$('.scorePoint').html(data.data+'分');
 				}
 				
@@ -104,7 +105,7 @@ define(['app',
 			// current: pageNo,
 			// size: 20,
 		}, function(data) {
-			console.log(data);
+			// console.log(data);
 			if(data.data && data.data.length > 0) {
 				
 				$$.each(data.data, function(index, item) {
@@ -134,7 +135,7 @@ define(['app',
 					$$('.userScoreInfoList ul').append(infoTemplate(data.data));
 				} else {
 					var li = $$('.userScoreInfoList ul li');
-					console.log(li);
+					// console.log(li);
 					for(var i=0; i<li.length; i++){
 						if(i != 0){
 							li[i].remove();

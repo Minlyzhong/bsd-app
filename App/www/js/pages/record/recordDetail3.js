@@ -102,6 +102,7 @@ define(['app',
 		if(app.userId != -1){
 			checkRecommend();
 		}	
+		
 	}
 
 	/**
@@ -440,10 +441,18 @@ define(['app',
 			});
 			//点击推荐日志按钮
 			$$('.recordDetailRecommendButton').on('click',function(){
+				if(app.userDetail.roleId != 4){
+					app.myApp.toast('该账户没有推荐权限', 'error').show(true);
+					return;
+				}
 				recommendRecord(recordId);
 			});
 			//点击取消推荐日志按钮
 			$$('.recordDetailCancelButton').on('click',function(){
+				if(app.userDetail.roleId != 4){
+					app.myApp.toast('该账户没有取消推荐权限', 'error').show(true);
+					return;
+				}
 				app.myApp.confirm('确定要取消推荐此日志吗？', function() {
 					cancelRecord(recordId);
 				});

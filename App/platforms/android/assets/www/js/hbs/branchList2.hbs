@@ -1,9 +1,10 @@
 {{#.}}
-	<div class="card branchCard" data-id={{id}} data-state={{state}} data-memo="{{memo}}" data-content="{{content}}" data-title="{{title}}" data-createDate="{{createDate}}"   style="margin:10px 5px;">
-	  <div class="card-header"><span style="font-weight:600;">{{title}}<span></div>
+	<div class="card branchCard" data-id={{id}} data-state={{state}} data-memo="{{memo}}" data-content="{{content}}" data-title="{{title}}" data-createDate="{{createDate}}"   style="margin:10px 5px;border-radius: 5px;">
+	  <div class="card-header" style="padding-bottom: 0px; padding-top:3px;"><span class="branchLists" style="font-weight:500;white-space:normal;">{{title}}</span></div>
 	  <div class="card-content">
 	    <div class="list-block media-list">
 	      <ul>
+			  {{#compare hasImg '==' 1}}
 	        <li class="item-content">
 	        	<!--<div class="item-inner">
 		            <div class="item-title-row">
@@ -15,6 +16,7 @@
 		           <img src="{{coverImg}}" width="320px" height="200px">
 		        </div>
 	        </li>
+			{{/compare}}
 	      </ul>
 	    </div>
 	  </div>

@@ -133,6 +133,7 @@ define(['app',
 			// checkRecommend();
 			
 		}	
+	
 	}
 
 	/**
@@ -279,17 +280,26 @@ define(['app',
 			$$('#recSendId').val(userId);
 			//判断发送日志的时间是否属于本周
 			var myDate = new Date();
-			
-			if(data.recommendState && data.recommendState == 1 ){
 
-				isRecommend = true;
-				$$('.cancelRecord').css('display','block');
-				$$('.recommendRecord').css('display','none');
+			// 只有管理员能推荐日志
+			if(app.userDetail.roleId != 4 ){
+				$$('.recordDetailDelete').css('display','none');
 			}else{
-				isRecommend = false;
-				$$('.recommendRecord').css('display','block');
-				$$('.cancelRecord').css('display','none');
+				if(data.recommendState && data.recommendState == 1 ){
+
+					isRecommend = true;
+					$$('.cancelRecord').css('display','block');
+					$$('.recommendRecord').css('display','none');
+				}else{
+					isRecommend = false;
+					$$('.recommendRecord').css('display','block');
+					$$('.cancelRecord').css('display','none');
+				}
+
+				
 			}
+			
+			
 			// 点赞人
 			if(data.likes && data.likes.length > 0){
 				var likeName = ''
@@ -514,6 +524,8 @@ define(['app',
 				'</div>' +
 				'</div>'
 			var popover = app.myApp.popover(popoverHTML, clickedLink);
+			// 只有管理员能推荐日志和取消推荐
+			
 			$$('.recordPopover li a').on('click', function() {
 				app.myApp.closeModal(popover);
 			});
@@ -525,10 +537,18 @@ define(['app',
 			});
 			//点击推荐日志按钮
 			$$('.recordDetailRecommendButton').on('click',function(){
+				if(app.userDetail.roleId != 4){
+					app.myApp.toast('该账户没有推荐权限', 'error').show(true);
+					return;
+				}
 				recommendRecord(recordId);
 			});
 			//点击取消推荐日志按钮
 			$$('.recordDetailCancelButton').on('click',function(){
+				if(app.userDetail.roleId != 4){
+					app.myApp.toast('该账户没有取消推荐权限', 'error').show(true);
+					return;
+				}
 				app.myApp.confirm('确定要取消推荐此日志吗？', function() {
 					cancelRecord(recordId);
 				});

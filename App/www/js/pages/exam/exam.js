@@ -150,7 +150,7 @@ define(['app',
 				loading = false;
 			}
 		} else {
-			$$('.examList ul').html('无试卷内容');
+			$$('.examList ul').html('<div style="text-align:center;height:35px;">没有需要填写的试卷</div>');
 		}
 	}
 

@@ -84,9 +84,12 @@ define(['app'], function(app) {
 	
 	function logionIn() {
 
-		var userName = $$('.login-form').find('input[name="userName"]').val();
-		var password = $$('.login-form').find('input[name="password"]').val();
+		var userName = $$('.login-form').find('input[name="userName"]').val() || $$('#userName').val();
+		var password = $$('.login-form').find('input[name="password"]').val() || $$('#password').val();
+		console.log('password');
 		console.log(password);
+		console.log( $$('#userName').val());
+		console.log( $$('#password').val());
 		if(userName == null || userName == '') {
 			app.myApp.alert('用户名不能为空!');
 			return;
@@ -135,7 +138,6 @@ define(['app'], function(app) {
 
 					// 根据id获取个人信息
 					getUserDetail(data.userId, data.access_token)
-
 					
 					app.myApp.toast('登录成功！', 'success').show(true);
 					

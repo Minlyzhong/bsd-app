@@ -472,12 +472,13 @@ define(['app',
 		console.log(i)
 		console.log(typeof i)
 		i = parseInt(i);
-		temId = parseInt(i+1)
-		app.ajaxLoadPageContent1(listPath + temId, {
+		// temId = parseInt(i+1)
+		// id 是 pageDataStorage['catId'+i]
+		app.ajaxLoadPageContent1(listPath + pageDataStorage['catId'+i], {
 			// type:1
 			pageNo: pageNo[i],
 			deptId:app.user.deptId,
-			villageId:pageDataStorage['catId'+i],
+			// villageId:pageDataStorage['catId'+i],
 			hasSecondPage:pageDataStorage['hasSecondPage'+i]
 		}, function(result) {
 			var data = result.data;
@@ -567,7 +568,13 @@ define(['app',
 					
 					$$.each(data.content,function(index, item){
 						item.createDate = app.getnowdata(item.createDate);
-						item.coverImg = app.filePath + item.coverImg;
+						if(item.coverImg){
+							item.coverImg = app.filePath + item.coverImg;
+							item.hasImg = 1;
+						}else{
+							item.hasImg = 0;
+						}
+						
 					})
 					console.log(data.content)
 					$$('.branchHome'+i).html(template1(data.content));
