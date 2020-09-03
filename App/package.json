@@ -23,7 +23,7 @@
   "dependencies": {
     "call-number": "git+https://github.com/Rohfosho/CordovaCallNumberPlugin.git",
     "com-badrit-macaddress": "git+https://github.com/mohamed-salah/MacAddress.git",
-    "cordova-android": "~5.2.2",
+    "cordova-android": "~6.0.0",
     "cordova-plugin-android-permissions": "^1.0.0",
     "cordova-plugin-baidupush": "^1.0.5",
     "cordova-plugin-barcodescanner": "^0.7.4",
